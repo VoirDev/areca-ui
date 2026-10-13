@@ -3,6 +3,69 @@
 A Compose Multiplatform design system for Android, iOS and the JVM, published as
 `dev.voir.areca:*`.
 
+## Installing
+
+Areca is published to GitHub Packages, not Maven Central. Add its repository to the consuming
+build's `settings.gradle.kts`, limited to the `dev.voir.areca` group so no other dependency is
+looked up there:
+
+```kotlin
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+        exclusiveContent {
+            forRepository {
+                maven("https://maven.pkg.github.com/VoirDev/areca-ui") {
+                    name = "Areca"
+                    credentials(PasswordCredentials::class)
+                }
+            }
+            filter { includeGroup("dev.voir.areca") }
+        }
+    }
+}
+```
+
+GitHub Packages asks for credentials even to read a public package.
+`credentials(PasswordCredentials::class)` reads them from the Gradle properties `ArecaUsername` and
+`ArecaPassword` (the repository's `name` plus `Username` and `Password`): a GitHub user name and a
+personal access token (classic) with the `read:packages` scope. Keep them out of the project, in
+`~/.gradle/gradle.properties`:
+
+```properties
+ArecaUsername=<your GitHub user name>
+ArecaPassword=<a classic token with read:packages>
+```
+
+In GitHub Actions, pass them as environment variables instead. A workflow's own `GITHUB_TOKEN` reads
+the packages when they are public, or when the package settings grant the consuming repository
+access:
+
+```yaml
+env:
+  ORG_GRADLE_PROJECT_ArecaUsername: ${{ github.actor }}
+  ORG_GRADLE_PROJECT_ArecaPassword: ${{ secrets.GITHUB_TOKEN }}
+```
+
+Then depend on the modules you need, all at the same version (the tables below list every
+artifact):
+
+```kotlin
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation("dev.voir.areca:foundation:<version>")
+            implementation("dev.voir.areca:icons:<version>") // optional: ArecaIcons.*
+        }
+    }
+}
+```
+
+The released versions are the repository's
+[GitHub Releases](https://github.com/VoirDev/areca-ui/releases). Every module needs Java 17 or later
+on the desktop JVM (see [Releasing](#releasing)).
+
 ## Repository layout
 
 The top level answers one question: what does this code need in order to be useful?
@@ -215,9 +278,11 @@ next release, never moving on to a further `-SNAPSHOT`. The `version` of
    artifacts** runs `ci/release/build-artifacts` on macOS: it stages every publication in
    `build/release-staging`, checks coordinates and files, resolves the result as a Java 17 consumer
    (`ci/release/consumer`), and keeps it as the run's `release-artifacts`.
-3. Merging starts **Publish Release**. After approval in the `release` environment it signs the kept
-   files and uploads them unchanged to Maven Central (`ci/release/publish-maven-central`), then tags
-   `vX.Y.Z` and creates the GitHub Release. A failed run is re-run; it never rebuilds.
+3. Merging starts **Publish Release**. After approval in the `release` environment it uploads the
+   kept files unchanged to this repository's GitHub Packages Maven registry
+   (`ci/release/publish-github-packages`), then tags `vX.Y.Z` and creates the GitHub Release. A
+   failed run is re-run; it never rebuilds, and a rerun uploads only the files the registry does not
+   yet serve.
 
 The first release is 1.0.0: run Prepare Release with `version` set to `1.0.0`, or with any bump,
 since from `1.0.0-SNAPSHOT` all three give `1.0.0`. Its pull request changes `VERSION` and the
@@ -227,9 +292,9 @@ publication: `build-artifacts`, `check-staging` and `detect` reject a `-SNAPSHOT
 
 `main` requires the `Build and check whole repository` and `Build release artifacts` checks on an
 up-to-date branch. Prepare Release uses the `RELEASE_BOT_TOKEN` secret and the `RELEASE_BOT_NAME`
-and `RELEASE_BOT_EMAIL` variables; the `release` environment holds `MAVEN_CENTRAL_USERNAME` and
-`MAVEN_CENTRAL_PASSWORD` (a Central Portal user token), `SIGNING_KEY` (an ASCII-armoured private
-key) and `SIGNING_KEY_PASSWORD`.
+and `RELEASE_BOT_EMAIL` variables. Publication needs no secret: the publishing job's own
+`GITHUB_TOKEN` holds `packages: write`, and the `release` environment only gates the job on its
+reviewers' approval.
 
 ## Conventions
 

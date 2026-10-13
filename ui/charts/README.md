@@ -19,6 +19,9 @@ the one the application states or the largest value it was given.
 implementation("dev.voir.areca:charts:1.0.0")
 ```
 
+Areca is published to GitHub Packages, so the build needs its repository first; see
+[Installing](../../README.md#installing).
+
 `charts` depends on `dev.voir.areca:foundation` as an API dependency, so it comes along. Both charts
 draw with the theme, so an `ArecaThemeProvider` must sit above them — usually the one at the
 application's root:

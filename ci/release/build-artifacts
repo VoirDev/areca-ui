@@ -36,7 +36,7 @@ mkdir -p "$output"
 echo "==> Staging every publication at $version"
 ./gradlew publishAllPublicationsToReleaseStagingRepository -PreleaseVersion="$version" --no-daemon
 
-# Maven Central builds its own metadata; a bundle carries only the version directories.
+# GitHub Packages keeps its own version listing; the release carries only the version directories.
 find "$staging" -name 'maven-metadata.xml*' -delete
 
 echo "==> Checking the staged coordinates and files"

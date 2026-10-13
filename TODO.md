@@ -6,11 +6,9 @@ Open work before the first release. Paths are relative to
 ## Release
 
 - [ ] GitHub setup for releasing (see README "Releasing"): `RELEASE_BOT_TOKEN` secret,
-      `RELEASE_BOT_NAME` / `RELEASE_BOT_EMAIL` variables, a `release` environment with reviewers and
-      `MAVEN_CENTRAL_USERNAME` / `MAVEN_CENTRAL_PASSWORD` / `SIGNING_KEY` / `SIGNING_KEY_PASSWORD`, a
-      `main` ruleset requiring "Build and check whole repository" and "Build release artifacts",
-      the `dev.voir.areca` namespace verified on the Central Portal, and the signing key's public half
-      on a keyserver.
+      `RELEASE_BOT_NAME` / `RELEASE_BOT_EMAIL` variables, a `release` environment with reviewers, and
+      a `main` ruleset requiring "Build and check whole repository" and "Build release artifacts".
+      After the first release, set each published package's visibility in its package settings.
 
 ## Foundation: components
 

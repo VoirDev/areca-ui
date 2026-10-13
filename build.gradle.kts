@@ -36,20 +36,11 @@ val projectVersion = providers.gradleProperty("releaseVersion")
 /**
  * Maven repository the release workflow stages publications in, under `build/release-staging`.
  *
- * The release pull request's Verify run keeps its files, and publication uploads them unchanged
- * after merge, so `publishAllPublicationsToReleaseStagingRepository` is the task that produces the
- * released bytes.
+ * The release pull request's Verify run keeps its files, and publication uploads them unchanged to
+ * GitHub Packages after merge, so `publishAllPublicationsToReleaseStagingRepository` is the task that
+ * produces the released bytes.
  */
 val releaseStagingRepository = "ReleaseStaging"
-
-/**
- * Whether this invocation publishes only to an unsigned repository: `~/.m2`, or the release staging
- * repository whose files the release workflow signs at publication.
- */
-val isUnsignedPublish = gradle.startParameter.taskNames.any {
-    it.contains("publishToMavenLocal", ignoreCase = true) ||
-        it.contains(releaseStagingRepository, ignoreCase = true)
-}
 
 /**
  * Lowest Java version the published JVM and Android bytecode runs on.
@@ -145,14 +136,8 @@ subprojects {
 
         // The POM fields every published module shares, so that no module can publish without a
         // licence, a source location or a developer. A module adds only its own `name` and
-        // `description` in its `mavenPublishing { pom { … } }` block; Maven Central rejects a POM
-        // missing either.
+        // `description` in its `mavenPublishing { pom { … } }` block.
         extensions.configure<MavenPublishBaseExtension> {
-            publishToMavenCentral()
-            if (!isUnsignedPublish) {
-                signAllPublications()
-            }
-
             pom {
                 url.set("https://github.com/VoirDev/areca-ui/")
 

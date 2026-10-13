@@ -11,6 +11,9 @@ implementation("dev.voir.areca:foundation:1.0.0")
 implementation("dev.voir.areca:icons:1.0.0") // optional: ArecaIcons.*
 ```
 
+Areca is published to GitHub Packages, so the build needs its repository first; see
+[Installing](../../README.md#installing).
+
 ---
 
 ## 1. Rules

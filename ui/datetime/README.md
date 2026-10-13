@@ -29,6 +29,9 @@ application from its own localization.
 implementation("dev.voir.areca:datetime:1.0.0")
 ```
 
+Areca is published to GitHub Packages, so the build needs its repository first; see
+[Installing](../../README.md#installing).
+
 `datetime` depends on `dev.voir.areca:foundation` as an API dependency, so it comes along: its
 signatures carry foundation types (`FieldStyle`, `WheelPickerStyle`, `ButtonStyle`). Everything
 draws with the theme, so an `ArecaThemeProvider` must sit above it — usually the one at the

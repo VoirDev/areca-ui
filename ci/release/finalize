@@ -32,7 +32,8 @@ fi
 
 notes="$(mktemp)"
 {
-  echo "Published to Maven Central:"
+  echo "Published to GitHub Packages, \`https://maven.pkg.github.com/$GITHUB_REPOSITORY\`"
+  echo "([installing](https://github.com/$GITHUB_REPOSITORY#installing)):"
   echo
   while IFS= read -r coordinate; do
     echo "- \`$coordinate\`"

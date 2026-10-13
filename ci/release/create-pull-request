@@ -54,7 +54,7 @@ Releases \`$RELEASE_VERSION\`, $reason.
 
 This pull request changes only \`VERSION\` and the \`version\` of \`.claude-plugin/plugin.json\`, which
 follows it. Verify checks the whole repository, and **Build release artifacts** builds, inspects and
-keeps every publication for Maven Central. Merging publishes those
+keeps every publication for GitHub Packages. Merging publishes those
 kept artifacts unchanged, after approval in the \`release\` environment, then tags \`v$RELEASE_VERSION\`
 and creates the GitHub Release.
 EOF
