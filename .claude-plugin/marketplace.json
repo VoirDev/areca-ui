@@ -1,0 +1,14 @@
+{
+  "name": "areca-ui",
+  "description": "Claude Code plugins for the Areca Compose Multiplatform design system",
+  "owner": {
+    "name": "Voir"
+  },
+  "plugins": [
+    {
+      "name": "areca",
+      "source": "./",
+      "description": "Agent Skills for building Compose Multiplatform UI with the Areca design system and for Areca ViewModel presentation code"
+    }
+  ]
+}

@@ -1,0 +1,1067 @@
+# Source of every icon in `ArecaIcons`; `./gradlew :standalone:icons:generateIcons` reads it.
+# Columns: name, set (lucide | tabler | manual), source id, comma-separated flags.
+# Flags: mirror (autoMirror in right-to-left layouts), filled (the outline is also filled),
+#   same-as=<Name> (deliberate duplicate of another name's drawing, kept as an alias).
+# `manual` icons are maintained by hand and are not regenerated.
+Activity	lucide	activity
+ActivityHeart	lucide	heart-pulse
+AirVent	lucide	air-vent
+Airplay	lucide	airplay
+Airpods	tabler	device-airpods
+AlarmClock	lucide	alarm-clock
+AlarmClockCheck	lucide	alarm-clock-check
+AlarmClockMinus	lucide	alarm-clock-minus
+AlarmClockOff	lucide	alarm-clock-off
+AlarmClockPlus	lucide	alarm-clock-plus
+AlertCircle	lucide	circle-alert
+AlertHexagon	tabler	alert-hexagon
+AlertOctagon	lucide	octagon-alert
+AlertSquare	tabler	alert-square-rounded
+AlertTriangle	lucide	triangle-alert
+AlignCenter	lucide	text-align-center
+AlignJustify	lucide	text-align-justify
+AlignLeft	lucide	text-align-start
+AlignRight	lucide	text-align-end
+Ambulance	lucide	ambulance
+Amphora	lucide	amphora
+Anchor	lucide	anchor
+Angle	tabler	angle
+Annotation	tabler	message-2
+AnnotationAlert	tabler	message-2-exclamation
+AnnotationCheck	tabler	message-2-check
+AnnotationDots	tabler	message-dots
+AnnotationHeart	tabler	message-2-heart
+AnnotationPlus	tabler	message-2-plus
+AnnotationQuestion	tabler	message-2-question
+AnnotationX	tabler	message-2-x
+Announcement	lucide	megaphone	same-as=Megaphone
+Antenna	lucide	antenna
+Aperture	lucide	aperture
+AppWindow	lucide	app-window
+Apple	lucide	apple
+Archive	lucide	archive
+Armchair	lucide	armchair
+Armchair2	tabler	armchair-2
+ArrowBlockDown	lucide	arrow-big-down
+ArrowBlockLeft	lucide	arrow-big-left	mirror
+ArrowBlockRight	lucide	arrow-big-right	mirror
+ArrowBlockUp	lucide	arrow-big-up
+ArrowCircleBrokenDownLeft	lucide	circle-arrow-out-down-left	mirror
+ArrowCircleBrokenDownRight	lucide	circle-arrow-out-down-right	mirror
+ArrowCircleBrokenUpLeft	lucide	circle-arrow-out-up-left	mirror
+ArrowCircleBrokenUpRight	lucide	circle-arrow-out-up-right	mirror
+ArrowCircleDown	tabler	circle-arrow-down
+ArrowCircleDownLeft	tabler	circle-arrow-down-left	mirror
+ArrowCircleDownRight	tabler	circle-arrow-down-right	mirror
+ArrowCircleLeft	tabler	circle-arrow-left	mirror
+ArrowCircleRight	tabler	circle-arrow-right	mirror
+ArrowCircleUp	tabler	circle-arrow-up
+ArrowCircleUpLeft	tabler	circle-arrow-up-left	mirror
+ArrowCircleUpRight	tabler	circle-arrow-up-right	mirror
+ArrowDown	lucide	arrow-down
+ArrowDownLeft	lucide	arrow-down-left	mirror
+ArrowDownRight	lucide	arrow-down-right	mirror
+ArrowDownUp	lucide	arrow-down-up
+ArrowLeft	lucide	arrow-left	mirror
+ArrowLeftRight	lucide	arrow-left-right
+ArrowNarrowDown	lucide	move-down
+ArrowNarrowDownLeft	lucide	move-down-left	mirror
+ArrowNarrowDownRight	lucide	move-down-right	mirror
+ArrowNarrowLeft	lucide	move-left	mirror
+ArrowNarrowRight	lucide	move-right	mirror
+ArrowNarrowUp	lucide	move-up
+ArrowNarrowUpLeft	lucide	move-up-left	mirror
+ArrowNarrowUpRight	lucide	move-up-right	mirror
+ArrowRight	lucide	arrow-right	mirror
+ArrowSquareDown	lucide	square-arrow-down
+ArrowSquareDownLeft	lucide	square-arrow-down-left	mirror
+ArrowSquareDownRight	lucide	square-arrow-down-right	mirror
+ArrowSquareLeft	lucide	square-arrow-left	mirror
+ArrowSquareRight	lucide	square-arrow-right	mirror
+ArrowSquareUp	lucide	square-arrow-up
+ArrowSquareUpLeft	lucide	square-arrow-up-left	mirror
+ArrowSquareUpRight	lucide	square-arrow-up-right	mirror
+ArrowUp	lucide	arrow-up
+ArrowUpLeft	lucide	arrow-up-left	mirror
+ArrowUpRight	lucide	arrow-up-right	mirror
+ArrowsDown	tabler	arrows-down
+ArrowsLeft	tabler	arrows-left	mirror
+ArrowsRight	tabler	arrows-right	mirror
+ArrowsUp	tabler	arrows-up
+Asterisk	lucide	asterisk
+AtSign	lucide	at-sign
+Atm	lucide	credit-card-reader	same-as=CreditCardReader
+Atom	lucide	atom
+Attachment02	tabler	paperclip
+Award	lucide	award
+Baby	lucide	baby
+BabyBottle	tabler	baby-bottle
+BabyCarriage	tabler	baby-carriage
+Backpack	lucide	backpack
+BadgePercent	lucide	badge-percent
+BaggageClaim	lucide	baggage-claim
+BallAmericanFootball	tabler	ball-american-football
+BallBaseball	tabler	ball-baseball
+BallBasketball	tabler	ball-basketball
+BallBowling	tabler	ball-bowling
+BallFootball	tabler	ball-football
+BallTennis	tabler	ball-tennis
+Balloon	lucide	balloon
+Banana	lucide	banana
+Bandage	lucide	bandage
+Bank	lucide	landmark	same-as=Landmark
+BankNote	lucide	banknote
+BankNoteDollar	tabler	cash-banknote	same-as=CashBanknote
+BarChart	tabler	chart-bar
+BarChartAsc	lucide	chart-no-axes-column-increasing
+BarChartDesc	lucide	chart-no-axes-column-decreasing
+BarChartLine	lucide	chart-column
+BarChartLineAlt	lucide	chart-column-big
+BarChartLineAsc	lucide	chart-column-increasing
+BarChartLineDesc	lucide	chart-column-decreasing
+BarChartSquare	lucide	chart-column-big	same-as=BarChartLineAlt
+BarLineChart	lucide	chart-no-axes-combined
+Basket	tabler	basket
+Bath	lucide	bath
+BatteryCharging	lucide	battery-charging
+BatteryEmpty	lucide	battery
+BatteryFull	lucide	battery-full
+BatteryLow	lucide	battery-low
+BatteryMid	lucide	battery-medium
+BeachUmbrella	tabler	beach
+Beaker	lucide	flask-conical
+Bean	lucide	bean
+BedDouble	lucide	bed-double
+BedSingle	lucide	bed-single
+Beef	lucide	beef
+Beer	lucide	beer
+Bell	lucide	bell
+BellMinus	lucide	bell-minus
+BellOff	lucide	bell-off
+BellPlus	lucide	bell-plus
+BellRinging	lucide	bell-ring
+BezierCurve	tabler	vector-bezier
+BicepsFlexed	lucide	biceps-flexed
+Bike	lucide	bike
+Binoculars	lucide	binoculars
+Bird	lucide	bird
+Blocks	lucide	blocks
+BluetoothConnect	lucide	bluetooth-connected
+BluetoothOff	lucide	bluetooth-off
+BluetoothOn	lucide	bluetooth
+BluetoothSignal	lucide	bluetooth-searching
+Bold	lucide	bold
+BoldAlt	tabler	bold
+Bone	lucide	bone
+BookClosed	lucide	book
+BookOpen	lucide	book-open
+BookOpenText	lucide	book-open-text
+Bookmark	lucide	bookmark
+BookmarkAdd	lucide	bookmark-plus
+BookmarkCheck	lucide	bookmark-check
+BookmarkMinus	lucide	bookmark-minus
+BookmarkX	lucide	bookmark-x
+Bot	lucide	bot
+Bottle	tabler	bottle
+BowlChopsticks	tabler	bowl-chopsticks
+Box	lucide	archive	same-as=Archive
+Brackets	lucide	braces
+Brain	lucide	brain
+BrandAndroid	tabler	brand-android
+BrandApple	tabler	brand-apple
+Bread	tabler	bread
+BrickWall	lucide	brick-wall
+Briefcase	lucide	briefcase
+BriefcaseBusiness	lucide	briefcase-business
+Broccoli	lucide	broccoli
+Broom	lucide	broom
+Browser	lucide	app-window	same-as=AppWindow
+Brush	lucide	brush
+BrushAlt	lucide	paintbrush-vertical
+Bug	lucide	bug
+Building	lucide	building
+Building2	lucide	building-complex
+BuildingArch	tabler	building-arch
+BuildingMonument	tabler	building-monument
+BuildingPavilion	tabler	building-pavilion
+BuildingStore	tabler	building-store
+BuildingWarehouse	tabler	building-warehouse
+Buildings	tabler	buildings
+Bulb	tabler	bulb
+Burger	tabler	burger
+Bus	lucide	bus
+BusFront	lucide	bus-front
+Cable	lucide	cable
+CableCar	lucide	cable-car
+Cake	lucide	cake
+CakeSlice	lucide	cake-slice
+Calculator	lucide	calculator
+Calendar	lucide	calendar
+CalendarCheck	lucide	calendar-check
+CalendarCheckAlt	lucide	calendar-check-2
+CalendarDate	lucide	calendar-days
+CalendarDollar	tabler	calendar-dollar
+CalendarHeart	lucide	calendar-heart
+CalendarHeartAlt	tabler	calendar-heart
+CalendarMinus	lucide	calendar-minus
+CalendarMinusAlt	lucide	calendar-minus-2
+CalendarPlus	lucide	calendar-plus
+CalendarPlusAlt	lucide	calendar-plus-2
+CalendarX	lucide	calendar-x
+Camera	lucide	camera
+CameraLens	lucide	aperture	same-as=Aperture
+CameraOff	lucide	camera-off
+CameraPlus	tabler	camera-plus
+Camper	tabler	camper
+CanSoda	lucide	can-soda
+Candle	tabler	candle
+CandlestickChart	lucide	chart-candlestick
+Candy	lucide	candy
+Cannabis	lucide	cannabis
+Car	lucide	car
+CarCrash	tabler	car-crash
+CarFan	tabler	car-fan
+CarFront	lucide	car-front
+CarGarage	tabler	car-garage
+CarSuv	tabler	car-suv
+CarTaxiFront	lucide	car-taxi-front
+Caravan	lucide	caravan
+CardSim	lucide	card-sim
+Carrot	lucide	carrot
+Cash	tabler	cash
+CashBanknote	tabler	cash-banknote
+CashBanknoteMove	tabler	cash-banknote-move
+CashRegister	tabler	cash-register
+Cast	lucide	cast
+Castle	lucide	castle
+Cat	lucide	cat
+Cctv	lucide	cctv
+Certificate	tabler	certificate
+ChartUp	lucide	chart-line
+Check	lucide	check
+CheckCircle	lucide	circle-check
+CheckCircleBroken	lucide	circle-check-big
+CheckDone	lucide	copy-check
+CheckHeart	tabler	heart-check
+CheckSquare	lucide	square-check
+CheckSquareBroken	lucide	square-check-big
+CheckVerified	lucide	badge-check
+Cheese	tabler	cheese
+ChefHat	lucide	chef-hat
+Cheque	tabler	writing-sign
+Cherry	lucide	cherry
+Chess	tabler	chess
+ChevronDown	lucide	chevron-down
+ChevronDownDouble	lucide	chevrons-down
+ChevronLeft	lucide	chevron-left	mirror
+ChevronLeftDouble	lucide	chevrons-left	mirror
+ChevronRight	lucide	chevron-right	mirror
+ChevronRightDouble	lucide	chevrons-right	mirror
+ChevronSelectorHorizontal	lucide	chevrons-left-right
+ChevronSelectorVertical	lucide	chevrons-up-down
+ChevronUp	lucide	chevron-up
+ChevronUpDouble	lucide	chevrons-up
+ChristmasTree	tabler	christmas-tree
+Church	lucide	church
+Cigarette	lucide	cigarette
+Circle	lucide	circle
+CircleHelp	lucide	circle-question-mark
+CircleParking	lucide	circle-parking
+Citrus	lucide	citrus
+Clapperboard	lucide	clapperboard
+Clipboard	lucide	clipboard
+ClipboardCheck	lucide	clipboard-check
+ClipboardMinus	lucide	clipboard-minus
+ClipboardPlus	lucide	clipboard-plus
+ClipboardX	lucide	clipboard-x
+Clock	lucide	clock
+ClockCheck	lucide	clock-check
+ClockFastForward	lucide	rotate-cw-clock
+ClockPlus	lucide	clock-plus
+ClockRewind	lucide	rotate-ccw-clock
+ClockSnooze	tabler	alarm-snooze
+ClockStopwatch	lucide	timer
+Cloud	lucide	cloud
+CloudAlt	tabler	cloud
+CloudLightning	lucide	cloud-lightning
+CloudMoon	lucide	cloud-moon
+CloudOff	lucide	cloud-off
+CloudRain	lucide	cloud-rain
+CloudSnowing	lucide	cloud-snow
+CloudSun	lucide	cloud-sun
+Clover	tabler	clover
+Code	lucide	code
+CodeAlt	lucide	code-xml
+Codepen	tabler	brand-codepen
+Coffee	lucide	coffee
+Coin	tabler	coin
+Coins	lucide	coins
+CoinsHand	lucide	hand-coins	same-as=HandCoins
+CoinsStacked	tabler	coins
+CoinsSwap	tabler	exchange
+Colors	tabler	color-swatch
+Command	lucide	command
+Compass	lucide	compass
+Computer	lucide	computer
+ConciergeBell	lucide	concierge-bell
+Confetti	tabler	confetti
+Container	lucide	container
+Contrast	lucide	contrast
+Cookie	lucide	cookie
+CookingPot	lucide	cooking-pot
+Copy	lucide	copy
+CornerDownLeft	lucide	corner-down-left	mirror
+CornerDownRight	lucide	corner-down-right	mirror
+CornerLeftDown	lucide	corner-left-down	mirror
+CornerLeftUp	lucide	corner-left-up	mirror
+CornerRightDown	lucide	corner-right-down	mirror
+CornerRightUp	lucide	corner-right-up	mirror
+CornerUpLeft	lucide	corner-up-left	mirror
+CornerUpRight	lucide	corner-up-right	mirror
+CpuChip	lucide	cpu
+CreditCard	lucide	credit-card
+CreditCardCheck	lucide	credit-card-check
+CreditCardLock	lucide	credit-card	same-as=CreditCard
+CreditCardMinus	lucide	credit-card-minus
+CreditCardPlus	lucide	credit-card-plus
+CreditCardReader	lucide	credit-card-reader
+CreditCardRefresh	tabler	credit-card-refund
+CreditCardShield	lucide	credit-card	same-as=CreditCard
+CreditCardX	lucide	credit-card-x
+Croissant	lucide	croissant
+Crop	lucide	crop
+Cross	lucide	x	same-as=X
+CrossCircle	lucide	circle-x
+Crown	lucide	crown
+Crutches	tabler	crutches
+Cryptocurrency	tabler	coin-bitcoin
+Cube	tabler	cube
+Cup	tabler	cup
+CupSoda	lucide	cup-soda
+Cupcake	lucide	cupcake
+CurrencyBitcoin	tabler	currency-bitcoin
+CurrencyDollar	tabler	currency-dollar
+CurrencyDollarCircle	tabler	coin	same-as=Coin
+CurrencyEthereum	tabler	currency-ethereum
+CurrencyEuro	tabler	currency-euro
+CurrencyEuroCircle	tabler	coin-euro
+CurrencyPound	tabler	currency-pound
+CurrencyPoundCircle	tabler	coin-pound
+CurrencyRuble	tabler	currency-ruble
+CurrencyRupee	tabler	currency-rupee
+CurrencyRupeeCircle	tabler	coin-rupee
+CurrencyYen	tabler	currency-yen
+CurrencyYenCircle	tabler	coin-yen
+Cursor	lucide	mouse-pointer-2
+CursorAlt	lucide	mouse-pointer
+CursorBox	lucide	square-mouse-pointer
+CursorClick	lucide	mouse-pointer-click
+Cut	tabler	cut
+Database	lucide	database
+DatabaseAlt	tabler	database
+Dataflow	lucide	workflow
+Delete	lucide	delete
+Dental	tabler	dental
+DeviceLaptop	tabler	device-laptop
+DeviceMobileDollar	tabler	device-mobile-dollar
+DeviceTvOld	tabler	device-tv-old
+DeviceWatch	tabler	device-watch
+Diamond	lucide	gem	same-as=Gem
+Dice1	lucide	dice-1
+Dice2	lucide	dice-2
+Dice3	lucide	dice-3
+Dice4	lucide	dice-4
+Dice5	lucide	dice-5
+Dice6	lucide	dice-6
+Dices	lucide	dices
+Disc	lucide	disc
+Discount	tabler	discount
+Divide	lucide	divide
+DivideCircle	lucide	circle-divide
+Dna	lucide	dna
+Dog	lucide	dog
+Donut	lucide	donut
+DoorOpen	lucide	door-open
+Dotpoints	lucide	list
+DotsGrid	lucide	grip
+DotsHorizontal	lucide	ellipsis
+DotsVertical	lucide	ellipsis-vertical
+Download	lucide	download
+DownloadAlt	lucide	arrow-down-to-line
+DownloadCloud	lucide	cloud-download
+DownloadCloudAlt	tabler	cloud-download
+Drama	lucide	drama
+Drill	lucide	drill
+Drone	lucide	drone
+Drop	lucide	droplet	same-as=Droplet
+Droplet	lucide	droplet
+DropletHalf2	tabler	droplet-half-2
+Droplets	lucide	droplets
+Dropper	lucide	pipette
+Drum	lucide	drum
+Drumstick	lucide	drumstick
+Dumbbell	lucide	dumbbell
+Ear	lucide	ear
+Earth	lucide	earth
+EarthPin	tabler	world-pin
+Edit	lucide	pen
+EditLine	lucide	pen-line
+EditSquare	lucide	square-pen
+Egg	lucide	egg
+EggFried	lucide	egg-fried
+Engine	lucide	engine
+Equal	lucide	equal
+EqualNot	lucide	equal-not
+Eraser	lucide	eraser
+EvCharger	lucide	ev-charger
+Exchange	tabler	arrows-exchange
+Expand	lucide	maximize-2
+ExpandSquare	lucide	expand
+Eye	lucide	eye
+EyeHide	lucide	eye-off	same-as=EyeOff
+EyeOff	lucide	eye-off
+EyeShow	lucide	eye	same-as=Eye
+FaceContent	lucide	face-slightly-smiling
+FaceFrown	lucide	face-slightly-frowning
+FaceHappy	lucide	face-grinning
+FaceId	tabler	face-id
+FaceIdSquare	lucide	scan-face
+FaceNeutral	lucide	face-neutral
+FaceSad	tabler	mood-sad
+FaceSmile	tabler	mood-smile
+FaceWink	tabler	mood-wink
+Factory	lucide	factory
+Fan	lucide	fan
+FastBackward	lucide	rewind
+FastForward	lucide	fast-forward
+Faucet	lucide	faucet
+Feather	lucide	feather
+Fence	lucide	fence
+FerrisWheel	lucide	ferris-wheel
+Ferry	tabler	ferry
+Figma	tabler	brand-figma
+FileChart	lucide	file-chart-column
+FileCheck	lucide	file-check
+FileCode	lucide	file-code
+FileCodeAlt	tabler	file-code
+FileDownload	lucide	file-down
+FileEmpty	lucide	file
+FileHeart	lucide	file-heart
+FileLink	lucide	file-symlink
+FileLock	lucide	file-lock
+FileMinus	lucide	file-minus
+FilePlus	lucide	file-plus
+FileQuestion	lucide	file-question-mark
+FileSearch	lucide	file-search
+FileShieldText	tabler	file-text-shield
+FileText	lucide	file-text
+FileX	lucide	file-x
+Film	lucide	film
+FilterFunnel	lucide	funnel
+FilterLines	lucide	list-filter
+Fingerprint	lucide	fingerprint-pattern
+Fish	lucide	fish
+FishBone	tabler	fish-bone
+FishSymbol	lucide	fish-symbol
+FishingRod	lucide	fishing-rod
+Flag01	lucide	flag
+FlagWave	tabler	flag
+Flame	lucide	flame
+FlameKindling	lucide	flame-kindling
+Flash	lucide	zap	same-as=Zap
+FlipBackward	lucide	undo-2	mirror
+FlipForward	lucide	redo-2	mirror
+Flower	lucide	flower
+Flower2	lucide	flower-2
+Folder	lucide	folder
+FolderCheck	lucide	folder-check
+FolderClosed	lucide	folder-closed
+FolderCode	lucide	folder-code
+FolderDownload	lucide	folder-down
+FolderLock	lucide	folder-lock
+FolderMinus	lucide	folder-minus
+FolderPlus	lucide	folder-plus
+FolderQuestion	tabler	folder-question
+FolderSearch	lucide	folder-search
+FolderX	lucide	folder-x
+Footprints	lucide	footprints
+Forbidden	lucide	ban
+Frame	lucide	frame
+Framer	tabler	brand-framer
+Friends	tabler	friends
+Fuel	lucide	fuel
+Gamepad2	lucide	gamepad-2
+GamingPad	lucide	gamepad-2	same-as=Gamepad2
+GasStation	tabler	gas-station
+Gauge	lucide	gauge
+Gavel	lucide	gavel
+Gem	lucide	gem
+Gift	lucide	gift
+GiftCard	tabler	gift-card
+GitBranch	lucide	git-branch
+GitCommit	lucide	git-commit-horizontal
+GitMerge	lucide	git-merge
+GitPullRequest	lucide	git-pull-request
+GlassChampagne	tabler	glass-champagne
+GlassCocktail	tabler	glass-cocktail
+GlassWater	lucide	glass-water
+Glasses	lucide	glasses
+Globe	lucide	globe
+GlobeSlated	tabler	world	same-as=World
+Goal	lucide	goal
+Gold	tabler	coins	same-as=CoinsStacked
+Golf	tabler	golf
+GoogleChrome	tabler	brand-chrome
+GraduationHat	lucide	graduation-cap
+Grape	lucide	grape
+Grocery	lucide	store	same-as=Store
+Guitar	lucide	guitar
+Ham	lucide	ham
+Hammer	lucide	hammer
+Hand	lucide	hand
+HandCoins	lucide	hand-coins
+HandFist	lucide	hand-fist
+HandHeart	lucide	hand-heart
+HandHelping	lucide	hand-helping
+HandLuggage	tabler	luggage
+HandPlatter	lucide	hand-platter
+Handbag	lucide	handbag
+Handshake	lucide	handshake
+Hanger	tabler	hanger
+HardDrive	lucide	hard-drive
+HardHat	lucide	hard-hat
+Hash	lucide	hash
+HashAlt	tabler	hash
+HatGlasses	lucide	hat-glasses
+Heading	lucide	heading
+HeadingAlt	tabler	heading
+Headphones	lucide	headphones
+Headset	lucide	headset
+Heart	lucide	heart
+HeartCircle	tabler	circle-heart
+HeartFill	lucide	heart	filled
+HeartHand	lucide	hand-heart	same-as=HandHeart
+HeartHandshake	tabler	heart-handshake
+HeartPlus	tabler	heart-plus
+HeartRounded	tabler	heart
+HeartRoundedFill	tabler	heart	filled
+Heartbeat	tabler	heartbeat
+Hearts	tabler	hearts
+Heater	lucide	heater
+Helicopter	lucide	helicopter
+Helmet	tabler	helmet
+HelpBubble	lucide	message-circle-question-mark
+HelpCircle	lucide	circle-question-mark	same-as=CircleHelp
+HelpHexagon	tabler	help-hexagon
+HelpOctagon	tabler	help-octagon
+HelpSquare	tabler	help-square
+Hexagon	lucide	hexagon
+Home	lucide	house	same-as=House
+Home01	tabler	home
+HomeAlt	tabler	home-2
+HomeDollar	tabler	home-dollar
+HomeShield	tabler	home-shield
+HomeSmile	tabler	smart-home
+HorizontalBarChart	lucide	chart-bar
+HorizontalBarChartAsc	lucide	chart-bar-increasing
+HorizontalBarChartDesc	lucide	chart-bar-decreasing
+Horse	tabler	horse
+HorseToy	tabler	horse-toy
+Horseshoe	tabler	horseshoe
+Hospital	lucide	hospital
+Hotel	lucide	hotel
+Hourglass	lucide	hourglass
+House	lucide	house
+Hurricane	lucide	tornado
+IceCreamCone	lucide	ice-cream-cone
+IdBadge2	tabler	id-badge-2
+IdCard	lucide	id-card
+IdCardLanyard	lucide	id-card-lanyard
+Image	lucide	image
+ImageCheck	tabler	photo-check
+ImageCircle	tabler	photo-circle
+ImageDown	lucide	image-down
+ImagePlus	lucide	image-plus
+ImageUp	lucide	image-up
+ImageUser	lucide	square-user
+ImageX	tabler	photo-x
+Inbox	lucide	inbox
+Infinity	lucide	infinity
+Info	lucide	info
+InfoCircle	tabler	info-circle
+InfoHexagon	tabler	info-hexagon
+InfoOctagon	tabler	info-octagon
+InfoSquare	tabler	info-square
+Insurance	tabler	shield-dollar	same-as=ShieldDollar
+Invoice	tabler	file-invoice
+Ironing	tabler	ironing
+Italic	lucide	italic
+ItalicAlt	tabler	italic
+Joystick	lucide	joystick
+Kayak	lucide	kayak
+Key	lucide	key
+KeyRound	lucide	key-round
+Keyboard	lucide	keyboard
+Lamp	lucide	lamp
+LampCeiling	lucide	lamp-ceiling
+Landmark	lucide	landmark
+Languages	lucide	languages
+Laptop	lucide	laptop
+LaptopMinimal	lucide	laptop-minimal
+LawnMower	tabler	lawn-mower
+Leaf	lucide	leaf
+Leaf2	tabler	leaf-2
+LeafyGreen	lucide	leafy-green
+LeftIndent	lucide	list-indent-increase	mirror
+LetterSpacing	tabler	letter-spacing
+Library	lucide	library
+LibraryBig	lucide	library-big
+License	tabler	license
+LifeBuoy	lucide	life-buoy
+Lightbulb	lucide	lightbulb
+Lightning	lucide	zap	same-as=Zap
+LightningAlt	tabler	bolt
+LineChartDown	lucide	trending-down
+LineChartUp	lucide	chart-line	same-as=ChartUp
+LineChartUpArrow	lucide	trending-up
+LineHeight	tabler	line-height
+Link	lucide	link
+LinkAlt	lucide	link-2
+LinkBroken	lucide	unlink
+LinkExternal	lucide	external-link
+LinkExternalSquare	lucide	square-arrow-out-up-right
+Loading	lucide	loader
+Loan	lucide	hand-coins	same-as=HandCoins
+Lock	lucide	lock
+LockKeyholeSquare	lucide	lock-keyhole
+LockUnlocked	lucide	lock-open
+LogIn	lucide	log-in	mirror
+LogOut	lucide	log-out	mirror
+Luggage	lucide	luggage
+MagicWand01	lucide	wand-sparkles
+MagicWand02	lucide	wand
+Mail	lucide	mail
+MailAlt	tabler	mail
+MailAltOpen	tabler	mail-opened
+MailOpen	lucide	mail-open
+Mailbox	lucide	mailbox
+Map	lucide	map
+MapAlt	tabler	map
+Mark	lucide	crosshair
+MarkerPin	lucide	map-pin
+Martini	lucide	martini
+Massage	tabler	massage
+Medal	lucide	medal
+MedicalCross	tabler	medical-cross
+Megaphone	lucide	megaphone
+Menu01	lucide	menu
+MessageAlertCircle	lucide	message-circle-warning
+MessageAlertSquare	lucide	message-square-warning
+MessageChatCircle	lucide	messages-circle
+MessageChatSquare	lucide	messages-square
+MessageCheckCircle	lucide	message-circle-check
+MessageCheckSquare	lucide	message-square-check
+MessageCircle	lucide	message-circle
+MessageCircleAlt	tabler	message-circle
+MessageDotsCircle	lucide	message-circle-more
+MessageDotsSquare	lucide	message-square-more
+MessageHeart	tabler	message-heart
+MessageHeartCircle	lucide	message-circle-heart
+MessageHeartSquare	lucide	message-square-heart
+MessageNotificationSquare	lucide	message-square-dot
+MessagePlusCircle	lucide	message-circle-plus
+MessagePlusSquare	lucide	message-square-plus
+MessageQuestionSquare	tabler	message-question
+MessageSquare	lucide	message-square
+MessageSquareAlt	tabler	message
+MessageTextSquare	lucide	message-square-text
+MessageXCircle	lucide	message-circle-x
+MessageXSquare	lucide	message-square-x
+Microphone	lucide	mic
+Microphone2	tabler	microphone-2
+MicrophoneOff	lucide	mic-off
+Microscope	lucide	microscope
+Microwave	lucide	microwave
+Milk	lucide	milk
+Minus	lucide	minus
+MinusCircle	lucide	circle-minus
+MinusSquare	lucide	square-minus
+MirrorRound	lucide	mirror-round
+MoneyBag	tabler	moneybag
+Monitor	lucide	monitor
+MoodKid	tabler	mood-kid
+MoonAlt	tabler	moon
+MoonStar	lucide	moon-star
+Mop	lucide	mop
+Moped	tabler	moped
+MoreHorizontal	lucide	ellipsis	same-as=DotsHorizontal
+Mosque	lucide	mosque
+Motorbike	lucide	motorbike
+Mountain	lucide	mountain
+MountainSnow	lucide	mountain-snow
+Mouse	lucide	mouse
+Move	lucide	move
+Movie	tabler	movie
+MusicNote	lucide	music
+MusicNotePlus	tabler	music-plus
+NavigationPointer	lucide	navigation
+NavigationPointerForward	lucide	navigation-2
+NavigationPointerForwardOff	lucide	navigation-2-off
+NavigationPointerOff	lucide	navigation-off
+NeedleThread	tabler	needle-thread
+News	tabler	news
+Newspaper	lucide	newspaper
+Nfc	lucide	nfc
+Notebook	lucide	notebook
+Octagon	lucide	octagon
+Office	lucide	building-complex	same-as=Building2
+Old	tabler	old
+OnlineBanking	lucide	landmark	same-as=Landmark
+Origami	lucide	origami
+Package	lucide	package
+PackageCheck	lucide	package-check
+PackageMinus	lucide	package-minus
+PackageOpen	lucide	package-open
+PackagePlus	lucide	package-plus
+PackageSearch	lucide	package-search
+PackageX	lucide	package-x
+Paint	tabler	paint
+PaintPour	lucide	paint-bucket
+PaintRoller	lucide	paint-roller
+Paintbrush	lucide	paintbrush
+Palette	lucide	palette
+PaperBag	lucide	paper-bag
+Paperclip	lucide	paperclip
+ParagraphWrap	lucide	text-wrap
+PartyPopper	lucide	party-popper
+Passcode	lucide	rectangle-ellipsis
+Passport	tabler	e-passport
+PauseCircle	lucide	circle-pause
+PauseSquare	lucide	square-pause
+PawPrint	lucide	paw-print
+PcCase	lucide	pc-case
+PenTool	lucide	pen-tool
+Pencil	lucide	pencil
+PencilLine	lucide	pencil-line
+PencilRuler	lucide	pencil-ruler
+Pentagon	lucide	pentagon
+Percent	lucide	percent
+PercentCircle	lucide	circle-percent
+Percentage	tabler	percentage
+Perfume	tabler	perfume
+Perspective	tabler	perspective
+Phone	lucide	phone
+PhoneCall	lucide	phone-call
+PhoneCallAlt	tabler	phone-call
+PhoneHangUp	tabler	phone-end
+PhoneIncoming	lucide	phone-incoming
+PhoneOutgoing	lucide	phone-outgoing
+PhonePause	tabler	phone-pause
+PhonePlus	tabler	phone-plus
+PhoneX	tabler	phone-x
+Piano	lucide	piano
+PieChart	lucide	chart-pie
+PigMoney	tabler	pig-money
+PiggyBank	lucide	piggy-bank
+Pilcrow	lucide	pilcrow
+PilcrowSquare	lucide	square-pilcrow
+Pill	lucide	pill
+PillBottle	lucide	pill-bottle
+Pin	lucide	pin
+PinAlt	tabler	pin
+Pizza	lucide	pizza
+Plane	lucide	plane
+PlaneLanding	lucide	plane-landing
+PlaneTakeoff	lucide	plane-takeoff
+PlantPot	lucide	plant-pot
+Play	lucide	play
+PlayCircle	lucide	circle-play
+PlayFootball	tabler	play-football
+PlaySquare	lucide	square-play
+Plug	lucide	plug
+Plus	lucide	plus
+PlusCircle	lucide	circle-plus
+PlusSquare	lucide	square-plus
+Podcast	lucide	mic-signal
+Podium	lucide	podium
+Pool	tabler	pool
+Popcorn	lucide	popcorn
+Power	lucide	power
+Pray	tabler	pray
+Presentation	lucide	presentation
+PresentationChart	tabler	presentation-analytics
+Printer	lucide	printer
+Puzzle	lucide	puzzle
+PuzzlePiece	lucide	puzzle	same-as=Puzzle
+QrCode	lucide	qr-code
+Rabbit	lucide	rabbit
+Radio	lucide	radio
+Razor	tabler	razor
+Receipt	lucide	receipt
+ReceiptCheck	lucide	receipt-text
+ReceiptTax	tabler	receipt-tax
+Recording	lucide	audio-lines
+Recycle	lucide	recycle
+Reflect	lucide	triangles-centerline-dashed-vertical
+RefreshCcw	lucide	refresh-ccw
+Refrigerator	lucide	refrigerator
+Repeat	lucide	repeat
+RepeatOval	lucide	repeat-2
+ReportMoney	tabler	report-money
+ReverseLeft	lucide	undo-2	mirror,same-as=FlipBackward
+Ribbon	lucide	ribbon
+RightIndent	lucide	list-indent-decrease	mirror
+Rings	tabler	rings
+Road	lucide	road
+RoadSign	tabler	road-sign
+Rocket	lucide	rocket
+RocketLaunch	tabler	rocket
+RockingChair	lucide	rocking-chair
+RollerBrush	lucide	paint-roller	same-as=PaintRoller
+Rose	lucide	rose
+RotateCcwSquare	lucide	rotate-ccw-square
+Route	lucide	route
+Router	lucide	router
+Rss	lucide	rss
+RubberStamp	tabler	rubber-stamp
+Ruler	lucide	ruler
+Run	tabler	run
+Safe	lucide	vault	same-as=Vault
+SafetyBox	lucide	vault	same-as=Vault
+Sailboat	lucide	sailboat
+Salad	lucide	salad
+Sale	lucide	badge-percent	same-as=BadgePercent
+Salt	tabler	salt
+Sandwich	lucide	sandwich
+SatelliteDish	lucide	satellite-dish
+Sausage	tabler	sausage
+Save	lucide	save
+Scale	lucide	scaling
+Scales	lucide	scale
+Scan	lucide	scan
+School	lucide	school
+Scissors	lucide	scissors
+ScissorsCut	lucide	scissors-line-dashed
+Scooter	lucide	scooter
+ScooterElectric	tabler	scooter-electric
+ScrollText	lucide	scroll-text
+Search	lucide	search
+SearchMd	lucide	search	same-as=Search
+SearchX	lucide	search-x
+Seedling	tabler	seedling
+Send	lucide	send	mirror
+Server	lucide	server
+Settings	lucide	settings
+SettingsControl	lucide	settings-2
+Share	lucide	forward	mirror
+ShareNodes	lucide	share-2
+ShelvingUnit	lucide	shelving-unit
+Shield	lucide	shield
+ShieldDollar	tabler	shield-dollar
+ShieldOff	lucide	shield-off
+ShieldPlus	lucide	shield-plus
+ShieldTick	lucide	shield-check
+ShieldZap	tabler	shield-bolt
+Ship	lucide	ship
+Shirt	lucide	shirt
+ShirtSport	tabler	shirt-sport
+Shoe	tabler	shoe
+ShoppingBag03	lucide	shopping-bag
+ShoppingBasket	lucide	shopping-basket
+ShoppingCart	lucide	shopping-cart
+ShoppingCartDollar	tabler	shopping-cart-dollar
+Shovel	lucide	shovel
+ShowerHead	lucide	shower-head
+Shrimp	lucide	shrimp
+Shuffle	lucide	shuffle
+Sigma	lucide	sigma
+Signal	lucide	radio	same-as=Radio
+Signature	lucide	signature
+Siren	lucide	siren
+Skateboarding	tabler	skateboarding
+SkiJumping	tabler	ski-jumping
+SkipBack	lucide	skip-back
+SkipForward	lucide	skip-forward
+SlashCircle	lucide	circle-slash
+SlashDivider	lucide	slash
+Sliders	lucide	sliders-vertical
+Smartphone	lucide	smartphone
+Smoking	tabler	smoking
+Snowboarding	tabler	snowboarding
+Snowflake	lucide	snowflake
+SoapDispenserDroplet	lucide	soap-dispenser-droplet
+SocialApple	manual	-
+SocialFacebook	manual	-
+SocialGoogle	manual	-
+Sofa	lucide	sofa
+SolarPanel	lucide	solar-panel
+Soup	lucide	soup
+Spade	lucide	spade
+Sparkle	lucide	sparkle
+Sparkles	lucide	sparkles
+Speaker	lucide	speaker
+Speedometer	lucide	gauge	same-as=Gauge
+SportShoe	lucide	sport-shoe
+SprayCan	lucide	spray-can
+Sprout	lucide	sprout
+Square	lucide	square
+Stamp	lucide	stamp
+Star	lucide	star
+StarAlt	tabler	star
+Stars	lucide	sparkles	same-as=Sparkles
+SteeringWheel	tabler	steering-wheel
+Stethoscope	lucide	stethoscope
+StickerSquare	lucide	sticker
+Stockmarket	lucide	chart-no-axes-combined	same-as=BarLineChart
+StopCircle	lucide	circle-stop
+StopSquare	lucide	square-stop
+Store	lucide	store
+Strikethrough	lucide	strikethrough
+StrikethroughAlt	tabler	strikethrough
+Subscript	lucide	subscript
+Sun	lucide	sun
+Sunglasses	tabler	sunglasses
+Sunrise	lucide	sunrise
+Sunset	lucide	sunset
+Swimming	tabler	swimming
+SwissFranc	lucide	swiss-franc
+SwitchHorizontal	tabler	switch-horizontal
+SwitchHorizontalAlt	lucide	arrow-right-left
+SwitchVertical	tabler	switch-vertical
+SwitchVerticalAlt	lucide	arrow-up-down
+Syringe	lucide	syringe
+Tablet	lucide	tablet
+Tag	lucide	tag
+TagAlt	tabler	tag
+Target	lucide	target
+TargetAlt	tabler	target
+Telescope	lucide	telescope
+Tent	lucide	tent
+Terminal	lucide	terminal
+TerminalBrowser	tabler	terminal-2
+TerminalSquare	lucide	square-terminal
+TestPipe	tabler	test-pipe
+TestTube	lucide	test-tube
+TextInput	lucide	text-cursor-input
+Thermometer	lucide	thermometer
+ThermometerCold	lucide	thermometer-snowflake
+ThermometerLow	tabler	temperature-minus
+ThermometerWarm	lucide	thermometer-sun
+ThumbsDown	lucide	thumbs-down
+ThumbsUp	lucide	thumbs-up
+Ticket	lucide	ticket
+TicketCheck	lucide	ticket-check
+Tickets	lucide	tickets
+ToggleLeft	lucide	toggle-left
+ToggleRight	lucide	toggle-right
+Toilet	lucide	toilet
+Tool	tabler	tool
+Toolbox	lucide	toolbox
+Tools	tabler	tools
+ToolsKitchen2	tabler	tools-kitchen-2
+Toothbrush	lucide	toothbrush
+TowerControl	lucide	tower-control
+ToyBrick	lucide	toy-brick
+Tractor	lucide	tractor
+TrafficCone	lucide	traffic-cone
+Train	tabler	train
+TrainFrontTunnel	lucide	train-front-tunnel
+Tram	lucide	tram-front	same-as=TramFront
+TramFront	lucide	tram-front
+Transform	tabler	vector
+Translate	lucide	languages	same-as=Languages
+Trash	lucide	trash
+TrashAlt	tabler	trash
+Tray	lucide	inbox	same-as=Inbox
+TreeDeciduous	lucide	tree-deciduous
+TreePalm	lucide	tree-palm
+Trees	lucide	trees
+TrendDown	lucide	trending-down	same-as=LineChartDown
+TrendUp	lucide	trending-up	same-as=LineChartUpArrow
+Triangle	lucide	triangle
+Trophy	lucide	trophy
+Truck	lucide	truck
+TruckReturn	tabler	truck-return
+TubeLotion	lucide	tube-lotion
+TurkishLira	lucide	turkish-lira
+Turtle	lucide	turtle
+Tv	lucide	tv
+TvMinimalPlay	lucide	tv-minimal-play
+Type	lucide	type
+TypeAlt	tabler	typography
+Umbrella	lucide	umbrella
+Underline	lucide	underline
+UnderlineAlt	tabler	underline
+University	lucide	university
+Unlock	tabler	lock-open
+Upload	lucide	upload
+UploadAlt	lucide	arrow-up-to-line
+UploadCloud	lucide	cloud-upload
+UploadCloudAlt	tabler	cloud-upload
+UsbFlashDrive	tabler	device-usb
+User	lucide	user
+UserCheck	lucide	user-check
+UserCircle	lucide	circle-user
+UserDown	tabler	user-down
+UserEdit	tabler	user-edit
+UserMinus	lucide	user-minus
+UserPlus	lucide	user-plus
+UserUp	tabler	user-up
+UserX	lucide	user-x
+Users	lucide	users
+UsersGroup	tabler	users-group
+UsersMinus	tabler	users-minus
+UsersPlus	tabler	users-plus
+UsersRound	lucide	users-round
+Utensils	lucide	utensils
+UtensilsCrossed	lucide	utensils-crossed
+UtilityPole	lucide	utility-pole
+Vaccine	tabler	vaccine
+VacuumCleaner	tabler	vacuum-cleaner
+Van	lucide	van
+Variable	lucide	variable
+Vault	lucide	vault
+Vegan	lucide	vegan
+Video	lucide	video
+VideoRecorder	lucide	video	same-as=Video
+VideoRecorderOff	lucide	video-off
+Virus	tabler	virus
+Voicemail	lucide	voicemail
+Volleyball	lucide	volleyball
+VolumeMax	lucide	volume-2
+VolumeMin	lucide	volume
+VolumeX	lucide	volume-x
+Walk	tabler	walk
+Wallet	lucide	wallet
+WalletAlt	tabler	wallet
+WalletClassic	lucide	wallet-minimal	same-as=WalletMinimal
+WalletMinimal	lucide	wallet-minimal
+Warehouse	lucide	warehouse
+WarningSeal	lucide	badge-alert
+Wash	tabler	wash
+WashingMachine	lucide	washing-machine
+Watch	lucide	watch
+Waves	lucide	waves-horizontal
+Webcam	lucide	webcam
+Wheat	lucide	wheat
+Wheel	tabler	wheel
+Wheelchair	tabler	wheelchair
+Whistle	lucide	whistle
+Wifi	lucide	wifi
+WifiOff	lucide	wifi-off
+Wind	lucide	wind
+WindAlt	tabler	wind
+Wine	lucide	wine
+World	tabler	world
+Wrench	lucide	wrench
+X	lucide	x
+XCircle	lucide	circle-x	same-as=CrossCircle
+XClose	lucide	x	same-as=X
+XSquare	lucide	square-x
+Yarn	tabler	yarn
+Yoga	tabler	yoga
+Youtube	tabler	brand-youtube
+Zap	lucide	zap
+ZapOff	lucide	zap-off
+ZoomIn	lucide	zoom-in
+ZoomOut	lucide	zoom-out

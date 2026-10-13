@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "areca",
+  "displayName": "Areca",
+  "version": "1.0.0-SNAPSHOT",
+  "description": "Agent Skills for building Compose Multiplatform UI with the Areca design system and for Areca ViewModel presentation code",
+  "author": {
+    "name": "Voir",
+    "url": "https://github.com/VoirDev"
+  },
+  "homepage": "https://github.com/VoirDev/areca-ui#readme",
+  "repository": "https://github.com/VoirDev/areca-ui",
+  "license": "Apache-2.0",
+  "keywords": [
+    "kotlin",
+    "kotlin-multiplatform",
+    "compose-multiplatform",
+    "design-system",
+    "ui",
+    "viewmodel",
+    "agent-skills"
+  ]
+}

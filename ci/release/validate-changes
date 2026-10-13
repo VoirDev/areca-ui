@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+#
+# Checks that release preparation changed exactly `VERSION` and the `version` of
+# `.claude-plugin/plugin.json`, both to exactly RELEASE_VERSION.
+set -euo pipefail
+
+cd "$(dirname "$0")/../.."
+
+: "${RELEASE_VERSION:?RELEASE_VERSION is required.}"
+
+manifest=".claude-plugin/plugin.json"
+
+written="$(tr -d '[:space:]' < VERSION)"
+if [ "$written" != "$RELEASE_VERSION" ]; then
+  echo "VERSION holds '$written', not the resolved $RELEASE_VERSION." >&2
+  exit 1
+fi
+
+plugin_version="$(python3 -c 'import json, sys; print(json.load(open(sys.argv[1]))["version"])' "$manifest")"
+if [ "$plugin_version" != "$RELEASE_VERSION" ]; then
+  echo "$manifest states version '$plugin_version', not the resolved $RELEASE_VERSION." >&2
+  exit 1
+fi
+
+changed="$(git status --porcelain --untracked-files=all | cut -c4- | LC_ALL=C sort)"
+expected="$(printf '%s\n' "$manifest" VERSION | LC_ALL=C sort)"
+if [ "$changed" != "$expected" ]; then
+  echo "Release preparation must change only VERSION and $manifest; it changed:" >&2
+  echo "$changed" >&2
+  exit 1
+fi
+
+# The manifest changes in its `version` line only.
+if [ "$(git diff --numstat -- "$manifest" | cut -f1,2)" != "$(printf '1\t1')" ] ||
+  ! git diff --unified=0 -- "$manifest" | grep -q '^+  "version": '; then
+  echo "Release preparation must change only the version line of $manifest:" >&2
+  git diff -- "$manifest" >&2
+  exit 1
+fi
+
+git diff --check

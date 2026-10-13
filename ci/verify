@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+#
+# The repository's single verification entry point.
+#
+# CI calls this; run it locally before opening a pull request to get the same answer. Keep test
+# selection here rather than in workflow YAML, so the two can never disagree.
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+echo "==> Building and checking every module"
+# `build` runs assemble plus check for every target: compilation for JVM, Android and iOS, the unit
+# tests, and the verifications wired into `check` — each published module's public API against its
+# committed `api/` dump, the bundled icons, the playground's showcase conventions, including the
+# chrome contract of `playground/SHOWCASES.md` §5, and the Claude Code plugin manifest's version
+# against `VERSION`.
+./gradlew build --no-daemon
+
+echo "==> Validating that the published libraries still publish"
+# Catches publication-only breakage — a missing POM field or an unresolvable coordinate — before a
+# release PR does, without needing credentials.
+./gradlew publishToMavenLocal --no-daemon
+
+echo "==> Verification complete"

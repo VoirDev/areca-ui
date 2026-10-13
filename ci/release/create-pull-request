@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+#
+# Commits the version change, `VERSION` and the plugin manifest's `version`, on `release/vX.Y.Z`,
+# pushes it and opens the release pull request.
+#
+# Rerunnable: an existing branch for the same version is kept as it is, never force-pushed, and an
+# existing pull request is updated instead of duplicated. A branch holding another version fails.
+# RELEASE_TYPE is the bump, or `explicit` for a requested version.
+set -euo pipefail
+
+cd "$(dirname "$0")/../.."
+
+: "${RELEASE_VERSION:?RELEASE_VERSION is required.}"
+: "${RELEASE_TYPE:?RELEASE_TYPE is required.}"
+: "${DEFAULT_BRANCH:?DEFAULT_BRANCH is required.}"
+: "${RELEASE_BOT_NAME:?RELEASE_BOT_NAME is required.}"
+: "${RELEASE_BOT_EMAIL:?RELEASE_BOT_EMAIL is required.}"
+
+branch="release/v$RELEASE_VERSION"
+title="Release v$RELEASE_VERSION"
+
+git config user.name "$RELEASE_BOT_NAME"
+git config user.email "$RELEASE_BOT_EMAIL"
+
+if git ls-remote --exit-code --heads origin "refs/heads/$branch" > /dev/null; then
+  git fetch --no-tags origin "refs/heads/$branch"
+  existing="$(git show FETCH_HEAD:VERSION | tr -d '[:space:]')"
+  if [ "$existing" != "$RELEASE_VERSION" ]; then
+    echo "$branch exists but its VERSION is '$existing'. Resolve the branch by hand." >&2
+    exit 1
+  fi
+  existing_plugin="$(git show FETCH_HEAD:.claude-plugin/plugin.json |
+    python3 -c 'import json, sys; print(json.load(sys.stdin)["version"])')"
+  if [ "$existing_plugin" != "$RELEASE_VERSION" ]; then
+    echo "$branch exists but its plugin version is '$existing_plugin'. Resolve the branch by hand." >&2
+    exit 1
+  fi
+  echo "$branch already exists with VERSION $RELEASE_VERSION; it is left unchanged."
+else
+  git switch --create "$branch"
+  git add VERSION .claude-plugin/plugin.json
+  git commit --message "$title"
+  git push origin "refs/heads/$branch"
+fi
+
+if [ "$RELEASE_TYPE" = explicit ]; then
+  reason="the explicitly requested version"
+else
+  reason="a $RELEASE_TYPE bump"
+fi
+
+body="$(cat <<EOF
+Releases \`$RELEASE_VERSION\`, $reason.
+
+This pull request changes only \`VERSION\` and the \`version\` of \`.claude-plugin/plugin.json\`, which
+follows it. Verify checks the whole repository, and **Build release artifacts** builds, inspects and
+keeps every publication for Maven Central. Merging publishes those
+kept artifacts unchanged, after approval in the \`release\` environment, then tags \`v$RELEASE_VERSION\`
+and creates the GitHub Release.
+EOF
+)"
+
+pull="$(gh pr list --head "$branch" --state open --json number --jq '.[0].number // empty')"
+if [ -n "$pull" ]; then
+  gh pr edit "$pull" --title "$title" --body "$body"
+  echo "Updated pull request #$pull."
+else
+  gh pr create --base "$DEFAULT_BRANCH" --head "$branch" --title "$title" --body "$body"
+fi

@@ -1,0 +1,101 @@
+#!/usr/bin/env python3
+"""Checks a staged Maven repository before the release keeps it.
+
+Usage: check-staging STAGING_DIR VERSION COORDINATES_FILE
+
+Every component under `dev/voir/areca` must be at VERSION, carry a POM with its checksums, and,
+unless it is a POM-only component, carry the sources and javadoc jars Maven Central requires. Every
+platform variant a root component's Gradle module metadata points at must be staged too, so a
+publication can never be released without one of its targets.
+
+Writes the root components' coordinates, one `group:artifact:version` per line, to
+COORDINATES_FILE for the consumer check and the release notes.
+"""
+
+import json
+import pathlib
+import re
+import sys
+
+GROUP = "dev.voir.areca"
+CHECKSUMS = (".md5", ".sha1")
+
+
+def main() -> int:
+    staging, version, coordinates_file = pathlib.Path(sys.argv[1]), sys.argv[2], sys.argv[3]
+    if not re.fullmatch(r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)", version):
+        print(f"{version} is not a release MAJOR.MINOR.PATCH; a snapshot is never staged.", file=sys.stderr)
+        return 1
+    group_dir = staging / GROUP.replace(".", "/")
+    failures: list[str] = []
+    roots: list[str] = []
+
+    artifacts = sorted(path for path in group_dir.iterdir() if path.is_dir())
+    if not artifacts:
+        failures.append(f"{group_dir} holds no components.")
+
+    for artifact_dir in artifacts:
+        artifact = artifact_dir.name
+        versions = sorted(path.name for path in artifact_dir.iterdir() if path.is_dir())
+        if versions != [version]:
+            failures.append(f"{artifact} is staged at {versions}, not exactly [{version}].")
+            continue
+
+        version_dir = artifact_dir / version
+        prefix = f"{artifact}-{version}"
+        files = {path.name for path in version_dir.iterdir()}
+
+        for name in sorted(files):
+            if name.endswith(CHECKSUMS + (".sha256", ".sha512")):
+                continue
+            for checksum in CHECKSUMS:
+                if name + checksum not in files:
+                    failures.append(f"{artifact}: {name} has no {checksum} checksum.")
+
+        pom = f"{prefix}.pom"
+        if pom not in files:
+            failures.append(f"{artifact}: {pom} is missing.")
+            continue
+        packaging_is_pom = "<packaging>pom</packaging>" in (version_dir / pom).read_text()
+        if not packaging_is_pom:
+            for classifier in ("sources", "javadoc"):
+                if f"{prefix}-{classifier}.jar" not in files:
+                    failures.append(f"{artifact}: the {classifier} jar Maven Central requires is missing.")
+
+        module = version_dir / f"{prefix}.module"
+        if module.exists():
+            metadata = json.loads(module.read_text())
+            component = metadata["component"]
+            if component.get("version") != version:
+                failures.append(f"{artifact}: its module metadata states {component.get('version')}.")
+            for variant in metadata.get("variants", []):
+                target = variant.get("available-at")
+                if target is None:
+                    continue
+                if target.get("version") != version:
+                    failures.append(f"{artifact}: variant {variant['name']} points at {target}.")
+                if not (version_dir / target["url"]).resolve().exists():
+                    failures.append(f"{artifact}: variant {variant['name']} points at a missing {target['url']}.")
+            # A root component points at its platform variants; a platform component points back
+            # at its root through `component.url`.
+            if "url" not in component:
+                roots.append(f"{GROUP}:{artifact}:{version}")
+
+    if not roots:
+        failures.append("No root component was staged.")
+
+    if failures:
+        print(f"The staged release repository is not publishable ({len(failures)}):", file=sys.stderr)
+        for failure in failures:
+            print(f"  - {failure}", file=sys.stderr)
+        return 1
+
+    pathlib.Path(coordinates_file).write_text("".join(f"{coordinate}\n" for coordinate in roots))
+    print(f"Staged {len(artifacts)} components at {version}; {len(roots)} root components:")
+    for coordinate in roots:
+        print(f"  {coordinate}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

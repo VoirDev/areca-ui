@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+#
+# Builds every release publication once, checks and exercises it, and keeps it in
+# `release-artifacts/` for publication.
+#
+# Runs in the release pull request's Verify workflow, after `ci/verify` passed on the same commit.
+# Publication uploads exactly the files this leaves behind, unchanged and without rebuilding, so it
+# needs no credentials and must fail here on anything that would stop a release.
+#
+# Input: HEAD_REF, the release pull request's branch, which must be `release/v` + VERSION.
+# Output: release-artifacts/maven (the staged Maven layout), VERSION, COORDINATES and SHA256SUMS.
+set -euo pipefail
+
+cd "$(dirname "$0")/../.."
+root="$(pwd)"
+
+version="$(tr -d '[:space:]' < VERSION)"
+if [[ "$version" == *-SNAPSHOT ]]; then
+  echo "VERSION holds the development version $version; only a release is built." >&2
+  exit 1
+fi
+if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+  echo "VERSION holds '$version', which is not MAJOR.MINOR.PATCH." >&2
+  exit 1
+fi
+if [ "${HEAD_REF:-}" != "release/v$version" ]; then
+  echo "Branch '${HEAD_REF:-}' does not match VERSION $version; expected release/v$version." >&2
+  exit 1
+fi
+
+staging="$root/build/release-staging"
+output="$root/release-artifacts"
+rm -rf "$staging" "$output"
+mkdir -p "$output"
+
+echo "==> Staging every publication at $version"
+./gradlew publishAllPublicationsToReleaseStagingRepository -PreleaseVersion="$version" --no-daemon
+
+# Maven Central builds its own metadata; a bundle carries only the version directories.
+find "$staging" -name 'maven-metadata.xml*' -delete
+
+echo "==> Checking the staged coordinates and files"
+./ci/release/check-staging "$staging" "$version" "$output/COORDINATES"
+
+echo "==> Resolving the staged release as a Java 17 consumer"
+./gradlew --project-dir ci/release/consumer verifyReleaseConsumer --no-daemon \
+  -PstagingRepository="$staging" \
+  -PcoordinatesFile="$output/COORDINATES"
+
+echo "==> Keeping the release artifacts"
+cp -R "$staging" "$output/maven"
+printf '%s\n' "$version" > "$output/VERSION"
+(cd "$output" && find maven -type f | LC_ALL=C sort | xargs shasum -a 256 > SHA256SUMS)
+
+echo "Kept $(wc -l < "$output/SHA256SUMS" | tr -d ' ') files for $version."

@@ -1,0 +1,107 @@
+name: Verify
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - edited
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Build and check whole repository
+    # Evaluated on the job rather than the workflow: a skipped job still reports success, which keeps
+    # the required check resolvable. Removing the marker and editing the PR re-runs it. A release pull
+    # request is always verified, because publication ships what it built.
+    if: >-
+      startsWith(github.event.pull_request.head.ref, 'release/v') ||
+      !contains(github.event.pull_request.body || '', '[skip verify]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up JDK
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          # Matches the jvmToolchain(21) every module declares.
+          java-version: '21'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          # `basic` is the MIT-licensed GitHub Actions cache. The v6 default, `enhanced`, is
+          # proprietary and only unconditionally free for public repositories — switch to it
+          # deliberately, not by inheriting a default.
+          cache-provider: basic
+          # Only the default branch writes the cache, so a pull request cannot poison it.
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+
+      - name: Verify whole repository
+        run: ./ci/verify
+
+      - name: Upload test reports
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-reports
+          path: '**/build/reports/tests/**'
+          retention-days: 7
+          if-no-files-found: ignore
+
+  release-artifacts:
+    name: Build release artifacts
+    needs: verify
+    # Skipped, with a successful conclusion, on every pull request that is not a same-repository
+    # release pull request, so requiring this check blocks nothing else.
+    if: >-
+      startsWith(github.event.pull_request.head.ref, 'release/v') &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    # The publication includes the iOS targets, so the whole of it is built on macOS, in this one job.
+    runs-on: macos-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout release PR commit
+        uses: actions/checkout@v7
+
+      - name: Set up JDK
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-provider: basic
+          cache-read-only: true
+
+      - name: Build and exercise release artifacts
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: ./ci/release/build-artifacts
+
+      - name: Keep release artifacts for publication
+        uses: actions/upload-artifact@v7
+        with:
+          name: release-artifacts
+          path: release-artifacts/
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true

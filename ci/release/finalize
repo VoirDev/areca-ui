@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+#
+# Tags the published release and creates its GitHub Release, once every artifact is published.
+#
+# Usage: finalize ARTIFACTS_DIR
+#
+# ARTIFACTS_DIR is what `ci/release/build-artifacts` kept; its COORDINATES name the release in the
+# notes. Rerunnable: an existing tag is accepted only when it points at the pushed commit, and an
+# existing GitHub Release is left as it is.
+#
+# Environment: RELEASE_TAG, GH_TOKEN, and the GITHUB_REPOSITORY and GITHUB_SHA of the push.
+set -euo pipefail
+
+artifacts="${1:?Usage: finalize ARTIFACTS_DIR}"
+: "${RELEASE_TAG:?}" "${GITHUB_REPOSITORY:?}" "${GITHUB_SHA:?}"
+
+tagged="$(git ls-remote --tags origin "refs/tags/$RELEASE_TAG" | cut -f1)"
+if [ -z "$tagged" ]; then
+  gh api "repos/$GITHUB_REPOSITORY/git/refs" -f ref="refs/tags/$RELEASE_TAG" -f sha="$GITHUB_SHA" > /dev/null
+  echo "Tagged $GITHUB_SHA as $RELEASE_TAG."
+elif [ "$tagged" != "$GITHUB_SHA" ]; then
+  echo "$RELEASE_TAG already points at $tagged, not the released $GITHUB_SHA." >&2
+  exit 1
+else
+  echo "$RELEASE_TAG already points at $GITHUB_SHA."
+fi
+
+if gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+  echo "The GitHub Release $RELEASE_TAG already exists."
+  exit 0
+fi
+
+notes="$(mktemp)"
+{
+  echo "Published to Maven Central:"
+  echo
+  while IFS= read -r coordinate; do
+    echo "- \`$coordinate\`"
+  done < "$artifacts/COORDINATES"
+} > "$notes"
+
+gh release create "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --verify-tag \
+  --title "$RELEASE_TAG" --notes-file "$notes" --generate-notes
+echo "Created the GitHub Release $RELEASE_TAG."

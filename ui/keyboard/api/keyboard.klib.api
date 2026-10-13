@@ -1,0 +1,572 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <dev.voir.areca:keyboard>
+final enum class dev.voir.areca.keyboard.key/KeyOperation : kotlin/Enum<dev.voir.areca.keyboard.key/KeyOperation> { // dev.voir.areca.keyboard.key/KeyOperation|null[0]
+    enum entry Add // dev.voir.areca.keyboard.key/KeyOperation.Add|null[0]
+    enum entry Divide // dev.voir.areca.keyboard.key/KeyOperation.Divide|null[0]
+    enum entry Multiply // dev.voir.areca.keyboard.key/KeyOperation.Multiply|null[0]
+    enum entry Subtract // dev.voir.areca.keyboard.key/KeyOperation.Subtract|null[0]
+
+    final val entries // dev.voir.areca.keyboard.key/KeyOperation.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<dev.voir.areca.keyboard.key/KeyOperation> // dev.voir.areca.keyboard.key/KeyOperation.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): dev.voir.areca.keyboard.key/KeyOperation // dev.voir.areca.keyboard.key/KeyOperation.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<dev.voir.areca.keyboard.key/KeyOperation> // dev.voir.areca.keyboard.key/KeyOperation.values|values#static(){}[0]
+}
+
+final enum class dev.voir.areca.keyboard.key/KeyRole : kotlin/Enum<dev.voir.areca.keyboard.key/KeyRole> { // dev.voir.areca.keyboard.key/KeyRole|null[0]
+    enum entry Action // dev.voir.areca.keyboard.key/KeyRole.Action|null[0]
+    enum entry Caution // dev.voir.areca.keyboard.key/KeyRole.Caution|null[0]
+    enum entry Confirm // dev.voir.areca.keyboard.key/KeyRole.Confirm|null[0]
+    enum entry Destructive // dev.voir.areca.keyboard.key/KeyRole.Destructive|null[0]
+    enum entry Digit // dev.voir.areca.keyboard.key/KeyRole.Digit|null[0]
+    enum entry Ghost // dev.voir.areca.keyboard.key/KeyRole.Ghost|null[0]
+    enum entry Info // dev.voir.areca.keyboard.key/KeyRole.Info|null[0]
+
+    final val entries // dev.voir.areca.keyboard.key/KeyRole.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<dev.voir.areca.keyboard.key/KeyRole> // dev.voir.areca.keyboard.key/KeyRole.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): dev.voir.areca.keyboard.key/KeyRole // dev.voir.areca.keyboard.key/KeyRole.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<dev.voir.areca.keyboard.key/KeyRole> // dev.voir.areca.keyboard.key/KeyRole.values|values#static(){}[0]
+}
+
+sealed interface dev.voir.areca.keyboard.key/KeyAction { // dev.voir.areca.keyboard.key/KeyAction|null[0]
+    final class Custom : dev.voir.areca.keyboard.key/KeyAction { // dev.voir.areca.keyboard.key/KeyAction.Custom|null[0]
+        constructor <init>(kotlin/String) // dev.voir.areca.keyboard.key/KeyAction.Custom.<init>|<init>(kotlin.String){}[0]
+
+        final val id // dev.voir.areca.keyboard.key/KeyAction.Custom.id|{}id[0]
+            final fun <get-id>(): kotlin/String // dev.voir.areca.keyboard.key/KeyAction.Custom.id.<get-id>|<get-id>(){}[0]
+
+        final fun component1(): kotlin/String // dev.voir.areca.keyboard.key/KeyAction.Custom.component1|component1(){}[0]
+        final fun copy(kotlin/String = ...): dev.voir.areca.keyboard.key/KeyAction.Custom // dev.voir.areca.keyboard.key/KeyAction.Custom.copy|copy(kotlin.String){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.keyboard.key/KeyAction.Custom.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.keyboard.key/KeyAction.Custom.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.keyboard.key/KeyAction.Custom.toString|toString(){}[0]
+    }
+
+    final class Digit : dev.voir.areca.keyboard.key/KeyAction { // dev.voir.areca.keyboard.key/KeyAction.Digit|null[0]
+        constructor <init>(kotlin/Char) // dev.voir.areca.keyboard.key/KeyAction.Digit.<init>|<init>(kotlin.Char){}[0]
+
+        final val value // dev.voir.areca.keyboard.key/KeyAction.Digit.value|{}value[0]
+            final fun <get-value>(): kotlin/Char // dev.voir.areca.keyboard.key/KeyAction.Digit.value.<get-value>|<get-value>(){}[0]
+
+        final fun component1(): kotlin/Char // dev.voir.areca.keyboard.key/KeyAction.Digit.component1|component1(){}[0]
+        final fun copy(kotlin/Char = ...): dev.voir.areca.keyboard.key/KeyAction.Digit // dev.voir.areca.keyboard.key/KeyAction.Digit.copy|copy(kotlin.Char){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.keyboard.key/KeyAction.Digit.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.keyboard.key/KeyAction.Digit.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.keyboard.key/KeyAction.Digit.toString|toString(){}[0]
+    }
+
+    final class Insert : dev.voir.areca.keyboard.key/KeyAction { // dev.voir.areca.keyboard.key/KeyAction.Insert|null[0]
+        constructor <init>(kotlin/String) // dev.voir.areca.keyboard.key/KeyAction.Insert.<init>|<init>(kotlin.String){}[0]
+
+        final val text // dev.voir.areca.keyboard.key/KeyAction.Insert.text|{}text[0]
+            final fun <get-text>(): kotlin/String // dev.voir.areca.keyboard.key/KeyAction.Insert.text.<get-text>|<get-text>(){}[0]
+
+        final fun component1(): kotlin/String // dev.voir.areca.keyboard.key/KeyAction.Insert.component1|component1(){}[0]
+        final fun copy(kotlin/String = ...): dev.voir.areca.keyboard.key/KeyAction.Insert // dev.voir.areca.keyboard.key/KeyAction.Insert.copy|copy(kotlin.String){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.keyboard.key/KeyAction.Insert.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.keyboard.key/KeyAction.Insert.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.keyboard.key/KeyAction.Insert.toString|toString(){}[0]
+    }
+
+    final class Operation : dev.voir.areca.keyboard.key/KeyAction { // dev.voir.areca.keyboard.key/KeyAction.Operation|null[0]
+        constructor <init>(dev.voir.areca.keyboard.key/KeyOperation) // dev.voir.areca.keyboard.key/KeyAction.Operation.<init>|<init>(dev.voir.areca.keyboard.key.KeyOperation){}[0]
+
+        final val operation // dev.voir.areca.keyboard.key/KeyAction.Operation.operation|{}operation[0]
+            final fun <get-operation>(): dev.voir.areca.keyboard.key/KeyOperation // dev.voir.areca.keyboard.key/KeyAction.Operation.operation.<get-operation>|<get-operation>(){}[0]
+
+        final fun component1(): dev.voir.areca.keyboard.key/KeyOperation // dev.voir.areca.keyboard.key/KeyAction.Operation.component1|component1(){}[0]
+        final fun copy(dev.voir.areca.keyboard.key/KeyOperation = ...): dev.voir.areca.keyboard.key/KeyAction.Operation // dev.voir.areca.keyboard.key/KeyAction.Operation.copy|copy(dev.voir.areca.keyboard.key.KeyOperation){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.keyboard.key/KeyAction.Operation.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.keyboard.key/KeyAction.Operation.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.keyboard.key/KeyAction.Operation.toString|toString(){}[0]
+    }
+
+    final object Backspace : dev.voir.areca.keyboard.key/KeyAction { // dev.voir.areca.keyboard.key/KeyAction.Backspace|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.keyboard.key/KeyAction.Backspace.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.keyboard.key/KeyAction.Backspace.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.keyboard.key/KeyAction.Backspace.toString|toString(){}[0]
+    }
+
+    final object Clear : dev.voir.areca.keyboard.key/KeyAction { // dev.voir.areca.keyboard.key/KeyAction.Clear|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.keyboard.key/KeyAction.Clear.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.keyboard.key/KeyAction.Clear.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.keyboard.key/KeyAction.Clear.toString|toString(){}[0]
+    }
+
+    final object DecimalSeparator : dev.voir.areca.keyboard.key/KeyAction { // dev.voir.areca.keyboard.key/KeyAction.DecimalSeparator|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.keyboard.key/KeyAction.DecimalSeparator.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.keyboard.key/KeyAction.DecimalSeparator.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.keyboard.key/KeyAction.DecimalSeparator.toString|toString(){}[0]
+    }
+
+    final object Done : dev.voir.areca.keyboard.key/KeyAction { // dev.voir.areca.keyboard.key/KeyAction.Done|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.keyboard.key/KeyAction.Done.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.keyboard.key/KeyAction.Done.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.keyboard.key/KeyAction.Done.toString|toString(){}[0]
+    }
+
+    final object Evaluate : dev.voir.areca.keyboard.key/KeyAction { // dev.voir.areca.keyboard.key/KeyAction.Evaluate|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.keyboard.key/KeyAction.Evaluate.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.keyboard.key/KeyAction.Evaluate.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.keyboard.key/KeyAction.Evaluate.toString|toString(){}[0]
+    }
+
+    final object Hide : dev.voir.areca.keyboard.key/KeyAction { // dev.voir.areca.keyboard.key/KeyAction.Hide|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.keyboard.key/KeyAction.Hide.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.keyboard.key/KeyAction.Hide.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.keyboard.key/KeyAction.Hide.toString|toString(){}[0]
+    }
+}
+
+sealed interface dev.voir.areca.keyboard.key/KeyContent { // dev.voir.areca.keyboard.key/KeyContent|null[0]
+    final class Custom : dev.voir.areca.keyboard.key/KeyContent { // dev.voir.areca.keyboard.key/KeyContent.Custom|null[0]
+        constructor <init>(kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>) // dev.voir.areca.keyboard.key/KeyContent.Custom.<init>|<init>(kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>){}[0]
+
+        final val content // dev.voir.areca.keyboard.key/KeyContent.Custom.content|{}content[0]
+            final fun <get-content>(): kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit> // dev.voir.areca.keyboard.key/KeyContent.Custom.content.<get-content>|<get-content>(){}[0]
+
+        final fun component1(): kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit> // dev.voir.areca.keyboard.key/KeyContent.Custom.component1|component1(){}[0]
+        final fun copy(kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit> = ...): dev.voir.areca.keyboard.key/KeyContent.Custom // dev.voir.areca.keyboard.key/KeyContent.Custom.copy|copy(kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.keyboard.key/KeyContent.Custom.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.keyboard.key/KeyContent.Custom.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.keyboard.key/KeyContent.Custom.toString|toString(){}[0]
+    }
+
+    final class Icon : dev.voir.areca.keyboard.key/KeyContent { // dev.voir.areca.keyboard.key/KeyContent.Icon|null[0]
+        constructor <init>(androidx.compose.ui.graphics.vector/ImageVector) // dev.voir.areca.keyboard.key/KeyContent.Icon.<init>|<init>(androidx.compose.ui.graphics.vector.ImageVector){}[0]
+
+        final val image // dev.voir.areca.keyboard.key/KeyContent.Icon.image|{}image[0]
+            final fun <get-image>(): androidx.compose.ui.graphics.vector/ImageVector // dev.voir.areca.keyboard.key/KeyContent.Icon.image.<get-image>|<get-image>(){}[0]
+
+        final fun component1(): androidx.compose.ui.graphics.vector/ImageVector // dev.voir.areca.keyboard.key/KeyContent.Icon.component1|component1(){}[0]
+        final fun copy(androidx.compose.ui.graphics.vector/ImageVector = ...): dev.voir.areca.keyboard.key/KeyContent.Icon // dev.voir.areca.keyboard.key/KeyContent.Icon.copy|copy(androidx.compose.ui.graphics.vector.ImageVector){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.keyboard.key/KeyContent.Icon.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.keyboard.key/KeyContent.Icon.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.keyboard.key/KeyContent.Icon.toString|toString(){}[0]
+    }
+
+    final class Label : dev.voir.areca.keyboard.key/KeyContent { // dev.voir.areca.keyboard.key/KeyContent.Label|null[0]
+        constructor <init>(kotlin/String) // dev.voir.areca.keyboard.key/KeyContent.Label.<init>|<init>(kotlin.String){}[0]
+
+        final val text // dev.voir.areca.keyboard.key/KeyContent.Label.text|{}text[0]
+            final fun <get-text>(): kotlin/String // dev.voir.areca.keyboard.key/KeyContent.Label.text.<get-text>|<get-text>(){}[0]
+
+        final fun component1(): kotlin/String // dev.voir.areca.keyboard.key/KeyContent.Label.component1|component1(){}[0]
+        final fun copy(kotlin/String = ...): dev.voir.areca.keyboard.key/KeyContent.Label // dev.voir.areca.keyboard.key/KeyContent.Label.copy|copy(kotlin.String){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.keyboard.key/KeyContent.Label.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.keyboard.key/KeyContent.Label.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.keyboard.key/KeyContent.Label.toString|toString(){}[0]
+    }
+
+    final object Blank : dev.voir.areca.keyboard.key/KeyContent { // dev.voir.areca.keyboard.key/KeyContent.Blank|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.keyboard.key/KeyContent.Blank.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.keyboard.key/KeyContent.Blank.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.keyboard.key/KeyContent.Blank.toString|toString(){}[0]
+    }
+}
+
+final class dev.voir.areca.keyboard.key/Key { // dev.voir.areca.keyboard.key/Key|null[0]
+    constructor <init>(kotlin/String, dev.voir.areca.keyboard.key/KeyContent, kotlin/Function0<kotlin/Unit>, kotlin/Float = ..., kotlin/Boolean = ..., dev.voir.areca.keyboard.key/KeyRole = ..., dev.voir.areca.foundation.button/ButtonStyle? = ..., kotlin/String? = ...) // dev.voir.areca.keyboard.key/Key.<init>|<init>(kotlin.String;dev.voir.areca.keyboard.key.KeyContent;kotlin.Function0<kotlin.Unit>;kotlin.Float;kotlin.Boolean;dev.voir.areca.keyboard.key.KeyRole;dev.voir.areca.foundation.button.ButtonStyle?;kotlin.String?){}[0]
+
+    final val content // dev.voir.areca.keyboard.key/Key.content|{}content[0]
+        final fun <get-content>(): dev.voir.areca.keyboard.key/KeyContent // dev.voir.areca.keyboard.key/Key.content.<get-content>|<get-content>(){}[0]
+    final val contentDescription // dev.voir.areca.keyboard.key/Key.contentDescription|{}contentDescription[0]
+        final fun <get-contentDescription>(): kotlin/String? // dev.voir.areca.keyboard.key/Key.contentDescription.<get-contentDescription>|<get-contentDescription>(){}[0]
+    final val enabled // dev.voir.areca.keyboard.key/Key.enabled|{}enabled[0]
+        final fun <get-enabled>(): kotlin/Boolean // dev.voir.areca.keyboard.key/Key.enabled.<get-enabled>|<get-enabled>(){}[0]
+    final val id // dev.voir.areca.keyboard.key/Key.id|{}id[0]
+        final fun <get-id>(): kotlin/String // dev.voir.areca.keyboard.key/Key.id.<get-id>|<get-id>(){}[0]
+    final val onClick // dev.voir.areca.keyboard.key/Key.onClick|{}onClick[0]
+        final fun <get-onClick>(): kotlin/Function0<kotlin/Unit> // dev.voir.areca.keyboard.key/Key.onClick.<get-onClick>|<get-onClick>(){}[0]
+    final val role // dev.voir.areca.keyboard.key/Key.role|{}role[0]
+        final fun <get-role>(): dev.voir.areca.keyboard.key/KeyRole // dev.voir.areca.keyboard.key/Key.role.<get-role>|<get-role>(){}[0]
+    final val style // dev.voir.areca.keyboard.key/Key.style|{}style[0]
+        final fun <get-style>(): dev.voir.areca.foundation.button/ButtonStyle? // dev.voir.areca.keyboard.key/Key.style.<get-style>|<get-style>(){}[0]
+    final val weight // dev.voir.areca.keyboard.key/Key.weight|{}weight[0]
+        final fun <get-weight>(): kotlin/Float // dev.voir.areca.keyboard.key/Key.weight.<get-weight>|<get-weight>(){}[0]
+
+    final fun component1(): kotlin/String // dev.voir.areca.keyboard.key/Key.component1|component1(){}[0]
+    final fun component2(): dev.voir.areca.keyboard.key/KeyContent // dev.voir.areca.keyboard.key/Key.component2|component2(){}[0]
+    final fun component3(): kotlin/Function0<kotlin/Unit> // dev.voir.areca.keyboard.key/Key.component3|component3(){}[0]
+    final fun component4(): kotlin/Float // dev.voir.areca.keyboard.key/Key.component4|component4(){}[0]
+    final fun component5(): kotlin/Boolean // dev.voir.areca.keyboard.key/Key.component5|component5(){}[0]
+    final fun component6(): dev.voir.areca.keyboard.key/KeyRole // dev.voir.areca.keyboard.key/Key.component6|component6(){}[0]
+    final fun component7(): dev.voir.areca.foundation.button/ButtonStyle? // dev.voir.areca.keyboard.key/Key.component7|component7(){}[0]
+    final fun component8(): kotlin/String? // dev.voir.areca.keyboard.key/Key.component8|component8(){}[0]
+    final fun copy(kotlin/String = ..., dev.voir.areca.keyboard.key/KeyContent = ..., kotlin/Function0<kotlin/Unit> = ..., kotlin/Float = ..., kotlin/Boolean = ..., dev.voir.areca.keyboard.key/KeyRole = ..., dev.voir.areca.foundation.button/ButtonStyle? = ..., kotlin/String? = ...): dev.voir.areca.keyboard.key/Key // dev.voir.areca.keyboard.key/Key.copy|copy(kotlin.String;dev.voir.areca.keyboard.key.KeyContent;kotlin.Function0<kotlin.Unit>;kotlin.Float;kotlin.Boolean;dev.voir.areca.keyboard.key.KeyRole;dev.voir.areca.foundation.button.ButtonStyle?;kotlin.String?){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.keyboard.key/Key.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.keyboard.key/Key.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.keyboard.key/Key.toString|toString(){}[0]
+
+    final object Companion { // dev.voir.areca.keyboard.key/Key.Companion|null[0]
+        final fun blank(kotlin/String, kotlin/Float = ...): dev.voir.areca.keyboard.key/Key // dev.voir.areca.keyboard.key/Key.Companion.blank|blank(kotlin.String;kotlin.Float){}[0]
+        final fun custom(kotlin/String, kotlin/Float = ..., kotlin/Boolean = ..., dev.voir.areca.keyboard.key/KeyRole = ..., dev.voir.areca.foundation.button/ButtonStyle? = ..., kotlin/String? = ..., kotlin/Function0<kotlin/Unit>, kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>): dev.voir.areca.keyboard.key/Key // dev.voir.areca.keyboard.key/Key.Companion.custom|custom(kotlin.String;kotlin.Float;kotlin.Boolean;dev.voir.areca.keyboard.key.KeyRole;dev.voir.areca.foundation.button.ButtonStyle?;kotlin.String?;kotlin.Function0<kotlin.Unit>;kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>){}[0]
+        final fun icon(androidx.compose.ui.graphics.vector/ImageVector, kotlin/String, kotlin/String? = ..., kotlin/Float = ..., kotlin/Boolean = ..., dev.voir.areca.keyboard.key/KeyRole = ..., dev.voir.areca.foundation.button/ButtonStyle? = ..., kotlin/Function0<kotlin/Unit>): dev.voir.areca.keyboard.key/Key // dev.voir.areca.keyboard.key/Key.Companion.icon|icon(androidx.compose.ui.graphics.vector.ImageVector;kotlin.String;kotlin.String?;kotlin.Float;kotlin.Boolean;dev.voir.areca.keyboard.key.KeyRole;dev.voir.areca.foundation.button.ButtonStyle?;kotlin.Function0<kotlin.Unit>){}[0]
+        final fun text(kotlin/String, kotlin/String = ..., kotlin/Float = ..., kotlin/Boolean = ..., dev.voir.areca.keyboard.key/KeyRole = ..., dev.voir.areca.foundation.button/ButtonStyle? = ..., kotlin/String? = ..., kotlin/Function0<kotlin/Unit>): dev.voir.areca.keyboard.key/Key // dev.voir.areca.keyboard.key/Key.Companion.text|text(kotlin.String;kotlin.String;kotlin.Float;kotlin.Boolean;dev.voir.areca.keyboard.key.KeyRole;dev.voir.areca.foundation.button.ButtonStyle?;kotlin.String?;kotlin.Function0<kotlin.Unit>){}[0]
+    }
+}
+
+final class dev.voir.areca.keyboard.key/KeyRow { // dev.voir.areca.keyboard.key/KeyRow|null[0]
+    constructor <init>(kotlin.collections/List<dev.voir.areca.keyboard.key/Key>, androidx.compose.ui.unit/Dp? = ...) // dev.voir.areca.keyboard.key/KeyRow.<init>|<init>(kotlin.collections.List<dev.voir.areca.keyboard.key.Key>;androidx.compose.ui.unit.Dp?){}[0]
+    constructor <init>(kotlin/Array<out dev.voir.areca.keyboard.key/Key>...) // dev.voir.areca.keyboard.key/KeyRow.<init>|<init>(kotlin.Array<out|dev.voir.areca.keyboard.key.Key>...){}[0]
+
+    final val height // dev.voir.areca.keyboard.key/KeyRow.height|{}height[0]
+        final fun <get-height>(): androidx.compose.ui.unit/Dp? // dev.voir.areca.keyboard.key/KeyRow.height.<get-height>|<get-height>(){}[0]
+    final val keys // dev.voir.areca.keyboard.key/KeyRow.keys|{}keys[0]
+        final fun <get-keys>(): kotlin.collections/List<dev.voir.areca.keyboard.key/Key> // dev.voir.areca.keyboard.key/KeyRow.keys.<get-keys>|<get-keys>(){}[0]
+
+    final fun component1(): kotlin.collections/List<dev.voir.areca.keyboard.key/Key> // dev.voir.areca.keyboard.key/KeyRow.component1|component1(){}[0]
+    final fun component2(): androidx.compose.ui.unit/Dp? // dev.voir.areca.keyboard.key/KeyRow.component2|component2(){}[0]
+    final fun copy(kotlin.collections/List<dev.voir.areca.keyboard.key/Key> = ..., androidx.compose.ui.unit/Dp? = ...): dev.voir.areca.keyboard.key/KeyRow // dev.voir.areca.keyboard.key/KeyRow.copy|copy(kotlin.collections.List<dev.voir.areca.keyboard.key.Key>;androidx.compose.ui.unit.Dp?){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.keyboard.key/KeyRow.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.keyboard.key/KeyRow.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.keyboard.key/KeyRow.toString|toString(){}[0]
+}
+
+final class dev.voir.areca.keyboard.key/KeyStyle { // dev.voir.areca.keyboard.key/KeyStyle|null[0]
+    constructor <init>(dev.voir.areca.foundation.button/ButtonStyle, dev.voir.areca.foundation.button/ButtonStyle, dev.voir.areca.foundation.button/ButtonStyle, dev.voir.areca.foundation.button/ButtonStyle, dev.voir.areca.foundation.button/ButtonStyle, dev.voir.areca.foundation.button/ButtonStyle, dev.voir.areca.foundation.button/ButtonStyle) // dev.voir.areca.keyboard.key/KeyStyle.<init>|<init>(dev.voir.areca.foundation.button.ButtonStyle;dev.voir.areca.foundation.button.ButtonStyle;dev.voir.areca.foundation.button.ButtonStyle;dev.voir.areca.foundation.button.ButtonStyle;dev.voir.areca.foundation.button.ButtonStyle;dev.voir.areca.foundation.button.ButtonStyle;dev.voir.areca.foundation.button.ButtonStyle){}[0]
+
+    final val action // dev.voir.areca.keyboard.key/KeyStyle.action|{}action[0]
+        final fun <get-action>(): dev.voir.areca.foundation.button/ButtonStyle // dev.voir.areca.keyboard.key/KeyStyle.action.<get-action>|<get-action>(){}[0]
+    final val caution // dev.voir.areca.keyboard.key/KeyStyle.caution|{}caution[0]
+        final fun <get-caution>(): dev.voir.areca.foundation.button/ButtonStyle // dev.voir.areca.keyboard.key/KeyStyle.caution.<get-caution>|<get-caution>(){}[0]
+    final val confirm // dev.voir.areca.keyboard.key/KeyStyle.confirm|{}confirm[0]
+        final fun <get-confirm>(): dev.voir.areca.foundation.button/ButtonStyle // dev.voir.areca.keyboard.key/KeyStyle.confirm.<get-confirm>|<get-confirm>(){}[0]
+    final val destructive // dev.voir.areca.keyboard.key/KeyStyle.destructive|{}destructive[0]
+        final fun <get-destructive>(): dev.voir.areca.foundation.button/ButtonStyle // dev.voir.areca.keyboard.key/KeyStyle.destructive.<get-destructive>|<get-destructive>(){}[0]
+    final val digit // dev.voir.areca.keyboard.key/KeyStyle.digit|{}digit[0]
+        final fun <get-digit>(): dev.voir.areca.foundation.button/ButtonStyle // dev.voir.areca.keyboard.key/KeyStyle.digit.<get-digit>|<get-digit>(){}[0]
+    final val ghost // dev.voir.areca.keyboard.key/KeyStyle.ghost|{}ghost[0]
+        final fun <get-ghost>(): dev.voir.areca.foundation.button/ButtonStyle // dev.voir.areca.keyboard.key/KeyStyle.ghost.<get-ghost>|<get-ghost>(){}[0]
+    final val info // dev.voir.areca.keyboard.key/KeyStyle.info|{}info[0]
+        final fun <get-info>(): dev.voir.areca.foundation.button/ButtonStyle // dev.voir.areca.keyboard.key/KeyStyle.info.<get-info>|<get-info>(){}[0]
+
+    final fun component1(): dev.voir.areca.foundation.button/ButtonStyle // dev.voir.areca.keyboard.key/KeyStyle.component1|component1(){}[0]
+    final fun component2(): dev.voir.areca.foundation.button/ButtonStyle // dev.voir.areca.keyboard.key/KeyStyle.component2|component2(){}[0]
+    final fun component3(): dev.voir.areca.foundation.button/ButtonStyle // dev.voir.areca.keyboard.key/KeyStyle.component3|component3(){}[0]
+    final fun component4(): dev.voir.areca.foundation.button/ButtonStyle // dev.voir.areca.keyboard.key/KeyStyle.component4|component4(){}[0]
+    final fun component5(): dev.voir.areca.foundation.button/ButtonStyle // dev.voir.areca.keyboard.key/KeyStyle.component5|component5(){}[0]
+    final fun component6(): dev.voir.areca.foundation.button/ButtonStyle // dev.voir.areca.keyboard.key/KeyStyle.component6|component6(){}[0]
+    final fun component7(): dev.voir.areca.foundation.button/ButtonStyle // dev.voir.areca.keyboard.key/KeyStyle.component7|component7(){}[0]
+    final fun copy(dev.voir.areca.foundation.button/ButtonStyle = ..., dev.voir.areca.foundation.button/ButtonStyle = ..., dev.voir.areca.foundation.button/ButtonStyle = ..., dev.voir.areca.foundation.button/ButtonStyle = ..., dev.voir.areca.foundation.button/ButtonStyle = ..., dev.voir.areca.foundation.button/ButtonStyle = ..., dev.voir.areca.foundation.button/ButtonStyle = ...): dev.voir.areca.keyboard.key/KeyStyle // dev.voir.areca.keyboard.key/KeyStyle.copy|copy(dev.voir.areca.foundation.button.ButtonStyle;dev.voir.areca.foundation.button.ButtonStyle;dev.voir.areca.foundation.button.ButtonStyle;dev.voir.areca.foundation.button.ButtonStyle;dev.voir.areca.foundation.button.ButtonStyle;dev.voir.areca.foundation.button.ButtonStyle;dev.voir.areca.foundation.button.ButtonStyle){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.keyboard.key/KeyStyle.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.keyboard.key/KeyStyle.hashCode|hashCode(){}[0]
+    final fun of(dev.voir.areca.keyboard.key/KeyRole): dev.voir.areca.foundation.button/ButtonStyle // dev.voir.areca.keyboard.key/KeyStyle.of|of(dev.voir.areca.keyboard.key.KeyRole){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.keyboard.key/KeyStyle.toString|toString(){}[0]
+
+    final object Companion { // dev.voir.areca.keyboard.key/KeyStyle.Companion|null[0]
+        final val Default // dev.voir.areca.keyboard.key/KeyStyle.Companion.Default|{}Default[0]
+            final fun <get-Default>(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.keyboard.key/KeyStyle // dev.voir.areca.keyboard.key/KeyStyle.Companion.Default.<get-Default>|<get-Default>(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+
+        final fun default(androidx.compose.ui.graphics/Shape?, dev.voir.areca.foundation.button/ButtonStyle?, dev.voir.areca.foundation.button/ButtonStyle?, dev.voir.areca.foundation.button/ButtonStyle?, dev.voir.areca.foundation.button/ButtonStyle?, dev.voir.areca.foundation.button/ButtonStyle?, dev.voir.areca.foundation.button/ButtonStyle?, dev.voir.areca.foundation.button/ButtonStyle?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.voir.areca.keyboard.key/KeyStyle // dev.voir.areca.keyboard.key/KeyStyle.Companion.default|default(androidx.compose.ui.graphics.Shape?;dev.voir.areca.foundation.button.ButtonStyle?;dev.voir.areca.foundation.button.ButtonStyle?;dev.voir.areca.foundation.button.ButtonStyle?;dev.voir.areca.foundation.button.ButtonStyle?;dev.voir.areca.foundation.button.ButtonStyle?;dev.voir.areca.foundation.button.ButtonStyle?;dev.voir.areca.foundation.button.ButtonStyle?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+    }
+}
+
+final class dev.voir.areca.keyboard.key/KeyboardGrid { // dev.voir.areca.keyboard.key/KeyboardGrid|null[0]
+    constructor <init>(kotlin.collections/List<dev.voir.areca.keyboard.key/KeyRow>) // dev.voir.areca.keyboard.key/KeyboardGrid.<init>|<init>(kotlin.collections.List<dev.voir.areca.keyboard.key.KeyRow>){}[0]
+    constructor <init>(kotlin/Array<out dev.voir.areca.keyboard.key/KeyRow>...) // dev.voir.areca.keyboard.key/KeyboardGrid.<init>|<init>(kotlin.Array<out|dev.voir.areca.keyboard.key.KeyRow>...){}[0]
+
+    final val rows // dev.voir.areca.keyboard.key/KeyboardGrid.rows|{}rows[0]
+        final fun <get-rows>(): kotlin.collections/List<dev.voir.areca.keyboard.key/KeyRow> // dev.voir.areca.keyboard.key/KeyboardGrid.rows.<get-rows>|<get-rows>(){}[0]
+
+    final fun component1(): kotlin.collections/List<dev.voir.areca.keyboard.key/KeyRow> // dev.voir.areca.keyboard.key/KeyboardGrid.component1|component1(){}[0]
+    final fun copy(kotlin.collections/List<dev.voir.areca.keyboard.key/KeyRow> = ...): dev.voir.areca.keyboard.key/KeyboardGrid // dev.voir.areca.keyboard.key/KeyboardGrid.copy|copy(kotlin.collections.List<dev.voir.areca.keyboard.key.KeyRow>){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.keyboard.key/KeyboardGrid.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.keyboard.key/KeyboardGrid.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.keyboard.key/KeyboardGrid.toString|toString(){}[0]
+}
+
+final class dev.voir.areca.keyboard.key/KeyboardGridLabels { // dev.voir.areca.keyboard.key/KeyboardGridLabels|null[0]
+    constructor <init>(kotlin/String = ..., kotlin/String = ..., kotlin/String = ..., kotlin/String = ...) // dev.voir.areca.keyboard.key/KeyboardGridLabels.<init>|<init>(kotlin.String;kotlin.String;kotlin.String;kotlin.String){}[0]
+
+    final val backspace // dev.voir.areca.keyboard.key/KeyboardGridLabels.backspace|{}backspace[0]
+        final fun <get-backspace>(): kotlin/String // dev.voir.areca.keyboard.key/KeyboardGridLabels.backspace.<get-backspace>|<get-backspace>(){}[0]
+    final val clear // dev.voir.areca.keyboard.key/KeyboardGridLabels.clear|{}clear[0]
+        final fun <get-clear>(): kotlin/String // dev.voir.areca.keyboard.key/KeyboardGridLabels.clear.<get-clear>|<get-clear>(){}[0]
+    final val done // dev.voir.areca.keyboard.key/KeyboardGridLabels.done|{}done[0]
+        final fun <get-done>(): kotlin/String // dev.voir.areca.keyboard.key/KeyboardGridLabels.done.<get-done>|<get-done>(){}[0]
+    final val hide // dev.voir.areca.keyboard.key/KeyboardGridLabels.hide|{}hide[0]
+        final fun <get-hide>(): kotlin/String // dev.voir.areca.keyboard.key/KeyboardGridLabels.hide.<get-hide>|<get-hide>(){}[0]
+
+    final fun component1(): kotlin/String // dev.voir.areca.keyboard.key/KeyboardGridLabels.component1|component1(){}[0]
+    final fun component2(): kotlin/String // dev.voir.areca.keyboard.key/KeyboardGridLabels.component2|component2(){}[0]
+    final fun component3(): kotlin/String // dev.voir.areca.keyboard.key/KeyboardGridLabels.component3|component3(){}[0]
+    final fun component4(): kotlin/String // dev.voir.areca.keyboard.key/KeyboardGridLabels.component4|component4(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/String = ..., kotlin/String = ..., kotlin/String = ...): dev.voir.areca.keyboard.key/KeyboardGridLabels // dev.voir.areca.keyboard.key/KeyboardGridLabels.copy|copy(kotlin.String;kotlin.String;kotlin.String;kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.keyboard.key/KeyboardGridLabels.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.keyboard.key/KeyboardGridLabels.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.keyboard.key/KeyboardGridLabels.toString|toString(){}[0]
+}
+
+final class dev.voir.areca.keyboard.layout/KeyboardSize { // dev.voir.areca.keyboard.layout/KeyboardSize|null[0]
+    constructor <init>(androidx.compose.foundation.layout/PaddingValues, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, dev.voir.areca.foundation.button/ButtonSize, kotlin/Int = ...) // dev.voir.areca.keyboard.layout/KeyboardSize.<init>|<init>(androidx.compose.foundation.layout.PaddingValues;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;dev.voir.areca.foundation.button.ButtonSize;kotlin.Int){}[0]
+
+    final val footerGap // dev.voir.areca.keyboard.layout/KeyboardSize.footerGap|{}footerGap[0]
+        final fun <get-footerGap>(): androidx.compose.ui.unit/Dp // dev.voir.areca.keyboard.layout/KeyboardSize.footerGap.<get-footerGap>|<get-footerGap>(){}[0]
+    final val headerGap // dev.voir.areca.keyboard.layout/KeyboardSize.headerGap|{}headerGap[0]
+        final fun <get-headerGap>(): androidx.compose.ui.unit/Dp // dev.voir.areca.keyboard.layout/KeyboardSize.headerGap.<get-headerGap>|<get-headerGap>(){}[0]
+    final val key // dev.voir.areca.keyboard.layout/KeyboardSize.key|{}key[0]
+        final fun <get-key>(): dev.voir.areca.foundation.button/ButtonSize // dev.voir.areca.keyboard.layout/KeyboardSize.key.<get-key>|<get-key>(){}[0]
+    final val keyGap // dev.voir.areca.keyboard.layout/KeyboardSize.keyGap|{}keyGap[0]
+        final fun <get-keyGap>(): androidx.compose.ui.unit/Dp // dev.voir.areca.keyboard.layout/KeyboardSize.keyGap.<get-keyGap>|<get-keyGap>(){}[0]
+    final val keyHeight // dev.voir.areca.keyboard.layout/KeyboardSize.keyHeight|{}keyHeight[0]
+        final fun <get-keyHeight>(): androidx.compose.ui.unit/Dp // dev.voir.areca.keyboard.layout/KeyboardSize.keyHeight.<get-keyHeight>|<get-keyHeight>(){}[0]
+    final val keyLabelMaxLines // dev.voir.areca.keyboard.layout/KeyboardSize.keyLabelMaxLines|{}keyLabelMaxLines[0]
+        final fun <get-keyLabelMaxLines>(): kotlin/Int // dev.voir.areca.keyboard.layout/KeyboardSize.keyLabelMaxLines.<get-keyLabelMaxLines>|<get-keyLabelMaxLines>(){}[0]
+    final val padding // dev.voir.areca.keyboard.layout/KeyboardSize.padding|{}padding[0]
+        final fun <get-padding>(): androidx.compose.foundation.layout/PaddingValues // dev.voir.areca.keyboard.layout/KeyboardSize.padding.<get-padding>|<get-padding>(){}[0]
+    final val rowGap // dev.voir.areca.keyboard.layout/KeyboardSize.rowGap|{}rowGap[0]
+        final fun <get-rowGap>(): androidx.compose.ui.unit/Dp // dev.voir.areca.keyboard.layout/KeyboardSize.rowGap.<get-rowGap>|<get-rowGap>(){}[0]
+
+    final fun component1(): androidx.compose.foundation.layout/PaddingValues // dev.voir.areca.keyboard.layout/KeyboardSize.component1|component1(){}[0]
+    final fun component2(): androidx.compose.ui.unit/Dp // dev.voir.areca.keyboard.layout/KeyboardSize.component2|component2(){}[0]
+    final fun component3(): androidx.compose.ui.unit/Dp // dev.voir.areca.keyboard.layout/KeyboardSize.component3|component3(){}[0]
+    final fun component4(): androidx.compose.ui.unit/Dp // dev.voir.areca.keyboard.layout/KeyboardSize.component4|component4(){}[0]
+    final fun component5(): androidx.compose.ui.unit/Dp // dev.voir.areca.keyboard.layout/KeyboardSize.component5|component5(){}[0]
+    final fun component6(): androidx.compose.ui.unit/Dp // dev.voir.areca.keyboard.layout/KeyboardSize.component6|component6(){}[0]
+    final fun component7(): dev.voir.areca.foundation.button/ButtonSize // dev.voir.areca.keyboard.layout/KeyboardSize.component7|component7(){}[0]
+    final fun component8(): kotlin/Int // dev.voir.areca.keyboard.layout/KeyboardSize.component8|component8(){}[0]
+    final fun copy(androidx.compose.foundation.layout/PaddingValues = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ..., dev.voir.areca.foundation.button/ButtonSize = ..., kotlin/Int = ...): dev.voir.areca.keyboard.layout/KeyboardSize // dev.voir.areca.keyboard.layout/KeyboardSize.copy|copy(androidx.compose.foundation.layout.PaddingValues;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;dev.voir.areca.foundation.button.ButtonSize;kotlin.Int){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.keyboard.layout/KeyboardSize.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.keyboard.layout/KeyboardSize.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.keyboard.layout/KeyboardSize.toString|toString(){}[0]
+
+    final object Companion { // dev.voir.areca.keyboard.layout/KeyboardSize.Companion|null[0]
+        final val Compact // dev.voir.areca.keyboard.layout/KeyboardSize.Companion.Compact|{}Compact[0]
+            final fun <get-Compact>(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.keyboard.layout/KeyboardSize // dev.voir.areca.keyboard.layout/KeyboardSize.Companion.Compact.<get-Compact>|<get-Compact>(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+        final val Default // dev.voir.areca.keyboard.layout/KeyboardSize.Companion.Default|{}Default[0]
+            final fun <get-Default>(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.keyboard.layout/KeyboardSize // dev.voir.areca.keyboard.layout/KeyboardSize.Companion.Default.<get-Default>|<get-Default>(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+
+        final fun default(androidx.compose.foundation.layout/PaddingValues?, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, dev.voir.areca.foundation.button/ButtonSize?, kotlin/Int, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.voir.areca.keyboard.layout/KeyboardSize // dev.voir.areca.keyboard.layout/KeyboardSize.Companion.default|default(androidx.compose.foundation.layout.PaddingValues?;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;dev.voir.areca.foundation.button.ButtonSize?;kotlin.Int;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+    }
+}
+
+final class dev.voir.areca.keyboard.layout/KeyboardStyle { // dev.voir.areca.keyboard.layout/KeyboardStyle|null[0]
+    constructor <init>(androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.unit/Dp, androidx.compose.ui.graphics/Shape, androidx.compose.ui.unit/Dp, androidx.compose.ui.graphics/Color = ..., dev.voir.areca.keyboard.key/KeyStyle) // dev.voir.areca.keyboard.layout/KeyboardStyle.<init>|<init>(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.unit.Dp;androidx.compose.ui.graphics.Shape;androidx.compose.ui.unit.Dp;androidx.compose.ui.graphics.Color;dev.voir.areca.keyboard.key.KeyStyle){}[0]
+
+    final val bg // dev.voir.areca.keyboard.layout/KeyboardStyle.bg|{}bg[0]
+        final fun <get-bg>(): androidx.compose.ui.graphics/Color // dev.voir.areca.keyboard.layout/KeyboardStyle.bg.<get-bg>|<get-bg>(){}[0]
+    final val border // dev.voir.areca.keyboard.layout/KeyboardStyle.border|{}border[0]
+        final fun <get-border>(): androidx.compose.ui.graphics/Color // dev.voir.areca.keyboard.layout/KeyboardStyle.border.<get-border>|<get-border>(){}[0]
+    final val borderWidth // dev.voir.areca.keyboard.layout/KeyboardStyle.borderWidth|{}borderWidth[0]
+        final fun <get-borderWidth>(): androidx.compose.ui.unit/Dp // dev.voir.areca.keyboard.layout/KeyboardStyle.borderWidth.<get-borderWidth>|<get-borderWidth>(){}[0]
+    final val content // dev.voir.areca.keyboard.layout/KeyboardStyle.content|{}content[0]
+        final fun <get-content>(): androidx.compose.ui.graphics/Color // dev.voir.areca.keyboard.layout/KeyboardStyle.content.<get-content>|<get-content>(){}[0]
+    final val divider // dev.voir.areca.keyboard.layout/KeyboardStyle.divider|{}divider[0]
+        final fun <get-divider>(): androidx.compose.ui.graphics/Color // dev.voir.areca.keyboard.layout/KeyboardStyle.divider.<get-divider>|<get-divider>(){}[0]
+    final val elevation // dev.voir.areca.keyboard.layout/KeyboardStyle.elevation|{}elevation[0]
+        final fun <get-elevation>(): androidx.compose.ui.unit/Dp // dev.voir.areca.keyboard.layout/KeyboardStyle.elevation.<get-elevation>|<get-elevation>(){}[0]
+    final val keys // dev.voir.areca.keyboard.layout/KeyboardStyle.keys|{}keys[0]
+        final fun <get-keys>(): dev.voir.areca.keyboard.key/KeyStyle // dev.voir.areca.keyboard.layout/KeyboardStyle.keys.<get-keys>|<get-keys>(){}[0]
+    final val shape // dev.voir.areca.keyboard.layout/KeyboardStyle.shape|{}shape[0]
+        final fun <get-shape>(): androidx.compose.ui.graphics/Shape // dev.voir.areca.keyboard.layout/KeyboardStyle.shape.<get-shape>|<get-shape>(){}[0]
+
+    final fun component1(): androidx.compose.ui.graphics/Color // dev.voir.areca.keyboard.layout/KeyboardStyle.component1|component1(){}[0]
+    final fun component2(): androidx.compose.ui.graphics/Color // dev.voir.areca.keyboard.layout/KeyboardStyle.component2|component2(){}[0]
+    final fun component3(): androidx.compose.ui.graphics/Color // dev.voir.areca.keyboard.layout/KeyboardStyle.component3|component3(){}[0]
+    final fun component4(): androidx.compose.ui.unit/Dp // dev.voir.areca.keyboard.layout/KeyboardStyle.component4|component4(){}[0]
+    final fun component5(): androidx.compose.ui.graphics/Shape // dev.voir.areca.keyboard.layout/KeyboardStyle.component5|component5(){}[0]
+    final fun component6(): androidx.compose.ui.unit/Dp // dev.voir.areca.keyboard.layout/KeyboardStyle.component6|component6(){}[0]
+    final fun component7(): androidx.compose.ui.graphics/Color // dev.voir.areca.keyboard.layout/KeyboardStyle.component7|component7(){}[0]
+    final fun component8(): dev.voir.areca.keyboard.key/KeyStyle // dev.voir.areca.keyboard.layout/KeyboardStyle.component8|component8(){}[0]
+    final fun copy(androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.graphics/Shape = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.graphics/Color = ..., dev.voir.areca.keyboard.key/KeyStyle = ...): dev.voir.areca.keyboard.layout/KeyboardStyle // dev.voir.areca.keyboard.layout/KeyboardStyle.copy|copy(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.unit.Dp;androidx.compose.ui.graphics.Shape;androidx.compose.ui.unit.Dp;androidx.compose.ui.graphics.Color;dev.voir.areca.keyboard.key.KeyStyle){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.keyboard.layout/KeyboardStyle.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.keyboard.layout/KeyboardStyle.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.keyboard.layout/KeyboardStyle.toString|toString(){}[0]
+
+    final object Companion { // dev.voir.areca.keyboard.layout/KeyboardStyle.Companion|null[0]
+        final val Default // dev.voir.areca.keyboard.layout/KeyboardStyle.Companion.Default|{}Default[0]
+            final fun <get-Default>(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.keyboard.layout/KeyboardStyle // dev.voir.areca.keyboard.layout/KeyboardStyle.Companion.Default.<get-Default>|<get-Default>(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+
+        final fun default(androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.unit/Dp, androidx.compose.ui.graphics/Shape?, androidx.compose.ui.unit/Dp, androidx.compose.ui.graphics/Color, dev.voir.areca.keyboard.key/KeyStyle?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.voir.areca.keyboard.layout/KeyboardStyle // dev.voir.areca.keyboard.layout/KeyboardStyle.Companion.default|default(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.unit.Dp;androidx.compose.ui.graphics.Shape?;androidx.compose.ui.unit.Dp;androidx.compose.ui.graphics.Color;dev.voir.areca.keyboard.key.KeyStyle?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+        final fun flat(androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, dev.voir.areca.keyboard.key/KeyStyle?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.voir.areca.keyboard.layout/KeyboardStyle // dev.voir.areca.keyboard.layout/KeyboardStyle.Companion.flat|flat(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;dev.voir.areca.keyboard.key.KeyStyle?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+    }
+}
+
+final class dev.voir.areca.keyboard/KeyboardAnimation { // dev.voir.areca.keyboard/KeyboardAnimation|null[0]
+    constructor <init>(androidx.compose.animation/EnterTransition, androidx.compose.animation/ExitTransition, androidx.compose.animation/EnterTransition, androidx.compose.animation/ExitTransition, androidx.compose.animation.core/FiniteAnimationSpec<androidx.compose.ui.unit/Dp>, androidx.compose.animation.core/FiniteAnimationSpec<androidx.compose.ui.unit/Dp>) // dev.voir.areca.keyboard/KeyboardAnimation.<init>|<init>(androidx.compose.animation.EnterTransition;androidx.compose.animation.ExitTransition;androidx.compose.animation.EnterTransition;androidx.compose.animation.ExitTransition;androidx.compose.animation.core.FiniteAnimationSpec<androidx.compose.ui.unit.Dp>;androidx.compose.animation.core.FiniteAnimationSpec<androidx.compose.ui.unit.Dp>){}[0]
+
+    final val enter // dev.voir.areca.keyboard/KeyboardAnimation.enter|{}enter[0]
+        final fun <get-enter>(): androidx.compose.animation/EnterTransition // dev.voir.areca.keyboard/KeyboardAnimation.enter.<get-enter>|<get-enter>(){}[0]
+    final val exit // dev.voir.areca.keyboard/KeyboardAnimation.exit|{}exit[0]
+        final fun <get-exit>(): androidx.compose.animation/ExitTransition // dev.voir.areca.keyboard/KeyboardAnimation.exit.<get-exit>|<get-exit>(){}[0]
+    final val insetEnter // dev.voir.areca.keyboard/KeyboardAnimation.insetEnter|{}insetEnter[0]
+        final fun <get-insetEnter>(): androidx.compose.animation.core/FiniteAnimationSpec<androidx.compose.ui.unit/Dp> // dev.voir.areca.keyboard/KeyboardAnimation.insetEnter.<get-insetEnter>|<get-insetEnter>(){}[0]
+    final val insetExit // dev.voir.areca.keyboard/KeyboardAnimation.insetExit|{}insetExit[0]
+        final fun <get-insetExit>(): androidx.compose.animation.core/FiniteAnimationSpec<androidx.compose.ui.unit/Dp> // dev.voir.areca.keyboard/KeyboardAnimation.insetExit.<get-insetExit>|<get-insetExit>(){}[0]
+    final val scrimEnter // dev.voir.areca.keyboard/KeyboardAnimation.scrimEnter|{}scrimEnter[0]
+        final fun <get-scrimEnter>(): androidx.compose.animation/EnterTransition // dev.voir.areca.keyboard/KeyboardAnimation.scrimEnter.<get-scrimEnter>|<get-scrimEnter>(){}[0]
+    final val scrimExit // dev.voir.areca.keyboard/KeyboardAnimation.scrimExit|{}scrimExit[0]
+        final fun <get-scrimExit>(): androidx.compose.animation/ExitTransition // dev.voir.areca.keyboard/KeyboardAnimation.scrimExit.<get-scrimExit>|<get-scrimExit>(){}[0]
+
+    final fun component1(): androidx.compose.animation/EnterTransition // dev.voir.areca.keyboard/KeyboardAnimation.component1|component1(){}[0]
+    final fun component2(): androidx.compose.animation/ExitTransition // dev.voir.areca.keyboard/KeyboardAnimation.component2|component2(){}[0]
+    final fun component3(): androidx.compose.animation/EnterTransition // dev.voir.areca.keyboard/KeyboardAnimation.component3|component3(){}[0]
+    final fun component4(): androidx.compose.animation/ExitTransition // dev.voir.areca.keyboard/KeyboardAnimation.component4|component4(){}[0]
+    final fun component5(): androidx.compose.animation.core/FiniteAnimationSpec<androidx.compose.ui.unit/Dp> // dev.voir.areca.keyboard/KeyboardAnimation.component5|component5(){}[0]
+    final fun component6(): androidx.compose.animation.core/FiniteAnimationSpec<androidx.compose.ui.unit/Dp> // dev.voir.areca.keyboard/KeyboardAnimation.component6|component6(){}[0]
+    final fun copy(androidx.compose.animation/EnterTransition = ..., androidx.compose.animation/ExitTransition = ..., androidx.compose.animation/EnterTransition = ..., androidx.compose.animation/ExitTransition = ..., androidx.compose.animation.core/FiniteAnimationSpec<androidx.compose.ui.unit/Dp> = ..., androidx.compose.animation.core/FiniteAnimationSpec<androidx.compose.ui.unit/Dp> = ...): dev.voir.areca.keyboard/KeyboardAnimation // dev.voir.areca.keyboard/KeyboardAnimation.copy|copy(androidx.compose.animation.EnterTransition;androidx.compose.animation.ExitTransition;androidx.compose.animation.EnterTransition;androidx.compose.animation.ExitTransition;androidx.compose.animation.core.FiniteAnimationSpec<androidx.compose.ui.unit.Dp>;androidx.compose.animation.core.FiniteAnimationSpec<androidx.compose.ui.unit.Dp>){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.keyboard/KeyboardAnimation.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.keyboard/KeyboardAnimation.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.keyboard/KeyboardAnimation.toString|toString(){}[0]
+
+    final object Companion { // dev.voir.areca.keyboard/KeyboardAnimation.Companion|null[0]
+        final val Default // dev.voir.areca.keyboard/KeyboardAnimation.Companion.Default|{}Default[0]
+            final fun <get-Default>(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.keyboard/KeyboardAnimation // dev.voir.areca.keyboard/KeyboardAnimation.Companion.Default.<get-Default>|<get-Default>(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+
+        final fun default(kotlin.time/Duration, androidx.compose.animation.core/Easing?, androidx.compose.animation.core/Easing?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.voir.areca.keyboard/KeyboardAnimation // dev.voir.areca.keyboard/KeyboardAnimation.Companion.default|default(kotlin.time.Duration;androidx.compose.animation.core.Easing?;androidx.compose.animation.core.Easing?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+        final fun default(kotlin.time/Duration?, androidx.compose.animation.core/Easing?, androidx.compose.animation.core/Easing?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.voir.areca.keyboard/KeyboardAnimation // dev.voir.areca.keyboard/KeyboardAnimation.Companion.default|default(kotlin.time.Duration?;androidx.compose.animation.core.Easing?;androidx.compose.animation.core.Easing?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+    }
+}
+
+final class dev.voir.areca.keyboard/KeyboardController { // dev.voir.areca.keyboard/KeyboardController|null[0]
+    constructor <init>() // dev.voir.areca.keyboard/KeyboardController.<init>|<init>(){}[0]
+
+    final var isVisible // dev.voir.areca.keyboard/KeyboardController.isVisible|{}isVisible[0]
+        final fun <get-isVisible>(): kotlin/Boolean // dev.voir.areca.keyboard/KeyboardController.isVisible.<get-isVisible>|<get-isVisible>(){}[0]
+    final var target // dev.voir.areca.keyboard/KeyboardController.target|{}target[0]
+        final fun <get-target>(): dev.voir.areca.keyboard/KeyboardTarget? // dev.voir.areca.keyboard/KeyboardController.target.<get-target>|<get-target>(){}[0]
+
+    final fun close() // dev.voir.areca.keyboard/KeyboardController.close|close(){}[0]
+    final fun open(dev.voir.areca.keyboard/KeyboardTarget? = ..., kotlin/Boolean = ..., kotlin/Boolean = ...) // dev.voir.areca.keyboard/KeyboardController.open|open(dev.voir.areca.keyboard.KeyboardTarget?;kotlin.Boolean;kotlin.Boolean){}[0]
+    final fun toggle(dev.voir.areca.keyboard/KeyboardTarget? = ..., kotlin/Boolean = ..., kotlin/Boolean = ...) // dev.voir.areca.keyboard/KeyboardController.toggle|toggle(dev.voir.areca.keyboard.KeyboardTarget?;kotlin.Boolean;kotlin.Boolean){}[0]
+
+    final object Companion { // dev.voir.areca.keyboard/KeyboardController.Companion|null[0]
+        final val Saver // dev.voir.areca.keyboard/KeyboardController.Companion.Saver|{}Saver[0]
+            final fun <get-Saver>(): androidx.compose.runtime.saveable/Saver<dev.voir.areca.keyboard/KeyboardController, kotlin/Any> // dev.voir.areca.keyboard/KeyboardController.Companion.Saver.<get-Saver>|<get-Saver>(){}[0]
+    }
+}
+
+final class dev.voir.areca.keyboard/KeyboardScrim { // dev.voir.areca.keyboard/KeyboardScrim|null[0]
+    constructor <init>(androidx.compose.ui.graphics/Color, kotlin/Boolean = ..., kotlin/String = ...) // dev.voir.areca.keyboard/KeyboardScrim.<init>|<init>(androidx.compose.ui.graphics.Color;kotlin.Boolean;kotlin.String){}[0]
+
+    final val color // dev.voir.areca.keyboard/KeyboardScrim.color|{}color[0]
+        final fun <get-color>(): androidx.compose.ui.graphics/Color // dev.voir.areca.keyboard/KeyboardScrim.color.<get-color>|<get-color>(){}[0]
+    final val dismissLabel // dev.voir.areca.keyboard/KeyboardScrim.dismissLabel|{}dismissLabel[0]
+        final fun <get-dismissLabel>(): kotlin/String // dev.voir.areca.keyboard/KeyboardScrim.dismissLabel.<get-dismissLabel>|<get-dismissLabel>(){}[0]
+    final val dismissOnTap // dev.voir.areca.keyboard/KeyboardScrim.dismissOnTap|{}dismissOnTap[0]
+        final fun <get-dismissOnTap>(): kotlin/Boolean // dev.voir.areca.keyboard/KeyboardScrim.dismissOnTap.<get-dismissOnTap>|<get-dismissOnTap>(){}[0]
+
+    final fun component1(): androidx.compose.ui.graphics/Color // dev.voir.areca.keyboard/KeyboardScrim.component1|component1(){}[0]
+    final fun component2(): kotlin/Boolean // dev.voir.areca.keyboard/KeyboardScrim.component2|component2(){}[0]
+    final fun component3(): kotlin/String // dev.voir.areca.keyboard/KeyboardScrim.component3|component3(){}[0]
+    final fun copy(androidx.compose.ui.graphics/Color = ..., kotlin/Boolean = ..., kotlin/String = ...): dev.voir.areca.keyboard/KeyboardScrim // dev.voir.areca.keyboard/KeyboardScrim.copy|copy(androidx.compose.ui.graphics.Color;kotlin.Boolean;kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.keyboard/KeyboardScrim.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.keyboard/KeyboardScrim.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.keyboard/KeyboardScrim.toString|toString(){}[0]
+
+    final object Companion { // dev.voir.areca.keyboard/KeyboardScrim.Companion|null[0]
+        final val Default // dev.voir.areca.keyboard/KeyboardScrim.Companion.Default|{}Default[0]
+            final fun <get-Default>(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.keyboard/KeyboardScrim // dev.voir.areca.keyboard/KeyboardScrim.Companion.Default.<get-Default>|<get-Default>(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+
+        final fun default(androidx.compose.ui.graphics/Color, kotlin/Boolean, kotlin/String?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.voir.areca.keyboard/KeyboardScrim // dev.voir.areca.keyboard/KeyboardScrim.Companion.default|default(androidx.compose.ui.graphics.Color;kotlin.Boolean;kotlin.String?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+    }
+}
+
+final class dev.voir.areca.keyboard/KeyboardTarget { // dev.voir.areca.keyboard/KeyboardTarget|null[0]
+    constructor <init>(kotlin/Any? = ..., androidx.compose.ui.focus/FocusRequester, androidx.compose.foundation.relocation/BringIntoViewRequester) // dev.voir.areca.keyboard/KeyboardTarget.<init>|<init>(kotlin.Any?;androidx.compose.ui.focus.FocusRequester;androidx.compose.foundation.relocation.BringIntoViewRequester){}[0]
+
+    final val bringIntoViewRequester // dev.voir.areca.keyboard/KeyboardTarget.bringIntoViewRequester|{}bringIntoViewRequester[0]
+        final fun <get-bringIntoViewRequester>(): androidx.compose.foundation.relocation/BringIntoViewRequester // dev.voir.areca.keyboard/KeyboardTarget.bringIntoViewRequester.<get-bringIntoViewRequester>|<get-bringIntoViewRequester>(){}[0]
+    final val focusRequester // dev.voir.areca.keyboard/KeyboardTarget.focusRequester|{}focusRequester[0]
+        final fun <get-focusRequester>(): androidx.compose.ui.focus/FocusRequester // dev.voir.areca.keyboard/KeyboardTarget.focusRequester.<get-focusRequester>|<get-focusRequester>(){}[0]
+    final val key // dev.voir.areca.keyboard/KeyboardTarget.key|{}key[0]
+        final fun <get-key>(): kotlin/Any? // dev.voir.areca.keyboard/KeyboardTarget.key.<get-key>|<get-key>(){}[0]
+
+    final fun component1(): kotlin/Any? // dev.voir.areca.keyboard/KeyboardTarget.component1|component1(){}[0]
+    final fun component2(): androidx.compose.ui.focus/FocusRequester // dev.voir.areca.keyboard/KeyboardTarget.component2|component2(){}[0]
+    final fun component3(): androidx.compose.foundation.relocation/BringIntoViewRequester // dev.voir.areca.keyboard/KeyboardTarget.component3|component3(){}[0]
+    final fun copy(kotlin/Any? = ..., androidx.compose.ui.focus/FocusRequester = ..., androidx.compose.foundation.relocation/BringIntoViewRequester = ...): dev.voir.areca.keyboard/KeyboardTarget // dev.voir.areca.keyboard/KeyboardTarget.copy|copy(kotlin.Any?;androidx.compose.ui.focus.FocusRequester;androidx.compose.foundation.relocation.BringIntoViewRequester){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.keyboard/KeyboardTarget.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.keyboard/KeyboardTarget.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.keyboard/KeyboardTarget.toString|toString(){}[0]
+}
+
+final object dev.voir.areca.keyboard.key/KeyboardGrids { // dev.voir.areca.keyboard.key/KeyboardGrids|null[0]
+    final fun calculator(kotlin/Function1<dev.voir.areca.keyboard.key/KeyAction, kotlin/Unit>, kotlin/Char = ..., dev.voir.areca.keyboard.key/Key = ..., dev.voir.areca.keyboard.key/KeyboardGridLabels = ...): dev.voir.areca.keyboard.key/KeyboardGrid // dev.voir.areca.keyboard.key/KeyboardGrids.calculator|calculator(kotlin.Function1<dev.voir.areca.keyboard.key.KeyAction,kotlin.Unit>;kotlin.Char;dev.voir.areca.keyboard.key.Key;dev.voir.areca.keyboard.key.KeyboardGridLabels){}[0]
+    final fun decimal(kotlin/Function1<dev.voir.areca.keyboard.key/KeyAction, kotlin/Unit>, kotlin/Char = ..., dev.voir.areca.keyboard.key/KeyboardGridLabels = ...): dev.voir.areca.keyboard.key/KeyboardGrid // dev.voir.areca.keyboard.key/KeyboardGrids.decimal|decimal(kotlin.Function1<dev.voir.areca.keyboard.key.KeyAction,kotlin.Unit>;kotlin.Char;dev.voir.areca.keyboard.key.KeyboardGridLabels){}[0]
+    final fun numeric(kotlin/Function1<dev.voir.areca.keyboard.key/KeyAction, kotlin/Unit>, dev.voir.areca.keyboard.key/Key = ..., dev.voir.areca.keyboard.key/KeyboardGridLabels = ...): dev.voir.areca.keyboard.key/KeyboardGrid // dev.voir.areca.keyboard.key/KeyboardGrids.numeric|numeric(kotlin.Function1<dev.voir.areca.keyboard.key.KeyAction,kotlin.Unit>;dev.voir.areca.keyboard.key.Key;dev.voir.areca.keyboard.key.KeyboardGridLabels){}[0]
+    final fun phone(kotlin/Function1<dev.voir.areca.keyboard.key/KeyAction, kotlin/Unit>, dev.voir.areca.keyboard.key/KeyboardGridLabels = ...): dev.voir.areca.keyboard.key/KeyboardGrid // dev.voir.areca.keyboard.key/KeyboardGrids.phone|phone(kotlin.Function1<dev.voir.areca.keyboard.key.KeyAction,kotlin.Unit>;dev.voir.areca.keyboard.key.KeyboardGridLabels){}[0]
+}
+
+final val dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_Key$stableprop // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_Key$stableprop|#static{}dev_voir_areca_keyboard_key_Key$stableprop[0]
+final val dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Backspace$stableprop // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Backspace$stableprop|#static{}dev_voir_areca_keyboard_key_KeyAction_Backspace$stableprop[0]
+final val dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Clear$stableprop // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Clear$stableprop|#static{}dev_voir_areca_keyboard_key_KeyAction_Clear$stableprop[0]
+final val dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Custom$stableprop // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Custom$stableprop|#static{}dev_voir_areca_keyboard_key_KeyAction_Custom$stableprop[0]
+final val dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_DecimalSeparator$stableprop // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_DecimalSeparator$stableprop|#static{}dev_voir_areca_keyboard_key_KeyAction_DecimalSeparator$stableprop[0]
+final val dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Digit$stableprop // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Digit$stableprop|#static{}dev_voir_areca_keyboard_key_KeyAction_Digit$stableprop[0]
+final val dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Done$stableprop // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Done$stableprop|#static{}dev_voir_areca_keyboard_key_KeyAction_Done$stableprop[0]
+final val dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Evaluate$stableprop // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Evaluate$stableprop|#static{}dev_voir_areca_keyboard_key_KeyAction_Evaluate$stableprop[0]
+final val dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Hide$stableprop // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Hide$stableprop|#static{}dev_voir_areca_keyboard_key_KeyAction_Hide$stableprop[0]
+final val dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Insert$stableprop // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Insert$stableprop|#static{}dev_voir_areca_keyboard_key_KeyAction_Insert$stableprop[0]
+final val dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Operation$stableprop // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Operation$stableprop|#static{}dev_voir_areca_keyboard_key_KeyAction_Operation$stableprop[0]
+final val dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyContent_Blank$stableprop // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyContent_Blank$stableprop|#static{}dev_voir_areca_keyboard_key_KeyContent_Blank$stableprop[0]
+final val dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyContent_Custom$stableprop // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyContent_Custom$stableprop|#static{}dev_voir_areca_keyboard_key_KeyContent_Custom$stableprop[0]
+final val dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyContent_Icon$stableprop // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyContent_Icon$stableprop|#static{}dev_voir_areca_keyboard_key_KeyContent_Icon$stableprop[0]
+final val dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyContent_Label$stableprop // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyContent_Label$stableprop|#static{}dev_voir_areca_keyboard_key_KeyContent_Label$stableprop[0]
+final val dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyRow$stableprop // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyRow$stableprop|#static{}dev_voir_areca_keyboard_key_KeyRow$stableprop[0]
+final val dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyStyle$stableprop // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyStyle$stableprop|#static{}dev_voir_areca_keyboard_key_KeyStyle$stableprop[0]
+final val dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyboardGrid$stableprop // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyboardGrid$stableprop|#static{}dev_voir_areca_keyboard_key_KeyboardGrid$stableprop[0]
+final val dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyboardGridLabels$stableprop // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyboardGridLabels$stableprop|#static{}dev_voir_areca_keyboard_key_KeyboardGridLabels$stableprop[0]
+final val dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyboardGrids$stableprop // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyboardGrids$stableprop|#static{}dev_voir_areca_keyboard_key_KeyboardGrids$stableprop[0]
+final val dev.voir.areca.keyboard.layout/LocalKeyboardSize // dev.voir.areca.keyboard.layout/LocalKeyboardSize|{}LocalKeyboardSize[0]
+    final fun <get-LocalKeyboardSize>(): androidx.compose.runtime/ProvidableCompositionLocal<dev.voir.areca.keyboard.layout/KeyboardSize?> // dev.voir.areca.keyboard.layout/LocalKeyboardSize.<get-LocalKeyboardSize>|<get-LocalKeyboardSize>(){}[0]
+final val dev.voir.areca.keyboard.layout/LocalKeyboardStyle // dev.voir.areca.keyboard.layout/LocalKeyboardStyle|{}LocalKeyboardStyle[0]
+    final fun <get-LocalKeyboardStyle>(): androidx.compose.runtime/ProvidableCompositionLocal<dev.voir.areca.keyboard.layout/KeyboardStyle?> // dev.voir.areca.keyboard.layout/LocalKeyboardStyle.<get-LocalKeyboardStyle>|<get-LocalKeyboardStyle>(){}[0]
+final val dev.voir.areca.keyboard.layout/dev_voir_areca_keyboard_layout_KeyboardSize$stableprop // dev.voir.areca.keyboard.layout/dev_voir_areca_keyboard_layout_KeyboardSize$stableprop|#static{}dev_voir_areca_keyboard_layout_KeyboardSize$stableprop[0]
+final val dev.voir.areca.keyboard.layout/dev_voir_areca_keyboard_layout_KeyboardStyle$stableprop // dev.voir.areca.keyboard.layout/dev_voir_areca_keyboard_layout_KeyboardStyle$stableprop|#static{}dev_voir_areca_keyboard_layout_KeyboardStyle$stableprop[0]
+final val dev.voir.areca.keyboard/LocalKeyboardController // dev.voir.areca.keyboard/LocalKeyboardController|{}LocalKeyboardController[0]
+    final fun <get-LocalKeyboardController>(): androidx.compose.runtime/ProvidableCompositionLocal<dev.voir.areca.keyboard/KeyboardController> // dev.voir.areca.keyboard/LocalKeyboardController.<get-LocalKeyboardController>|<get-LocalKeyboardController>(){}[0]
+final val dev.voir.areca.keyboard/dev_voir_areca_keyboard_KeyboardAnimation$stableprop // dev.voir.areca.keyboard/dev_voir_areca_keyboard_KeyboardAnimation$stableprop|#static{}dev_voir_areca_keyboard_KeyboardAnimation$stableprop[0]
+final val dev.voir.areca.keyboard/dev_voir_areca_keyboard_KeyboardController$stableprop // dev.voir.areca.keyboard/dev_voir_areca_keyboard_KeyboardController$stableprop|#static{}dev_voir_areca_keyboard_KeyboardController$stableprop[0]
+final val dev.voir.areca.keyboard/dev_voir_areca_keyboard_KeyboardScrim$stableprop // dev.voir.areca.keyboard/dev_voir_areca_keyboard_KeyboardScrim$stableprop|#static{}dev_voir_areca_keyboard_KeyboardScrim$stableprop[0]
+final val dev.voir.areca.keyboard/dev_voir_areca_keyboard_KeyboardTarget$stableprop // dev.voir.areca.keyboard/dev_voir_areca_keyboard_KeyboardTarget$stableprop|#static{}dev_voir_areca_keyboard_KeyboardTarget$stableprop[0]
+
+final fun (androidx.compose.ui.input.key/KeyEvent).dev.voir.areca.keyboard.key/toKeyAction(kotlin/Char = ...): dev.voir.areca.keyboard.key/KeyAction? // dev.voir.areca.keyboard.key/toKeyAction|toKeyAction@androidx.compose.ui.input.key.KeyEvent(kotlin.Char){}[0]
+final fun (androidx.compose.ui/Modifier).dev.voir.areca.keyboard/keyboardAnchor(dev.voir.areca.keyboard/KeyboardController, dev.voir.areca.keyboard/KeyboardTarget, kotlin/Boolean = ..., kotlin/Boolean = ...): androidx.compose.ui/Modifier // dev.voir.areca.keyboard/keyboardAnchor|keyboardAnchor@androidx.compose.ui.Modifier(dev.voir.areca.keyboard.KeyboardController;dev.voir.areca.keyboard.KeyboardTarget;kotlin.Boolean;kotlin.Boolean){}[0]
+final fun (androidx.compose.ui/Modifier).dev.voir.areca.keyboard/keyboardTarget(dev.voir.areca.keyboard/KeyboardController, dev.voir.areca.keyboard/KeyboardTarget, kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/String? = ..., androidx.compose.foundation.interaction/MutableInteractionSource? = ..., androidx.compose.foundation/Indication? = ...): androidx.compose.ui/Modifier // dev.voir.areca.keyboard/keyboardTarget|keyboardTarget@androidx.compose.ui.Modifier(dev.voir.areca.keyboard.KeyboardController;dev.voir.areca.keyboard.KeyboardTarget;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.String?;androidx.compose.foundation.interaction.MutableInteractionSource?;androidx.compose.foundation.Indication?){}[0]
+final fun (dev.voir.areca.keyboard.key/KeyboardGrid).dev.voir.areca.keyboard.key/appendRow(dev.voir.areca.keyboard.key/KeyRow): dev.voir.areca.keyboard.key/KeyboardGrid // dev.voir.areca.keyboard.key/appendRow|appendRow@dev.voir.areca.keyboard.key.KeyboardGrid(dev.voir.areca.keyboard.key.KeyRow){}[0]
+final fun (dev.voir.areca.keyboard.key/KeyboardGrid).dev.voir.areca.keyboard.key/key(kotlin/String): dev.voir.areca.keyboard.key/Key? // dev.voir.areca.keyboard.key/key|key@dev.voir.areca.keyboard.key.KeyboardGrid(kotlin.String){}[0]
+final fun (dev.voir.areca.keyboard.key/KeyboardGrid).dev.voir.areca.keyboard.key/mapKeys(kotlin/Function1<dev.voir.areca.keyboard.key/Key, dev.voir.areca.keyboard.key/Key>): dev.voir.areca.keyboard.key/KeyboardGrid // dev.voir.areca.keyboard.key/mapKeys|mapKeys@dev.voir.areca.keyboard.key.KeyboardGrid(kotlin.Function1<dev.voir.areca.keyboard.key.Key,dev.voir.areca.keyboard.key.Key>){}[0]
+final fun (dev.voir.areca.keyboard.key/KeyboardGrid).dev.voir.areca.keyboard.key/prependRow(dev.voir.areca.keyboard.key/KeyRow): dev.voir.areca.keyboard.key/KeyboardGrid // dev.voir.areca.keyboard.key/prependRow|prependRow@dev.voir.areca.keyboard.key.KeyboardGrid(dev.voir.areca.keyboard.key.KeyRow){}[0]
+final fun (dev.voir.areca.keyboard.key/KeyboardGrid).dev.voir.areca.keyboard.key/removeKey(kotlin/String): dev.voir.areca.keyboard.key/KeyboardGrid // dev.voir.areca.keyboard.key/removeKey|removeKey@dev.voir.areca.keyboard.key.KeyboardGrid(kotlin.String){}[0]
+final fun (dev.voir.areca.keyboard.key/KeyboardGrid).dev.voir.areca.keyboard.key/replaceKey(kotlin/String, kotlin/Function1<dev.voir.areca.keyboard.key/Key, dev.voir.areca.keyboard.key/Key>): dev.voir.areca.keyboard.key/KeyboardGrid // dev.voir.areca.keyboard.key/replaceKey|replaceKey@dev.voir.areca.keyboard.key.KeyboardGrid(kotlin.String;kotlin.Function1<dev.voir.areca.keyboard.key.Key,dev.voir.areca.keyboard.key.Key>){}[0]
+final fun dev.voir.areca.keyboard.key/KeyboardKeys(dev.voir.areca.keyboard.key/KeyboardGrid, androidx.compose.ui/Modifier?, dev.voir.areca.keyboard.key/KeyStyle?, dev.voir.areca.keyboard.layout/KeyboardSize?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.voir.areca.keyboard.key/KeyboardKeys|KeyboardKeys(dev.voir.areca.keyboard.key.KeyboardGrid;androidx.compose.ui.Modifier?;dev.voir.areca.keyboard.key.KeyStyle?;dev.voir.areca.keyboard.layout.KeyboardSize?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_Key$stableprop_getter(): kotlin/Int // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_Key$stableprop_getter|dev_voir_areca_keyboard_key_Key$stableprop_getter(){}[0]
+final fun dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Backspace$stableprop_getter(): kotlin/Int // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Backspace$stableprop_getter|dev_voir_areca_keyboard_key_KeyAction_Backspace$stableprop_getter(){}[0]
+final fun dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Clear$stableprop_getter(): kotlin/Int // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Clear$stableprop_getter|dev_voir_areca_keyboard_key_KeyAction_Clear$stableprop_getter(){}[0]
+final fun dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Custom$stableprop_getter(): kotlin/Int // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Custom$stableprop_getter|dev_voir_areca_keyboard_key_KeyAction_Custom$stableprop_getter(){}[0]
+final fun dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_DecimalSeparator$stableprop_getter(): kotlin/Int // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_DecimalSeparator$stableprop_getter|dev_voir_areca_keyboard_key_KeyAction_DecimalSeparator$stableprop_getter(){}[0]
+final fun dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Digit$stableprop_getter(): kotlin/Int // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Digit$stableprop_getter|dev_voir_areca_keyboard_key_KeyAction_Digit$stableprop_getter(){}[0]
+final fun dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Done$stableprop_getter(): kotlin/Int // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Done$stableprop_getter|dev_voir_areca_keyboard_key_KeyAction_Done$stableprop_getter(){}[0]
+final fun dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Evaluate$stableprop_getter(): kotlin/Int // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Evaluate$stableprop_getter|dev_voir_areca_keyboard_key_KeyAction_Evaluate$stableprop_getter(){}[0]
+final fun dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Hide$stableprop_getter(): kotlin/Int // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Hide$stableprop_getter|dev_voir_areca_keyboard_key_KeyAction_Hide$stableprop_getter(){}[0]
+final fun dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Insert$stableprop_getter(): kotlin/Int // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Insert$stableprop_getter|dev_voir_areca_keyboard_key_KeyAction_Insert$stableprop_getter(){}[0]
+final fun dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Operation$stableprop_getter(): kotlin/Int // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Operation$stableprop_getter|dev_voir_areca_keyboard_key_KeyAction_Operation$stableprop_getter(){}[0]
+final fun dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyContent_Blank$stableprop_getter(): kotlin/Int // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyContent_Blank$stableprop_getter|dev_voir_areca_keyboard_key_KeyContent_Blank$stableprop_getter(){}[0]
+final fun dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyContent_Custom$stableprop_getter(): kotlin/Int // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyContent_Custom$stableprop_getter|dev_voir_areca_keyboard_key_KeyContent_Custom$stableprop_getter(){}[0]
+final fun dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyContent_Icon$stableprop_getter(): kotlin/Int // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyContent_Icon$stableprop_getter|dev_voir_areca_keyboard_key_KeyContent_Icon$stableprop_getter(){}[0]
+final fun dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyContent_Label$stableprop_getter(): kotlin/Int // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyContent_Label$stableprop_getter|dev_voir_areca_keyboard_key_KeyContent_Label$stableprop_getter(){}[0]
+final fun dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyRow$stableprop_getter(): kotlin/Int // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyRow$stableprop_getter|dev_voir_areca_keyboard_key_KeyRow$stableprop_getter(){}[0]
+final fun dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyStyle$stableprop_getter(): kotlin/Int // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyStyle$stableprop_getter|dev_voir_areca_keyboard_key_KeyStyle$stableprop_getter(){}[0]
+final fun dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyboardGrid$stableprop_getter(): kotlin/Int // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyboardGrid$stableprop_getter|dev_voir_areca_keyboard_key_KeyboardGrid$stableprop_getter(){}[0]
+final fun dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyboardGridLabels$stableprop_getter(): kotlin/Int // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyboardGridLabels$stableprop_getter|dev_voir_areca_keyboard_key_KeyboardGridLabels$stableprop_getter(){}[0]
+final fun dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyboardGrids$stableprop_getter(): kotlin/Int // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyboardGrids$stableprop_getter|dev_voir_areca_keyboard_key_KeyboardGrids$stableprop_getter(){}[0]
+final fun dev.voir.areca.keyboard.layout/KeyboardLayout(androidx.compose.ui/Modifier?, dev.voir.areca.keyboard.layout/KeyboardStyle?, dev.voir.areca.keyboard.layout/KeyboardSize?, androidx.compose.foundation.layout/WindowInsets?, kotlin/Function3<androidx.compose.foundation.layout/ColumnScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function3<androidx.compose.foundation.layout/ColumnScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function3<androidx.compose.foundation.layout/ColumnScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.voir.areca.keyboard.layout/KeyboardLayout|KeyboardLayout(androidx.compose.ui.Modifier?;dev.voir.areca.keyboard.layout.KeyboardStyle?;dev.voir.areca.keyboard.layout.KeyboardSize?;androidx.compose.foundation.layout.WindowInsets?;kotlin.Function3<androidx.compose.foundation.layout.ColumnScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function3<androidx.compose.foundation.layout.ColumnScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function3<androidx.compose.foundation.layout.ColumnScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.keyboard.layout/KeyboardLayout(dev.voir.areca.keyboard.key/KeyboardGrid, androidx.compose.ui/Modifier?, dev.voir.areca.keyboard.layout/KeyboardStyle?, dev.voir.areca.keyboard.layout/KeyboardSize?, androidx.compose.foundation.layout/WindowInsets?, kotlin/Function3<androidx.compose.foundation.layout/ColumnScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function3<androidx.compose.foundation.layout/ColumnScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.voir.areca.keyboard.layout/KeyboardLayout|KeyboardLayout(dev.voir.areca.keyboard.key.KeyboardGrid;androidx.compose.ui.Modifier?;dev.voir.areca.keyboard.layout.KeyboardStyle?;dev.voir.areca.keyboard.layout.KeyboardSize?;androidx.compose.foundation.layout.WindowInsets?;kotlin.Function3<androidx.compose.foundation.layout.ColumnScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function3<androidx.compose.foundation.layout.ColumnScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.keyboard.layout/dev_voir_areca_keyboard_layout_KeyboardSize$stableprop_getter(): kotlin/Int // dev.voir.areca.keyboard.layout/dev_voir_areca_keyboard_layout_KeyboardSize$stableprop_getter|dev_voir_areca_keyboard_layout_KeyboardSize$stableprop_getter(){}[0]
+final fun dev.voir.areca.keyboard.layout/dev_voir_areca_keyboard_layout_KeyboardStyle$stableprop_getter(): kotlin/Int // dev.voir.areca.keyboard.layout/dev_voir_areca_keyboard_layout_KeyboardStyle$stableprop_getter|dev_voir_areca_keyboard_layout_KeyboardStyle$stableprop_getter(){}[0]
+final fun dev.voir.areca.keyboard/KeyboardHost(kotlin/Function3<dev.voir.areca.keyboard/KeyboardTarget?, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.ui/Modifier?, dev.voir.areca.keyboard/KeyboardController?, kotlin/Boolean, dev.voir.areca.keyboard/KeyboardScrim?, dev.voir.areca.keyboard/KeyboardAnimation?, kotlin/String?, kotlin/Function1<kotlin/Boolean, kotlin/Unit>?, kotlin/Function3<androidx.compose.foundation.layout/BoxScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.voir.areca.keyboard/KeyboardHost|KeyboardHost(kotlin.Function3<dev.voir.areca.keyboard.KeyboardTarget?,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.ui.Modifier?;dev.voir.areca.keyboard.KeyboardController?;kotlin.Boolean;dev.voir.areca.keyboard.KeyboardScrim?;dev.voir.areca.keyboard.KeyboardAnimation?;kotlin.String?;kotlin.Function1<kotlin.Boolean,kotlin.Unit>?;kotlin.Function3<androidx.compose.foundation.layout.BoxScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.keyboard/dev_voir_areca_keyboard_KeyboardAnimation$stableprop_getter(): kotlin/Int // dev.voir.areca.keyboard/dev_voir_areca_keyboard_KeyboardAnimation$stableprop_getter|dev_voir_areca_keyboard_KeyboardAnimation$stableprop_getter(){}[0]
+final fun dev.voir.areca.keyboard/dev_voir_areca_keyboard_KeyboardController$stableprop_getter(): kotlin/Int // dev.voir.areca.keyboard/dev_voir_areca_keyboard_KeyboardController$stableprop_getter|dev_voir_areca_keyboard_KeyboardController$stableprop_getter(){}[0]
+final fun dev.voir.areca.keyboard/dev_voir_areca_keyboard_KeyboardScrim$stableprop_getter(): kotlin/Int // dev.voir.areca.keyboard/dev_voir_areca_keyboard_KeyboardScrim$stableprop_getter|dev_voir_areca_keyboard_KeyboardScrim$stableprop_getter(){}[0]
+final fun dev.voir.areca.keyboard/dev_voir_areca_keyboard_KeyboardTarget$stableprop_getter(): kotlin/Int // dev.voir.areca.keyboard/dev_voir_areca_keyboard_KeyboardTarget$stableprop_getter|dev_voir_areca_keyboard_KeyboardTarget$stableprop_getter(){}[0]
+final fun dev.voir.areca.keyboard/rememberKeyboardController(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.keyboard/KeyboardController // dev.voir.areca.keyboard/rememberKeyboardController|rememberKeyboardController(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+final fun dev.voir.areca.keyboard/rememberKeyboardTarget(kotlin/Any?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.voir.areca.keyboard/KeyboardTarget // dev.voir.areca.keyboard/rememberKeyboardTarget|rememberKeyboardTarget(kotlin.Any?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]

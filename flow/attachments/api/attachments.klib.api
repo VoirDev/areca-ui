@@ -1,0 +1,399 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <dev.voir.areca:attachments>
+final enum class dev.voir.areca.flow.attachments/AttachmentFormat : kotlin/Enum<dev.voir.areca.flow.attachments/AttachmentFormat> { // dev.voir.areca.flow.attachments/AttachmentFormat|null[0]
+    enum entry Document // dev.voir.areca.flow.attachments/AttachmentFormat.Document|null[0]
+    enum entry Image // dev.voir.areca.flow.attachments/AttachmentFormat.Image|null[0]
+    enum entry Pdf // dev.voir.areca.flow.attachments/AttachmentFormat.Pdf|null[0]
+
+    final val entries // dev.voir.areca.flow.attachments/AttachmentFormat.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<dev.voir.areca.flow.attachments/AttachmentFormat> // dev.voir.areca.flow.attachments/AttachmentFormat.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): dev.voir.areca.flow.attachments/AttachmentFormat // dev.voir.areca.flow.attachments/AttachmentFormat.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<dev.voir.areca.flow.attachments/AttachmentFormat> // dev.voir.areca.flow.attachments/AttachmentFormat.values|values#static(){}[0]
+
+    final object Companion { // dev.voir.areca.flow.attachments/AttachmentFormat.Companion|null[0]
+        final fun of(kotlin/String?, kotlin/String): dev.voir.areca.flow.attachments/AttachmentFormat // dev.voir.areca.flow.attachments/AttachmentFormat.Companion.of|of(kotlin.String?;kotlin.String){}[0]
+    }
+}
+
+abstract interface dev.voir.areca.flow.attachments/AttachmentImageLoader { // dev.voir.areca.flow.attachments/AttachmentImageLoader|null[0]
+    abstract fun load(kotlin/Any, kotlin/Int, androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.flow.attachments/AttachmentImageState // dev.voir.areca.flow.attachments/AttachmentImageLoader.load|load(kotlin.Any;kotlin.Int;androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+    open fun loadSquare(kotlin/Any, kotlin/Int, androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.flow.attachments/AttachmentImageState // dev.voir.areca.flow.attachments/AttachmentImageLoader.loadSquare|loadSquare(kotlin.Any;kotlin.Int;androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+
+    final object None : dev.voir.areca.flow.attachments/AttachmentImageLoader { // dev.voir.areca.flow.attachments/AttachmentImageLoader.None|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.flow.attachments/AttachmentImageLoader.None.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.flow.attachments/AttachmentImageLoader.None.hashCode|hashCode(){}[0]
+        final fun load(kotlin/Any, kotlin/Int, androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.flow.attachments/AttachmentImageState // dev.voir.areca.flow.attachments/AttachmentImageLoader.None.load|load(kotlin.Any;kotlin.Int;androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.flow.attachments/AttachmentImageLoader.None.toString|toString(){}[0]
+    }
+}
+
+abstract interface dev.voir.areca.flow.attachments/AttachmentPdfDocument : kotlin/AutoCloseable { // dev.voir.areca.flow.attachments/AttachmentPdfDocument|null[0]
+    abstract val pageCount // dev.voir.areca.flow.attachments/AttachmentPdfDocument.pageCount|{}pageCount[0]
+        abstract fun <get-pageCount>(): kotlin/Int // dev.voir.areca.flow.attachments/AttachmentPdfDocument.pageCount.<get-pageCount>|<get-pageCount>(){}[0]
+
+    abstract suspend fun render(kotlin/Int, kotlin/Int): androidx.compose.ui.graphics/ImageBitmap? // dev.voir.areca.flow.attachments/AttachmentPdfDocument.render|render(kotlin.Int;kotlin.Int){}[0]
+}
+
+abstract interface dev.voir.areca.flow.attachments/AttachmentPdfRenderer { // dev.voir.areca.flow.attachments/AttachmentPdfRenderer|null[0]
+    abstract suspend fun open(kotlin/Any): dev.voir.areca.flow.attachments/AttachmentPdfDocument? // dev.voir.areca.flow.attachments/AttachmentPdfRenderer.open|open(kotlin.Any){}[0]
+
+    final object None : dev.voir.areca.flow.attachments/AttachmentPdfRenderer { // dev.voir.areca.flow.attachments/AttachmentPdfRenderer.None|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.flow.attachments/AttachmentPdfRenderer.None.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.flow.attachments/AttachmentPdfRenderer.None.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.flow.attachments/AttachmentPdfRenderer.None.toString|toString(){}[0]
+        final suspend fun open(kotlin/Any): dev.voir.areca.flow.attachments/AttachmentPdfDocument? // dev.voir.areca.flow.attachments/AttachmentPdfRenderer.None.open|open(kotlin.Any){}[0]
+    }
+}
+
+sealed interface dev.voir.areca.flow.attachments/AttachmentImageState { // dev.voir.areca.flow.attachments/AttachmentImageState|null[0]
+    final class Ready : dev.voir.areca.flow.attachments/AttachmentImageState { // dev.voir.areca.flow.attachments/AttachmentImageState.Ready|null[0]
+        constructor <init>(androidx.compose.ui.graphics.painter/Painter) // dev.voir.areca.flow.attachments/AttachmentImageState.Ready.<init>|<init>(androidx.compose.ui.graphics.painter.Painter){}[0]
+
+        final val painter // dev.voir.areca.flow.attachments/AttachmentImageState.Ready.painter|{}painter[0]
+            final fun <get-painter>(): androidx.compose.ui.graphics.painter/Painter // dev.voir.areca.flow.attachments/AttachmentImageState.Ready.painter.<get-painter>|<get-painter>(){}[0]
+
+        final fun component1(): androidx.compose.ui.graphics.painter/Painter // dev.voir.areca.flow.attachments/AttachmentImageState.Ready.component1|component1(){}[0]
+        final fun copy(androidx.compose.ui.graphics.painter/Painter = ...): dev.voir.areca.flow.attachments/AttachmentImageState.Ready // dev.voir.areca.flow.attachments/AttachmentImageState.Ready.copy|copy(androidx.compose.ui.graphics.painter.Painter){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.flow.attachments/AttachmentImageState.Ready.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.flow.attachments/AttachmentImageState.Ready.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.flow.attachments/AttachmentImageState.Ready.toString|toString(){}[0]
+    }
+
+    final object Failed : dev.voir.areca.flow.attachments/AttachmentImageState { // dev.voir.areca.flow.attachments/AttachmentImageState.Failed|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.flow.attachments/AttachmentImageState.Failed.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.flow.attachments/AttachmentImageState.Failed.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.flow.attachments/AttachmentImageState.Failed.toString|toString(){}[0]
+    }
+
+    final object Loading : dev.voir.areca.flow.attachments/AttachmentImageState { // dev.voir.areca.flow.attachments/AttachmentImageState.Loading|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.flow.attachments/AttachmentImageState.Loading.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.flow.attachments/AttachmentImageState.Loading.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.flow.attachments/AttachmentImageState.Loading.toString|toString(){}[0]
+    }
+}
+
+sealed interface dev.voir.areca.flow.attachments/AttachmentState { // dev.voir.areca.flow.attachments/AttachmentState|null[0]
+    final class Downloading : dev.voir.areca.flow.attachments/AttachmentState { // dev.voir.areca.flow.attachments/AttachmentState.Downloading|null[0]
+        constructor <init>(kotlin/Float? = ...) // dev.voir.areca.flow.attachments/AttachmentState.Downloading.<init>|<init>(kotlin.Float?){}[0]
+
+        final val progress // dev.voir.areca.flow.attachments/AttachmentState.Downloading.progress|{}progress[0]
+            final fun <get-progress>(): kotlin/Float? // dev.voir.areca.flow.attachments/AttachmentState.Downloading.progress.<get-progress>|<get-progress>(){}[0]
+
+        final fun component1(): kotlin/Float? // dev.voir.areca.flow.attachments/AttachmentState.Downloading.component1|component1(){}[0]
+        final fun copy(kotlin/Float? = ...): dev.voir.areca.flow.attachments/AttachmentState.Downloading // dev.voir.areca.flow.attachments/AttachmentState.Downloading.copy|copy(kotlin.Float?){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.flow.attachments/AttachmentState.Downloading.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.flow.attachments/AttachmentState.Downloading.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.flow.attachments/AttachmentState.Downloading.toString|toString(){}[0]
+    }
+
+    final class Uploading : dev.voir.areca.flow.attachments/AttachmentState { // dev.voir.areca.flow.attachments/AttachmentState.Uploading|null[0]
+        constructor <init>(kotlin/Float? = ...) // dev.voir.areca.flow.attachments/AttachmentState.Uploading.<init>|<init>(kotlin.Float?){}[0]
+
+        final val progress // dev.voir.areca.flow.attachments/AttachmentState.Uploading.progress|{}progress[0]
+            final fun <get-progress>(): kotlin/Float? // dev.voir.areca.flow.attachments/AttachmentState.Uploading.progress.<get-progress>|<get-progress>(){}[0]
+
+        final fun component1(): kotlin/Float? // dev.voir.areca.flow.attachments/AttachmentState.Uploading.component1|component1(){}[0]
+        final fun copy(kotlin/Float? = ...): dev.voir.areca.flow.attachments/AttachmentState.Uploading // dev.voir.areca.flow.attachments/AttachmentState.Uploading.copy|copy(kotlin.Float?){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.flow.attachments/AttachmentState.Uploading.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.flow.attachments/AttachmentState.Uploading.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.flow.attachments/AttachmentState.Uploading.toString|toString(){}[0]
+    }
+
+    final object Adding : dev.voir.areca.flow.attachments/AttachmentState { // dev.voir.areca.flow.attachments/AttachmentState.Adding|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.flow.attachments/AttachmentState.Adding.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.flow.attachments/AttachmentState.Adding.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.flow.attachments/AttachmentState.Adding.toString|toString(){}[0]
+    }
+
+    final object Ready : dev.voir.areca.flow.attachments/AttachmentState { // dev.voir.areca.flow.attachments/AttachmentState.Ready|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.flow.attachments/AttachmentState.Ready.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.flow.attachments/AttachmentState.Ready.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.flow.attachments/AttachmentState.Ready.toString|toString(){}[0]
+    }
+
+    final object Remote : dev.voir.areca.flow.attachments/AttachmentState { // dev.voir.areca.flow.attachments/AttachmentState.Remote|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.flow.attachments/AttachmentState.Remote.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.flow.attachments/AttachmentState.Remote.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.flow.attachments/AttachmentState.Remote.toString|toString(){}[0]
+    }
+
+    final object Unavailable : dev.voir.areca.flow.attachments/AttachmentState { // dev.voir.areca.flow.attachments/AttachmentState.Unavailable|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.flow.attachments/AttachmentState.Unavailable.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.flow.attachments/AttachmentState.Unavailable.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.flow.attachments/AttachmentState.Unavailable.toString|toString(){}[0]
+    }
+
+    final object Waiting : dev.voir.areca.flow.attachments/AttachmentState { // dev.voir.areca.flow.attachments/AttachmentState.Waiting|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.flow.attachments/AttachmentState.Waiting.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.flow.attachments/AttachmentState.Waiting.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.flow.attachments/AttachmentState.Waiting.toString|toString(){}[0]
+    }
+}
+
+final class dev.voir.areca.flow.attachments.part/AttachmentTileStyle { // dev.voir.areca.flow.attachments.part/AttachmentTileStyle|null[0]
+    constructor <init>(androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Shape = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ...) // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.<init>|<init>(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Shape;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.unit.Dp;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color){}[0]
+
+    final val bg // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.bg|{}bg[0]
+        final fun <get-bg>(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.bg.<get-bg>|<get-bg>(){}[0]
+    final val caption // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.caption|{}caption[0]
+        final fun <get-caption>(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.caption.<get-caption>|<get-caption>(){}[0]
+    final val captionDisabled // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.captionDisabled|{}captionDisabled[0]
+        final fun <get-captionDisabled>(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.captionDisabled.<get-captionDisabled>|<get-captionDisabled>(){}[0]
+    final val content // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.content|{}content[0]
+        final fun <get-content>(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.content.<get-content>|<get-content>(){}[0]
+    final val contentDisabled // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.contentDisabled|{}contentDisabled[0]
+        final fun <get-contentDisabled>(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.contentDisabled.<get-contentDisabled>|<get-contentDisabled>(){}[0]
+    final val detail // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.detail|{}detail[0]
+        final fun <get-detail>(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.detail.<get-detail>|<get-detail>(){}[0]
+    final val extension // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.extension|{}extension[0]
+        final fun <get-extension>(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.extension.<get-extension>|<get-extension>(){}[0]
+    final val glyph // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.glyph|{}glyph[0]
+        final fun <get-glyph>(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.glyph.<get-glyph>|<get-glyph>(){}[0]
+    final val markBg // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.markBg|{}markBg[0]
+        final fun <get-markBg>(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.markBg.<get-markBg>|<get-markBg>(){}[0]
+    final val markContent // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.markContent|{}markContent[0]
+        final fun <get-markContent>(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.markContent.<get-markContent>|<get-markContent>(){}[0]
+    final val removeBg // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.removeBg|{}removeBg[0]
+        final fun <get-removeBg>(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.removeBg.<get-removeBg>|<get-removeBg>(){}[0]
+    final val removeContent // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.removeContent|{}removeContent[0]
+        final fun <get-removeContent>(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.removeContent.<get-removeContent>|<get-removeContent>(){}[0]
+    final val ringThickness // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.ringThickness|{}ringThickness[0]
+        final fun <get-ringThickness>(): androidx.compose.ui.unit/Dp // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.ringThickness.<get-ringThickness>|<get-ringThickness>(){}[0]
+    final val shape // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.shape|{}shape[0]
+        final fun <get-shape>(): androidx.compose.ui.graphics/Shape // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.shape.<get-shape>|<get-shape>(){}[0]
+    final val veil // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.veil|{}veil[0]
+        final fun <get-veil>(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.veil.<get-veil>|<get-veil>(){}[0]
+
+    final fun component1(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.component1|component1(){}[0]
+    final fun component10(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.component10|component10(){}[0]
+    final fun component11(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.component11|component11(){}[0]
+    final fun component12(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.component12|component12(){}[0]
+    final fun component13(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.component13|component13(){}[0]
+    final fun component14(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.component14|component14(){}[0]
+    final fun component15(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.component15|component15(){}[0]
+    final fun component2(): androidx.compose.ui.graphics/Shape // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.component2|component2(){}[0]
+    final fun component3(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.component3|component3(){}[0]
+    final fun component4(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.component4|component4(){}[0]
+    final fun component5(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.component5|component5(){}[0]
+    final fun component6(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.component6|component6(){}[0]
+    final fun component7(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.component7|component7(){}[0]
+    final fun component8(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.component8|component8(){}[0]
+    final fun component9(): androidx.compose.ui.unit/Dp // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.component9|component9(){}[0]
+    final fun copy(androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Shape = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ...): dev.voir.areca.flow.attachments.part/AttachmentTileStyle // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.copy|copy(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Shape;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.unit.Dp;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.toString|toString(){}[0]
+
+    final object Companion { // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.Companion|null[0]
+        final val Default // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.Companion.Default|{}Default[0]
+            final fun <get-Default>(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.flow.attachments.part/AttachmentTileStyle // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.Companion.Default.<get-Default>|<get-Default>(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+
+        final fun default(androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Shape?, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.unit/Dp, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int, kotlin/Int): dev.voir.areca.flow.attachments.part/AttachmentTileStyle // dev.voir.areca.flow.attachments.part/AttachmentTileStyle.Companion.default|default(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Shape?;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.unit.Dp;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+    }
+}
+
+final class dev.voir.areca.flow.attachments.sheet/AttachmentChoice { // dev.voir.areca.flow.attachments.sheet/AttachmentChoice|null[0]
+    constructor <init>(kotlin/String, androidx.compose.ui.graphics.vector/ImageVector, kotlin/Function0<kotlin/Unit>, kotlin/Boolean = ...) // dev.voir.areca.flow.attachments.sheet/AttachmentChoice.<init>|<init>(kotlin.String;androidx.compose.ui.graphics.vector.ImageVector;kotlin.Function0<kotlin.Unit>;kotlin.Boolean){}[0]
+
+    final val icon // dev.voir.areca.flow.attachments.sheet/AttachmentChoice.icon|{}icon[0]
+        final fun <get-icon>(): androidx.compose.ui.graphics.vector/ImageVector // dev.voir.areca.flow.attachments.sheet/AttachmentChoice.icon.<get-icon>|<get-icon>(){}[0]
+    final val isDestructive // dev.voir.areca.flow.attachments.sheet/AttachmentChoice.isDestructive|{}isDestructive[0]
+        final fun <get-isDestructive>(): kotlin/Boolean // dev.voir.areca.flow.attachments.sheet/AttachmentChoice.isDestructive.<get-isDestructive>|<get-isDestructive>(){}[0]
+    final val label // dev.voir.areca.flow.attachments.sheet/AttachmentChoice.label|{}label[0]
+        final fun <get-label>(): kotlin/String // dev.voir.areca.flow.attachments.sheet/AttachmentChoice.label.<get-label>|<get-label>(){}[0]
+    final val onClick // dev.voir.areca.flow.attachments.sheet/AttachmentChoice.onClick|{}onClick[0]
+        final fun <get-onClick>(): kotlin/Function0<kotlin/Unit> // dev.voir.areca.flow.attachments.sheet/AttachmentChoice.onClick.<get-onClick>|<get-onClick>(){}[0]
+}
+
+final class dev.voir.areca.flow.attachments.sheet/PendingAttachment { // dev.voir.areca.flow.attachments.sheet/PendingAttachment|null[0]
+    constructor <init>(kotlin/String?, dev.voir.areca.flow.attachments/AttachmentFormat = ..., kotlin/String? = ..., kotlin/Any? = ..., kotlin/Boolean = ..., kotlin/String? = ...) // dev.voir.areca.flow.attachments.sheet/PendingAttachment.<init>|<init>(kotlin.String?;dev.voir.areca.flow.attachments.AttachmentFormat;kotlin.String?;kotlin.Any?;kotlin.Boolean;kotlin.String?){}[0]
+
+    final val fileName // dev.voir.areca.flow.attachments.sheet/PendingAttachment.fileName|{}fileName[0]
+        final fun <get-fileName>(): kotlin/String? // dev.voir.areca.flow.attachments.sheet/PendingAttachment.fileName.<get-fileName>|<get-fileName>(){}[0]
+    final val format // dev.voir.areca.flow.attachments.sheet/PendingAttachment.format|{}format[0]
+        final fun <get-format>(): dev.voir.areca.flow.attachments/AttachmentFormat // dev.voir.areca.flow.attachments.sheet/PendingAttachment.format.<get-format>|<get-format>(){}[0]
+    final val isCopying // dev.voir.areca.flow.attachments.sheet/PendingAttachment.isCopying|{}isCopying[0]
+        final fun <get-isCopying>(): kotlin/Boolean // dev.voir.areca.flow.attachments.sheet/PendingAttachment.isCopying.<get-isCopying>|<get-isCopying>(){}[0]
+    final val model // dev.voir.areca.flow.attachments.sheet/PendingAttachment.model|{}model[0]
+        final fun <get-model>(): kotlin/Any? // dev.voir.areca.flow.attachments.sheet/PendingAttachment.model.<get-model>|<get-model>(){}[0]
+    final val problem // dev.voir.areca.flow.attachments.sheet/PendingAttachment.problem|{}problem[0]
+        final fun <get-problem>(): kotlin/String? // dev.voir.areca.flow.attachments.sheet/PendingAttachment.problem.<get-problem>|<get-problem>(){}[0]
+    final val size // dev.voir.areca.flow.attachments.sheet/PendingAttachment.size|{}size[0]
+        final fun <get-size>(): kotlin/String? // dev.voir.areca.flow.attachments.sheet/PendingAttachment.size.<get-size>|<get-size>(){}[0]
+
+    final fun component1(): kotlin/String? // dev.voir.areca.flow.attachments.sheet/PendingAttachment.component1|component1(){}[0]
+    final fun component2(): dev.voir.areca.flow.attachments/AttachmentFormat // dev.voir.areca.flow.attachments.sheet/PendingAttachment.component2|component2(){}[0]
+    final fun component3(): kotlin/String? // dev.voir.areca.flow.attachments.sheet/PendingAttachment.component3|component3(){}[0]
+    final fun component4(): kotlin/Any? // dev.voir.areca.flow.attachments.sheet/PendingAttachment.component4|component4(){}[0]
+    final fun component5(): kotlin/Boolean // dev.voir.areca.flow.attachments.sheet/PendingAttachment.component5|component5(){}[0]
+    final fun component6(): kotlin/String? // dev.voir.areca.flow.attachments.sheet/PendingAttachment.component6|component6(){}[0]
+    final fun copy(kotlin/String? = ..., dev.voir.areca.flow.attachments/AttachmentFormat = ..., kotlin/String? = ..., kotlin/Any? = ..., kotlin/Boolean = ..., kotlin/String? = ...): dev.voir.areca.flow.attachments.sheet/PendingAttachment // dev.voir.areca.flow.attachments.sheet/PendingAttachment.copy|copy(kotlin.String?;dev.voir.areca.flow.attachments.AttachmentFormat;kotlin.String?;kotlin.Any?;kotlin.Boolean;kotlin.String?){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.flow.attachments.sheet/PendingAttachment.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.flow.attachments.sheet/PendingAttachment.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.flow.attachments.sheet/PendingAttachment.toString|toString(){}[0]
+}
+
+final class dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle { // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle|null[0]
+    constructor <init>(androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ...) // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.<init>|<init>(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color){}[0]
+
+    final val bg // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.bg|{}bg[0]
+        final fun <get-bg>(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.bg.<get-bg>|<get-bg>(){}[0]
+    final val controlBg // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.controlBg|{}controlBg[0]
+        final fun <get-controlBg>(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.controlBg.<get-controlBg>|<get-controlBg>(){}[0]
+    final val controlContent // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.controlContent|{}controlContent[0]
+        final fun <get-controlContent>(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.controlContent.<get-controlContent>|<get-controlContent>(){}[0]
+    final val controlContentDisabled // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.controlContentDisabled|{}controlContentDisabled[0]
+        final fun <get-controlContentDisabled>(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.controlContentDisabled.<get-controlContentDisabled>|<get-controlContentDisabled>(){}[0]
+    final val detail // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.detail|{}detail[0]
+        final fun <get-detail>(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.detail.<get-detail>|<get-detail>(){}[0]
+    final val pillBg // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.pillBg|{}pillBg[0]
+        final fun <get-pillBg>(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.pillBg.<get-pillBg>|<get-pillBg>(){}[0]
+    final val pillContent // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.pillContent|{}pillContent[0]
+        final fun <get-pillContent>(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.pillContent.<get-pillContent>|<get-pillContent>(){}[0]
+    final val title // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.title|{}title[0]
+        final fun <get-title>(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.title.<get-title>|<get-title>(){}[0]
+
+    final fun component1(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.component1|component1(){}[0]
+    final fun component2(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.component2|component2(){}[0]
+    final fun component3(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.component3|component3(){}[0]
+    final fun component4(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.component4|component4(){}[0]
+    final fun component5(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.component5|component5(){}[0]
+    final fun component6(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.component6|component6(){}[0]
+    final fun component7(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.component7|component7(){}[0]
+    final fun component8(): androidx.compose.ui.graphics/Color // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.component8|component8(){}[0]
+    final fun copy(androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ...): dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.copy|copy(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.hashCode|hashCode(){}[0]
+    final fun secondaryButton(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.foundation.button/ButtonStyle // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.secondaryButton|secondaryButton(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.toString|toString(){}[0]
+    final fun topBar(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.foundation.topbar/TopBarStyle // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.topBar|topBar(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+
+    final object Companion { // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.Companion|null[0]
+        final val Default // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.Companion.Default|{}Default[0]
+            final fun <get-Default>(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.Companion.Default.<get-Default>|<get-Default>(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+
+        final fun default(androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle // dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle.Companion.default|default(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+    }
+}
+
+final class dev.voir.areca.flow.attachments/AttachmentItem { // dev.voir.areca.flow.attachments/AttachmentItem|null[0]
+    constructor <init>(kotlin/Any, kotlin/String, kotlin/String = ..., kotlin/String? = ..., dev.voir.areca.flow.attachments/AttachmentFormat = ..., dev.voir.areca.flow.attachments/AttachmentState = ..., kotlin/Any? = ...) // dev.voir.areca.flow.attachments/AttachmentItem.<init>|<init>(kotlin.Any;kotlin.String;kotlin.String;kotlin.String?;dev.voir.areca.flow.attachments.AttachmentFormat;dev.voir.areca.flow.attachments.AttachmentState;kotlin.Any?){}[0]
+
+    final val extension // dev.voir.areca.flow.attachments/AttachmentItem.extension|{}extension[0]
+        final fun <get-extension>(): kotlin/String? // dev.voir.areca.flow.attachments/AttachmentItem.extension.<get-extension>|<get-extension>(){}[0]
+    final val fileName // dev.voir.areca.flow.attachments/AttachmentItem.fileName|{}fileName[0]
+        final fun <get-fileName>(): kotlin/String // dev.voir.areca.flow.attachments/AttachmentItem.fileName.<get-fileName>|<get-fileName>(){}[0]
+    final val format // dev.voir.areca.flow.attachments/AttachmentItem.format|{}format[0]
+        final fun <get-format>(): dev.voir.areca.flow.attachments/AttachmentFormat // dev.voir.areca.flow.attachments/AttachmentItem.format.<get-format>|<get-format>(){}[0]
+    final val key // dev.voir.areca.flow.attachments/AttachmentItem.key|{}key[0]
+        final fun <get-key>(): kotlin/Any // dev.voir.areca.flow.attachments/AttachmentItem.key.<get-key>|<get-key>(){}[0]
+    final val label // dev.voir.areca.flow.attachments/AttachmentItem.label|{}label[0]
+        final fun <get-label>(): kotlin/String // dev.voir.areca.flow.attachments/AttachmentItem.label.<get-label>|<get-label>(){}[0]
+    final val model // dev.voir.areca.flow.attachments/AttachmentItem.model|{}model[0]
+        final fun <get-model>(): kotlin/Any? // dev.voir.areca.flow.attachments/AttachmentItem.model.<get-model>|<get-model>(){}[0]
+    final val size // dev.voir.areca.flow.attachments/AttachmentItem.size|{}size[0]
+        final fun <get-size>(): kotlin/String? // dev.voir.areca.flow.attachments/AttachmentItem.size.<get-size>|<get-size>(){}[0]
+    final val state // dev.voir.areca.flow.attachments/AttachmentItem.state|{}state[0]
+        final fun <get-state>(): dev.voir.areca.flow.attachments/AttachmentState // dev.voir.areca.flow.attachments/AttachmentItem.state.<get-state>|<get-state>(){}[0]
+
+    final fun component1(): kotlin/Any // dev.voir.areca.flow.attachments/AttachmentItem.component1|component1(){}[0]
+    final fun component2(): kotlin/String // dev.voir.areca.flow.attachments/AttachmentItem.component2|component2(){}[0]
+    final fun component3(): kotlin/String // dev.voir.areca.flow.attachments/AttachmentItem.component3|component3(){}[0]
+    final fun component4(): kotlin/String? // dev.voir.areca.flow.attachments/AttachmentItem.component4|component4(){}[0]
+    final fun component5(): dev.voir.areca.flow.attachments/AttachmentFormat // dev.voir.areca.flow.attachments/AttachmentItem.component5|component5(){}[0]
+    final fun component6(): dev.voir.areca.flow.attachments/AttachmentState // dev.voir.areca.flow.attachments/AttachmentItem.component6|component6(){}[0]
+    final fun component7(): kotlin/Any? // dev.voir.areca.flow.attachments/AttachmentItem.component7|component7(){}[0]
+    final fun copy(kotlin/Any = ..., kotlin/String = ..., kotlin/String = ..., kotlin/String? = ..., dev.voir.areca.flow.attachments/AttachmentFormat = ..., dev.voir.areca.flow.attachments/AttachmentState = ..., kotlin/Any? = ...): dev.voir.areca.flow.attachments/AttachmentItem // dev.voir.areca.flow.attachments/AttachmentItem.copy|copy(kotlin.Any;kotlin.String;kotlin.String;kotlin.String?;dev.voir.areca.flow.attachments.AttachmentFormat;dev.voir.areca.flow.attachments.AttachmentState;kotlin.Any?){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.flow.attachments/AttachmentItem.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.flow.attachments/AttachmentItem.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.flow.attachments/AttachmentItem.toString|toString(){}[0]
+}
+
+final object dev.voir.areca.flow.attachments.sheet/AttachmentOptions { // dev.voir.areca.flow.attachments.sheet/AttachmentOptions|null[0]
+    final fun openElsewhere(kotlin/String = ..., kotlin/Function0<kotlin/Unit>): dev.voir.areca.flow.attachments.sheet/AttachmentChoice // dev.voir.areca.flow.attachments.sheet/AttachmentOptions.openElsewhere|openElsewhere(kotlin.String;kotlin.Function0<kotlin.Unit>){}[0]
+    final fun remove(kotlin/String = ..., kotlin/Function0<kotlin/Unit>): dev.voir.areca.flow.attachments.sheet/AttachmentChoice // dev.voir.areca.flow.attachments.sheet/AttachmentOptions.remove|remove(kotlin.String;kotlin.Function0<kotlin.Unit>){}[0]
+    final fun rename(kotlin/String = ..., kotlin/Function0<kotlin/Unit>): dev.voir.areca.flow.attachments.sheet/AttachmentChoice // dev.voir.areca.flow.attachments.sheet/AttachmentOptions.rename|rename(kotlin.String;kotlin.Function0<kotlin.Unit>){}[0]
+    final fun save(kotlin/String = ..., kotlin/Function0<kotlin/Unit>): dev.voir.areca.flow.attachments.sheet/AttachmentChoice // dev.voir.areca.flow.attachments.sheet/AttachmentOptions.save|save(kotlin.String;kotlin.Function0<kotlin.Unit>){}[0]
+    final fun share(kotlin/String = ..., kotlin/Function0<kotlin/Unit>): dev.voir.areca.flow.attachments.sheet/AttachmentChoice // dev.voir.areca.flow.attachments.sheet/AttachmentOptions.share|share(kotlin.String;kotlin.Function0<kotlin.Unit>){}[0]
+}
+
+final object dev.voir.areca.flow.attachments.sheet/AttachmentSourceOptions { // dev.voir.areca.flow.attachments.sheet/AttachmentSourceOptions|null[0]
+    final fun camera(kotlin/String = ..., kotlin/Function0<kotlin/Unit>): dev.voir.areca.flow.attachments.sheet/AttachmentChoice // dev.voir.areca.flow.attachments.sheet/AttachmentSourceOptions.camera|camera(kotlin.String;kotlin.Function0<kotlin.Unit>){}[0]
+    final fun files(kotlin/String = ..., kotlin/Function0<kotlin/Unit>): dev.voir.areca.flow.attachments.sheet/AttachmentChoice // dev.voir.areca.flow.attachments.sheet/AttachmentSourceOptions.files|files(kotlin.String;kotlin.Function0<kotlin.Unit>){}[0]
+    final fun library(kotlin/String = ..., kotlin/Function0<kotlin/Unit>): dev.voir.areca.flow.attachments.sheet/AttachmentChoice // dev.voir.areca.flow.attachments.sheet/AttachmentSourceOptions.library|library(kotlin.String;kotlin.Function0<kotlin.Unit>){}[0]
+}
+
+final val dev.voir.areca.flow.attachments.part/LocalAttachmentTileStyle // dev.voir.areca.flow.attachments.part/LocalAttachmentTileStyle|{}LocalAttachmentTileStyle[0]
+    final fun <get-LocalAttachmentTileStyle>(): androidx.compose.runtime/ProvidableCompositionLocal<dev.voir.areca.flow.attachments.part/AttachmentTileStyle?> // dev.voir.areca.flow.attachments.part/LocalAttachmentTileStyle.<get-LocalAttachmentTileStyle>|<get-LocalAttachmentTileStyle>(){}[0]
+final val dev.voir.areca.flow.attachments.part/dev_voir_areca_flow_attachments_part_AttachmentTileStyle$stableprop // dev.voir.areca.flow.attachments.part/dev_voir_areca_flow_attachments_part_AttachmentTileStyle$stableprop|#static{}dev_voir_areca_flow_attachments_part_AttachmentTileStyle$stableprop[0]
+final val dev.voir.areca.flow.attachments.sheet/dev_voir_areca_flow_attachments_sheet_AttachmentChoice$stableprop // dev.voir.areca.flow.attachments.sheet/dev_voir_areca_flow_attachments_sheet_AttachmentChoice$stableprop|#static{}dev_voir_areca_flow_attachments_sheet_AttachmentChoice$stableprop[0]
+final val dev.voir.areca.flow.attachments.sheet/dev_voir_areca_flow_attachments_sheet_AttachmentOptions$stableprop // dev.voir.areca.flow.attachments.sheet/dev_voir_areca_flow_attachments_sheet_AttachmentOptions$stableprop|#static{}dev_voir_areca_flow_attachments_sheet_AttachmentOptions$stableprop[0]
+final val dev.voir.areca.flow.attachments.sheet/dev_voir_areca_flow_attachments_sheet_AttachmentSourceOptions$stableprop // dev.voir.areca.flow.attachments.sheet/dev_voir_areca_flow_attachments_sheet_AttachmentSourceOptions$stableprop|#static{}dev_voir_areca_flow_attachments_sheet_AttachmentSourceOptions$stableprop[0]
+final val dev.voir.areca.flow.attachments.sheet/dev_voir_areca_flow_attachments_sheet_PendingAttachment$stableprop // dev.voir.areca.flow.attachments.sheet/dev_voir_areca_flow_attachments_sheet_PendingAttachment$stableprop|#static{}dev_voir_areca_flow_attachments_sheet_PendingAttachment$stableprop[0]
+final val dev.voir.areca.flow.attachments.viewer/LocalAttachmentViewerStyle // dev.voir.areca.flow.attachments.viewer/LocalAttachmentViewerStyle|{}LocalAttachmentViewerStyle[0]
+    final fun <get-LocalAttachmentViewerStyle>(): androidx.compose.runtime/ProvidableCompositionLocal<dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle?> // dev.voir.areca.flow.attachments.viewer/LocalAttachmentViewerStyle.<get-LocalAttachmentViewerStyle>|<get-LocalAttachmentViewerStyle>(){}[0]
+final val dev.voir.areca.flow.attachments.viewer/dev_voir_areca_flow_attachments_viewer_AttachmentViewerStyle$stableprop // dev.voir.areca.flow.attachments.viewer/dev_voir_areca_flow_attachments_viewer_AttachmentViewerStyle$stableprop|#static{}dev_voir_areca_flow_attachments_viewer_AttachmentViewerStyle$stableprop[0]
+final val dev.voir.areca.flow.attachments.viewer/dev_voir_areca_flow_attachments_viewer_PdfOpening_Failed$stableprop // dev.voir.areca.flow.attachments.viewer/dev_voir_areca_flow_attachments_viewer_PdfOpening_Failed$stableprop|#static{}dev_voir_areca_flow_attachments_viewer_PdfOpening_Failed$stableprop[0]
+final val dev.voir.areca.flow.attachments.viewer/dev_voir_areca_flow_attachments_viewer_PdfOpening_Open$stableprop // dev.voir.areca.flow.attachments.viewer/dev_voir_areca_flow_attachments_viewer_PdfOpening_Open$stableprop|#static{}dev_voir_areca_flow_attachments_viewer_PdfOpening_Open$stableprop[0]
+final val dev.voir.areca.flow.attachments.viewer/dev_voir_areca_flow_attachments_viewer_PdfOpening_Opening$stableprop // dev.voir.areca.flow.attachments.viewer/dev_voir_areca_flow_attachments_viewer_PdfOpening_Opening$stableprop|#static{}dev_voir_areca_flow_attachments_viewer_PdfOpening_Opening$stableprop[0]
+final val dev.voir.areca.flow.attachments/LocalAttachmentImageLoader // dev.voir.areca.flow.attachments/LocalAttachmentImageLoader|{}LocalAttachmentImageLoader[0]
+    final fun <get-LocalAttachmentImageLoader>(): androidx.compose.runtime/ProvidableCompositionLocal<dev.voir.areca.flow.attachments/AttachmentImageLoader> // dev.voir.areca.flow.attachments/LocalAttachmentImageLoader.<get-LocalAttachmentImageLoader>|<get-LocalAttachmentImageLoader>(){}[0]
+final val dev.voir.areca.flow.attachments/LocalAttachmentPdfRenderer // dev.voir.areca.flow.attachments/LocalAttachmentPdfRenderer|{}LocalAttachmentPdfRenderer[0]
+    final fun <get-LocalAttachmentPdfRenderer>(): androidx.compose.runtime/ProvidableCompositionLocal<dev.voir.areca.flow.attachments/AttachmentPdfRenderer> // dev.voir.areca.flow.attachments/LocalAttachmentPdfRenderer.<get-LocalAttachmentPdfRenderer>|<get-LocalAttachmentPdfRenderer>(){}[0]
+final val dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentImageLoader_None$stableprop // dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentImageLoader_None$stableprop|#static{}dev_voir_areca_flow_attachments_AttachmentImageLoader_None$stableprop[0]
+final val dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentImageState_Failed$stableprop // dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentImageState_Failed$stableprop|#static{}dev_voir_areca_flow_attachments_AttachmentImageState_Failed$stableprop[0]
+final val dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentImageState_Loading$stableprop // dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentImageState_Loading$stableprop|#static{}dev_voir_areca_flow_attachments_AttachmentImageState_Loading$stableprop[0]
+final val dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentImageState_Ready$stableprop // dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentImageState_Ready$stableprop|#static{}dev_voir_areca_flow_attachments_AttachmentImageState_Ready$stableprop[0]
+final val dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentItem$stableprop // dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentItem$stableprop|#static{}dev_voir_areca_flow_attachments_AttachmentItem$stableprop[0]
+final val dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentPdfRenderer_None$stableprop // dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentPdfRenderer_None$stableprop|#static{}dev_voir_areca_flow_attachments_AttachmentPdfRenderer_None$stableprop[0]
+final val dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentState_Adding$stableprop // dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentState_Adding$stableprop|#static{}dev_voir_areca_flow_attachments_AttachmentState_Adding$stableprop[0]
+final val dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentState_Downloading$stableprop // dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentState_Downloading$stableprop|#static{}dev_voir_areca_flow_attachments_AttachmentState_Downloading$stableprop[0]
+final val dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentState_Ready$stableprop // dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentState_Ready$stableprop|#static{}dev_voir_areca_flow_attachments_AttachmentState_Ready$stableprop[0]
+final val dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentState_Remote$stableprop // dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentState_Remote$stableprop|#static{}dev_voir_areca_flow_attachments_AttachmentState_Remote$stableprop[0]
+final val dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentState_Unavailable$stableprop // dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentState_Unavailable$stableprop|#static{}dev_voir_areca_flow_attachments_AttachmentState_Unavailable$stableprop[0]
+final val dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentState_Uploading$stableprop // dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentState_Uploading$stableprop|#static{}dev_voir_areca_flow_attachments_AttachmentState_Uploading$stableprop[0]
+final val dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentState_Waiting$stableprop // dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentState_Waiting$stableprop|#static{}dev_voir_areca_flow_attachments_AttachmentState_Waiting$stableprop[0]
+
+final fun <#A: kotlin/Any?> dev.voir.areca.flow.attachments.sheet/AttachmentTagChips(kotlin.collections/List<#A>, #A?, kotlin/Function1<#A, kotlin/Unit>, kotlin/Function1<#A, kotlin/String>, androidx.compose.ui/Modifier?, androidx.compose.ui.graphics/Color, kotlin/Boolean, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.voir.areca.flow.attachments.sheet/AttachmentTagChips|AttachmentTagChips(kotlin.collections.List<0:0>;0:0?;kotlin.Function1<0:0,kotlin.Unit>;kotlin.Function1<0:0,kotlin.String>;androidx.compose.ui.Modifier?;androidx.compose.ui.graphics.Color;kotlin.Boolean;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){0§<kotlin.Any?>}[0]
+final fun dev.voir.areca.flow.attachments.part/AttachmentAddTile(kotlin/Function0<kotlin/Unit>, androidx.compose.ui/Modifier?, kotlin/String?, kotlin/String?, dev.voir.areca.flow.attachments.part/AttachmentTileStyle?, androidx.compose.ui.unit/Dp, kotlin/Boolean, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.voir.areca.flow.attachments.part/AttachmentAddTile|AttachmentAddTile(kotlin.Function0<kotlin.Unit>;androidx.compose.ui.Modifier?;kotlin.String?;kotlin.String?;dev.voir.areca.flow.attachments.part.AttachmentTileStyle?;androidx.compose.ui.unit.Dp;kotlin.Boolean;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.flow.attachments.part/AttachmentIndicator(androidx.compose.ui/Modifier?, kotlin/String?, kotlin/String?, androidx.compose.ui.graphics/Color, androidx.compose.ui.unit/Dp, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.voir.areca.flow.attachments.part/AttachmentIndicator|AttachmentIndicator(androidx.compose.ui.Modifier?;kotlin.String?;kotlin.String?;androidx.compose.ui.graphics.Color;androidx.compose.ui.unit.Dp;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.flow.attachments.part/AttachmentStrip(kotlin.collections/List<dev.voir.areca.flow.attachments/AttachmentItem>, kotlin/Function1<dev.voir.areca.flow.attachments/AttachmentItem, kotlin/Unit>?, androidx.compose.ui/Modifier?, kotlin/Function0<kotlin/Unit>?, kotlin/Function1<dev.voir.areca.flow.attachments/AttachmentItem, kotlin/Unit>?, kotlin/String?, kotlin/String?, kotlin/String?, kotlin/String?, kotlin/String?, kotlin/Function1<dev.voir.areca.flow.attachments/AttachmentItem, kotlin/String?>?, kotlin/Function1<dev.voir.areca.flow.attachments/AttachmentItem, kotlin/String?>?, kotlin/String?, kotlin/String?, kotlin/Function1<dev.voir.areca.flow.attachments/AttachmentItem, kotlin/String>?, kotlin/Function1<dev.voir.areca.flow.attachments/AttachmentItem, kotlin/String>?, kotlin/Function1<dev.voir.areca.flow.attachments/AttachmentState, kotlin/String?>?, androidx.compose.ui.unit/Dp, kotlin/Boolean, dev.voir.areca.flow.attachments.part/AttachmentTileStyle?, androidx.compose.ui.unit/Dp, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int, kotlin/Int, kotlin/Int) // dev.voir.areca.flow.attachments.part/AttachmentStrip|AttachmentStrip(kotlin.collections.List<dev.voir.areca.flow.attachments.AttachmentItem>;kotlin.Function1<dev.voir.areca.flow.attachments.AttachmentItem,kotlin.Unit>?;androidx.compose.ui.Modifier?;kotlin.Function0<kotlin.Unit>?;kotlin.Function1<dev.voir.areca.flow.attachments.AttachmentItem,kotlin.Unit>?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.Function1<dev.voir.areca.flow.attachments.AttachmentItem,kotlin.String?>?;kotlin.Function1<dev.voir.areca.flow.attachments.AttachmentItem,kotlin.String?>?;kotlin.String?;kotlin.String?;kotlin.Function1<dev.voir.areca.flow.attachments.AttachmentItem,kotlin.String>?;kotlin.Function1<dev.voir.areca.flow.attachments.AttachmentItem,kotlin.String>?;kotlin.Function1<dev.voir.areca.flow.attachments.AttachmentState,kotlin.String?>?;androidx.compose.ui.unit.Dp;kotlin.Boolean;dev.voir.areca.flow.attachments.part.AttachmentTileStyle?;androidx.compose.ui.unit.Dp;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.flow.attachments.part/AttachmentThumbnail(dev.voir.areca.flow.attachments/AttachmentItem, androidx.compose.ui/Modifier?, dev.voir.areca.flow.attachments.part/AttachmentTileStyle?, androidx.compose.ui.unit/Dp, kotlin/Boolean, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.voir.areca.flow.attachments.part/AttachmentThumbnail|AttachmentThumbnail(dev.voir.areca.flow.attachments.AttachmentItem;androidx.compose.ui.Modifier?;dev.voir.areca.flow.attachments.part.AttachmentTileStyle?;androidx.compose.ui.unit.Dp;kotlin.Boolean;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.flow.attachments.part/AttachmentTile(dev.voir.areca.flow.attachments/AttachmentItem, kotlin/Function0<kotlin/Unit>?, androidx.compose.ui/Modifier?, kotlin/String?, kotlin/String?, kotlin/Function0<kotlin/Unit>?, kotlin/String?, kotlin/String?, kotlin/String?, dev.voir.areca.flow.attachments.part/AttachmentTileStyle?, androidx.compose.ui.unit/Dp, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int, kotlin/Int) // dev.voir.areca.flow.attachments.part/AttachmentTile|AttachmentTile(dev.voir.areca.flow.attachments.AttachmentItem;kotlin.Function0<kotlin.Unit>?;androidx.compose.ui.Modifier?;kotlin.String?;kotlin.String?;kotlin.Function0<kotlin.Unit>?;kotlin.String?;kotlin.String?;kotlin.String?;dev.voir.areca.flow.attachments.part.AttachmentTileStyle?;androidx.compose.ui.unit.Dp;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.flow.attachments.part/dev_voir_areca_flow_attachments_part_AttachmentTileStyle$stableprop_getter(): kotlin/Int // dev.voir.areca.flow.attachments.part/dev_voir_areca_flow_attachments_part_AttachmentTileStyle$stableprop_getter|dev_voir_areca_flow_attachments_part_AttachmentTileStyle$stableprop_getter(){}[0]
+final fun dev.voir.areca.flow.attachments.row/AttachmentRow(dev.voir.areca.flow.attachments/AttachmentItem, kotlin/Function0<kotlin/Unit>?, androidx.compose.ui/Modifier?, kotlin/String?, kotlin/String?, kotlin/String?, kotlin/String?, dev.voir.areca.flow.attachments.part/AttachmentTileStyle?, androidx.compose.ui.unit/Dp, kotlin/Boolean, kotlin/Function3<androidx.compose.foundation.layout/BoxScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int, kotlin/Int) // dev.voir.areca.flow.attachments.row/AttachmentRow|AttachmentRow(dev.voir.areca.flow.attachments.AttachmentItem;kotlin.Function0<kotlin.Unit>?;androidx.compose.ui.Modifier?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;dev.voir.areca.flow.attachments.part.AttachmentTileStyle?;androidx.compose.ui.unit.Dp;kotlin.Boolean;kotlin.Function3<androidx.compose.foundation.layout.BoxScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.flow.attachments.sheet/AttachmentOptionsSheet(dev.voir.areca.flow.attachments/AttachmentItem?, kotlin.collections/List<dev.voir.areca.flow.attachments.sheet/AttachmentChoice>, kotlin/Function0<kotlin/Unit>, kotlin/Function1<dev.voir.areca.flow.attachments/AttachmentItem, kotlin/String>?, kotlin/Function1<dev.voir.areca.flow.attachments/AttachmentItem, kotlin/String?>?, kotlin/String?, kotlin/String?, kotlin/Function3<androidx.compose.foundation.layout/ColumnScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.voir.areca.flow.attachments.sheet/AttachmentOptionsSheet|AttachmentOptionsSheet(dev.voir.areca.flow.attachments.AttachmentItem?;kotlin.collections.List<dev.voir.areca.flow.attachments.sheet.AttachmentChoice>;kotlin.Function0<kotlin.Unit>;kotlin.Function1<dev.voir.areca.flow.attachments.AttachmentItem,kotlin.String>?;kotlin.Function1<dev.voir.areca.flow.attachments.AttachmentItem,kotlin.String?>?;kotlin.String?;kotlin.String?;kotlin.Function3<androidx.compose.foundation.layout.ColumnScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.flow.attachments.sheet/AttachmentRenameSheet(dev.voir.areca.flow.attachments/AttachmentItem?, kotlin/Function1<kotlin/String, kotlin/Unit>, kotlin/Function0<kotlin/Unit>, kotlin/String?, kotlin/String?, kotlin/String?, kotlin/String?, kotlin/Function1<kotlin/String, kotlin/Boolean>?, kotlin/String?, kotlin/Boolean, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.voir.areca.flow.attachments.sheet/AttachmentRenameSheet|AttachmentRenameSheet(dev.voir.areca.flow.attachments.AttachmentItem?;kotlin.Function1<kotlin.String,kotlin.Unit>;kotlin.Function0<kotlin.Unit>;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.Function1<kotlin.String,kotlin.Boolean>?;kotlin.String?;kotlin.Boolean;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.flow.attachments.sheet/AttachmentSourceSheet(kotlin/Boolean, kotlin.collections/List<dev.voir.areca.flow.attachments.sheet/AttachmentChoice>, kotlin/Function0<kotlin/Unit>, kotlin/String?, kotlin/String?, kotlin/String?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.voir.areca.flow.attachments.sheet/AttachmentSourceSheet|AttachmentSourceSheet(kotlin.Boolean;kotlin.collections.List<dev.voir.areca.flow.attachments.sheet.AttachmentChoice>;kotlin.Function0<kotlin.Unit>;kotlin.String?;kotlin.String?;kotlin.String?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.flow.attachments.sheet/PendingAttachmentSheet(dev.voir.areca.flow.attachments.sheet/PendingAttachment?, kotlin/Function0<kotlin/Unit>, kotlin/Function0<kotlin/Unit>, kotlin/String?, kotlin/String?, kotlin/String?, kotlin/String?, kotlin/String?, kotlin/String?, kotlin/Function0<kotlin/Unit>?, kotlin/String?, dev.voir.areca.flow.attachments.part/AttachmentTileStyle?, kotlin/Boolean, kotlin/Function3<androidx.compose.foundation.layout/ColumnScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int, kotlin/Int) // dev.voir.areca.flow.attachments.sheet/PendingAttachmentSheet|PendingAttachmentSheet(dev.voir.areca.flow.attachments.sheet.PendingAttachment?;kotlin.Function0<kotlin.Unit>;kotlin.Function0<kotlin.Unit>;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.Function0<kotlin.Unit>?;kotlin.String?;dev.voir.areca.flow.attachments.part.AttachmentTileStyle?;kotlin.Boolean;kotlin.Function3<androidx.compose.foundation.layout.ColumnScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.flow.attachments.sheet/dev_voir_areca_flow_attachments_sheet_AttachmentChoice$stableprop_getter(): kotlin/Int // dev.voir.areca.flow.attachments.sheet/dev_voir_areca_flow_attachments_sheet_AttachmentChoice$stableprop_getter|dev_voir_areca_flow_attachments_sheet_AttachmentChoice$stableprop_getter(){}[0]
+final fun dev.voir.areca.flow.attachments.sheet/dev_voir_areca_flow_attachments_sheet_AttachmentOptions$stableprop_getter(): kotlin/Int // dev.voir.areca.flow.attachments.sheet/dev_voir_areca_flow_attachments_sheet_AttachmentOptions$stableprop_getter|dev_voir_areca_flow_attachments_sheet_AttachmentOptions$stableprop_getter(){}[0]
+final fun dev.voir.areca.flow.attachments.sheet/dev_voir_areca_flow_attachments_sheet_AttachmentSourceOptions$stableprop_getter(): kotlin/Int // dev.voir.areca.flow.attachments.sheet/dev_voir_areca_flow_attachments_sheet_AttachmentSourceOptions$stableprop_getter|dev_voir_areca_flow_attachments_sheet_AttachmentSourceOptions$stableprop_getter(){}[0]
+final fun dev.voir.areca.flow.attachments.sheet/dev_voir_areca_flow_attachments_sheet_PendingAttachment$stableprop_getter(): kotlin/Int // dev.voir.areca.flow.attachments.sheet/dev_voir_areca_flow_attachments_sheet_PendingAttachment$stableprop_getter|dev_voir_areca_flow_attachments_sheet_PendingAttachment$stableprop_getter(){}[0]
+final fun dev.voir.areca.flow.attachments.viewer/AttachmentViewer(kotlin.collections/List<dev.voir.areca.flow.attachments/AttachmentItem>, kotlin/Function0<kotlin/Unit>, androidx.compose.ui/Modifier?, kotlin/Any?, kotlin/Function1<dev.voir.areca.flow.attachments/AttachmentItem, kotlin/Unit>?, kotlin/Function1<dev.voir.areca.flow.attachments/AttachmentItem, kotlin/Unit>?, kotlin/Function1<dev.voir.areca.flow.attachments/AttachmentItem, kotlin/Unit>?, kotlin/String?, kotlin/Function0<kotlin/Unit>?, kotlin.time/Duration, kotlin/Function1<dev.voir.areca.flow.attachments/AttachmentItem, kotlin/String>?, kotlin/Function2<kotlin/Int, kotlin/Int, kotlin/String>?, kotlin/Function1<dev.voir.areca.flow.attachments/AttachmentItem, kotlin/String?>?, kotlin/String?, kotlin/String?, kotlin/String?, kotlin/Function3<dev.voir.areca.flow.attachments/AttachmentItem, kotlin/Int, kotlin/Int, kotlin/String>?, dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle?, kotlin/Function3<dev.voir.areca.flow.attachments/AttachmentItem, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int, kotlin/Int) // dev.voir.areca.flow.attachments.viewer/AttachmentViewer|AttachmentViewer(kotlin.collections.List<dev.voir.areca.flow.attachments.AttachmentItem>;kotlin.Function0<kotlin.Unit>;androidx.compose.ui.Modifier?;kotlin.Any?;kotlin.Function1<dev.voir.areca.flow.attachments.AttachmentItem,kotlin.Unit>?;kotlin.Function1<dev.voir.areca.flow.attachments.AttachmentItem,kotlin.Unit>?;kotlin.Function1<dev.voir.areca.flow.attachments.AttachmentItem,kotlin.Unit>?;kotlin.String?;kotlin.Function0<kotlin.Unit>?;kotlin.time.Duration;kotlin.Function1<dev.voir.areca.flow.attachments.AttachmentItem,kotlin.String>?;kotlin.Function2<kotlin.Int,kotlin.Int,kotlin.String>?;kotlin.Function1<dev.voir.areca.flow.attachments.AttachmentItem,kotlin.String?>?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.Function3<dev.voir.areca.flow.attachments.AttachmentItem,kotlin.Int,kotlin.Int,kotlin.String>?;dev.voir.areca.flow.attachments.viewer.AttachmentViewerStyle?;kotlin.Function3<dev.voir.areca.flow.attachments.AttachmentItem,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.flow.attachments.viewer/AttachmentViewer(kotlin.collections/List<dev.voir.areca.flow.attachments/AttachmentItem>, kotlin/Function0<kotlin/Unit>, androidx.compose.ui/Modifier?, kotlin/Any?, kotlin/Function1<dev.voir.areca.flow.attachments/AttachmentItem, kotlin/Unit>?, kotlin/Function1<dev.voir.areca.flow.attachments/AttachmentItem, kotlin/Unit>?, kotlin/Function1<dev.voir.areca.flow.attachments/AttachmentItem, kotlin/Unit>?, kotlin/String?, kotlin/Function0<kotlin/Unit>?, kotlin.time/Duration?, kotlin/Function1<dev.voir.areca.flow.attachments/AttachmentItem, kotlin/String>?, kotlin/Function2<kotlin/Int, kotlin/Int, kotlin/String>?, kotlin/Function1<dev.voir.areca.flow.attachments/AttachmentItem, kotlin/String?>?, kotlin/String?, kotlin/String?, kotlin/String?, kotlin/Function3<dev.voir.areca.flow.attachments/AttachmentItem, kotlin/Int, kotlin/Int, kotlin/String>?, dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle?, kotlin/Function3<dev.voir.areca.flow.attachments/AttachmentItem, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int, kotlin/Int) // dev.voir.areca.flow.attachments.viewer/AttachmentViewer|AttachmentViewer(kotlin.collections.List<dev.voir.areca.flow.attachments.AttachmentItem>;kotlin.Function0<kotlin.Unit>;androidx.compose.ui.Modifier?;kotlin.Any?;kotlin.Function1<dev.voir.areca.flow.attachments.AttachmentItem,kotlin.Unit>?;kotlin.Function1<dev.voir.areca.flow.attachments.AttachmentItem,kotlin.Unit>?;kotlin.Function1<dev.voir.areca.flow.attachments.AttachmentItem,kotlin.Unit>?;kotlin.String?;kotlin.Function0<kotlin.Unit>?;kotlin.time.Duration?;kotlin.Function1<dev.voir.areca.flow.attachments.AttachmentItem,kotlin.String>?;kotlin.Function2<kotlin.Int,kotlin.Int,kotlin.String>?;kotlin.Function1<dev.voir.areca.flow.attachments.AttachmentItem,kotlin.String?>?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.Function3<dev.voir.areca.flow.attachments.AttachmentItem,kotlin.Int,kotlin.Int,kotlin.String>?;dev.voir.areca.flow.attachments.viewer.AttachmentViewerStyle?;kotlin.Function3<dev.voir.areca.flow.attachments.AttachmentItem,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.flow.attachments.viewer/AttachmentViewerPage(dev.voir.areca.flow.attachments/AttachmentItem, androidx.compose.ui/Modifier?, kotlin/Function0<kotlin/Unit>?, kotlin/Function0<kotlin/Unit>?, kotlin/Function0<kotlin/Unit>?, dev.voir.areca.flow.attachments.viewer/AttachmentViewerStyle?, kotlin/String?, kotlin/String?, kotlin/Function1<kotlin/Float?, kotlin/String>?, kotlin/String?, kotlin/String?, kotlin/String?, kotlin/String?, kotlin/String?, kotlin/String?, kotlin/String?, kotlin/String?, kotlin/Function2<kotlin/Int, kotlin/Int, kotlin/String>?, kotlin/Function2<kotlin/Int, kotlin/Int, kotlin/String>?, kotlin/String?, kotlin/String?, kotlin/String?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int, kotlin/Int, kotlin/Int) // dev.voir.areca.flow.attachments.viewer/AttachmentViewerPage|AttachmentViewerPage(dev.voir.areca.flow.attachments.AttachmentItem;androidx.compose.ui.Modifier?;kotlin.Function0<kotlin.Unit>?;kotlin.Function0<kotlin.Unit>?;kotlin.Function0<kotlin.Unit>?;dev.voir.areca.flow.attachments.viewer.AttachmentViewerStyle?;kotlin.String?;kotlin.String?;kotlin.Function1<kotlin.Float?,kotlin.String>?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.Function2<kotlin.Int,kotlin.Int,kotlin.String>?;kotlin.Function2<kotlin.Int,kotlin.Int,kotlin.String>?;kotlin.String?;kotlin.String?;kotlin.String?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.flow.attachments.viewer/dev_voir_areca_flow_attachments_viewer_AttachmentViewerStyle$stableprop_getter(): kotlin/Int // dev.voir.areca.flow.attachments.viewer/dev_voir_areca_flow_attachments_viewer_AttachmentViewerStyle$stableprop_getter|dev_voir_areca_flow_attachments_viewer_AttachmentViewerStyle$stableprop_getter(){}[0]
+final fun dev.voir.areca.flow.attachments.viewer/dev_voir_areca_flow_attachments_viewer_PdfOpening_Failed$stableprop_getter(): kotlin/Int // dev.voir.areca.flow.attachments.viewer/dev_voir_areca_flow_attachments_viewer_PdfOpening_Failed$stableprop_getter|dev_voir_areca_flow_attachments_viewer_PdfOpening_Failed$stableprop_getter(){}[0]
+final fun dev.voir.areca.flow.attachments.viewer/dev_voir_areca_flow_attachments_viewer_PdfOpening_Open$stableprop_getter(): kotlin/Int // dev.voir.areca.flow.attachments.viewer/dev_voir_areca_flow_attachments_viewer_PdfOpening_Open$stableprop_getter|dev_voir_areca_flow_attachments_viewer_PdfOpening_Open$stableprop_getter(){}[0]
+final fun dev.voir.areca.flow.attachments.viewer/dev_voir_areca_flow_attachments_viewer_PdfOpening_Opening$stableprop_getter(): kotlin/Int // dev.voir.areca.flow.attachments.viewer/dev_voir_areca_flow_attachments_viewer_PdfOpening_Opening$stableprop_getter|dev_voir_areca_flow_attachments_viewer_PdfOpening_Opening$stableprop_getter(){}[0]
+final fun dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentImageLoader_None$stableprop_getter(): kotlin/Int // dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentImageLoader_None$stableprop_getter|dev_voir_areca_flow_attachments_AttachmentImageLoader_None$stableprop_getter(){}[0]
+final fun dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentImageState_Failed$stableprop_getter(): kotlin/Int // dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentImageState_Failed$stableprop_getter|dev_voir_areca_flow_attachments_AttachmentImageState_Failed$stableprop_getter(){}[0]
+final fun dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentImageState_Loading$stableprop_getter(): kotlin/Int // dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentImageState_Loading$stableprop_getter|dev_voir_areca_flow_attachments_AttachmentImageState_Loading$stableprop_getter(){}[0]
+final fun dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentImageState_Ready$stableprop_getter(): kotlin/Int // dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentImageState_Ready$stableprop_getter|dev_voir_areca_flow_attachments_AttachmentImageState_Ready$stableprop_getter(){}[0]
+final fun dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentItem$stableprop_getter(): kotlin/Int // dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentItem$stableprop_getter|dev_voir_areca_flow_attachments_AttachmentItem$stableprop_getter(){}[0]
+final fun dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentPdfRenderer_None$stableprop_getter(): kotlin/Int // dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentPdfRenderer_None$stableprop_getter|dev_voir_areca_flow_attachments_AttachmentPdfRenderer_None$stableprop_getter(){}[0]
+final fun dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentState_Adding$stableprop_getter(): kotlin/Int // dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentState_Adding$stableprop_getter|dev_voir_areca_flow_attachments_AttachmentState_Adding$stableprop_getter(){}[0]
+final fun dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentState_Downloading$stableprop_getter(): kotlin/Int // dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentState_Downloading$stableprop_getter|dev_voir_areca_flow_attachments_AttachmentState_Downloading$stableprop_getter(){}[0]
+final fun dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentState_Ready$stableprop_getter(): kotlin/Int // dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentState_Ready$stableprop_getter|dev_voir_areca_flow_attachments_AttachmentState_Ready$stableprop_getter(){}[0]
+final fun dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentState_Remote$stableprop_getter(): kotlin/Int // dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentState_Remote$stableprop_getter|dev_voir_areca_flow_attachments_AttachmentState_Remote$stableprop_getter(){}[0]
+final fun dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentState_Unavailable$stableprop_getter(): kotlin/Int // dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentState_Unavailable$stableprop_getter|dev_voir_areca_flow_attachments_AttachmentState_Unavailable$stableprop_getter(){}[0]
+final fun dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentState_Uploading$stableprop_getter(): kotlin/Int // dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentState_Uploading$stableprop_getter|dev_voir_areca_flow_attachments_AttachmentState_Uploading$stableprop_getter(){}[0]
+final fun dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentState_Waiting$stableprop_getter(): kotlin/Int // dev.voir.areca.flow.attachments/dev_voir_areca_flow_attachments_AttachmentState_Waiting$stableprop_getter|dev_voir_areca_flow_attachments_AttachmentState_Waiting$stableprop_getter(){}[0]

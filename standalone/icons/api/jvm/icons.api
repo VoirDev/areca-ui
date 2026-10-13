@@ -1,0 +1,4252 @@
+public final class dev/voir/areca/icons/ActivityHeartKt {
+	public static final fun getActivityHeart (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ActivityKt {
+	public static final fun getActivity (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AirVentKt {
+	public static final fun getAirVent (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AirplayKt {
+	public static final fun getAirplay (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AirpodsKt {
+	public static final fun getAirpods (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AlarmClockCheckKt {
+	public static final fun getAlarmClockCheck (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AlarmClockKt {
+	public static final fun getAlarmClock (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AlarmClockMinusKt {
+	public static final fun getAlarmClockMinus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AlarmClockOffKt {
+	public static final fun getAlarmClockOff (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AlarmClockPlusKt {
+	public static final fun getAlarmClockPlus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AlertCircleKt {
+	public static final fun getAlertCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AlertHexagonKt {
+	public static final fun getAlertHexagon (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AlertOctagonKt {
+	public static final fun getAlertOctagon (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AlertSquareKt {
+	public static final fun getAlertSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AlertTriangleKt {
+	public static final fun getAlertTriangle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AlignCenterKt {
+	public static final fun getAlignCenter (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AlignJustifyKt {
+	public static final fun getAlignJustify (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AlignLeftKt {
+	public static final fun getAlignLeft (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AlignRightKt {
+	public static final fun getAlignRight (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AmbulanceKt {
+	public static final fun getAmbulance (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AmphoraKt {
+	public static final fun getAmphora (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AnchorKt {
+	public static final fun getAnchor (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AngleKt {
+	public static final fun getAngle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AnnotationAlertKt {
+	public static final fun getAnnotationAlert (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AnnotationCheckKt {
+	public static final fun getAnnotationCheck (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AnnotationDotsKt {
+	public static final fun getAnnotationDots (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AnnotationHeartKt {
+	public static final fun getAnnotationHeart (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AnnotationKt {
+	public static final fun getAnnotation (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AnnotationPlusKt {
+	public static final fun getAnnotationPlus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AnnotationQuestionKt {
+	public static final fun getAnnotationQuestion (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AnnotationXKt {
+	public static final fun getAnnotationX (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AnnouncementKt {
+	public static final fun getAnnouncement (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AntennaKt {
+	public static final fun getAntenna (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ApertureKt {
+	public static final fun getAperture (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AppWindowKt {
+	public static final fun getAppWindow (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AppleKt {
+	public static final fun getApple (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArchiveKt {
+	public static final fun getArchive (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArecaIcons {
+	public static final field INSTANCE Ldev/voir/areca/icons/ArecaIcons;
+}
+
+public final class dev/voir/areca/icons/Armchair2Kt {
+	public static final fun getArmchair2 (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArmchairKt {
+	public static final fun getArmchair (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowBlockDownKt {
+	public static final fun getArrowBlockDown (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowBlockLeftKt {
+	public static final fun getArrowBlockLeft (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowBlockRightKt {
+	public static final fun getArrowBlockRight (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowBlockUpKt {
+	public static final fun getArrowBlockUp (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowCircleBrokenDownLeftKt {
+	public static final fun getArrowCircleBrokenDownLeft (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowCircleBrokenDownRightKt {
+	public static final fun getArrowCircleBrokenDownRight (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowCircleBrokenUpLeftKt {
+	public static final fun getArrowCircleBrokenUpLeft (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowCircleBrokenUpRightKt {
+	public static final fun getArrowCircleBrokenUpRight (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowCircleDownKt {
+	public static final fun getArrowCircleDown (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowCircleDownLeftKt {
+	public static final fun getArrowCircleDownLeft (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowCircleDownRightKt {
+	public static final fun getArrowCircleDownRight (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowCircleLeftKt {
+	public static final fun getArrowCircleLeft (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowCircleRightKt {
+	public static final fun getArrowCircleRight (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowCircleUpKt {
+	public static final fun getArrowCircleUp (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowCircleUpLeftKt {
+	public static final fun getArrowCircleUpLeft (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowCircleUpRightKt {
+	public static final fun getArrowCircleUpRight (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowDownKt {
+	public static final fun getArrowDown (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowDownLeftKt {
+	public static final fun getArrowDownLeft (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowDownRightKt {
+	public static final fun getArrowDownRight (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowDownUpKt {
+	public static final fun getArrowDownUp (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowLeftKt {
+	public static final fun getArrowLeft (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowLeftRightKt {
+	public static final fun getArrowLeftRight (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowNarrowDownKt {
+	public static final fun getArrowNarrowDown (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowNarrowDownLeftKt {
+	public static final fun getArrowNarrowDownLeft (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowNarrowDownRightKt {
+	public static final fun getArrowNarrowDownRight (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowNarrowLeftKt {
+	public static final fun getArrowNarrowLeft (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowNarrowRightKt {
+	public static final fun getArrowNarrowRight (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowNarrowUpKt {
+	public static final fun getArrowNarrowUp (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowNarrowUpLeftKt {
+	public static final fun getArrowNarrowUpLeft (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowNarrowUpRightKt {
+	public static final fun getArrowNarrowUpRight (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowRightKt {
+	public static final fun getArrowRight (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowSquareDownKt {
+	public static final fun getArrowSquareDown (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowSquareDownLeftKt {
+	public static final fun getArrowSquareDownLeft (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowSquareDownRightKt {
+	public static final fun getArrowSquareDownRight (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowSquareLeftKt {
+	public static final fun getArrowSquareLeft (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowSquareRightKt {
+	public static final fun getArrowSquareRight (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowSquareUpKt {
+	public static final fun getArrowSquareUp (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowSquareUpLeftKt {
+	public static final fun getArrowSquareUpLeft (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowSquareUpRightKt {
+	public static final fun getArrowSquareUpRight (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowUpKt {
+	public static final fun getArrowUp (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowUpLeftKt {
+	public static final fun getArrowUpLeft (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowUpRightKt {
+	public static final fun getArrowUpRight (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowsDownKt {
+	public static final fun getArrowsDown (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowsLeftKt {
+	public static final fun getArrowsLeft (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowsRightKt {
+	public static final fun getArrowsRight (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ArrowsUpKt {
+	public static final fun getArrowsUp (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AsteriskKt {
+	public static final fun getAsterisk (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AtSignKt {
+	public static final fun getAtSign (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AtmKt {
+	public static final fun getAtm (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AtomKt {
+	public static final fun getAtom (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/Attachment02Kt {
+	public static final fun getAttachment02 (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/AwardKt {
+	public static final fun getAward (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BabyBottleKt {
+	public static final fun getBabyBottle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BabyCarriageKt {
+	public static final fun getBabyCarriage (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BabyKt {
+	public static final fun getBaby (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BackpackKt {
+	public static final fun getBackpack (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BadgePercentKt {
+	public static final fun getBadgePercent (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BaggageClaimKt {
+	public static final fun getBaggageClaim (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BallAmericanFootballKt {
+	public static final fun getBallAmericanFootball (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BallBaseballKt {
+	public static final fun getBallBaseball (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BallBasketballKt {
+	public static final fun getBallBasketball (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BallBowlingKt {
+	public static final fun getBallBowling (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BallFootballKt {
+	public static final fun getBallFootball (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BallTennisKt {
+	public static final fun getBallTennis (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BalloonKt {
+	public static final fun getBalloon (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BananaKt {
+	public static final fun getBanana (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BandageKt {
+	public static final fun getBandage (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BankKt {
+	public static final fun getBank (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BankNoteDollarKt {
+	public static final fun getBankNoteDollar (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BankNoteKt {
+	public static final fun getBankNote (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BarChartAscKt {
+	public static final fun getBarChartAsc (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BarChartDescKt {
+	public static final fun getBarChartDesc (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BarChartKt {
+	public static final fun getBarChart (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BarChartLineAltKt {
+	public static final fun getBarChartLineAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BarChartLineAscKt {
+	public static final fun getBarChartLineAsc (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BarChartLineDescKt {
+	public static final fun getBarChartLineDesc (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BarChartLineKt {
+	public static final fun getBarChartLine (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BarChartSquareKt {
+	public static final fun getBarChartSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BarLineChartKt {
+	public static final fun getBarLineChart (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BasketKt {
+	public static final fun getBasket (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BathKt {
+	public static final fun getBath (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BatteryChargingKt {
+	public static final fun getBatteryCharging (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BatteryEmptyKt {
+	public static final fun getBatteryEmpty (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BatteryFullKt {
+	public static final fun getBatteryFull (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BatteryLowKt {
+	public static final fun getBatteryLow (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BatteryMidKt {
+	public static final fun getBatteryMid (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BeachUmbrellaKt {
+	public static final fun getBeachUmbrella (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BeakerKt {
+	public static final fun getBeaker (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BeanKt {
+	public static final fun getBean (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BedDoubleKt {
+	public static final fun getBedDouble (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BedSingleKt {
+	public static final fun getBedSingle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BeefKt {
+	public static final fun getBeef (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BeerKt {
+	public static final fun getBeer (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BellKt {
+	public static final fun getBell (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BellMinusKt {
+	public static final fun getBellMinus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BellOffKt {
+	public static final fun getBellOff (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BellPlusKt {
+	public static final fun getBellPlus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BellRingingKt {
+	public static final fun getBellRinging (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BezierCurveKt {
+	public static final fun getBezierCurve (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BicepsFlexedKt {
+	public static final fun getBicepsFlexed (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BikeKt {
+	public static final fun getBike (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BinocularsKt {
+	public static final fun getBinoculars (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BirdKt {
+	public static final fun getBird (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BlocksKt {
+	public static final fun getBlocks (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BluetoothConnectKt {
+	public static final fun getBluetoothConnect (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BluetoothOffKt {
+	public static final fun getBluetoothOff (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BluetoothOnKt {
+	public static final fun getBluetoothOn (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BluetoothSignalKt {
+	public static final fun getBluetoothSignal (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BoldAltKt {
+	public static final fun getBoldAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BoldKt {
+	public static final fun getBold (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BoneKt {
+	public static final fun getBone (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BookClosedKt {
+	public static final fun getBookClosed (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BookOpenKt {
+	public static final fun getBookOpen (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BookOpenTextKt {
+	public static final fun getBookOpenText (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BookmarkAddKt {
+	public static final fun getBookmarkAdd (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BookmarkCheckKt {
+	public static final fun getBookmarkCheck (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BookmarkKt {
+	public static final fun getBookmark (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BookmarkMinusKt {
+	public static final fun getBookmarkMinus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BookmarkXKt {
+	public static final fun getBookmarkX (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BotKt {
+	public static final fun getBot (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BottleKt {
+	public static final fun getBottle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BowlChopsticksKt {
+	public static final fun getBowlChopsticks (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BoxKt {
+	public static final fun getBox (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BracketsKt {
+	public static final fun getBrackets (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BrainKt {
+	public static final fun getBrain (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BrandAndroidKt {
+	public static final fun getBrandAndroid (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BrandAppleKt {
+	public static final fun getBrandApple (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BreadKt {
+	public static final fun getBread (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BrickWallKt {
+	public static final fun getBrickWall (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BriefcaseBusinessKt {
+	public static final fun getBriefcaseBusiness (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BriefcaseKt {
+	public static final fun getBriefcase (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BroccoliKt {
+	public static final fun getBroccoli (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BroomKt {
+	public static final fun getBroom (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BrowserKt {
+	public static final fun getBrowser (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BrushAltKt {
+	public static final fun getBrushAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BrushKt {
+	public static final fun getBrush (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BugKt {
+	public static final fun getBug (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/Building2Kt {
+	public static final fun getBuilding2 (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BuildingArchKt {
+	public static final fun getBuildingArch (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BuildingKt {
+	public static final fun getBuilding (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BuildingMonumentKt {
+	public static final fun getBuildingMonument (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BuildingPavilionKt {
+	public static final fun getBuildingPavilion (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BuildingStoreKt {
+	public static final fun getBuildingStore (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BuildingWarehouseKt {
+	public static final fun getBuildingWarehouse (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BuildingsKt {
+	public static final fun getBuildings (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BulbKt {
+	public static final fun getBulb (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BurgerKt {
+	public static final fun getBurger (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BusFrontKt {
+	public static final fun getBusFront (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/BusKt {
+	public static final fun getBus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CableCarKt {
+	public static final fun getCableCar (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CableKt {
+	public static final fun getCable (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CakeKt {
+	public static final fun getCake (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CakeSliceKt {
+	public static final fun getCakeSlice (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CalculatorKt {
+	public static final fun getCalculator (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CalendarCheckAltKt {
+	public static final fun getCalendarCheckAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CalendarCheckKt {
+	public static final fun getCalendarCheck (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CalendarDateKt {
+	public static final fun getCalendarDate (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CalendarDollarKt {
+	public static final fun getCalendarDollar (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CalendarHeartAltKt {
+	public static final fun getCalendarHeartAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CalendarHeartKt {
+	public static final fun getCalendarHeart (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CalendarKt {
+	public static final fun getCalendar (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CalendarMinusAltKt {
+	public static final fun getCalendarMinusAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CalendarMinusKt {
+	public static final fun getCalendarMinus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CalendarPlusAltKt {
+	public static final fun getCalendarPlusAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CalendarPlusKt {
+	public static final fun getCalendarPlus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CalendarXKt {
+	public static final fun getCalendarX (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CameraKt {
+	public static final fun getCamera (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CameraLensKt {
+	public static final fun getCameraLens (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CameraOffKt {
+	public static final fun getCameraOff (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CameraPlusKt {
+	public static final fun getCameraPlus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CamperKt {
+	public static final fun getCamper (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CanSodaKt {
+	public static final fun getCanSoda (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CandleKt {
+	public static final fun getCandle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CandlestickChartKt {
+	public static final fun getCandlestickChart (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CandyKt {
+	public static final fun getCandy (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CannabisKt {
+	public static final fun getCannabis (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CarCrashKt {
+	public static final fun getCarCrash (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CarFanKt {
+	public static final fun getCarFan (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CarFrontKt {
+	public static final fun getCarFront (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CarGarageKt {
+	public static final fun getCarGarage (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CarKt {
+	public static final fun getCar (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CarSuvKt {
+	public static final fun getCarSuv (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CarTaxiFrontKt {
+	public static final fun getCarTaxiFront (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CaravanKt {
+	public static final fun getCaravan (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CardSimKt {
+	public static final fun getCardSim (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CarrotKt {
+	public static final fun getCarrot (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CashBanknoteKt {
+	public static final fun getCashBanknote (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CashBanknoteMoveKt {
+	public static final fun getCashBanknoteMove (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CashKt {
+	public static final fun getCash (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CashRegisterKt {
+	public static final fun getCashRegister (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CastKt {
+	public static final fun getCast (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CastleKt {
+	public static final fun getCastle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CatKt {
+	public static final fun getCat (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CctvKt {
+	public static final fun getCctv (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CertificateKt {
+	public static final fun getCertificate (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ChartUpKt {
+	public static final fun getChartUp (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CheckCircleBrokenKt {
+	public static final fun getCheckCircleBroken (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CheckCircleKt {
+	public static final fun getCheckCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CheckDoneKt {
+	public static final fun getCheckDone (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CheckHeartKt {
+	public static final fun getCheckHeart (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CheckKt {
+	public static final fun getCheck (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CheckSquareBrokenKt {
+	public static final fun getCheckSquareBroken (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CheckSquareKt {
+	public static final fun getCheckSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CheckVerifiedKt {
+	public static final fun getCheckVerified (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CheeseKt {
+	public static final fun getCheese (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ChefHatKt {
+	public static final fun getChefHat (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ChequeKt {
+	public static final fun getCheque (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CherryKt {
+	public static final fun getCherry (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ChessKt {
+	public static final fun getChess (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ChevronDownDoubleKt {
+	public static final fun getChevronDownDouble (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ChevronDownKt {
+	public static final fun getChevronDown (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ChevronLeftDoubleKt {
+	public static final fun getChevronLeftDouble (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ChevronLeftKt {
+	public static final fun getChevronLeft (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ChevronRightDoubleKt {
+	public static final fun getChevronRightDouble (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ChevronRightKt {
+	public static final fun getChevronRight (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ChevronSelectorHorizontalKt {
+	public static final fun getChevronSelectorHorizontal (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ChevronSelectorVerticalKt {
+	public static final fun getChevronSelectorVertical (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ChevronUpDoubleKt {
+	public static final fun getChevronUpDouble (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ChevronUpKt {
+	public static final fun getChevronUp (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ChristmasTreeKt {
+	public static final fun getChristmasTree (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ChurchKt {
+	public static final fun getChurch (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CigaretteKt {
+	public static final fun getCigarette (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CircleHelpKt {
+	public static final fun getCircleHelp (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CircleKt {
+	public static final fun getCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CircleParkingKt {
+	public static final fun getCircleParking (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CitrusKt {
+	public static final fun getCitrus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ClapperboardKt {
+	public static final fun getClapperboard (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ClipboardCheckKt {
+	public static final fun getClipboardCheck (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ClipboardKt {
+	public static final fun getClipboard (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ClipboardMinusKt {
+	public static final fun getClipboardMinus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ClipboardPlusKt {
+	public static final fun getClipboardPlus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ClipboardXKt {
+	public static final fun getClipboardX (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ClockCheckKt {
+	public static final fun getClockCheck (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ClockFastForwardKt {
+	public static final fun getClockFastForward (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ClockKt {
+	public static final fun getClock (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ClockPlusKt {
+	public static final fun getClockPlus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ClockRewindKt {
+	public static final fun getClockRewind (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ClockSnoozeKt {
+	public static final fun getClockSnooze (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ClockStopwatchKt {
+	public static final fun getClockStopwatch (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CloudAltKt {
+	public static final fun getCloudAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CloudKt {
+	public static final fun getCloud (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CloudLightningKt {
+	public static final fun getCloudLightning (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CloudMoonKt {
+	public static final fun getCloudMoon (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CloudOffKt {
+	public static final fun getCloudOff (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CloudRainKt {
+	public static final fun getCloudRain (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CloudSnowingKt {
+	public static final fun getCloudSnowing (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CloudSunKt {
+	public static final fun getCloudSun (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CloverKt {
+	public static final fun getClover (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CodeAltKt {
+	public static final fun getCodeAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CodeKt {
+	public static final fun getCode (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CodepenKt {
+	public static final fun getCodepen (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CoffeeKt {
+	public static final fun getCoffee (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CoinKt {
+	public static final fun getCoin (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CoinsHandKt {
+	public static final fun getCoinsHand (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CoinsKt {
+	public static final fun getCoins (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CoinsStackedKt {
+	public static final fun getCoinsStacked (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CoinsSwapKt {
+	public static final fun getCoinsSwap (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ColorsKt {
+	public static final fun getColors (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CommandKt {
+	public static final fun getCommand (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CompassKt {
+	public static final fun getCompass (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ComputerKt {
+	public static final fun getComputer (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ConciergeBellKt {
+	public static final fun getConciergeBell (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ConfettiKt {
+	public static final fun getConfetti (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ContainerKt {
+	public static final fun getContainer (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ContrastKt {
+	public static final fun getContrast (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CookieKt {
+	public static final fun getCookie (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CookingPotKt {
+	public static final fun getCookingPot (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CopyKt {
+	public static final fun getCopy (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CornerDownLeftKt {
+	public static final fun getCornerDownLeft (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CornerDownRightKt {
+	public static final fun getCornerDownRight (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CornerLeftDownKt {
+	public static final fun getCornerLeftDown (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CornerLeftUpKt {
+	public static final fun getCornerLeftUp (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CornerRightDownKt {
+	public static final fun getCornerRightDown (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CornerRightUpKt {
+	public static final fun getCornerRightUp (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CornerUpLeftKt {
+	public static final fun getCornerUpLeft (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CornerUpRightKt {
+	public static final fun getCornerUpRight (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CpuChipKt {
+	public static final fun getCpuChip (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CreditCardCheckKt {
+	public static final fun getCreditCardCheck (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CreditCardKt {
+	public static final fun getCreditCard (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CreditCardLockKt {
+	public static final fun getCreditCardLock (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CreditCardMinusKt {
+	public static final fun getCreditCardMinus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CreditCardPlusKt {
+	public static final fun getCreditCardPlus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CreditCardReaderKt {
+	public static final fun getCreditCardReader (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CreditCardRefreshKt {
+	public static final fun getCreditCardRefresh (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CreditCardShieldKt {
+	public static final fun getCreditCardShield (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CreditCardXKt {
+	public static final fun getCreditCardX (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CroissantKt {
+	public static final fun getCroissant (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CropKt {
+	public static final fun getCrop (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CrossCircleKt {
+	public static final fun getCrossCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CrossKt {
+	public static final fun getCross (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CrownKt {
+	public static final fun getCrown (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CrutchesKt {
+	public static final fun getCrutches (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CryptocurrencyKt {
+	public static final fun getCryptocurrency (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CubeKt {
+	public static final fun getCube (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CupKt {
+	public static final fun getCup (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CupSodaKt {
+	public static final fun getCupSoda (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CupcakeKt {
+	public static final fun getCupcake (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CurrencyBitcoinKt {
+	public static final fun getCurrencyBitcoin (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CurrencyDollarCircleKt {
+	public static final fun getCurrencyDollarCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CurrencyDollarKt {
+	public static final fun getCurrencyDollar (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CurrencyEthereumKt {
+	public static final fun getCurrencyEthereum (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CurrencyEuroCircleKt {
+	public static final fun getCurrencyEuroCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CurrencyEuroKt {
+	public static final fun getCurrencyEuro (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CurrencyPoundCircleKt {
+	public static final fun getCurrencyPoundCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CurrencyPoundKt {
+	public static final fun getCurrencyPound (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CurrencyRubleKt {
+	public static final fun getCurrencyRuble (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CurrencyRupeeCircleKt {
+	public static final fun getCurrencyRupeeCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CurrencyRupeeKt {
+	public static final fun getCurrencyRupee (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CurrencyYenCircleKt {
+	public static final fun getCurrencyYenCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CurrencyYenKt {
+	public static final fun getCurrencyYen (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CursorAltKt {
+	public static final fun getCursorAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CursorBoxKt {
+	public static final fun getCursorBox (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CursorClickKt {
+	public static final fun getCursorClick (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CursorKt {
+	public static final fun getCursor (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/CutKt {
+	public static final fun getCut (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DatabaseAltKt {
+	public static final fun getDatabaseAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DatabaseKt {
+	public static final fun getDatabase (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DataflowKt {
+	public static final fun getDataflow (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DeleteKt {
+	public static final fun getDelete (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DentalKt {
+	public static final fun getDental (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DeviceLaptopKt {
+	public static final fun getDeviceLaptop (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DeviceMobileDollarKt {
+	public static final fun getDeviceMobileDollar (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DeviceTvOldKt {
+	public static final fun getDeviceTvOld (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DeviceWatchKt {
+	public static final fun getDeviceWatch (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DiamondKt {
+	public static final fun getDiamond (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/Dice1Kt {
+	public static final fun getDice1 (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/Dice2Kt {
+	public static final fun getDice2 (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/Dice3Kt {
+	public static final fun getDice3 (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/Dice4Kt {
+	public static final fun getDice4 (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/Dice5Kt {
+	public static final fun getDice5 (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/Dice6Kt {
+	public static final fun getDice6 (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DicesKt {
+	public static final fun getDices (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DiscKt {
+	public static final fun getDisc (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DiscountKt {
+	public static final fun getDiscount (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DivideCircleKt {
+	public static final fun getDivideCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DivideKt {
+	public static final fun getDivide (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DnaKt {
+	public static final fun getDna (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DogKt {
+	public static final fun getDog (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DonutKt {
+	public static final fun getDonut (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DoorOpenKt {
+	public static final fun getDoorOpen (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DotpointsKt {
+	public static final fun getDotpoints (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DotsGridKt {
+	public static final fun getDotsGrid (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DotsHorizontalKt {
+	public static final fun getDotsHorizontal (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DotsVerticalKt {
+	public static final fun getDotsVertical (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DownloadAltKt {
+	public static final fun getDownloadAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DownloadCloudAltKt {
+	public static final fun getDownloadCloudAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DownloadCloudKt {
+	public static final fun getDownloadCloud (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DownloadKt {
+	public static final fun getDownload (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DramaKt {
+	public static final fun getDrama (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DrillKt {
+	public static final fun getDrill (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DroneKt {
+	public static final fun getDrone (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DropKt {
+	public static final fun getDrop (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DropletHalf2Kt {
+	public static final fun getDropletHalf2 (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DropletKt {
+	public static final fun getDroplet (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DropletsKt {
+	public static final fun getDroplets (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DropperKt {
+	public static final fun getDropper (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DrumKt {
+	public static final fun getDrum (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DrumstickKt {
+	public static final fun getDrumstick (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/DumbbellKt {
+	public static final fun getDumbbell (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/EarKt {
+	public static final fun getEar (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/EarthKt {
+	public static final fun getEarth (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/EarthPinKt {
+	public static final fun getEarthPin (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/EditKt {
+	public static final fun getEdit (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/EditLineKt {
+	public static final fun getEditLine (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/EditSquareKt {
+	public static final fun getEditSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/EggFriedKt {
+	public static final fun getEggFried (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/EggKt {
+	public static final fun getEgg (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/EngineKt {
+	public static final fun getEngine (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/EqualKt {
+	public static final fun getEqual (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/EqualNotKt {
+	public static final fun getEqualNot (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/EraserKt {
+	public static final fun getEraser (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/EvChargerKt {
+	public static final fun getEvCharger (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ExchangeKt {
+	public static final fun getExchange (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ExpandKt {
+	public static final fun getExpand (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ExpandSquareKt {
+	public static final fun getExpandSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/EyeHideKt {
+	public static final fun getEyeHide (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/EyeKt {
+	public static final fun getEye (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/EyeOffKt {
+	public static final fun getEyeOff (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/EyeShowKt {
+	public static final fun getEyeShow (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FaceContentKt {
+	public static final fun getFaceContent (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FaceFrownKt {
+	public static final fun getFaceFrown (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FaceHappyKt {
+	public static final fun getFaceHappy (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FaceIdKt {
+	public static final fun getFaceId (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FaceIdSquareKt {
+	public static final fun getFaceIdSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FaceNeutralKt {
+	public static final fun getFaceNeutral (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FaceSadKt {
+	public static final fun getFaceSad (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FaceSmileKt {
+	public static final fun getFaceSmile (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FaceWinkKt {
+	public static final fun getFaceWink (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FactoryKt {
+	public static final fun getFactory (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FanKt {
+	public static final fun getFan (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FastBackwardKt {
+	public static final fun getFastBackward (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FastForwardKt {
+	public static final fun getFastForward (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FaucetKt {
+	public static final fun getFaucet (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FeatherKt {
+	public static final fun getFeather (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FenceKt {
+	public static final fun getFence (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FerrisWheelKt {
+	public static final fun getFerrisWheel (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FerryKt {
+	public static final fun getFerry (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FigmaKt {
+	public static final fun getFigma (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FileChartKt {
+	public static final fun getFileChart (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FileCheckKt {
+	public static final fun getFileCheck (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FileCodeAltKt {
+	public static final fun getFileCodeAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FileCodeKt {
+	public static final fun getFileCode (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FileDownloadKt {
+	public static final fun getFileDownload (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FileEmptyKt {
+	public static final fun getFileEmpty (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FileHeartKt {
+	public static final fun getFileHeart (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FileLinkKt {
+	public static final fun getFileLink (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FileLockKt {
+	public static final fun getFileLock (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FileMinusKt {
+	public static final fun getFileMinus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FilePlusKt {
+	public static final fun getFilePlus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FileQuestionKt {
+	public static final fun getFileQuestion (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FileSearchKt {
+	public static final fun getFileSearch (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FileShieldTextKt {
+	public static final fun getFileShieldText (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FileTextKt {
+	public static final fun getFileText (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FileXKt {
+	public static final fun getFileX (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FilmKt {
+	public static final fun getFilm (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FilterFunnelKt {
+	public static final fun getFilterFunnel (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FilterLinesKt {
+	public static final fun getFilterLines (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FingerprintKt {
+	public static final fun getFingerprint (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FishBoneKt {
+	public static final fun getFishBone (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FishKt {
+	public static final fun getFish (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FishSymbolKt {
+	public static final fun getFishSymbol (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FishingRodKt {
+	public static final fun getFishingRod (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/Flag01Kt {
+	public static final fun getFlag01 (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FlagWaveKt {
+	public static final fun getFlagWave (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FlameKindlingKt {
+	public static final fun getFlameKindling (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FlameKt {
+	public static final fun getFlame (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FlashKt {
+	public static final fun getFlash (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FlipBackwardKt {
+	public static final fun getFlipBackward (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FlipForwardKt {
+	public static final fun getFlipForward (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/Flower2Kt {
+	public static final fun getFlower2 (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FlowerKt {
+	public static final fun getFlower (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FolderCheckKt {
+	public static final fun getFolderCheck (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FolderClosedKt {
+	public static final fun getFolderClosed (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FolderCodeKt {
+	public static final fun getFolderCode (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FolderDownloadKt {
+	public static final fun getFolderDownload (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FolderKt {
+	public static final fun getFolder (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FolderLockKt {
+	public static final fun getFolderLock (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FolderMinusKt {
+	public static final fun getFolderMinus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FolderPlusKt {
+	public static final fun getFolderPlus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FolderQuestionKt {
+	public static final fun getFolderQuestion (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FolderSearchKt {
+	public static final fun getFolderSearch (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FolderXKt {
+	public static final fun getFolderX (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FootprintsKt {
+	public static final fun getFootprints (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ForbiddenKt {
+	public static final fun getForbidden (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FrameKt {
+	public static final fun getFrame (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FramerKt {
+	public static final fun getFramer (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FriendsKt {
+	public static final fun getFriends (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/FuelKt {
+	public static final fun getFuel (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/Gamepad2Kt {
+	public static final fun getGamepad2 (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/GamingPadKt {
+	public static final fun getGamingPad (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/GasStationKt {
+	public static final fun getGasStation (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/GaugeKt {
+	public static final fun getGauge (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/GavelKt {
+	public static final fun getGavel (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/GemKt {
+	public static final fun getGem (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/GiftCardKt {
+	public static final fun getGiftCard (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/GiftKt {
+	public static final fun getGift (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/GitBranchKt {
+	public static final fun getGitBranch (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/GitCommitKt {
+	public static final fun getGitCommit (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/GitMergeKt {
+	public static final fun getGitMerge (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/GitPullRequestKt {
+	public static final fun getGitPullRequest (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/GlassChampagneKt {
+	public static final fun getGlassChampagne (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/GlassCocktailKt {
+	public static final fun getGlassCocktail (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/GlassWaterKt {
+	public static final fun getGlassWater (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/GlassesKt {
+	public static final fun getGlasses (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/GlobeKt {
+	public static final fun getGlobe (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/GlobeSlatedKt {
+	public static final fun getGlobeSlated (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/GoalKt {
+	public static final fun getGoal (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/GoldKt {
+	public static final fun getGold (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/GolfKt {
+	public static final fun getGolf (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/GoogleChromeKt {
+	public static final fun getGoogleChrome (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/GraduationHatKt {
+	public static final fun getGraduationHat (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/GrapeKt {
+	public static final fun getGrape (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/GroceryKt {
+	public static final fun getGrocery (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/GuitarKt {
+	public static final fun getGuitar (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HamKt {
+	public static final fun getHam (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HammerKt {
+	public static final fun getHammer (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HandCoinsKt {
+	public static final fun getHandCoins (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HandFistKt {
+	public static final fun getHandFist (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HandHeartKt {
+	public static final fun getHandHeart (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HandHelpingKt {
+	public static final fun getHandHelping (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HandKt {
+	public static final fun getHand (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HandLuggageKt {
+	public static final fun getHandLuggage (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HandPlatterKt {
+	public static final fun getHandPlatter (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HandbagKt {
+	public static final fun getHandbag (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HandshakeKt {
+	public static final fun getHandshake (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HangerKt {
+	public static final fun getHanger (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HardDriveKt {
+	public static final fun getHardDrive (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HardHatKt {
+	public static final fun getHardHat (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HashAltKt {
+	public static final fun getHashAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HashKt {
+	public static final fun getHash (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HatGlassesKt {
+	public static final fun getHatGlasses (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HeadingAltKt {
+	public static final fun getHeadingAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HeadingKt {
+	public static final fun getHeading (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HeadphonesKt {
+	public static final fun getHeadphones (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HeadsetKt {
+	public static final fun getHeadset (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HeartCircleKt {
+	public static final fun getHeartCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HeartFillKt {
+	public static final fun getHeartFill (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HeartHandKt {
+	public static final fun getHeartHand (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HeartHandshakeKt {
+	public static final fun getHeartHandshake (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HeartKt {
+	public static final fun getHeart (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HeartPlusKt {
+	public static final fun getHeartPlus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HeartRoundedFillKt {
+	public static final fun getHeartRoundedFill (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HeartRoundedKt {
+	public static final fun getHeartRounded (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HeartbeatKt {
+	public static final fun getHeartbeat (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HeartsKt {
+	public static final fun getHearts (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HeaterKt {
+	public static final fun getHeater (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HelicopterKt {
+	public static final fun getHelicopter (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HelmetKt {
+	public static final fun getHelmet (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HelpBubbleKt {
+	public static final fun getHelpBubble (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HelpCircleKt {
+	public static final fun getHelpCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HelpHexagonKt {
+	public static final fun getHelpHexagon (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HelpOctagonKt {
+	public static final fun getHelpOctagon (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HelpSquareKt {
+	public static final fun getHelpSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HexagonKt {
+	public static final fun getHexagon (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/Home01Kt {
+	public static final fun getHome01 (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HomeAltKt {
+	public static final fun getHomeAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HomeDollarKt {
+	public static final fun getHomeDollar (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HomeKt {
+	public static final fun getHome (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HomeShieldKt {
+	public static final fun getHomeShield (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HomeSmileKt {
+	public static final fun getHomeSmile (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HorizontalBarChartAscKt {
+	public static final fun getHorizontalBarChartAsc (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HorizontalBarChartDescKt {
+	public static final fun getHorizontalBarChartDesc (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HorizontalBarChartKt {
+	public static final fun getHorizontalBarChart (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HorseKt {
+	public static final fun getHorse (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HorseToyKt {
+	public static final fun getHorseToy (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HorseshoeKt {
+	public static final fun getHorseshoe (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HospitalKt {
+	public static final fun getHospital (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HotelKt {
+	public static final fun getHotel (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HourglassKt {
+	public static final fun getHourglass (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HouseKt {
+	public static final fun getHouse (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/HurricaneKt {
+	public static final fun getHurricane (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/IceCreamConeKt {
+	public static final fun getIceCreamCone (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/IdBadge2Kt {
+	public static final fun getIdBadge2 (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/IdCardKt {
+	public static final fun getIdCard (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/IdCardLanyardKt {
+	public static final fun getIdCardLanyard (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ImageCheckKt {
+	public static final fun getImageCheck (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ImageCircleKt {
+	public static final fun getImageCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ImageDownKt {
+	public static final fun getImageDown (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ImageKt {
+	public static final fun getImage (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ImagePlusKt {
+	public static final fun getImagePlus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ImageUpKt {
+	public static final fun getImageUp (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ImageUserKt {
+	public static final fun getImageUser (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ImageXKt {
+	public static final fun getImageX (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/InboxKt {
+	public static final fun getInbox (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/InfinityKt {
+	public static final fun getInfinity (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/InfoCircleKt {
+	public static final fun getInfoCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/InfoHexagonKt {
+	public static final fun getInfoHexagon (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/InfoKt {
+	public static final fun getInfo (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/InfoOctagonKt {
+	public static final fun getInfoOctagon (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/InfoSquareKt {
+	public static final fun getInfoSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/InsuranceKt {
+	public static final fun getInsurance (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/InvoiceKt {
+	public static final fun getInvoice (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/IroningKt {
+	public static final fun getIroning (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ItalicAltKt {
+	public static final fun getItalicAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ItalicKt {
+	public static final fun getItalic (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/JoystickKt {
+	public static final fun getJoystick (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/KayakKt {
+	public static final fun getKayak (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/KeyKt {
+	public static final fun getKey (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/KeyRoundKt {
+	public static final fun getKeyRound (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/KeyboardKt {
+	public static final fun getKeyboard (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LampCeilingKt {
+	public static final fun getLampCeiling (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LampKt {
+	public static final fun getLamp (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LandmarkKt {
+	public static final fun getLandmark (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LanguagesKt {
+	public static final fun getLanguages (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LaptopKt {
+	public static final fun getLaptop (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LaptopMinimalKt {
+	public static final fun getLaptopMinimal (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LawnMowerKt {
+	public static final fun getLawnMower (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/Leaf2Kt {
+	public static final fun getLeaf2 (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LeafKt {
+	public static final fun getLeaf (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LeafyGreenKt {
+	public static final fun getLeafyGreen (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LeftIndentKt {
+	public static final fun getLeftIndent (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LetterSpacingKt {
+	public static final fun getLetterSpacing (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LibraryBigKt {
+	public static final fun getLibraryBig (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LibraryKt {
+	public static final fun getLibrary (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LicenseKt {
+	public static final fun getLicense (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LifeBuoyKt {
+	public static final fun getLifeBuoy (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LightbulbKt {
+	public static final fun getLightbulb (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LightningAltKt {
+	public static final fun getLightningAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LightningKt {
+	public static final fun getLightning (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LineChartDownKt {
+	public static final fun getLineChartDown (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LineChartUpArrowKt {
+	public static final fun getLineChartUpArrow (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LineChartUpKt {
+	public static final fun getLineChartUp (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LineHeightKt {
+	public static final fun getLineHeight (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LinkAltKt {
+	public static final fun getLinkAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LinkBrokenKt {
+	public static final fun getLinkBroken (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LinkExternalKt {
+	public static final fun getLinkExternal (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LinkExternalSquareKt {
+	public static final fun getLinkExternalSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LinkKt {
+	public static final fun getLink (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LoadingKt {
+	public static final fun getLoading (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LoanKt {
+	public static final fun getLoan (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LockKeyholeSquareKt {
+	public static final fun getLockKeyholeSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LockKt {
+	public static final fun getLock (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LockUnlockedKt {
+	public static final fun getLockUnlocked (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LogInKt {
+	public static final fun getLogIn (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LogOutKt {
+	public static final fun getLogOut (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/LuggageKt {
+	public static final fun getLuggage (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MagicWand01Kt {
+	public static final fun getMagicWand01 (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MagicWand02Kt {
+	public static final fun getMagicWand02 (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MailAltKt {
+	public static final fun getMailAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MailAltOpenKt {
+	public static final fun getMailAltOpen (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MailKt {
+	public static final fun getMail (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MailOpenKt {
+	public static final fun getMailOpen (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MailboxKt {
+	public static final fun getMailbox (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MapAltKt {
+	public static final fun getMapAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MapKt {
+	public static final fun getMap (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MarkKt {
+	public static final fun getMark (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MarkerPinKt {
+	public static final fun getMarkerPin (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MartiniKt {
+	public static final fun getMartini (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MassageKt {
+	public static final fun getMassage (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MedalKt {
+	public static final fun getMedal (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MedicalCrossKt {
+	public static final fun getMedicalCross (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MegaphoneKt {
+	public static final fun getMegaphone (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/Menu01Kt {
+	public static final fun getMenu01 (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MessageAlertCircleKt {
+	public static final fun getMessageAlertCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MessageAlertSquareKt {
+	public static final fun getMessageAlertSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MessageChatCircleKt {
+	public static final fun getMessageChatCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MessageChatSquareKt {
+	public static final fun getMessageChatSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MessageCheckCircleKt {
+	public static final fun getMessageCheckCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MessageCheckSquareKt {
+	public static final fun getMessageCheckSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MessageCircleAltKt {
+	public static final fun getMessageCircleAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MessageCircleKt {
+	public static final fun getMessageCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MessageDotsCircleKt {
+	public static final fun getMessageDotsCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MessageDotsSquareKt {
+	public static final fun getMessageDotsSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MessageHeartCircleKt {
+	public static final fun getMessageHeartCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MessageHeartKt {
+	public static final fun getMessageHeart (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MessageHeartSquareKt {
+	public static final fun getMessageHeartSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MessageNotificationSquareKt {
+	public static final fun getMessageNotificationSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MessagePlusCircleKt {
+	public static final fun getMessagePlusCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MessagePlusSquareKt {
+	public static final fun getMessagePlusSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MessageQuestionSquareKt {
+	public static final fun getMessageQuestionSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MessageSquareAltKt {
+	public static final fun getMessageSquareAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MessageSquareKt {
+	public static final fun getMessageSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MessageTextSquareKt {
+	public static final fun getMessageTextSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MessageXCircleKt {
+	public static final fun getMessageXCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MessageXSquareKt {
+	public static final fun getMessageXSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/Microphone2Kt {
+	public static final fun getMicrophone2 (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MicrophoneKt {
+	public static final fun getMicrophone (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MicrophoneOffKt {
+	public static final fun getMicrophoneOff (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MicroscopeKt {
+	public static final fun getMicroscope (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MicrowaveKt {
+	public static final fun getMicrowave (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MilkKt {
+	public static final fun getMilk (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MinusCircleKt {
+	public static final fun getMinusCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MinusKt {
+	public static final fun getMinus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MinusSquareKt {
+	public static final fun getMinusSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MirrorRoundKt {
+	public static final fun getMirrorRound (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MoneyBagKt {
+	public static final fun getMoneyBag (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MonitorKt {
+	public static final fun getMonitor (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MoodKidKt {
+	public static final fun getMoodKid (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MoonAltKt {
+	public static final fun getMoonAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MoonStarKt {
+	public static final fun getMoonStar (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MopKt {
+	public static final fun getMop (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MopedKt {
+	public static final fun getMoped (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MoreHorizontalKt {
+	public static final fun getMoreHorizontal (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MosqueKt {
+	public static final fun getMosque (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MotorbikeKt {
+	public static final fun getMotorbike (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MountainKt {
+	public static final fun getMountain (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MountainSnowKt {
+	public static final fun getMountainSnow (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MouseKt {
+	public static final fun getMouse (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MoveKt {
+	public static final fun getMove (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MovieKt {
+	public static final fun getMovie (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MusicNoteKt {
+	public static final fun getMusicNote (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/MusicNotePlusKt {
+	public static final fun getMusicNotePlus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/NavigationPointerForwardKt {
+	public static final fun getNavigationPointerForward (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/NavigationPointerForwardOffKt {
+	public static final fun getNavigationPointerForwardOff (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/NavigationPointerKt {
+	public static final fun getNavigationPointer (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/NavigationPointerOffKt {
+	public static final fun getNavigationPointerOff (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/NeedleThreadKt {
+	public static final fun getNeedleThread (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/NewsKt {
+	public static final fun getNews (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/NewspaperKt {
+	public static final fun getNewspaper (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/NfcKt {
+	public static final fun getNfc (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/NotebookKt {
+	public static final fun getNotebook (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/OctagonKt {
+	public static final fun getOctagon (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/OfficeKt {
+	public static final fun getOffice (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/OldKt {
+	public static final fun getOld (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/OnlineBankingKt {
+	public static final fun getOnlineBanking (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/OrigamiKt {
+	public static final fun getOrigami (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PackageCheckKt {
+	public static final fun getPackageCheck (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PackageKt {
+	public static final fun getPackage (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PackageMinusKt {
+	public static final fun getPackageMinus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PackageOpenKt {
+	public static final fun getPackageOpen (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PackagePlusKt {
+	public static final fun getPackagePlus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PackageSearchKt {
+	public static final fun getPackageSearch (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PackageXKt {
+	public static final fun getPackageX (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PaintKt {
+	public static final fun getPaint (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PaintPourKt {
+	public static final fun getPaintPour (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PaintRollerKt {
+	public static final fun getPaintRoller (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PaintbrushKt {
+	public static final fun getPaintbrush (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PaletteKt {
+	public static final fun getPalette (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PaperBagKt {
+	public static final fun getPaperBag (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PaperclipKt {
+	public static final fun getPaperclip (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ParagraphWrapKt {
+	public static final fun getParagraphWrap (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PartyPopperKt {
+	public static final fun getPartyPopper (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PasscodeKt {
+	public static final fun getPasscode (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PassportKt {
+	public static final fun getPassport (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PauseCircleKt {
+	public static final fun getPauseCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PauseSquareKt {
+	public static final fun getPauseSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PawPrintKt {
+	public static final fun getPawPrint (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PcCaseKt {
+	public static final fun getPcCase (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PenToolKt {
+	public static final fun getPenTool (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PencilKt {
+	public static final fun getPencil (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PencilLineKt {
+	public static final fun getPencilLine (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PencilRulerKt {
+	public static final fun getPencilRuler (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PentagonKt {
+	public static final fun getPentagon (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PercentCircleKt {
+	public static final fun getPercentCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PercentKt {
+	public static final fun getPercent (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PercentageKt {
+	public static final fun getPercentage (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PerfumeKt {
+	public static final fun getPerfume (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PerspectiveKt {
+	public static final fun getPerspective (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PhoneCallAltKt {
+	public static final fun getPhoneCallAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PhoneCallKt {
+	public static final fun getPhoneCall (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PhoneHangUpKt {
+	public static final fun getPhoneHangUp (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PhoneIncomingKt {
+	public static final fun getPhoneIncoming (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PhoneKt {
+	public static final fun getPhone (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PhoneOutgoingKt {
+	public static final fun getPhoneOutgoing (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PhonePauseKt {
+	public static final fun getPhonePause (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PhonePlusKt {
+	public static final fun getPhonePlus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PhoneXKt {
+	public static final fun getPhoneX (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PianoKt {
+	public static final fun getPiano (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PieChartKt {
+	public static final fun getPieChart (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PigMoneyKt {
+	public static final fun getPigMoney (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PiggyBankKt {
+	public static final fun getPiggyBank (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PilcrowKt {
+	public static final fun getPilcrow (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PilcrowSquareKt {
+	public static final fun getPilcrowSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PillBottleKt {
+	public static final fun getPillBottle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PillKt {
+	public static final fun getPill (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PinAltKt {
+	public static final fun getPinAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PinKt {
+	public static final fun getPin (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PizzaKt {
+	public static final fun getPizza (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PlaneKt {
+	public static final fun getPlane (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PlaneLandingKt {
+	public static final fun getPlaneLanding (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PlaneTakeoffKt {
+	public static final fun getPlaneTakeoff (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PlantPotKt {
+	public static final fun getPlantPot (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PlayCircleKt {
+	public static final fun getPlayCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PlayFootballKt {
+	public static final fun getPlayFootball (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PlayKt {
+	public static final fun getPlay (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PlaySquareKt {
+	public static final fun getPlaySquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PlugKt {
+	public static final fun getPlug (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PlusCircleKt {
+	public static final fun getPlusCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PlusKt {
+	public static final fun getPlus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PlusSquareKt {
+	public static final fun getPlusSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PodcastKt {
+	public static final fun getPodcast (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PodiumKt {
+	public static final fun getPodium (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PoolKt {
+	public static final fun getPool (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PopcornKt {
+	public static final fun getPopcorn (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PowerKt {
+	public static final fun getPower (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PrayKt {
+	public static final fun getPray (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PresentationChartKt {
+	public static final fun getPresentationChart (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PresentationKt {
+	public static final fun getPresentation (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PrinterKt {
+	public static final fun getPrinter (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PuzzleKt {
+	public static final fun getPuzzle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/PuzzlePieceKt {
+	public static final fun getPuzzlePiece (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/QrCodeKt {
+	public static final fun getQrCode (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/RabbitKt {
+	public static final fun getRabbit (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/RadioKt {
+	public static final fun getRadio (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/RazorKt {
+	public static final fun getRazor (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ReceiptCheckKt {
+	public static final fun getReceiptCheck (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ReceiptKt {
+	public static final fun getReceipt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ReceiptTaxKt {
+	public static final fun getReceiptTax (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/RecordingKt {
+	public static final fun getRecording (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/RecycleKt {
+	public static final fun getRecycle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ReflectKt {
+	public static final fun getReflect (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/RefreshCcwKt {
+	public static final fun getRefreshCcw (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/RefrigeratorKt {
+	public static final fun getRefrigerator (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/RepeatKt {
+	public static final fun getRepeat (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/RepeatOvalKt {
+	public static final fun getRepeatOval (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ReportMoneyKt {
+	public static final fun getReportMoney (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ReverseLeftKt {
+	public static final fun getReverseLeft (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/RibbonKt {
+	public static final fun getRibbon (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/RightIndentKt {
+	public static final fun getRightIndent (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/RingsKt {
+	public static final fun getRings (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/RoadKt {
+	public static final fun getRoad (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/RoadSignKt {
+	public static final fun getRoadSign (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/RocketKt {
+	public static final fun getRocket (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/RocketLaunchKt {
+	public static final fun getRocketLaunch (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/RockingChairKt {
+	public static final fun getRockingChair (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/RollerBrushKt {
+	public static final fun getRollerBrush (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/RoseKt {
+	public static final fun getRose (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/RotateCcwSquareKt {
+	public static final fun getRotateCcwSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/RouteKt {
+	public static final fun getRoute (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/RouterKt {
+	public static final fun getRouter (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/RssKt {
+	public static final fun getRss (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/RubberStampKt {
+	public static final fun getRubberStamp (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/RulerKt {
+	public static final fun getRuler (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/RunKt {
+	public static final fun getRun (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SafeKt {
+	public static final fun getSafe (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SafetyBoxKt {
+	public static final fun getSafetyBox (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SailboatKt {
+	public static final fun getSailboat (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SaladKt {
+	public static final fun getSalad (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SaleKt {
+	public static final fun getSale (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SaltKt {
+	public static final fun getSalt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SandwichKt {
+	public static final fun getSandwich (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SatelliteDishKt {
+	public static final fun getSatelliteDish (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SausageKt {
+	public static final fun getSausage (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SaveKt {
+	public static final fun getSave (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ScaleKt {
+	public static final fun getScale (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ScalesKt {
+	public static final fun getScales (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ScanKt {
+	public static final fun getScan (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SchoolKt {
+	public static final fun getSchool (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ScissorsCutKt {
+	public static final fun getScissorsCut (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ScissorsKt {
+	public static final fun getScissors (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ScooterElectricKt {
+	public static final fun getScooterElectric (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ScooterKt {
+	public static final fun getScooter (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ScrollTextKt {
+	public static final fun getScrollText (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SearchKt {
+	public static final fun getSearch (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SearchMdKt {
+	public static final fun getSearchMd (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SearchXKt {
+	public static final fun getSearchX (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SeedlingKt {
+	public static final fun getSeedling (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SendKt {
+	public static final fun getSend (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ServerKt {
+	public static final fun getServer (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SettingsControlKt {
+	public static final fun getSettingsControl (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SettingsKt {
+	public static final fun getSettings (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ShareKt {
+	public static final fun getShare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ShareNodesKt {
+	public static final fun getShareNodes (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ShelvingUnitKt {
+	public static final fun getShelvingUnit (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ShieldDollarKt {
+	public static final fun getShieldDollar (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ShieldKt {
+	public static final fun getShield (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ShieldOffKt {
+	public static final fun getShieldOff (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ShieldPlusKt {
+	public static final fun getShieldPlus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ShieldTickKt {
+	public static final fun getShieldTick (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ShieldZapKt {
+	public static final fun getShieldZap (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ShipKt {
+	public static final fun getShip (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ShirtKt {
+	public static final fun getShirt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ShirtSportKt {
+	public static final fun getShirtSport (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ShoeKt {
+	public static final fun getShoe (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ShoppingBag03Kt {
+	public static final fun getShoppingBag03 (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ShoppingBasketKt {
+	public static final fun getShoppingBasket (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ShoppingCartDollarKt {
+	public static final fun getShoppingCartDollar (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ShoppingCartKt {
+	public static final fun getShoppingCart (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ShovelKt {
+	public static final fun getShovel (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ShowerHeadKt {
+	public static final fun getShowerHead (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ShrimpKt {
+	public static final fun getShrimp (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ShuffleKt {
+	public static final fun getShuffle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SigmaKt {
+	public static final fun getSigma (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SignalKt {
+	public static final fun getSignal (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SignatureKt {
+	public static final fun getSignature (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SirenKt {
+	public static final fun getSiren (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SkateboardingKt {
+	public static final fun getSkateboarding (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SkiJumpingKt {
+	public static final fun getSkiJumping (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SkipBackKt {
+	public static final fun getSkipBack (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SkipForwardKt {
+	public static final fun getSkipForward (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SlashCircleKt {
+	public static final fun getSlashCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SlashDividerKt {
+	public static final fun getSlashDivider (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SlidersKt {
+	public static final fun getSliders (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SmartphoneKt {
+	public static final fun getSmartphone (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SmokingKt {
+	public static final fun getSmoking (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SnowboardingKt {
+	public static final fun getSnowboarding (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SnowflakeKt {
+	public static final fun getSnowflake (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SoapDispenserDropletKt {
+	public static final fun getSoapDispenserDroplet (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SocialAppleKt {
+	public static final fun getSocialApple (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SocialFacebookKt {
+	public static final fun getSocialFacebook (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SocialGoogleKt {
+	public static final fun getSocialGoogle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SofaKt {
+	public static final fun getSofa (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SolarPanelKt {
+	public static final fun getSolarPanel (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SoupKt {
+	public static final fun getSoup (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SpadeKt {
+	public static final fun getSpade (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SparkleKt {
+	public static final fun getSparkle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SparklesKt {
+	public static final fun getSparkles (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SpeakerKt {
+	public static final fun getSpeaker (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SpeedometerKt {
+	public static final fun getSpeedometer (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SportShoeKt {
+	public static final fun getSportShoe (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SprayCanKt {
+	public static final fun getSprayCan (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SproutKt {
+	public static final fun getSprout (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SquareKt {
+	public static final fun getSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/StampKt {
+	public static final fun getStamp (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/StarAltKt {
+	public static final fun getStarAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/StarKt {
+	public static final fun getStar (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/StarsKt {
+	public static final fun getStars (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SteeringWheelKt {
+	public static final fun getSteeringWheel (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/StethoscopeKt {
+	public static final fun getStethoscope (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/StickerSquareKt {
+	public static final fun getStickerSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/StockmarketKt {
+	public static final fun getStockmarket (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/StopCircleKt {
+	public static final fun getStopCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/StopSquareKt {
+	public static final fun getStopSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/StoreKt {
+	public static final fun getStore (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/StrikethroughAltKt {
+	public static final fun getStrikethroughAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/StrikethroughKt {
+	public static final fun getStrikethrough (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SubscriptKt {
+	public static final fun getSubscript (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SunKt {
+	public static final fun getSun (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SunglassesKt {
+	public static final fun getSunglasses (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SunriseKt {
+	public static final fun getSunrise (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SunsetKt {
+	public static final fun getSunset (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SwimmingKt {
+	public static final fun getSwimming (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SwissFrancKt {
+	public static final fun getSwissFranc (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SwitchHorizontalAltKt {
+	public static final fun getSwitchHorizontalAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SwitchHorizontalKt {
+	public static final fun getSwitchHorizontal (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SwitchVerticalAltKt {
+	public static final fun getSwitchVerticalAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SwitchVerticalKt {
+	public static final fun getSwitchVertical (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/SyringeKt {
+	public static final fun getSyringe (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TabletKt {
+	public static final fun getTablet (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TagAltKt {
+	public static final fun getTagAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TagKt {
+	public static final fun getTag (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TargetAltKt {
+	public static final fun getTargetAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TargetKt {
+	public static final fun getTarget (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TelescopeKt {
+	public static final fun getTelescope (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TentKt {
+	public static final fun getTent (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TerminalBrowserKt {
+	public static final fun getTerminalBrowser (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TerminalKt {
+	public static final fun getTerminal (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TerminalSquareKt {
+	public static final fun getTerminalSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TestPipeKt {
+	public static final fun getTestPipe (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TestTubeKt {
+	public static final fun getTestTube (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TextInputKt {
+	public static final fun getTextInput (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ThermometerColdKt {
+	public static final fun getThermometerCold (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ThermometerKt {
+	public static final fun getThermometer (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ThermometerLowKt {
+	public static final fun getThermometerLow (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ThermometerWarmKt {
+	public static final fun getThermometerWarm (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ThumbsDownKt {
+	public static final fun getThumbsDown (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ThumbsUpKt {
+	public static final fun getThumbsUp (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TicketCheckKt {
+	public static final fun getTicketCheck (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TicketKt {
+	public static final fun getTicket (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TicketsKt {
+	public static final fun getTickets (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ToggleLeftKt {
+	public static final fun getToggleLeft (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ToggleRightKt {
+	public static final fun getToggleRight (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ToiletKt {
+	public static final fun getToilet (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ToolKt {
+	public static final fun getTool (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ToolboxKt {
+	public static final fun getToolbox (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ToolsKitchen2Kt {
+	public static final fun getToolsKitchen2 (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ToolsKt {
+	public static final fun getTools (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ToothbrushKt {
+	public static final fun getToothbrush (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TowerControlKt {
+	public static final fun getTowerControl (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ToyBrickKt {
+	public static final fun getToyBrick (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TractorKt {
+	public static final fun getTractor (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TrafficConeKt {
+	public static final fun getTrafficCone (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TrainFrontTunnelKt {
+	public static final fun getTrainFrontTunnel (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TrainKt {
+	public static final fun getTrain (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TramFrontKt {
+	public static final fun getTramFront (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TramKt {
+	public static final fun getTram (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TransformKt {
+	public static final fun getTransform (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TranslateKt {
+	public static final fun getTranslate (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TrashAltKt {
+	public static final fun getTrashAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TrashKt {
+	public static final fun getTrash (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TrayKt {
+	public static final fun getTray (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TreeDeciduousKt {
+	public static final fun getTreeDeciduous (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TreePalmKt {
+	public static final fun getTreePalm (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TreesKt {
+	public static final fun getTrees (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TrendDownKt {
+	public static final fun getTrendDown (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TrendUpKt {
+	public static final fun getTrendUp (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TriangleKt {
+	public static final fun getTriangle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TrophyKt {
+	public static final fun getTrophy (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TruckKt {
+	public static final fun getTruck (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TruckReturnKt {
+	public static final fun getTruckReturn (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TubeLotionKt {
+	public static final fun getTubeLotion (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TurkishLiraKt {
+	public static final fun getTurkishLira (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TurtleKt {
+	public static final fun getTurtle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TvKt {
+	public static final fun getTv (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TvMinimalPlayKt {
+	public static final fun getTvMinimalPlay (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TypeAltKt {
+	public static final fun getTypeAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/TypeKt {
+	public static final fun getType (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/UmbrellaKt {
+	public static final fun getUmbrella (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/UnderlineAltKt {
+	public static final fun getUnderlineAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/UnderlineKt {
+	public static final fun getUnderline (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/UniversityKt {
+	public static final fun getUniversity (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/UnlockKt {
+	public static final fun getUnlock (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/UploadAltKt {
+	public static final fun getUploadAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/UploadCloudAltKt {
+	public static final fun getUploadCloudAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/UploadCloudKt {
+	public static final fun getUploadCloud (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/UploadKt {
+	public static final fun getUpload (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/UsbFlashDriveKt {
+	public static final fun getUsbFlashDrive (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/UserCheckKt {
+	public static final fun getUserCheck (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/UserCircleKt {
+	public static final fun getUserCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/UserDownKt {
+	public static final fun getUserDown (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/UserEditKt {
+	public static final fun getUserEdit (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/UserKt {
+	public static final fun getUser (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/UserMinusKt {
+	public static final fun getUserMinus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/UserPlusKt {
+	public static final fun getUserPlus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/UserUpKt {
+	public static final fun getUserUp (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/UserXKt {
+	public static final fun getUserX (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/UsersGroupKt {
+	public static final fun getUsersGroup (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/UsersKt {
+	public static final fun getUsers (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/UsersMinusKt {
+	public static final fun getUsersMinus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/UsersPlusKt {
+	public static final fun getUsersPlus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/UsersRoundKt {
+	public static final fun getUsersRound (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/UtensilsCrossedKt {
+	public static final fun getUtensilsCrossed (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/UtensilsKt {
+	public static final fun getUtensils (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/UtilityPoleKt {
+	public static final fun getUtilityPole (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/VaccineKt {
+	public static final fun getVaccine (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/VacuumCleanerKt {
+	public static final fun getVacuumCleaner (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/VanKt {
+	public static final fun getVan (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/VariableKt {
+	public static final fun getVariable (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/VaultKt {
+	public static final fun getVault (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/VeganKt {
+	public static final fun getVegan (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/VideoKt {
+	public static final fun getVideo (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/VideoRecorderKt {
+	public static final fun getVideoRecorder (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/VideoRecorderOffKt {
+	public static final fun getVideoRecorderOff (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/VirusKt {
+	public static final fun getVirus (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/VoicemailKt {
+	public static final fun getVoicemail (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/VolleyballKt {
+	public static final fun getVolleyball (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/VolumeMaxKt {
+	public static final fun getVolumeMax (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/VolumeMinKt {
+	public static final fun getVolumeMin (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/VolumeXKt {
+	public static final fun getVolumeX (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/WalkKt {
+	public static final fun getWalk (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/WalletAltKt {
+	public static final fun getWalletAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/WalletClassicKt {
+	public static final fun getWalletClassic (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/WalletKt {
+	public static final fun getWallet (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/WalletMinimalKt {
+	public static final fun getWalletMinimal (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/WarehouseKt {
+	public static final fun getWarehouse (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/WarningSealKt {
+	public static final fun getWarningSeal (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/WashKt {
+	public static final fun getWash (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/WashingMachineKt {
+	public static final fun getWashingMachine (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/WatchKt {
+	public static final fun getWatch (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/WavesKt {
+	public static final fun getWaves (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/WebcamKt {
+	public static final fun getWebcam (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/WheatKt {
+	public static final fun getWheat (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/WheelKt {
+	public static final fun getWheel (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/WheelchairKt {
+	public static final fun getWheelchair (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/WhistleKt {
+	public static final fun getWhistle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/WifiKt {
+	public static final fun getWifi (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/WifiOffKt {
+	public static final fun getWifiOff (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/WindAltKt {
+	public static final fun getWindAlt (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/WindKt {
+	public static final fun getWind (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/WineKt {
+	public static final fun getWine (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/WorldKt {
+	public static final fun getWorld (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/WrenchKt {
+	public static final fun getWrench (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/XCircleKt {
+	public static final fun getXCircle (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/XCloseKt {
+	public static final fun getXClose (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/XKt {
+	public static final fun getX (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/XSquareKt {
+	public static final fun getXSquare (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/YarnKt {
+	public static final fun getYarn (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/YogaKt {
+	public static final fun getYoga (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/YoutubeKt {
+	public static final fun getYoutube (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ZapKt {
+	public static final fun getZap (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ZapOffKt {
+	public static final fun getZapOff (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ZoomInKt {
+	public static final fun getZoomIn (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class dev/voir/areca/icons/ZoomOutKt {
+	public static final fun getZoomOut (Ldev/voir/areca/icons/ArecaIcons;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+

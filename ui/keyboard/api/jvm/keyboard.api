@@ -1,0 +1,502 @@
+public final class dev/voir/areca/keyboard/KeyboardAnimation {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/keyboard/KeyboardAnimation$Companion;
+	public fun <init> (Landroidx/compose/animation/EnterTransition;Landroidx/compose/animation/ExitTransition;Landroidx/compose/animation/EnterTransition;Landroidx/compose/animation/ExitTransition;Landroidx/compose/animation/core/FiniteAnimationSpec;Landroidx/compose/animation/core/FiniteAnimationSpec;)V
+	public final fun component1 ()Landroidx/compose/animation/EnterTransition;
+	public final fun component2 ()Landroidx/compose/animation/ExitTransition;
+	public final fun component3 ()Landroidx/compose/animation/EnterTransition;
+	public final fun component4 ()Landroidx/compose/animation/ExitTransition;
+	public final fun component5 ()Landroidx/compose/animation/core/FiniteAnimationSpec;
+	public final fun component6 ()Landroidx/compose/animation/core/FiniteAnimationSpec;
+	public final fun copy (Landroidx/compose/animation/EnterTransition;Landroidx/compose/animation/ExitTransition;Landroidx/compose/animation/EnterTransition;Landroidx/compose/animation/ExitTransition;Landroidx/compose/animation/core/FiniteAnimationSpec;Landroidx/compose/animation/core/FiniteAnimationSpec;)Ldev/voir/areca/keyboard/KeyboardAnimation;
+	public static synthetic fun copy$default (Ldev/voir/areca/keyboard/KeyboardAnimation;Landroidx/compose/animation/EnterTransition;Landroidx/compose/animation/ExitTransition;Landroidx/compose/animation/EnterTransition;Landroidx/compose/animation/ExitTransition;Landroidx/compose/animation/core/FiniteAnimationSpec;Landroidx/compose/animation/core/FiniteAnimationSpec;ILjava/lang/Object;)Ldev/voir/areca/keyboard/KeyboardAnimation;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEnter ()Landroidx/compose/animation/EnterTransition;
+	public final fun getExit ()Landroidx/compose/animation/ExitTransition;
+	public final fun getInsetEnter ()Landroidx/compose/animation/core/FiniteAnimationSpec;
+	public final fun getInsetExit ()Landroidx/compose/animation/core/FiniteAnimationSpec;
+	public final fun getScrimEnter ()Landroidx/compose/animation/EnterTransition;
+	public final fun getScrimExit ()Landroidx/compose/animation/ExitTransition;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/keyboard/KeyboardAnimation$Companion {
+	public final fun default-bz6L7rs (JLandroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;Landroidx/compose/runtime/Composer;II)Ldev/voir/areca/keyboard/KeyboardAnimation;
+	public final fun getDefault (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/keyboard/KeyboardAnimation;
+}
+
+public final class dev/voir/areca/keyboard/KeyboardController {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/keyboard/KeyboardController$Companion;
+	public fun <init> ()V
+	public final fun close ()V
+	public final fun getTarget ()Ldev/voir/areca/keyboard/KeyboardTarget;
+	public final fun isVisible ()Z
+	public final fun open (Ldev/voir/areca/keyboard/KeyboardTarget;ZZ)V
+	public static synthetic fun open$default (Ldev/voir/areca/keyboard/KeyboardController;Ldev/voir/areca/keyboard/KeyboardTarget;ZZILjava/lang/Object;)V
+	public final fun toggle (Ldev/voir/areca/keyboard/KeyboardTarget;ZZ)V
+	public static synthetic fun toggle$default (Ldev/voir/areca/keyboard/KeyboardController;Ldev/voir/areca/keyboard/KeyboardTarget;ZZILjava/lang/Object;)V
+}
+
+public final class dev/voir/areca/keyboard/KeyboardController$Companion {
+	public final fun getSaver ()Landroidx/compose/runtime/saveable/Saver;
+}
+
+public final class dev/voir/areca/keyboard/KeyboardControllerKt {
+	public static final fun getLocalKeyboardController ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+	public static final fun rememberKeyboardController (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/keyboard/KeyboardController;
+}
+
+public final class dev/voir/areca/keyboard/KeyboardHostKt {
+	public static final fun KeyboardHost (Lkotlin/jvm/functions/Function3;Landroidx/compose/ui/Modifier;Ldev/voir/areca/keyboard/KeyboardController;ZLdev/voir/areca/keyboard/KeyboardScrim;Ldev/voir/areca/keyboard/KeyboardAnimation;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class dev/voir/areca/keyboard/KeyboardScrim {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/keyboard/KeyboardScrim$Companion;
+	public synthetic fun <init> (JZLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (JZLjava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component2 ()Z
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy-ek8zF_U (JZLjava/lang/String;)Ldev/voir/areca/keyboard/KeyboardScrim;
+	public static synthetic fun copy-ek8zF_U$default (Ldev/voir/areca/keyboard/KeyboardScrim;JZLjava/lang/String;ILjava/lang/Object;)Ldev/voir/areca/keyboard/KeyboardScrim;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getColor-0d7_KjU ()J
+	public final fun getDismissLabel ()Ljava/lang/String;
+	public final fun getDismissOnTap ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/keyboard/KeyboardScrim$Companion {
+	public final fun default-KTwxG1Y (JZLjava/lang/String;Landroidx/compose/runtime/Composer;II)Ldev/voir/areca/keyboard/KeyboardScrim;
+	public final fun getDefault (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/keyboard/KeyboardScrim;
+}
+
+public final class dev/voir/areca/keyboard/KeyboardTarget {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/Object;Landroidx/compose/ui/focus/FocusRequester;Landroidx/compose/foundation/relocation/BringIntoViewRequester;)V
+	public synthetic fun <init> (Ljava/lang/Object;Landroidx/compose/ui/focus/FocusRequester;Landroidx/compose/foundation/relocation/BringIntoViewRequester;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/Object;
+	public final fun component2 ()Landroidx/compose/ui/focus/FocusRequester;
+	public final fun component3 ()Landroidx/compose/foundation/relocation/BringIntoViewRequester;
+	public final fun copy (Ljava/lang/Object;Landroidx/compose/ui/focus/FocusRequester;Landroidx/compose/foundation/relocation/BringIntoViewRequester;)Ldev/voir/areca/keyboard/KeyboardTarget;
+	public static synthetic fun copy$default (Ldev/voir/areca/keyboard/KeyboardTarget;Ljava/lang/Object;Landroidx/compose/ui/focus/FocusRequester;Landroidx/compose/foundation/relocation/BringIntoViewRequester;ILjava/lang/Object;)Ldev/voir/areca/keyboard/KeyboardTarget;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBringIntoViewRequester ()Landroidx/compose/foundation/relocation/BringIntoViewRequester;
+	public final fun getFocusRequester ()Landroidx/compose/ui/focus/FocusRequester;
+	public final fun getKey ()Ljava/lang/Object;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/keyboard/KeyboardTargetKt {
+	public static final fun keyboardAnchor (Landroidx/compose/ui/Modifier;Ldev/voir/areca/keyboard/KeyboardController;Ldev/voir/areca/keyboard/KeyboardTarget;ZZ)Landroidx/compose/ui/Modifier;
+	public static synthetic fun keyboardAnchor$default (Landroidx/compose/ui/Modifier;Ldev/voir/areca/keyboard/KeyboardController;Ldev/voir/areca/keyboard/KeyboardTarget;ZZILjava/lang/Object;)Landroidx/compose/ui/Modifier;
+	public static final fun keyboardTarget (Landroidx/compose/ui/Modifier;Ldev/voir/areca/keyboard/KeyboardController;Ldev/voir/areca/keyboard/KeyboardTarget;ZZZLjava/lang/String;Landroidx/compose/foundation/interaction/MutableInteractionSource;Landroidx/compose/foundation/Indication;)Landroidx/compose/ui/Modifier;
+	public static synthetic fun keyboardTarget$default (Landroidx/compose/ui/Modifier;Ldev/voir/areca/keyboard/KeyboardController;Ldev/voir/areca/keyboard/KeyboardTarget;ZZZLjava/lang/String;Landroidx/compose/foundation/interaction/MutableInteractionSource;Landroidx/compose/foundation/Indication;ILjava/lang/Object;)Landroidx/compose/ui/Modifier;
+	public static final fun rememberKeyboardTarget (Ljava/lang/Object;Landroidx/compose/runtime/Composer;II)Ldev/voir/areca/keyboard/KeyboardTarget;
+}
+
+public final class dev/voir/areca/keyboard/key/Key {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/keyboard/key/Key$Companion;
+	public fun <init> (Ljava/lang/String;Ldev/voir/areca/keyboard/key/KeyContent;Lkotlin/jvm/functions/Function0;FZLdev/voir/areca/keyboard/key/KeyRole;Ldev/voir/areca/foundation/button/ButtonStyle;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ldev/voir/areca/keyboard/key/KeyContent;Lkotlin/jvm/functions/Function0;FZLdev/voir/areca/keyboard/key/KeyRole;Ldev/voir/areca/foundation/button/ButtonStyle;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ldev/voir/areca/keyboard/key/KeyContent;
+	public final fun component3 ()Lkotlin/jvm/functions/Function0;
+	public final fun component4 ()F
+	public final fun component5 ()Z
+	public final fun component6 ()Ldev/voir/areca/keyboard/key/KeyRole;
+	public final fun component7 ()Ldev/voir/areca/foundation/button/ButtonStyle;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ldev/voir/areca/keyboard/key/KeyContent;Lkotlin/jvm/functions/Function0;FZLdev/voir/areca/keyboard/key/KeyRole;Ldev/voir/areca/foundation/button/ButtonStyle;Ljava/lang/String;)Ldev/voir/areca/keyboard/key/Key;
+	public static synthetic fun copy$default (Ldev/voir/areca/keyboard/key/Key;Ljava/lang/String;Ldev/voir/areca/keyboard/key/KeyContent;Lkotlin/jvm/functions/Function0;FZLdev/voir/areca/keyboard/key/KeyRole;Ldev/voir/areca/foundation/button/ButtonStyle;Ljava/lang/String;ILjava/lang/Object;)Ldev/voir/areca/keyboard/key/Key;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContent ()Ldev/voir/areca/keyboard/key/KeyContent;
+	public final fun getContentDescription ()Ljava/lang/String;
+	public final fun getEnabled ()Z
+	public final fun getId ()Ljava/lang/String;
+	public final fun getOnClick ()Lkotlin/jvm/functions/Function0;
+	public final fun getRole ()Ldev/voir/areca/keyboard/key/KeyRole;
+	public final fun getStyle ()Ldev/voir/areca/foundation/button/ButtonStyle;
+	public final fun getWeight ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/keyboard/key/Key$Companion {
+	public final fun blank (Ljava/lang/String;F)Ldev/voir/areca/keyboard/key/Key;
+	public static synthetic fun blank$default (Ldev/voir/areca/keyboard/key/Key$Companion;Ljava/lang/String;FILjava/lang/Object;)Ldev/voir/areca/keyboard/key/Key;
+	public final fun custom (Ljava/lang/String;FZLdev/voir/areca/keyboard/key/KeyRole;Ldev/voir/areca/foundation/button/ButtonStyle;Ljava/lang/String;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;)Ldev/voir/areca/keyboard/key/Key;
+	public static synthetic fun custom$default (Ldev/voir/areca/keyboard/key/Key$Companion;Ljava/lang/String;FZLdev/voir/areca/keyboard/key/KeyRole;Ldev/voir/areca/foundation/button/ButtonStyle;Ljava/lang/String;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ldev/voir/areca/keyboard/key/Key;
+	public final fun icon (Landroidx/compose/ui/graphics/vector/ImageVector;Ljava/lang/String;Ljava/lang/String;FZLdev/voir/areca/keyboard/key/KeyRole;Ldev/voir/areca/foundation/button/ButtonStyle;Lkotlin/jvm/functions/Function0;)Ldev/voir/areca/keyboard/key/Key;
+	public static synthetic fun icon$default (Ldev/voir/areca/keyboard/key/Key$Companion;Landroidx/compose/ui/graphics/vector/ImageVector;Ljava/lang/String;Ljava/lang/String;FZLdev/voir/areca/keyboard/key/KeyRole;Ldev/voir/areca/foundation/button/ButtonStyle;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Ldev/voir/areca/keyboard/key/Key;
+	public final fun text (Ljava/lang/String;Ljava/lang/String;FZLdev/voir/areca/keyboard/key/KeyRole;Ldev/voir/areca/foundation/button/ButtonStyle;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)Ldev/voir/areca/keyboard/key/Key;
+	public static synthetic fun text$default (Ldev/voir/areca/keyboard/key/Key$Companion;Ljava/lang/String;Ljava/lang/String;FZLdev/voir/areca/keyboard/key/KeyRole;Ldev/voir/areca/foundation/button/ButtonStyle;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Ldev/voir/areca/keyboard/key/Key;
+}
+
+public abstract interface class dev/voir/areca/keyboard/key/KeyAction {
+}
+
+public final class dev/voir/areca/keyboard/key/KeyAction$Backspace : dev/voir/areca/keyboard/key/KeyAction {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/voir/areca/keyboard/key/KeyAction$Backspace;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/keyboard/key/KeyAction$Clear : dev/voir/areca/keyboard/key/KeyAction {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/voir/areca/keyboard/key/KeyAction$Clear;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/keyboard/key/KeyAction$Custom : dev/voir/areca/keyboard/key/KeyAction {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Ldev/voir/areca/keyboard/key/KeyAction$Custom;
+	public static synthetic fun copy$default (Ldev/voir/areca/keyboard/key/KeyAction$Custom;Ljava/lang/String;ILjava/lang/Object;)Ldev/voir/areca/keyboard/key/KeyAction$Custom;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/keyboard/key/KeyAction$DecimalSeparator : dev/voir/areca/keyboard/key/KeyAction {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/voir/areca/keyboard/key/KeyAction$DecimalSeparator;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/keyboard/key/KeyAction$Digit : dev/voir/areca/keyboard/key/KeyAction {
+	public static final field $stable I
+	public fun <init> (C)V
+	public final fun component1 ()C
+	public final fun copy (C)Ldev/voir/areca/keyboard/key/KeyAction$Digit;
+	public static synthetic fun copy$default (Ldev/voir/areca/keyboard/key/KeyAction$Digit;CILjava/lang/Object;)Ldev/voir/areca/keyboard/key/KeyAction$Digit;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getValue ()C
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/keyboard/key/KeyAction$Done : dev/voir/areca/keyboard/key/KeyAction {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/voir/areca/keyboard/key/KeyAction$Done;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/keyboard/key/KeyAction$Evaluate : dev/voir/areca/keyboard/key/KeyAction {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/voir/areca/keyboard/key/KeyAction$Evaluate;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/keyboard/key/KeyAction$Hide : dev/voir/areca/keyboard/key/KeyAction {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/voir/areca/keyboard/key/KeyAction$Hide;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/keyboard/key/KeyAction$Insert : dev/voir/areca/keyboard/key/KeyAction {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Ldev/voir/areca/keyboard/key/KeyAction$Insert;
+	public static synthetic fun copy$default (Ldev/voir/areca/keyboard/key/KeyAction$Insert;Ljava/lang/String;ILjava/lang/Object;)Ldev/voir/areca/keyboard/key/KeyAction$Insert;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getText ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/keyboard/key/KeyAction$Operation : dev/voir/areca/keyboard/key/KeyAction {
+	public static final field $stable I
+	public fun <init> (Ldev/voir/areca/keyboard/key/KeyOperation;)V
+	public final fun component1 ()Ldev/voir/areca/keyboard/key/KeyOperation;
+	public final fun copy (Ldev/voir/areca/keyboard/key/KeyOperation;)Ldev/voir/areca/keyboard/key/KeyAction$Operation;
+	public static synthetic fun copy$default (Ldev/voir/areca/keyboard/key/KeyAction$Operation;Ldev/voir/areca/keyboard/key/KeyOperation;ILjava/lang/Object;)Ldev/voir/areca/keyboard/key/KeyAction$Operation;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getOperation ()Ldev/voir/areca/keyboard/key/KeyOperation;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class dev/voir/areca/keyboard/key/KeyContent {
+}
+
+public final class dev/voir/areca/keyboard/key/KeyContent$Blank : dev/voir/areca/keyboard/key/KeyContent {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/voir/areca/keyboard/key/KeyContent$Blank;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/keyboard/key/KeyContent$Custom : dev/voir/areca/keyboard/key/KeyContent {
+	public static final field $stable I
+	public fun <init> (Lkotlin/jvm/functions/Function2;)V
+	public final fun component1 ()Lkotlin/jvm/functions/Function2;
+	public final fun copy (Lkotlin/jvm/functions/Function2;)Ldev/voir/areca/keyboard/key/KeyContent$Custom;
+	public static synthetic fun copy$default (Ldev/voir/areca/keyboard/key/KeyContent$Custom;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ldev/voir/areca/keyboard/key/KeyContent$Custom;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContent ()Lkotlin/jvm/functions/Function2;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/keyboard/key/KeyContent$Icon : dev/voir/areca/keyboard/key/KeyContent {
+	public static final field $stable I
+	public fun <init> (Landroidx/compose/ui/graphics/vector/ImageVector;)V
+	public final fun component1 ()Landroidx/compose/ui/graphics/vector/ImageVector;
+	public final fun copy (Landroidx/compose/ui/graphics/vector/ImageVector;)Ldev/voir/areca/keyboard/key/KeyContent$Icon;
+	public static synthetic fun copy$default (Ldev/voir/areca/keyboard/key/KeyContent$Icon;Landroidx/compose/ui/graphics/vector/ImageVector;ILjava/lang/Object;)Ldev/voir/areca/keyboard/key/KeyContent$Icon;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getImage ()Landroidx/compose/ui/graphics/vector/ImageVector;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/keyboard/key/KeyContent$Label : dev/voir/areca/keyboard/key/KeyContent {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Ldev/voir/areca/keyboard/key/KeyContent$Label;
+	public static synthetic fun copy$default (Ldev/voir/areca/keyboard/key/KeyContent$Label;Ljava/lang/String;ILjava/lang/Object;)Ldev/voir/areca/keyboard/key/KeyContent$Label;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getText ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/keyboard/key/KeyEventMappingKt {
+	public static final fun toKeyAction-YhN2O0w (Ljava/lang/Object;C)Ldev/voir/areca/keyboard/key/KeyAction;
+	public static synthetic fun toKeyAction-YhN2O0w$default (Ljava/lang/Object;CILjava/lang/Object;)Ldev/voir/areca/keyboard/key/KeyAction;
+}
+
+public final class dev/voir/areca/keyboard/key/KeyOperation : java/lang/Enum {
+	public static final field Add Ldev/voir/areca/keyboard/key/KeyOperation;
+	public static final field Divide Ldev/voir/areca/keyboard/key/KeyOperation;
+	public static final field Multiply Ldev/voir/areca/keyboard/key/KeyOperation;
+	public static final field Subtract Ldev/voir/areca/keyboard/key/KeyOperation;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/keyboard/key/KeyOperation;
+	public static fun values ()[Ldev/voir/areca/keyboard/key/KeyOperation;
+}
+
+public final class dev/voir/areca/keyboard/key/KeyRole : java/lang/Enum {
+	public static final field Action Ldev/voir/areca/keyboard/key/KeyRole;
+	public static final field Caution Ldev/voir/areca/keyboard/key/KeyRole;
+	public static final field Confirm Ldev/voir/areca/keyboard/key/KeyRole;
+	public static final field Destructive Ldev/voir/areca/keyboard/key/KeyRole;
+	public static final field Digit Ldev/voir/areca/keyboard/key/KeyRole;
+	public static final field Ghost Ldev/voir/areca/keyboard/key/KeyRole;
+	public static final field Info Ldev/voir/areca/keyboard/key/KeyRole;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/keyboard/key/KeyRole;
+	public static fun values ()[Ldev/voir/areca/keyboard/key/KeyRole;
+}
+
+public final class dev/voir/areca/keyboard/key/KeyRow {
+	public static final field $stable I
+	public synthetic fun <init> (Ljava/util/List;Landroidx/compose/ui/unit/Dp;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/util/List;Landroidx/compose/ui/unit/Dp;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> ([Ldev/voir/areca/keyboard/key/Key;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2-lTKBWiU ()Landroidx/compose/ui/unit/Dp;
+	public final fun copy-3F_vd3o (Ljava/util/List;Landroidx/compose/ui/unit/Dp;)Ldev/voir/areca/keyboard/key/KeyRow;
+	public static synthetic fun copy-3F_vd3o$default (Ldev/voir/areca/keyboard/key/KeyRow;Ljava/util/List;Landroidx/compose/ui/unit/Dp;ILjava/lang/Object;)Ldev/voir/areca/keyboard/key/KeyRow;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getHeight-lTKBWiU ()Landroidx/compose/ui/unit/Dp;
+	public final fun getKeys ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/keyboard/key/KeyStyle {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/keyboard/key/KeyStyle$Companion;
+	public fun <init> (Ldev/voir/areca/foundation/button/ButtonStyle;Ldev/voir/areca/foundation/button/ButtonStyle;Ldev/voir/areca/foundation/button/ButtonStyle;Ldev/voir/areca/foundation/button/ButtonStyle;Ldev/voir/areca/foundation/button/ButtonStyle;Ldev/voir/areca/foundation/button/ButtonStyle;Ldev/voir/areca/foundation/button/ButtonStyle;)V
+	public final fun component1 ()Ldev/voir/areca/foundation/button/ButtonStyle;
+	public final fun component2 ()Ldev/voir/areca/foundation/button/ButtonStyle;
+	public final fun component3 ()Ldev/voir/areca/foundation/button/ButtonStyle;
+	public final fun component4 ()Ldev/voir/areca/foundation/button/ButtonStyle;
+	public final fun component5 ()Ldev/voir/areca/foundation/button/ButtonStyle;
+	public final fun component6 ()Ldev/voir/areca/foundation/button/ButtonStyle;
+	public final fun component7 ()Ldev/voir/areca/foundation/button/ButtonStyle;
+	public final fun copy (Ldev/voir/areca/foundation/button/ButtonStyle;Ldev/voir/areca/foundation/button/ButtonStyle;Ldev/voir/areca/foundation/button/ButtonStyle;Ldev/voir/areca/foundation/button/ButtonStyle;Ldev/voir/areca/foundation/button/ButtonStyle;Ldev/voir/areca/foundation/button/ButtonStyle;Ldev/voir/areca/foundation/button/ButtonStyle;)Ldev/voir/areca/keyboard/key/KeyStyle;
+	public static synthetic fun copy$default (Ldev/voir/areca/keyboard/key/KeyStyle;Ldev/voir/areca/foundation/button/ButtonStyle;Ldev/voir/areca/foundation/button/ButtonStyle;Ldev/voir/areca/foundation/button/ButtonStyle;Ldev/voir/areca/foundation/button/ButtonStyle;Ldev/voir/areca/foundation/button/ButtonStyle;Ldev/voir/areca/foundation/button/ButtonStyle;Ldev/voir/areca/foundation/button/ButtonStyle;ILjava/lang/Object;)Ldev/voir/areca/keyboard/key/KeyStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAction ()Ldev/voir/areca/foundation/button/ButtonStyle;
+	public final fun getCaution ()Ldev/voir/areca/foundation/button/ButtonStyle;
+	public final fun getConfirm ()Ldev/voir/areca/foundation/button/ButtonStyle;
+	public final fun getDestructive ()Ldev/voir/areca/foundation/button/ButtonStyle;
+	public final fun getDigit ()Ldev/voir/areca/foundation/button/ButtonStyle;
+	public final fun getGhost ()Ldev/voir/areca/foundation/button/ButtonStyle;
+	public final fun getInfo ()Ldev/voir/areca/foundation/button/ButtonStyle;
+	public fun hashCode ()I
+	public final fun of (Ldev/voir/areca/keyboard/key/KeyRole;)Ldev/voir/areca/foundation/button/ButtonStyle;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/keyboard/key/KeyStyle$Companion {
+	public final fun default (Landroidx/compose/ui/graphics/Shape;Ldev/voir/areca/foundation/button/ButtonStyle;Ldev/voir/areca/foundation/button/ButtonStyle;Ldev/voir/areca/foundation/button/ButtonStyle;Ldev/voir/areca/foundation/button/ButtonStyle;Ldev/voir/areca/foundation/button/ButtonStyle;Ldev/voir/areca/foundation/button/ButtonStyle;Ldev/voir/areca/foundation/button/ButtonStyle;Landroidx/compose/runtime/Composer;II)Ldev/voir/areca/keyboard/key/KeyStyle;
+	public final fun getDefault (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/keyboard/key/KeyStyle;
+}
+
+public final class dev/voir/areca/keyboard/key/KeyboardGrid {
+	public static final field $stable I
+	public fun <init> (Ljava/util/List;)V
+	public fun <init> ([Ldev/voir/areca/keyboard/key/KeyRow;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Ldev/voir/areca/keyboard/key/KeyboardGrid;
+	public static synthetic fun copy$default (Ldev/voir/areca/keyboard/key/KeyboardGrid;Ljava/util/List;ILjava/lang/Object;)Ldev/voir/areca/keyboard/key/KeyboardGrid;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getRows ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/keyboard/key/KeyboardGridKt {
+	public static final fun appendRow (Ldev/voir/areca/keyboard/key/KeyboardGrid;Ldev/voir/areca/keyboard/key/KeyRow;)Ldev/voir/areca/keyboard/key/KeyboardGrid;
+	public static final fun key (Ldev/voir/areca/keyboard/key/KeyboardGrid;Ljava/lang/String;)Ldev/voir/areca/keyboard/key/Key;
+	public static final fun mapKeys (Ldev/voir/areca/keyboard/key/KeyboardGrid;Lkotlin/jvm/functions/Function1;)Ldev/voir/areca/keyboard/key/KeyboardGrid;
+	public static final fun prependRow (Ldev/voir/areca/keyboard/key/KeyboardGrid;Ldev/voir/areca/keyboard/key/KeyRow;)Ldev/voir/areca/keyboard/key/KeyboardGrid;
+	public static final fun removeKey (Ldev/voir/areca/keyboard/key/KeyboardGrid;Ljava/lang/String;)Ldev/voir/areca/keyboard/key/KeyboardGrid;
+	public static final fun replaceKey (Ldev/voir/areca/keyboard/key/KeyboardGrid;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ldev/voir/areca/keyboard/key/KeyboardGrid;
+}
+
+public final class dev/voir/areca/keyboard/key/KeyboardGridLabels {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ldev/voir/areca/keyboard/key/KeyboardGridLabels;
+	public static synthetic fun copy$default (Ldev/voir/areca/keyboard/key/KeyboardGridLabels;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ldev/voir/areca/keyboard/key/KeyboardGridLabels;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBackspace ()Ljava/lang/String;
+	public final fun getClear ()Ljava/lang/String;
+	public final fun getDone ()Ljava/lang/String;
+	public final fun getHide ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/keyboard/key/KeyboardGrids {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/voir/areca/keyboard/key/KeyboardGrids;
+	public final fun calculator (Lkotlin/jvm/functions/Function1;CLdev/voir/areca/keyboard/key/Key;Ldev/voir/areca/keyboard/key/KeyboardGridLabels;)Ldev/voir/areca/keyboard/key/KeyboardGrid;
+	public static synthetic fun calculator$default (Ldev/voir/areca/keyboard/key/KeyboardGrids;Lkotlin/jvm/functions/Function1;CLdev/voir/areca/keyboard/key/Key;Ldev/voir/areca/keyboard/key/KeyboardGridLabels;ILjava/lang/Object;)Ldev/voir/areca/keyboard/key/KeyboardGrid;
+	public final fun decimal (Lkotlin/jvm/functions/Function1;CLdev/voir/areca/keyboard/key/KeyboardGridLabels;)Ldev/voir/areca/keyboard/key/KeyboardGrid;
+	public static synthetic fun decimal$default (Ldev/voir/areca/keyboard/key/KeyboardGrids;Lkotlin/jvm/functions/Function1;CLdev/voir/areca/keyboard/key/KeyboardGridLabels;ILjava/lang/Object;)Ldev/voir/areca/keyboard/key/KeyboardGrid;
+	public final fun numeric (Lkotlin/jvm/functions/Function1;Ldev/voir/areca/keyboard/key/Key;Ldev/voir/areca/keyboard/key/KeyboardGridLabels;)Ldev/voir/areca/keyboard/key/KeyboardGrid;
+	public static synthetic fun numeric$default (Ldev/voir/areca/keyboard/key/KeyboardGrids;Lkotlin/jvm/functions/Function1;Ldev/voir/areca/keyboard/key/Key;Ldev/voir/areca/keyboard/key/KeyboardGridLabels;ILjava/lang/Object;)Ldev/voir/areca/keyboard/key/KeyboardGrid;
+	public final fun phone (Lkotlin/jvm/functions/Function1;Ldev/voir/areca/keyboard/key/KeyboardGridLabels;)Ldev/voir/areca/keyboard/key/KeyboardGrid;
+	public static synthetic fun phone$default (Ldev/voir/areca/keyboard/key/KeyboardGrids;Lkotlin/jvm/functions/Function1;Ldev/voir/areca/keyboard/key/KeyboardGridLabels;ILjava/lang/Object;)Ldev/voir/areca/keyboard/key/KeyboardGrid;
+}
+
+public final class dev/voir/areca/keyboard/key/KeyboardKeysKt {
+	public static final fun KeyboardKeys (Ldev/voir/areca/keyboard/key/KeyboardGrid;Landroidx/compose/ui/Modifier;Ldev/voir/areca/keyboard/key/KeyStyle;Ldev/voir/areca/keyboard/layout/KeyboardSize;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class dev/voir/areca/keyboard/layout/KeyboardLayoutKt {
+	public static final fun KeyboardLayout (Landroidx/compose/ui/Modifier;Ldev/voir/areca/keyboard/layout/KeyboardStyle;Ldev/voir/areca/keyboard/layout/KeyboardSize;Landroidx/compose/foundation/layout/WindowInsets;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+	public static final fun KeyboardLayout (Ldev/voir/areca/keyboard/key/KeyboardGrid;Landroidx/compose/ui/Modifier;Ldev/voir/areca/keyboard/layout/KeyboardStyle;Ldev/voir/areca/keyboard/layout/KeyboardSize;Landroidx/compose/foundation/layout/WindowInsets;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class dev/voir/areca/keyboard/layout/KeyboardSize {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/keyboard/layout/KeyboardSize$Companion;
+	public synthetic fun <init> (Landroidx/compose/foundation/layout/PaddingValues;FFFFFLdev/voir/areca/foundation/button/ButtonSize;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Landroidx/compose/foundation/layout/PaddingValues;FFFFFLdev/voir/areca/foundation/button/ButtonSize;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Landroidx/compose/foundation/layout/PaddingValues;
+	public final fun component2-D9Ej5fM ()F
+	public final fun component3-D9Ej5fM ()F
+	public final fun component4-D9Ej5fM ()F
+	public final fun component5-D9Ej5fM ()F
+	public final fun component6-D9Ej5fM ()F
+	public final fun component7 ()Ldev/voir/areca/foundation/button/ButtonSize;
+	public final fun component8 ()I
+	public final fun copy-k7hfQS0 (Landroidx/compose/foundation/layout/PaddingValues;FFFFFLdev/voir/areca/foundation/button/ButtonSize;I)Ldev/voir/areca/keyboard/layout/KeyboardSize;
+	public static synthetic fun copy-k7hfQS0$default (Ldev/voir/areca/keyboard/layout/KeyboardSize;Landroidx/compose/foundation/layout/PaddingValues;FFFFFLdev/voir/areca/foundation/button/ButtonSize;IILjava/lang/Object;)Ldev/voir/areca/keyboard/layout/KeyboardSize;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFooterGap-D9Ej5fM ()F
+	public final fun getHeaderGap-D9Ej5fM ()F
+	public final fun getKey ()Ldev/voir/areca/foundation/button/ButtonSize;
+	public final fun getKeyGap-D9Ej5fM ()F
+	public final fun getKeyHeight-D9Ej5fM ()F
+	public final fun getKeyLabelMaxLines ()I
+	public final fun getPadding ()Landroidx/compose/foundation/layout/PaddingValues;
+	public final fun getRowGap-D9Ej5fM ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/keyboard/layout/KeyboardSize$Companion {
+	public final fun default-uX9Q1gw (Landroidx/compose/foundation/layout/PaddingValues;FFFFFLdev/voir/areca/foundation/button/ButtonSize;ILandroidx/compose/runtime/Composer;II)Ldev/voir/areca/keyboard/layout/KeyboardSize;
+	public final fun getCompact (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/keyboard/layout/KeyboardSize;
+	public final fun getDefault (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/keyboard/layout/KeyboardSize;
+}
+
+public final class dev/voir/areca/keyboard/layout/KeyboardSizeKt {
+	public static final fun getLocalKeyboardSize ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
+public final class dev/voir/areca/keyboard/layout/KeyboardStyle {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/keyboard/layout/KeyboardStyle$Companion;
+	public synthetic fun <init> (JJJFLandroidx/compose/ui/graphics/Shape;FJLdev/voir/areca/keyboard/key/KeyStyle;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (JJJFLandroidx/compose/ui/graphics/Shape;FJLdev/voir/areca/keyboard/key/KeyStyle;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-D9Ej5fM ()F
+	public final fun component5 ()Landroidx/compose/ui/graphics/Shape;
+	public final fun component6-D9Ej5fM ()F
+	public final fun component7-0d7_KjU ()J
+	public final fun component8 ()Ldev/voir/areca/keyboard/key/KeyStyle;
+	public final fun copy-eR6Uydw (JJJFLandroidx/compose/ui/graphics/Shape;FJLdev/voir/areca/keyboard/key/KeyStyle;)Ldev/voir/areca/keyboard/layout/KeyboardStyle;
+	public static synthetic fun copy-eR6Uydw$default (Ldev/voir/areca/keyboard/layout/KeyboardStyle;JJJFLandroidx/compose/ui/graphics/Shape;FJLdev/voir/areca/keyboard/key/KeyStyle;ILjava/lang/Object;)Ldev/voir/areca/keyboard/layout/KeyboardStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBg-0d7_KjU ()J
+	public final fun getBorder-0d7_KjU ()J
+	public final fun getBorderWidth-D9Ej5fM ()F
+	public final fun getContent-0d7_KjU ()J
+	public final fun getDivider-0d7_KjU ()J
+	public final fun getElevation-D9Ej5fM ()F
+	public final fun getKeys ()Ldev/voir/areca/keyboard/key/KeyStyle;
+	public final fun getShape ()Landroidx/compose/ui/graphics/Shape;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/keyboard/layout/KeyboardStyle$Companion {
+	public final fun default-Pr0p_vc (JJJFLandroidx/compose/ui/graphics/Shape;FJLdev/voir/areca/keyboard/key/KeyStyle;Landroidx/compose/runtime/Composer;II)Ldev/voir/areca/keyboard/layout/KeyboardStyle;
+	public final fun flat-Klgx-Pg (JJLdev/voir/areca/keyboard/key/KeyStyle;Landroidx/compose/runtime/Composer;II)Ldev/voir/areca/keyboard/layout/KeyboardStyle;
+	public final fun getDefault (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/keyboard/layout/KeyboardStyle;
+}
+
+public final class dev/voir/areca/keyboard/layout/KeyboardStyleKt {
+	public static final fun getLocalKeyboardStyle ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+

@@ -1,0 +1,110 @@
+name: Publish Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - VERSION
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-release
+  cancel-in-progress: false
+
+jobs:
+  detect:
+    name: Detect release
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: read
+      actions: read
+    outputs:
+      version: ${{ steps.release.outputs.version }}
+      tag: ${{ steps.release.outputs.tag }}
+      should_publish: ${{ steps.release.outputs.should_publish }}
+      verify_run_id: ${{ steps.release.outputs.verify_run_id }}
+
+    steps:
+      - name: Checkout pushed commit
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: ${{ github.sha }}
+
+      # Finds the merged release PR, compares its tree with the pushed commit, and finds the
+      # successful Verify run that holds its artifacts.
+      - name: Resolve release
+        id: release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: ./ci/release/detect
+
+  publish-maven-central:
+    name: Publish to Maven Central
+    needs: detect
+    if: needs.detect.outputs.should_publish == 'true'
+    runs-on: ubuntu-latest
+    # Covers Central's validation and publication, which the upload script waits for.
+    timeout-minutes: 90
+    # Approval happens here. The signing key and the Central token are secrets of this environment
+    # only, so no other job, and no pull request, can read them.
+    environment: release
+    permissions:
+      actions: read
+      contents: read
+
+    steps:
+      - name: Checkout pushed commit
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+
+      - name: Download kept release artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ needs.detect.outputs.verify_run_id }}
+        run: gh run download "$RUN_ID" --repo "$GITHUB_REPOSITORY" --name release-artifacts --dir release-artifacts
+
+      - name: Publish kept artifacts unchanged
+        env:
+          RELEASE_VERSION: ${{ needs.detect.outputs.version }}
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+        run: ./ci/release/publish-maven-central release-artifacts
+
+  finalize:
+    name: Create tag and GitHub Release
+    needs:
+      - detect
+      - publish-maven-central
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      actions: read
+      contents: write
+
+    steps:
+      - name: Checkout pushed commit
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: ${{ github.sha }}
+
+      - name: Download kept release artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ needs.detect.outputs.verify_run_id }}
+        run: gh run download "$RUN_ID" --repo "$GITHUB_REPOSITORY" --name release-artifacts --dir release-artifacts
+
+      - name: Create tag and GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ needs.detect.outputs.tag }}
+        run: ./ci/release/finalize release-artifacts

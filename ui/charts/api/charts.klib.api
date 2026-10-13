@@ -1,0 +1,442 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <dev.voir.areca:charts>
+final enum class dev.voir.areca.charts/BarChartColor : kotlin/Enum<dev.voir.areca.charts/BarChartColor> { // dev.voir.areca.charts/BarChartColor|null[0]
+    enum entry Brand // dev.voir.areca.charts/BarChartColor.Brand|null[0]
+    enum entry Danger // dev.voir.areca.charts/BarChartColor.Danger|null[0]
+    enum entry Info // dev.voir.areca.charts/BarChartColor.Info|null[0]
+    enum entry Neutral // dev.voir.areca.charts/BarChartColor.Neutral|null[0]
+    enum entry Success // dev.voir.areca.charts/BarChartColor.Success|null[0]
+    enum entry Warning // dev.voir.areca.charts/BarChartColor.Warning|null[0]
+
+    final val entries // dev.voir.areca.charts/BarChartColor.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<dev.voir.areca.charts/BarChartColor> // dev.voir.areca.charts/BarChartColor.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): dev.voir.areca.charts/BarChartColor // dev.voir.areca.charts/BarChartColor.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<dev.voir.areca.charts/BarChartColor> // dev.voir.areca.charts/BarChartColor.values|values#static(){}[0]
+}
+
+final enum class dev.voir.areca.charts/BarChartHorizontalAlignment : kotlin/Enum<dev.voir.areca.charts/BarChartHorizontalAlignment> { // dev.voir.areca.charts/BarChartHorizontalAlignment|null[0]
+    enum entry Center // dev.voir.areca.charts/BarChartHorizontalAlignment.Center|null[0]
+    enum entry End // dev.voir.areca.charts/BarChartHorizontalAlignment.End|null[0]
+    enum entry Start // dev.voir.areca.charts/BarChartHorizontalAlignment.Start|null[0]
+
+    final val entries // dev.voir.areca.charts/BarChartHorizontalAlignment.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<dev.voir.areca.charts/BarChartHorizontalAlignment> // dev.voir.areca.charts/BarChartHorizontalAlignment.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): dev.voir.areca.charts/BarChartHorizontalAlignment // dev.voir.areca.charts/BarChartHorizontalAlignment.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<dev.voir.areca.charts/BarChartHorizontalAlignment> // dev.voir.areca.charts/BarChartHorizontalAlignment.values|values#static(){}[0]
+}
+
+final enum class dev.voir.areca.charts/BarChartShape : kotlin/Enum<dev.voir.areca.charts/BarChartShape> { // dev.voir.areca.charts/BarChartShape|null[0]
+    enum entry Rounded // dev.voir.areca.charts/BarChartShape.Rounded|null[0]
+    enum entry Square // dev.voir.areca.charts/BarChartShape.Square|null[0]
+
+    final val entries // dev.voir.areca.charts/BarChartShape.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<dev.voir.areca.charts/BarChartShape> // dev.voir.areca.charts/BarChartShape.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): dev.voir.areca.charts/BarChartShape // dev.voir.areca.charts/BarChartShape.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<dev.voir.areca.charts/BarChartShape> // dev.voir.areca.charts/BarChartShape.values|values#static(){}[0]
+}
+
+sealed interface dev.voir.areca.charts/BarChartBarWidth { // dev.voir.areca.charts/BarChartBarWidth|null[0]
+    final class Fixed : dev.voir.areca.charts/BarChartBarWidth { // dev.voir.areca.charts/BarChartBarWidth.Fixed|null[0]
+        constructor <init>(androidx.compose.ui.unit/Dp) // dev.voir.areca.charts/BarChartBarWidth.Fixed.<init>|<init>(androidx.compose.ui.unit.Dp){}[0]
+
+        final val width // dev.voir.areca.charts/BarChartBarWidth.Fixed.width|{}width[0]
+            final fun <get-width>(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartBarWidth.Fixed.width.<get-width>|<get-width>(){}[0]
+
+        final fun component1(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartBarWidth.Fixed.component1|component1(){}[0]
+        final fun copy(androidx.compose.ui.unit/Dp = ...): dev.voir.areca.charts/BarChartBarWidth.Fixed // dev.voir.areca.charts/BarChartBarWidth.Fixed.copy|copy(androidx.compose.ui.unit.Dp){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.charts/BarChartBarWidth.Fixed.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.charts/BarChartBarWidth.Fixed.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.charts/BarChartBarWidth.Fixed.toString|toString(){}[0]
+    }
+
+    final class Range : dev.voir.areca.charts/BarChartBarWidth { // dev.voir.areca.charts/BarChartBarWidth.Range|null[0]
+        constructor <init>(androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp) // dev.voir.areca.charts/BarChartBarWidth.Range.<init>|<init>(androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp){}[0]
+
+        final val max // dev.voir.areca.charts/BarChartBarWidth.Range.max|{}max[0]
+            final fun <get-max>(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartBarWidth.Range.max.<get-max>|<get-max>(){}[0]
+        final val min // dev.voir.areca.charts/BarChartBarWidth.Range.min|{}min[0]
+            final fun <get-min>(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartBarWidth.Range.min.<get-min>|<get-min>(){}[0]
+
+        final fun component1(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartBarWidth.Range.component1|component1(){}[0]
+        final fun component2(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartBarWidth.Range.component2|component2(){}[0]
+        final fun copy(androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ...): dev.voir.areca.charts/BarChartBarWidth.Range // dev.voir.areca.charts/BarChartBarWidth.Range.copy|copy(androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.charts/BarChartBarWidth.Range.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.charts/BarChartBarWidth.Range.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.charts/BarChartBarWidth.Range.toString|toString(){}[0]
+    }
+
+    final object Fill : dev.voir.areca.charts/BarChartBarWidth { // dev.voir.areca.charts/BarChartBarWidth.Fill|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.charts/BarChartBarWidth.Fill.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.charts/BarChartBarWidth.Fill.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.charts/BarChartBarWidth.Fill.toString|toString(){}[0]
+    }
+}
+
+sealed interface dev.voir.areca.charts/BarChartFill { // dev.voir.areca.charts/BarChartFill|null[0]
+    final class Gradient : dev.voir.areca.charts/BarChartFill { // dev.voir.areca.charts/BarChartFill.Gradient|null[0]
+        constructor <init>(androidx.compose.ui.graphics/Brush) // dev.voir.areca.charts/BarChartFill.Gradient.<init>|<init>(androidx.compose.ui.graphics.Brush){}[0]
+
+        final val brush // dev.voir.areca.charts/BarChartFill.Gradient.brush|{}brush[0]
+            final fun <get-brush>(): androidx.compose.ui.graphics/Brush // dev.voir.areca.charts/BarChartFill.Gradient.brush.<get-brush>|<get-brush>(){}[0]
+
+        final fun component1(): androidx.compose.ui.graphics/Brush // dev.voir.areca.charts/BarChartFill.Gradient.component1|component1(){}[0]
+        final fun copy(androidx.compose.ui.graphics/Brush = ...): dev.voir.areca.charts/BarChartFill.Gradient // dev.voir.areca.charts/BarChartFill.Gradient.copy|copy(androidx.compose.ui.graphics.Brush){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.charts/BarChartFill.Gradient.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.charts/BarChartFill.Gradient.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.charts/BarChartFill.Gradient.toString|toString(){}[0]
+    }
+
+    final class Solid : dev.voir.areca.charts/BarChartFill { // dev.voir.areca.charts/BarChartFill.Solid|null[0]
+        constructor <init>(androidx.compose.ui.graphics/Color) // dev.voir.areca.charts/BarChartFill.Solid.<init>|<init>(androidx.compose.ui.graphics.Color){}[0]
+
+        final val color // dev.voir.areca.charts/BarChartFill.Solid.color|{}color[0]
+            final fun <get-color>(): androidx.compose.ui.graphics/Color // dev.voir.areca.charts/BarChartFill.Solid.color.<get-color>|<get-color>(){}[0]
+
+        final fun component1(): androidx.compose.ui.graphics/Color // dev.voir.areca.charts/BarChartFill.Solid.component1|component1(){}[0]
+        final fun copy(androidx.compose.ui.graphics/Color = ...): dev.voir.areca.charts/BarChartFill.Solid // dev.voir.areca.charts/BarChartFill.Solid.copy|copy(androidx.compose.ui.graphics.Color){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.charts/BarChartFill.Solid.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.charts/BarChartFill.Solid.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.charts/BarChartFill.Solid.toString|toString(){}[0]
+    }
+}
+
+final class dev.voir.areca.charts/BarChartBar { // dev.voir.areca.charts/BarChartBar|null[0]
+    constructor <init>(kotlin/Float, kotlin/String? = ..., dev.voir.areca.charts/BarChartFill? = ..., androidx.compose.ui.graphics/Color? = ...) // dev.voir.areca.charts/BarChartBar.<init>|<init>(kotlin.Float;kotlin.String?;dev.voir.areca.charts.BarChartFill?;androidx.compose.ui.graphics.Color?){}[0]
+
+    final val fill // dev.voir.areca.charts/BarChartBar.fill|{}fill[0]
+        final fun <get-fill>(): dev.voir.areca.charts/BarChartFill? // dev.voir.areca.charts/BarChartBar.fill.<get-fill>|<get-fill>(){}[0]
+    final val label // dev.voir.areca.charts/BarChartBar.label|{}label[0]
+        final fun <get-label>(): kotlin/String? // dev.voir.areca.charts/BarChartBar.label.<get-label>|<get-label>(){}[0]
+    final val trackColor // dev.voir.areca.charts/BarChartBar.trackColor|{}trackColor[0]
+        final fun <get-trackColor>(): androidx.compose.ui.graphics/Color? // dev.voir.areca.charts/BarChartBar.trackColor.<get-trackColor>|<get-trackColor>(){}[0]
+    final val value // dev.voir.areca.charts/BarChartBar.value|{}value[0]
+        final fun <get-value>(): kotlin/Float // dev.voir.areca.charts/BarChartBar.value.<get-value>|<get-value>(){}[0]
+
+    final fun component1(): kotlin/Float // dev.voir.areca.charts/BarChartBar.component1|component1(){}[0]
+    final fun component2(): kotlin/String? // dev.voir.areca.charts/BarChartBar.component2|component2(){}[0]
+    final fun component3(): dev.voir.areca.charts/BarChartFill? // dev.voir.areca.charts/BarChartBar.component3|component3(){}[0]
+    final fun component4(): androidx.compose.ui.graphics/Color? // dev.voir.areca.charts/BarChartBar.component4|component4(){}[0]
+    final fun copy(kotlin/Float = ..., kotlin/String? = ..., dev.voir.areca.charts/BarChartFill? = ..., androidx.compose.ui.graphics/Color? = ...): dev.voir.areca.charts/BarChartBar // dev.voir.areca.charts/BarChartBar.copy|copy(kotlin.Float;kotlin.String?;dev.voir.areca.charts.BarChartFill?;androidx.compose.ui.graphics.Color?){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.charts/BarChartBar.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.charts/BarChartBar.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.charts/BarChartBar.toString|toString(){}[0]
+
+    final object Companion { // dev.voir.areca.charts/BarChartBar.Companion|null[0]
+        final fun formatValue(kotlin/Float): kotlin/String // dev.voir.areca.charts/BarChartBar.Companion.formatValue|formatValue(kotlin.Float){}[0]
+    }
+}
+
+final class dev.voir.areca.charts/BarChartGroup { // dev.voir.areca.charts/BarChartGroup|null[0]
+    constructor <init>(kotlin/String? = ..., kotlin.collections/List<dev.voir.areca.charts/BarChartBar>) // dev.voir.areca.charts/BarChartGroup.<init>|<init>(kotlin.String?;kotlin.collections.List<dev.voir.areca.charts.BarChartBar>){}[0]
+
+    final val bars // dev.voir.areca.charts/BarChartGroup.bars|{}bars[0]
+        final fun <get-bars>(): kotlin.collections/List<dev.voir.areca.charts/BarChartBar> // dev.voir.areca.charts/BarChartGroup.bars.<get-bars>|<get-bars>(){}[0]
+    final val label // dev.voir.areca.charts/BarChartGroup.label|{}label[0]
+        final fun <get-label>(): kotlin/String? // dev.voir.areca.charts/BarChartGroup.label.<get-label>|<get-label>(){}[0]
+
+    final fun component1(): kotlin/String? // dev.voir.areca.charts/BarChartGroup.component1|component1(){}[0]
+    final fun component2(): kotlin.collections/List<dev.voir.areca.charts/BarChartBar> // dev.voir.areca.charts/BarChartGroup.component2|component2(){}[0]
+    final fun copy(kotlin/String? = ..., kotlin.collections/List<dev.voir.areca.charts/BarChartBar> = ...): dev.voir.areca.charts/BarChartGroup // dev.voir.areca.charts/BarChartGroup.copy|copy(kotlin.String?;kotlin.collections.List<dev.voir.areca.charts.BarChartBar>){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.charts/BarChartGroup.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.charts/BarChartGroup.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.charts/BarChartGroup.toString|toString(){}[0]
+
+    final object Companion { // dev.voir.areca.charts/BarChartGroup.Companion|null[0]
+        final fun singleBars(kotlin.collections/List<dev.voir.areca.charts/BarChartBar>): kotlin.collections/List<dev.voir.areca.charts/BarChartGroup> // dev.voir.areca.charts/BarChartGroup.Companion.singleBars|singleBars(kotlin.collections.List<dev.voir.areca.charts.BarChartBar>){}[0]
+    }
+}
+
+final class dev.voir.areca.charts/BarChartOptions { // dev.voir.areca.charts/BarChartOptions|null[0]
+    constructor <init>(kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., dev.voir.areca.charts/BarChartShape = ..., androidx.compose.foundation.layout/PaddingValues = ..., kotlin/Float = ..., kotlin/Float? = ..., dev.voir.areca.charts/BarChartBarWidth = ..., dev.voir.areca.charts/BarChartHorizontalAlignment = ...) // dev.voir.areca.charts/BarChartOptions.<init>|<init>(kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;dev.voir.areca.charts.BarChartShape;androidx.compose.foundation.layout.PaddingValues;kotlin.Float;kotlin.Float?;dev.voir.areca.charts.BarChartBarWidth;dev.voir.areca.charts.BarChartHorizontalAlignment){}[0]
+
+    final val barWidth // dev.voir.areca.charts/BarChartOptions.barWidth|{}barWidth[0]
+        final fun <get-barWidth>(): dev.voir.areca.charts/BarChartBarWidth // dev.voir.areca.charts/BarChartOptions.barWidth.<get-barWidth>|<get-barWidth>(){}[0]
+    final val contentPadding // dev.voir.areca.charts/BarChartOptions.contentPadding|{}contentPadding[0]
+        final fun <get-contentPadding>(): androidx.compose.foundation.layout/PaddingValues // dev.voir.areca.charts/BarChartOptions.contentPadding.<get-contentPadding>|<get-contentPadding>(){}[0]
+    final val horizontalAlignment // dev.voir.areca.charts/BarChartOptions.horizontalAlignment|{}horizontalAlignment[0]
+        final fun <get-horizontalAlignment>(): dev.voir.areca.charts/BarChartHorizontalAlignment // dev.voir.areca.charts/BarChartOptions.horizontalAlignment.<get-horizontalAlignment>|<get-horizontalAlignment>(){}[0]
+    final val maxValue // dev.voir.areca.charts/BarChartOptions.maxValue|{}maxValue[0]
+        final fun <get-maxValue>(): kotlin/Float? // dev.voir.areca.charts/BarChartOptions.maxValue.<get-maxValue>|<get-maxValue>(){}[0]
+    final val minValue // dev.voir.areca.charts/BarChartOptions.minValue|{}minValue[0]
+        final fun <get-minValue>(): kotlin/Float // dev.voir.areca.charts/BarChartOptions.minValue.<get-minValue>|<get-minValue>(){}[0]
+    final val shape // dev.voir.areca.charts/BarChartOptions.shape|{}shape[0]
+        final fun <get-shape>(): dev.voir.areca.charts/BarChartShape // dev.voir.areca.charts/BarChartOptions.shape.<get-shape>|<get-shape>(){}[0]
+    final val showBarTrack // dev.voir.areca.charts/BarChartOptions.showBarTrack|{}showBarTrack[0]
+        final fun <get-showBarTrack>(): kotlin/Boolean // dev.voir.areca.charts/BarChartOptions.showBarTrack.<get-showBarTrack>|<get-showBarTrack>(){}[0]
+    final val showXAxis // dev.voir.areca.charts/BarChartOptions.showXAxis|{}showXAxis[0]
+        final fun <get-showXAxis>(): kotlin/Boolean // dev.voir.areca.charts/BarChartOptions.showXAxis.<get-showXAxis>|<get-showXAxis>(){}[0]
+    final val showYAxis // dev.voir.areca.charts/BarChartOptions.showYAxis|{}showYAxis[0]
+        final fun <get-showYAxis>(): kotlin/Boolean // dev.voir.areca.charts/BarChartOptions.showYAxis.<get-showYAxis>|<get-showYAxis>(){}[0]
+    final val showYGuides // dev.voir.areca.charts/BarChartOptions.showYGuides|{}showYGuides[0]
+        final fun <get-showYGuides>(): kotlin/Boolean // dev.voir.areca.charts/BarChartOptions.showYGuides.<get-showYGuides>|<get-showYGuides>(){}[0]
+
+    final fun component1(): kotlin/Boolean // dev.voir.areca.charts/BarChartOptions.component1|component1(){}[0]
+    final fun component10(): dev.voir.areca.charts/BarChartHorizontalAlignment // dev.voir.areca.charts/BarChartOptions.component10|component10(){}[0]
+    final fun component2(): kotlin/Boolean // dev.voir.areca.charts/BarChartOptions.component2|component2(){}[0]
+    final fun component3(): kotlin/Boolean // dev.voir.areca.charts/BarChartOptions.component3|component3(){}[0]
+    final fun component4(): kotlin/Boolean // dev.voir.areca.charts/BarChartOptions.component4|component4(){}[0]
+    final fun component5(): dev.voir.areca.charts/BarChartShape // dev.voir.areca.charts/BarChartOptions.component5|component5(){}[0]
+    final fun component6(): androidx.compose.foundation.layout/PaddingValues // dev.voir.areca.charts/BarChartOptions.component6|component6(){}[0]
+    final fun component7(): kotlin/Float // dev.voir.areca.charts/BarChartOptions.component7|component7(){}[0]
+    final fun component8(): kotlin/Float? // dev.voir.areca.charts/BarChartOptions.component8|component8(){}[0]
+    final fun component9(): dev.voir.areca.charts/BarChartBarWidth // dev.voir.areca.charts/BarChartOptions.component9|component9(){}[0]
+    final fun copy(kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., dev.voir.areca.charts/BarChartShape = ..., androidx.compose.foundation.layout/PaddingValues = ..., kotlin/Float = ..., kotlin/Float? = ..., dev.voir.areca.charts/BarChartBarWidth = ..., dev.voir.areca.charts/BarChartHorizontalAlignment = ...): dev.voir.areca.charts/BarChartOptions // dev.voir.areca.charts/BarChartOptions.copy|copy(kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;dev.voir.areca.charts.BarChartShape;androidx.compose.foundation.layout.PaddingValues;kotlin.Float;kotlin.Float?;dev.voir.areca.charts.BarChartBarWidth;dev.voir.areca.charts.BarChartHorizontalAlignment){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.charts/BarChartOptions.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.charts/BarChartOptions.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.charts/BarChartOptions.toString|toString(){}[0]
+}
+
+final class dev.voir.areca.charts/BarChartSize { // dev.voir.areca.charts/BarChartSize|null[0]
+    constructor <init>(androidx.compose.ui.unit/Dp, androidx.compose.ui.graphics/Shape, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.text/TextStyle, androidx.compose.ui.text/TextStyle, androidx.compose.ui.text/TextStyle, kotlin/Int = ..., kotlin/Int = ...) // dev.voir.areca.charts/BarChartSize.<init>|<init>(androidx.compose.ui.unit.Dp;androidx.compose.ui.graphics.Shape;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.text.TextStyle;androidx.compose.ui.text.TextStyle;androidx.compose.ui.text.TextStyle;kotlin.Int;kotlin.Int){}[0]
+
+    final val axisStroke // dev.voir.areca.charts/BarChartSize.axisStroke|{}axisStroke[0]
+        final fun <get-axisStroke>(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartSize.axisStroke.<get-axisStroke>|<get-axisStroke>(){}[0]
+    final val barCornerRadius // dev.voir.areca.charts/BarChartSize.barCornerRadius|{}barCornerRadius[0]
+        final fun <get-barCornerRadius>(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartSize.barCornerRadius.<get-barCornerRadius>|<get-barCornerRadius>(){}[0]
+    final val barGap // dev.voir.areca.charts/BarChartSize.barGap|{}barGap[0]
+        final fun <get-barGap>(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartSize.barGap.<get-barGap>|<get-barGap>(){}[0]
+    final val groupGap // dev.voir.areca.charts/BarChartSize.groupGap|{}groupGap[0]
+        final fun <get-groupGap>(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartSize.groupGap.<get-groupGap>|<get-groupGap>(){}[0]
+    final val groupLabelBottomPadding // dev.voir.areca.charts/BarChartSize.groupLabelBottomPadding|{}groupLabelBottomPadding[0]
+        final fun <get-groupLabelBottomPadding>(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartSize.groupLabelBottomPadding.<get-groupLabelBottomPadding>|<get-groupLabelBottomPadding>(){}[0]
+    final val groupLabelGap // dev.voir.areca.charts/BarChartSize.groupLabelGap|{}groupLabelGap[0]
+        final fun <get-groupLabelGap>(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartSize.groupLabelGap.<get-groupLabelGap>|<get-groupLabelGap>(){}[0]
+    final val groupLabelMaxLines // dev.voir.areca.charts/BarChartSize.groupLabelMaxLines|{}groupLabelMaxLines[0]
+        final fun <get-groupLabelMaxLines>(): kotlin/Int // dev.voir.areca.charts/BarChartSize.groupLabelMaxLines.<get-groupLabelMaxLines>|<get-groupLabelMaxLines>(){}[0]
+    final val groupLabelTextStyle // dev.voir.areca.charts/BarChartSize.groupLabelTextStyle|{}groupLabelTextStyle[0]
+        final fun <get-groupLabelTextStyle>(): androidx.compose.ui.text/TextStyle // dev.voir.areca.charts/BarChartSize.groupLabelTextStyle.<get-groupLabelTextStyle>|<get-groupLabelTextStyle>(){}[0]
+    final val guideDash // dev.voir.areca.charts/BarChartSize.guideDash|{}guideDash[0]
+        final fun <get-guideDash>(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartSize.guideDash.<get-guideDash>|<get-guideDash>(){}[0]
+    final val guideStroke // dev.voir.areca.charts/BarChartSize.guideStroke|{}guideStroke[0]
+        final fun <get-guideStroke>(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartSize.guideStroke.<get-guideStroke>|<get-guideStroke>(){}[0]
+    final val height // dev.voir.areca.charts/BarChartSize.height|{}height[0]
+        final fun <get-height>(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartSize.height.<get-height>|<get-height>(){}[0]
+    final val minBarHeight // dev.voir.areca.charts/BarChartSize.minBarHeight|{}minBarHeight[0]
+        final fun <get-minBarHeight>(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartSize.minBarHeight.<get-minBarHeight>|<get-minBarHeight>(){}[0]
+    final val plotShape // dev.voir.areca.charts/BarChartSize.plotShape|{}plotShape[0]
+        final fun <get-plotShape>(): androidx.compose.ui.graphics/Shape // dev.voir.areca.charts/BarChartSize.plotShape.<get-plotShape>|<get-plotShape>(){}[0]
+    final val unboundedBarWidth // dev.voir.areca.charts/BarChartSize.unboundedBarWidth|{}unboundedBarWidth[0]
+        final fun <get-unboundedBarWidth>(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartSize.unboundedBarWidth.<get-unboundedBarWidth>|<get-unboundedBarWidth>(){}[0]
+    final val xLabelGap // dev.voir.areca.charts/BarChartSize.xLabelGap|{}xLabelGap[0]
+        final fun <get-xLabelGap>(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartSize.xLabelGap.<get-xLabelGap>|<get-xLabelGap>(){}[0]
+    final val xLabelMaxLines // dev.voir.areca.charts/BarChartSize.xLabelMaxLines|{}xLabelMaxLines[0]
+        final fun <get-xLabelMaxLines>(): kotlin/Int // dev.voir.areca.charts/BarChartSize.xLabelMaxLines.<get-xLabelMaxLines>|<get-xLabelMaxLines>(){}[0]
+    final val xLabelTextStyle // dev.voir.areca.charts/BarChartSize.xLabelTextStyle|{}xLabelTextStyle[0]
+        final fun <get-xLabelTextStyle>(): androidx.compose.ui.text/TextStyle // dev.voir.areca.charts/BarChartSize.xLabelTextStyle.<get-xLabelTextStyle>|<get-xLabelTextStyle>(){}[0]
+    final val yLabelGap // dev.voir.areca.charts/BarChartSize.yLabelGap|{}yLabelGap[0]
+        final fun <get-yLabelGap>(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartSize.yLabelGap.<get-yLabelGap>|<get-yLabelGap>(){}[0]
+    final val yLabelTextStyle // dev.voir.areca.charts/BarChartSize.yLabelTextStyle|{}yLabelTextStyle[0]
+        final fun <get-yLabelTextStyle>(): androidx.compose.ui.text/TextStyle // dev.voir.areca.charts/BarChartSize.yLabelTextStyle.<get-yLabelTextStyle>|<get-yLabelTextStyle>(){}[0]
+    final val yLabelWidth // dev.voir.areca.charts/BarChartSize.yLabelWidth|{}yLabelWidth[0]
+        final fun <get-yLabelWidth>(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartSize.yLabelWidth.<get-yLabelWidth>|<get-yLabelWidth>(){}[0]
+
+    final fun component1(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartSize.component1|component1(){}[0]
+    final fun component10(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartSize.component10|component10(){}[0]
+    final fun component11(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartSize.component11|component11(){}[0]
+    final fun component12(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartSize.component12|component12(){}[0]
+    final fun component13(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartSize.component13|component13(){}[0]
+    final fun component14(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartSize.component14|component14(){}[0]
+    final fun component15(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartSize.component15|component15(){}[0]
+    final fun component16(): androidx.compose.ui.text/TextStyle // dev.voir.areca.charts/BarChartSize.component16|component16(){}[0]
+    final fun component17(): androidx.compose.ui.text/TextStyle // dev.voir.areca.charts/BarChartSize.component17|component17(){}[0]
+    final fun component18(): androidx.compose.ui.text/TextStyle // dev.voir.areca.charts/BarChartSize.component18|component18(){}[0]
+    final fun component19(): kotlin/Int // dev.voir.areca.charts/BarChartSize.component19|component19(){}[0]
+    final fun component2(): androidx.compose.ui.graphics/Shape // dev.voir.areca.charts/BarChartSize.component2|component2(){}[0]
+    final fun component20(): kotlin/Int // dev.voir.areca.charts/BarChartSize.component20|component20(){}[0]
+    final fun component3(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartSize.component3|component3(){}[0]
+    final fun component4(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartSize.component4|component4(){}[0]
+    final fun component5(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartSize.component5|component5(){}[0]
+    final fun component6(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartSize.component6|component6(){}[0]
+    final fun component7(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartSize.component7|component7(){}[0]
+    final fun component8(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartSize.component8|component8(){}[0]
+    final fun component9(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/BarChartSize.component9|component9(){}[0]
+    final fun copy(androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.graphics/Shape = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.text/TextStyle = ..., androidx.compose.ui.text/TextStyle = ..., androidx.compose.ui.text/TextStyle = ..., kotlin/Int = ..., kotlin/Int = ...): dev.voir.areca.charts/BarChartSize // dev.voir.areca.charts/BarChartSize.copy|copy(androidx.compose.ui.unit.Dp;androidx.compose.ui.graphics.Shape;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.text.TextStyle;androidx.compose.ui.text.TextStyle;androidx.compose.ui.text.TextStyle;kotlin.Int;kotlin.Int){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.charts/BarChartSize.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.charts/BarChartSize.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.charts/BarChartSize.toString|toString(){}[0]
+
+    final object Companion { // dev.voir.areca.charts/BarChartSize.Companion|null[0]
+        final val Large // dev.voir.areca.charts/BarChartSize.Companion.Large|{}Large[0]
+            final fun <get-Large>(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.charts/BarChartSize // dev.voir.areca.charts/BarChartSize.Companion.Large.<get-Large>|<get-Large>(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+        final val Medium // dev.voir.areca.charts/BarChartSize.Companion.Medium|{}Medium[0]
+            final fun <get-Medium>(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.charts/BarChartSize // dev.voir.areca.charts/BarChartSize.Companion.Medium.<get-Medium>|<get-Medium>(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+        final val Small // dev.voir.areca.charts/BarChartSize.Companion.Small|{}Small[0]
+            final fun <get-Small>(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.charts/BarChartSize // dev.voir.areca.charts/BarChartSize.Companion.Small.<get-Small>|<get-Small>(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+    }
+}
+
+final class dev.voir.areca.charts/BarChartStyle { // dev.voir.areca.charts/BarChartStyle|null[0]
+    constructor <init>(androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color) // dev.voir.areca.charts/BarChartStyle.<init>|<init>(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color){}[0]
+
+    final val axis // dev.voir.areca.charts/BarChartStyle.axis|{}axis[0]
+        final fun <get-axis>(): androidx.compose.ui.graphics/Color // dev.voir.areca.charts/BarChartStyle.axis.<get-axis>|<get-axis>(){}[0]
+    final val bar // dev.voir.areca.charts/BarChartStyle.bar|{}bar[0]
+        final fun <get-bar>(): androidx.compose.ui.graphics/Color // dev.voir.areca.charts/BarChartStyle.bar.<get-bar>|<get-bar>(){}[0]
+    final val bg // dev.voir.areca.charts/BarChartStyle.bg|{}bg[0]
+        final fun <get-bg>(): androidx.compose.ui.graphics/Color // dev.voir.areca.charts/BarChartStyle.bg.<get-bg>|<get-bg>(){}[0]
+    final val groupLabel // dev.voir.areca.charts/BarChartStyle.groupLabel|{}groupLabel[0]
+        final fun <get-groupLabel>(): androidx.compose.ui.graphics/Color // dev.voir.areca.charts/BarChartStyle.groupLabel.<get-groupLabel>|<get-groupLabel>(){}[0]
+    final val guide // dev.voir.areca.charts/BarChartStyle.guide|{}guide[0]
+        final fun <get-guide>(): androidx.compose.ui.graphics/Color // dev.voir.areca.charts/BarChartStyle.guide.<get-guide>|<get-guide>(){}[0]
+    final val plotBg // dev.voir.areca.charts/BarChartStyle.plotBg|{}plotBg[0]
+        final fun <get-plotBg>(): androidx.compose.ui.graphics/Color // dev.voir.areca.charts/BarChartStyle.plotBg.<get-plotBg>|<get-plotBg>(){}[0]
+    final val track // dev.voir.areca.charts/BarChartStyle.track|{}track[0]
+        final fun <get-track>(): androidx.compose.ui.graphics/Color // dev.voir.areca.charts/BarChartStyle.track.<get-track>|<get-track>(){}[0]
+    final val xLabel // dev.voir.areca.charts/BarChartStyle.xLabel|{}xLabel[0]
+        final fun <get-xLabel>(): androidx.compose.ui.graphics/Color // dev.voir.areca.charts/BarChartStyle.xLabel.<get-xLabel>|<get-xLabel>(){}[0]
+    final val yLabel // dev.voir.areca.charts/BarChartStyle.yLabel|{}yLabel[0]
+        final fun <get-yLabel>(): androidx.compose.ui.graphics/Color // dev.voir.areca.charts/BarChartStyle.yLabel.<get-yLabel>|<get-yLabel>(){}[0]
+
+    final fun component1(): androidx.compose.ui.graphics/Color // dev.voir.areca.charts/BarChartStyle.component1|component1(){}[0]
+    final fun component2(): androidx.compose.ui.graphics/Color // dev.voir.areca.charts/BarChartStyle.component2|component2(){}[0]
+    final fun component3(): androidx.compose.ui.graphics/Color // dev.voir.areca.charts/BarChartStyle.component3|component3(){}[0]
+    final fun component4(): androidx.compose.ui.graphics/Color // dev.voir.areca.charts/BarChartStyle.component4|component4(){}[0]
+    final fun component5(): androidx.compose.ui.graphics/Color // dev.voir.areca.charts/BarChartStyle.component5|component5(){}[0]
+    final fun component6(): androidx.compose.ui.graphics/Color // dev.voir.areca.charts/BarChartStyle.component6|component6(){}[0]
+    final fun component7(): androidx.compose.ui.graphics/Color // dev.voir.areca.charts/BarChartStyle.component7|component7(){}[0]
+    final fun component8(): androidx.compose.ui.graphics/Color // dev.voir.areca.charts/BarChartStyle.component8|component8(){}[0]
+    final fun component9(): androidx.compose.ui.graphics/Color // dev.voir.areca.charts/BarChartStyle.component9|component9(){}[0]
+    final fun copy(androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ...): dev.voir.areca.charts/BarChartStyle // dev.voir.areca.charts/BarChartStyle.copy|copy(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.charts/BarChartStyle.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.charts/BarChartStyle.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.charts/BarChartStyle.toString|toString(){}[0]
+
+    final object Companion { // dev.voir.areca.charts/BarChartStyle.Companion|null[0]
+        final val Default // dev.voir.areca.charts/BarChartStyle.Companion.Default|{}Default[0]
+            final fun <get-Default>(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.charts/BarChartStyle // dev.voir.areca.charts/BarChartStyle.Companion.Default.<get-Default>|<get-Default>(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+
+        final fun of(dev.voir.areca.charts/BarChartColor, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.voir.areca.charts/BarChartStyle // dev.voir.areca.charts/BarChartStyle.Companion.of|of(dev.voir.areca.charts.BarChartColor;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+    }
+}
+
+final class dev.voir.areca.charts/BarChartYAxisLabel { // dev.voir.areca.charts/BarChartYAxisLabel|null[0]
+    constructor <init>(kotlin/Float, kotlin/String) // dev.voir.areca.charts/BarChartYAxisLabel.<init>|<init>(kotlin.Float;kotlin.String){}[0]
+
+    final val label // dev.voir.areca.charts/BarChartYAxisLabel.label|{}label[0]
+        final fun <get-label>(): kotlin/String // dev.voir.areca.charts/BarChartYAxisLabel.label.<get-label>|<get-label>(){}[0]
+    final val value // dev.voir.areca.charts/BarChartYAxisLabel.value|{}value[0]
+        final fun <get-value>(): kotlin/Float // dev.voir.areca.charts/BarChartYAxisLabel.value.<get-value>|<get-value>(){}[0]
+
+    final fun component1(): kotlin/Float // dev.voir.areca.charts/BarChartYAxisLabel.component1|component1(){}[0]
+    final fun component2(): kotlin/String // dev.voir.areca.charts/BarChartYAxisLabel.component2|component2(){}[0]
+    final fun copy(kotlin/Float = ..., kotlin/String = ...): dev.voir.areca.charts/BarChartYAxisLabel // dev.voir.areca.charts/BarChartYAxisLabel.copy|copy(kotlin.Float;kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.charts/BarChartYAxisLabel.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.charts/BarChartYAxisLabel.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.charts/BarChartYAxisLabel.toString|toString(){}[0]
+}
+
+final class dev.voir.areca.charts/StackedBarChartSize { // dev.voir.areca.charts/StackedBarChartSize|null[0]
+    constructor <init>(androidx.compose.ui.unit/Dp, androidx.compose.ui.graphics/Shape) // dev.voir.areca.charts/StackedBarChartSize.<init>|<init>(androidx.compose.ui.unit.Dp;androidx.compose.ui.graphics.Shape){}[0]
+
+    final val height // dev.voir.areca.charts/StackedBarChartSize.height|{}height[0]
+        final fun <get-height>(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/StackedBarChartSize.height.<get-height>|<get-height>(){}[0]
+    final val shape // dev.voir.areca.charts/StackedBarChartSize.shape|{}shape[0]
+        final fun <get-shape>(): androidx.compose.ui.graphics/Shape // dev.voir.areca.charts/StackedBarChartSize.shape.<get-shape>|<get-shape>(){}[0]
+
+    final fun component1(): androidx.compose.ui.unit/Dp // dev.voir.areca.charts/StackedBarChartSize.component1|component1(){}[0]
+    final fun component2(): androidx.compose.ui.graphics/Shape // dev.voir.areca.charts/StackedBarChartSize.component2|component2(){}[0]
+    final fun copy(androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.graphics/Shape = ...): dev.voir.areca.charts/StackedBarChartSize // dev.voir.areca.charts/StackedBarChartSize.copy|copy(androidx.compose.ui.unit.Dp;androidx.compose.ui.graphics.Shape){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.charts/StackedBarChartSize.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.charts/StackedBarChartSize.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.charts/StackedBarChartSize.toString|toString(){}[0]
+
+    final object Companion { // dev.voir.areca.charts/StackedBarChartSize.Companion|null[0]
+        final val Large // dev.voir.areca.charts/StackedBarChartSize.Companion.Large|{}Large[0]
+            final fun <get-Large>(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.charts/StackedBarChartSize // dev.voir.areca.charts/StackedBarChartSize.Companion.Large.<get-Large>|<get-Large>(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+        final val Medium // dev.voir.areca.charts/StackedBarChartSize.Companion.Medium|{}Medium[0]
+            final fun <get-Medium>(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.charts/StackedBarChartSize // dev.voir.areca.charts/StackedBarChartSize.Companion.Medium.<get-Medium>|<get-Medium>(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+        final val Small // dev.voir.areca.charts/StackedBarChartSize.Companion.Small|{}Small[0]
+            final fun <get-Small>(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.charts/StackedBarChartSize // dev.voir.areca.charts/StackedBarChartSize.Companion.Small.<get-Small>|<get-Small>(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+    }
+}
+
+final class dev.voir.areca.charts/StackedBarChartStyle { // dev.voir.areca.charts/StackedBarChartStyle|null[0]
+    constructor <init>(androidx.compose.ui.graphics/Color, kotlin.collections/List<androidx.compose.ui.graphics/Color>) // dev.voir.areca.charts/StackedBarChartStyle.<init>|<init>(androidx.compose.ui.graphics.Color;kotlin.collections.List<androidx.compose.ui.graphics.Color>){}[0]
+
+    final val palette // dev.voir.areca.charts/StackedBarChartStyle.palette|{}palette[0]
+        final fun <get-palette>(): kotlin.collections/List<androidx.compose.ui.graphics/Color> // dev.voir.areca.charts/StackedBarChartStyle.palette.<get-palette>|<get-palette>(){}[0]
+    final val track // dev.voir.areca.charts/StackedBarChartStyle.track|{}track[0]
+        final fun <get-track>(): androidx.compose.ui.graphics/Color // dev.voir.areca.charts/StackedBarChartStyle.track.<get-track>|<get-track>(){}[0]
+
+    final fun component1(): androidx.compose.ui.graphics/Color // dev.voir.areca.charts/StackedBarChartStyle.component1|component1(){}[0]
+    final fun component2(): kotlin.collections/List<androidx.compose.ui.graphics/Color> // dev.voir.areca.charts/StackedBarChartStyle.component2|component2(){}[0]
+    final fun copy(androidx.compose.ui.graphics/Color = ..., kotlin.collections/List<androidx.compose.ui.graphics/Color> = ...): dev.voir.areca.charts/StackedBarChartStyle // dev.voir.areca.charts/StackedBarChartStyle.copy|copy(androidx.compose.ui.graphics.Color;kotlin.collections.List<androidx.compose.ui.graphics.Color>){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.charts/StackedBarChartStyle.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.charts/StackedBarChartStyle.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.charts/StackedBarChartStyle.toString|toString(){}[0]
+
+    final object Companion { // dev.voir.areca.charts/StackedBarChartStyle.Companion|null[0]
+        final val Default // dev.voir.areca.charts/StackedBarChartStyle.Companion.Default|{}Default[0]
+            final fun <get-Default>(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.charts/StackedBarChartStyle // dev.voir.areca.charts/StackedBarChartStyle.Companion.Default.<get-Default>|<get-Default>(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+
+        final fun default(androidx.compose.ui.graphics/Color, kotlin.collections/List<androidx.compose.ui.graphics/Color>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.voir.areca.charts/StackedBarChartStyle // dev.voir.areca.charts/StackedBarChartStyle.Companion.default|default(androidx.compose.ui.graphics.Color;kotlin.collections.List<androidx.compose.ui.graphics.Color>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+    }
+}
+
+final class dev.voir.areca.charts/StackedBarSegment { // dev.voir.areca.charts/StackedBarSegment|null[0]
+    constructor <init>(kotlin/Float, androidx.compose.ui.graphics/Color? = ..., kotlin/String? = ...) // dev.voir.areca.charts/StackedBarSegment.<init>|<init>(kotlin.Float;androidx.compose.ui.graphics.Color?;kotlin.String?){}[0]
+
+    final val color // dev.voir.areca.charts/StackedBarSegment.color|{}color[0]
+        final fun <get-color>(): androidx.compose.ui.graphics/Color? // dev.voir.areca.charts/StackedBarSegment.color.<get-color>|<get-color>(){}[0]
+    final val fraction // dev.voir.areca.charts/StackedBarSegment.fraction|{}fraction[0]
+        final fun <get-fraction>(): kotlin/Float // dev.voir.areca.charts/StackedBarSegment.fraction.<get-fraction>|<get-fraction>(){}[0]
+    final val label // dev.voir.areca.charts/StackedBarSegment.label|{}label[0]
+        final fun <get-label>(): kotlin/String? // dev.voir.areca.charts/StackedBarSegment.label.<get-label>|<get-label>(){}[0]
+
+    final fun component1(): kotlin/Float // dev.voir.areca.charts/StackedBarSegment.component1|component1(){}[0]
+    final fun component2(): androidx.compose.ui.graphics/Color? // dev.voir.areca.charts/StackedBarSegment.component2|component2(){}[0]
+    final fun component3(): kotlin/String? // dev.voir.areca.charts/StackedBarSegment.component3|component3(){}[0]
+    final fun copy(kotlin/Float = ..., androidx.compose.ui.graphics/Color? = ..., kotlin/String? = ...): dev.voir.areca.charts/StackedBarSegment // dev.voir.areca.charts/StackedBarSegment.copy|copy(kotlin.Float;androidx.compose.ui.graphics.Color?;kotlin.String?){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.charts/StackedBarSegment.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.charts/StackedBarSegment.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.charts/StackedBarSegment.toString|toString(){}[0]
+}
+
+final val dev.voir.areca.charts/LocalBarChartSize // dev.voir.areca.charts/LocalBarChartSize|{}LocalBarChartSize[0]
+    final fun <get-LocalBarChartSize>(): androidx.compose.runtime/ProvidableCompositionLocal<dev.voir.areca.charts/BarChartSize?> // dev.voir.areca.charts/LocalBarChartSize.<get-LocalBarChartSize>|<get-LocalBarChartSize>(){}[0]
+final val dev.voir.areca.charts/LocalBarChartStyle // dev.voir.areca.charts/LocalBarChartStyle|{}LocalBarChartStyle[0]
+    final fun <get-LocalBarChartStyle>(): androidx.compose.runtime/ProvidableCompositionLocal<dev.voir.areca.charts/BarChartStyle?> // dev.voir.areca.charts/LocalBarChartStyle.<get-LocalBarChartStyle>|<get-LocalBarChartStyle>(){}[0]
+final val dev.voir.areca.charts/LocalStackedBarChartSize // dev.voir.areca.charts/LocalStackedBarChartSize|{}LocalStackedBarChartSize[0]
+    final fun <get-LocalStackedBarChartSize>(): androidx.compose.runtime/ProvidableCompositionLocal<dev.voir.areca.charts/StackedBarChartSize?> // dev.voir.areca.charts/LocalStackedBarChartSize.<get-LocalStackedBarChartSize>|<get-LocalStackedBarChartSize>(){}[0]
+final val dev.voir.areca.charts/LocalStackedBarChartStyle // dev.voir.areca.charts/LocalStackedBarChartStyle|{}LocalStackedBarChartStyle[0]
+    final fun <get-LocalStackedBarChartStyle>(): androidx.compose.runtime/ProvidableCompositionLocal<dev.voir.areca.charts/StackedBarChartStyle?> // dev.voir.areca.charts/LocalStackedBarChartStyle.<get-LocalStackedBarChartStyle>|<get-LocalStackedBarChartStyle>(){}[0]
+final val dev.voir.areca.charts/dev_voir_areca_charts_BarChartBar$stableprop // dev.voir.areca.charts/dev_voir_areca_charts_BarChartBar$stableprop|#static{}dev_voir_areca_charts_BarChartBar$stableprop[0]
+final val dev.voir.areca.charts/dev_voir_areca_charts_BarChartBarWidth_Fill$stableprop // dev.voir.areca.charts/dev_voir_areca_charts_BarChartBarWidth_Fill$stableprop|#static{}dev_voir_areca_charts_BarChartBarWidth_Fill$stableprop[0]
+final val dev.voir.areca.charts/dev_voir_areca_charts_BarChartBarWidth_Fixed$stableprop // dev.voir.areca.charts/dev_voir_areca_charts_BarChartBarWidth_Fixed$stableprop|#static{}dev_voir_areca_charts_BarChartBarWidth_Fixed$stableprop[0]
+final val dev.voir.areca.charts/dev_voir_areca_charts_BarChartBarWidth_Range$stableprop // dev.voir.areca.charts/dev_voir_areca_charts_BarChartBarWidth_Range$stableprop|#static{}dev_voir_areca_charts_BarChartBarWidth_Range$stableprop[0]
+final val dev.voir.areca.charts/dev_voir_areca_charts_BarChartFill_Gradient$stableprop // dev.voir.areca.charts/dev_voir_areca_charts_BarChartFill_Gradient$stableprop|#static{}dev_voir_areca_charts_BarChartFill_Gradient$stableprop[0]
+final val dev.voir.areca.charts/dev_voir_areca_charts_BarChartFill_Solid$stableprop // dev.voir.areca.charts/dev_voir_areca_charts_BarChartFill_Solid$stableprop|#static{}dev_voir_areca_charts_BarChartFill_Solid$stableprop[0]
+final val dev.voir.areca.charts/dev_voir_areca_charts_BarChartGroup$stableprop // dev.voir.areca.charts/dev_voir_areca_charts_BarChartGroup$stableprop|#static{}dev_voir_areca_charts_BarChartGroup$stableprop[0]
+final val dev.voir.areca.charts/dev_voir_areca_charts_BarChartOptions$stableprop // dev.voir.areca.charts/dev_voir_areca_charts_BarChartOptions$stableprop|#static{}dev_voir_areca_charts_BarChartOptions$stableprop[0]
+final val dev.voir.areca.charts/dev_voir_areca_charts_BarChartSize$stableprop // dev.voir.areca.charts/dev_voir_areca_charts_BarChartSize$stableprop|#static{}dev_voir_areca_charts_BarChartSize$stableprop[0]
+final val dev.voir.areca.charts/dev_voir_areca_charts_BarChartStyle$stableprop // dev.voir.areca.charts/dev_voir_areca_charts_BarChartStyle$stableprop|#static{}dev_voir_areca_charts_BarChartStyle$stableprop[0]
+final val dev.voir.areca.charts/dev_voir_areca_charts_BarChartYAxisLabel$stableprop // dev.voir.areca.charts/dev_voir_areca_charts_BarChartYAxisLabel$stableprop|#static{}dev_voir_areca_charts_BarChartYAxisLabel$stableprop[0]
+final val dev.voir.areca.charts/dev_voir_areca_charts_StackedBarChartSize$stableprop // dev.voir.areca.charts/dev_voir_areca_charts_StackedBarChartSize$stableprop|#static{}dev_voir_areca_charts_StackedBarChartSize$stableprop[0]
+final val dev.voir.areca.charts/dev_voir_areca_charts_StackedBarChartStyle$stableprop // dev.voir.areca.charts/dev_voir_areca_charts_StackedBarChartStyle$stableprop|#static{}dev_voir_areca_charts_StackedBarChartStyle$stableprop[0]
+final val dev.voir.areca.charts/dev_voir_areca_charts_StackedBarSegment$stableprop // dev.voir.areca.charts/dev_voir_areca_charts_StackedBarSegment$stableprop|#static{}dev_voir_areca_charts_StackedBarSegment$stableprop[0]
+
+final fun dev.voir.areca.charts/BarChart(kotlin.collections/List<dev.voir.areca.charts/BarChartGroup>, androidx.compose.ui/Modifier?, dev.voir.areca.charts/BarChartStyle?, dev.voir.areca.charts/BarChartSize?, dev.voir.areca.charts/BarChartOptions?, kotlin.collections/List<dev.voir.areca.charts/BarChartYAxisLabel>?, kotlin/String?, kotlin/Function1<kotlin/Float, kotlin/String>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.voir.areca.charts/BarChart|BarChart(kotlin.collections.List<dev.voir.areca.charts.BarChartGroup>;androidx.compose.ui.Modifier?;dev.voir.areca.charts.BarChartStyle?;dev.voir.areca.charts.BarChartSize?;dev.voir.areca.charts.BarChartOptions?;kotlin.collections.List<dev.voir.areca.charts.BarChartYAxisLabel>?;kotlin.String?;kotlin.Function1<kotlin.Float,kotlin.String>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.charts/StackedBarChart(kotlin.collections/List<dev.voir.areca.charts/StackedBarSegment>, androidx.compose.ui/Modifier?, dev.voir.areca.charts/StackedBarChartStyle?, dev.voir.areca.charts/StackedBarChartSize?, kotlin/String?, kotlin/Function1<kotlin/Float, kotlin/String>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.voir.areca.charts/StackedBarChart|StackedBarChart(kotlin.collections.List<dev.voir.areca.charts.StackedBarSegment>;androidx.compose.ui.Modifier?;dev.voir.areca.charts.StackedBarChartStyle?;dev.voir.areca.charts.StackedBarChartSize?;kotlin.String?;kotlin.Function1<kotlin.Float,kotlin.String>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.charts/dev_voir_areca_charts_BarChartBar$stableprop_getter(): kotlin/Int // dev.voir.areca.charts/dev_voir_areca_charts_BarChartBar$stableprop_getter|dev_voir_areca_charts_BarChartBar$stableprop_getter(){}[0]
+final fun dev.voir.areca.charts/dev_voir_areca_charts_BarChartBarWidth_Fill$stableprop_getter(): kotlin/Int // dev.voir.areca.charts/dev_voir_areca_charts_BarChartBarWidth_Fill$stableprop_getter|dev_voir_areca_charts_BarChartBarWidth_Fill$stableprop_getter(){}[0]
+final fun dev.voir.areca.charts/dev_voir_areca_charts_BarChartBarWidth_Fixed$stableprop_getter(): kotlin/Int // dev.voir.areca.charts/dev_voir_areca_charts_BarChartBarWidth_Fixed$stableprop_getter|dev_voir_areca_charts_BarChartBarWidth_Fixed$stableprop_getter(){}[0]
+final fun dev.voir.areca.charts/dev_voir_areca_charts_BarChartBarWidth_Range$stableprop_getter(): kotlin/Int // dev.voir.areca.charts/dev_voir_areca_charts_BarChartBarWidth_Range$stableprop_getter|dev_voir_areca_charts_BarChartBarWidth_Range$stableprop_getter(){}[0]
+final fun dev.voir.areca.charts/dev_voir_areca_charts_BarChartFill_Gradient$stableprop_getter(): kotlin/Int // dev.voir.areca.charts/dev_voir_areca_charts_BarChartFill_Gradient$stableprop_getter|dev_voir_areca_charts_BarChartFill_Gradient$stableprop_getter(){}[0]
+final fun dev.voir.areca.charts/dev_voir_areca_charts_BarChartFill_Solid$stableprop_getter(): kotlin/Int // dev.voir.areca.charts/dev_voir_areca_charts_BarChartFill_Solid$stableprop_getter|dev_voir_areca_charts_BarChartFill_Solid$stableprop_getter(){}[0]
+final fun dev.voir.areca.charts/dev_voir_areca_charts_BarChartGroup$stableprop_getter(): kotlin/Int // dev.voir.areca.charts/dev_voir_areca_charts_BarChartGroup$stableprop_getter|dev_voir_areca_charts_BarChartGroup$stableprop_getter(){}[0]
+final fun dev.voir.areca.charts/dev_voir_areca_charts_BarChartOptions$stableprop_getter(): kotlin/Int // dev.voir.areca.charts/dev_voir_areca_charts_BarChartOptions$stableprop_getter|dev_voir_areca_charts_BarChartOptions$stableprop_getter(){}[0]
+final fun dev.voir.areca.charts/dev_voir_areca_charts_BarChartSize$stableprop_getter(): kotlin/Int // dev.voir.areca.charts/dev_voir_areca_charts_BarChartSize$stableprop_getter|dev_voir_areca_charts_BarChartSize$stableprop_getter(){}[0]
+final fun dev.voir.areca.charts/dev_voir_areca_charts_BarChartStyle$stableprop_getter(): kotlin/Int // dev.voir.areca.charts/dev_voir_areca_charts_BarChartStyle$stableprop_getter|dev_voir_areca_charts_BarChartStyle$stableprop_getter(){}[0]
+final fun dev.voir.areca.charts/dev_voir_areca_charts_BarChartYAxisLabel$stableprop_getter(): kotlin/Int // dev.voir.areca.charts/dev_voir_areca_charts_BarChartYAxisLabel$stableprop_getter|dev_voir_areca_charts_BarChartYAxisLabel$stableprop_getter(){}[0]
+final fun dev.voir.areca.charts/dev_voir_areca_charts_StackedBarChartSize$stableprop_getter(): kotlin/Int // dev.voir.areca.charts/dev_voir_areca_charts_StackedBarChartSize$stableprop_getter|dev_voir_areca_charts_StackedBarChartSize$stableprop_getter(){}[0]
+final fun dev.voir.areca.charts/dev_voir_areca_charts_StackedBarChartStyle$stableprop_getter(): kotlin/Int // dev.voir.areca.charts/dev_voir_areca_charts_StackedBarChartStyle$stableprop_getter|dev_voir_areca_charts_StackedBarChartStyle$stableprop_getter(){}[0]
+final fun dev.voir.areca.charts/dev_voir_areca_charts_StackedBarSegment$stableprop_getter(): kotlin/Int // dev.voir.areca.charts/dev_voir_areca_charts_StackedBarSegment$stableprop_getter|dev_voir_areca_charts_StackedBarSegment$stableprop_getter(){}[0]

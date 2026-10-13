@@ -1,0 +1,44 @@
+package dev.voir.areca.icons
+
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.path
+import androidx.compose.ui.unit.dp
+
+/**
+ * Corner down right icon.
+ *
+ * Mirrored horizontally in right-to-left layouts.
+ *
+ * Converted from Lucide `corner-down-right` (ISC).
+ */
+public val ArecaIcons.CornerDownRight: ImageVector
+    get() = cachedCornerDownRight ?: ImageVector.Builder(
+        name = "CornerDownRight",
+        defaultWidth = 24.dp,
+        defaultHeight = 24.dp,
+        viewportWidth = 24f,
+        viewportHeight = 24f,
+        autoMirror = true,
+    ).apply {
+        path(
+            stroke = SolidColor(Color.Black),
+            strokeLineWidth = 2f,
+            strokeLineCap = StrokeCap.Round,
+            strokeLineJoin = StrokeJoin.Round,
+        ) {
+            moveTo(15f, 10f)
+            lineTo(20f, 15f)
+            lineTo(15f, 20f)
+            moveTo(4f, 4f)
+            verticalLineTo(11f)
+            arcTo(4f, 4f, 0f, false, false, 8f, 15f)
+            horizontalLineTo(20f)
+        }
+    }.build().also { cachedCornerDownRight = it }
+
+/** `CornerDownRight` vector, built on first access and reused afterwards. */
+private var cachedCornerDownRight: ImageVector? = null

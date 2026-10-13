@@ -1,0 +1,83 @@
+name: Prepare Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: Version bump type, unused when version is set
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+      version:
+        description: Exact version X.Y.Z to release instead of the bump (optional)
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: prepare-release-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    name: Prepare release PR
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Validate source branch and release configuration
+        shell: bash
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          RELEASE_BOT_TOKEN: ${{ secrets.RELEASE_BOT_TOKEN }}
+          RELEASE_BOT_NAME: ${{ vars.RELEASE_BOT_NAME }}
+          RELEASE_BOT_EMAIL: ${{ vars.RELEASE_BOT_EMAIL }}
+        run: |
+          set -euo pipefail
+          if [ "$GITHUB_REF_NAME" != "$DEFAULT_BRANCH" ]; then
+            echo "Prepare Release must run from the default branch, $DEFAULT_BRANCH." >&2
+            exit 1
+          fi
+          if [ -z "$RELEASE_BOT_TOKEN" ] || [ -z "$RELEASE_BOT_NAME" ] || [ -z "$RELEASE_BOT_EMAIL" ]; then
+            echo "The RELEASE_BOT_TOKEN secret and the RELEASE_BOT_NAME and RELEASE_BOT_EMAIL variables are required." >&2
+            exit 1
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          # The release bot's token, so the pushed branch and the pull request start Verify; pushes
+          # and pull requests made with GITHUB_TOKEN start no workflows.
+          token: ${{ secrets.RELEASE_BOT_TOKEN }}
+
+      - name: Resolve and apply release version
+        id: version
+        env:
+          RELEASE_TYPE: ${{ inputs.release_type }}
+          RELEASE_VERSION_INPUT: ${{ inputs.version }}
+        run: ./ci/release/prepare-version
+
+      - name: Validate release changes
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+        run: ./ci/release/validate-changes
+
+      - name: Create or update release pull request
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_BOT_TOKEN }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          RELEASE_TYPE: ${{ steps.version.outputs.release_type }}
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+          RELEASE_BOT_NAME: ${{ vars.RELEASE_BOT_NAME }}
+          RELEASE_BOT_EMAIL: ${{ vars.RELEASE_BOT_EMAIL }}
+        run: ./ci/release/create-pull-request

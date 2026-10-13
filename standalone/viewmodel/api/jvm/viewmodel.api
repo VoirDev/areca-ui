@@ -1,0 +1,198 @@
+public abstract class dev/voir/areca/viewmodel/BaseViewModel : androidx/lifecycle/ViewModel {
+	public fun <init> (Ljava/lang/Object;)V
+	protected final fun currentDisplayOrNull ()Ljava/lang/Object;
+	public final fun dispatch (Ljava/lang/Object;)V
+	protected final fun emitEffect (Ljava/lang/Object;)V
+	protected fun errorMessage (Ljava/lang/Throwable;)Ljava/lang/String;
+	protected final fun getDisplay ()Ljava/lang/Object;
+	public final fun getEffects ()Lkotlinx/coroutines/flow/Flow;
+	public final fun getState ()Lkotlinx/coroutines/flow/StateFlow;
+	protected final fun mutateDisplay (Lkotlin/jvm/functions/Function1;)V
+	protected fun onReduceFailure (Ljava/lang/Object;Ljava/lang/Throwable;)V
+	protected abstract fun reduce (Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	protected final fun runAction (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun runAction$default (Ldev/voir/areca/viewmodel/BaseViewModel;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	protected final fun setDisplay (Ljava/lang/Object;)V
+	protected final fun setError (Ljava/lang/String;Ljava/lang/Throwable;)V
+	protected final fun setError (Ljava/lang/Throwable;)V
+	public static synthetic fun setError$default (Ldev/voir/areca/viewmodel/BaseViewModel;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	protected final fun setInitial ()V
+	protected final fun setLoading ()V
+}
+
+public final class dev/voir/areca/viewmodel/RefreshGate {
+	public static final field Companion Ldev/voir/areca/viewmodel/RefreshGate$Companion;
+	public synthetic fun <init> (JLkotlin/time/TimeSource;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (JLkotlin/time/TimeSource;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun runReserved (Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun tryReserve (Lkotlin/jvm/functions/Function0;)Z
+}
+
+public final class dev/voir/areca/viewmodel/RefreshGate$Companion {
+	public final fun getDEFAULT_COOLDOWN-UwyO8pc ()J
+}
+
+public abstract interface class dev/voir/areca/viewmodel/UiState {
+}
+
+public final class dev/voir/areca/viewmodel/UiState$Display : dev/voir/areca/viewmodel/UiState {
+	public fun <init> (Ljava/lang/Object;)V
+	public final fun component1 ()Ljava/lang/Object;
+	public final fun copy (Ljava/lang/Object;)Ldev/voir/areca/viewmodel/UiState$Display;
+	public static synthetic fun copy$default (Ldev/voir/areca/viewmodel/UiState$Display;Ljava/lang/Object;ILjava/lang/Object;)Ldev/voir/areca/viewmodel/UiState$Display;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getData ()Ljava/lang/Object;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/viewmodel/UiState$Error : dev/voir/areca/viewmodel/UiState {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/Throwable;
+	public final fun copy (Ljava/lang/String;Ljava/lang/Throwable;)Ldev/voir/areca/viewmodel/UiState$Error;
+	public static synthetic fun copy$default (Ldev/voir/areca/viewmodel/UiState$Error;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)Ldev/voir/areca/viewmodel/UiState$Error;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCause ()Ljava/lang/Throwable;
+	public final fun getMessage ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/viewmodel/UiState$Initial : dev/voir/areca/viewmodel/UiState {
+	public static final field INSTANCE Ldev/voir/areca/viewmodel/UiState$Initial;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/viewmodel/UiState$Loading : dev/voir/areca/viewmodel/UiState {
+	public static final field INSTANCE Ldev/voir/areca/viewmodel/UiState$Loading;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/viewmodel/UiStateExtensionsKt {
+	public static final fun displayOrNull (Ldev/voir/areca/viewmodel/UiState;)Ljava/lang/Object;
+}
+
+public abstract class dev/voir/areca/viewmodel/list/BaseListViewModel : dev/voir/areca/viewmodel/BaseViewModel {
+	public static final field Companion Ldev/voir/areca/viewmodel/list/BaseListViewModel$Companion;
+	public static final field DEFAULT_PAGE_SIZE I
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/Object;Ljava/lang/Object;I)V
+	public synthetic fun <init> (Ljava/lang/Object;Ljava/lang/Object;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	protected abstract fun fetchPage (ILjava/lang/Object;Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	protected final fun getPageSize ()I
+	protected final fun handleClearFilters (Ldev/voir/areca/viewmodel/list/ReloadStrategy;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun handleClearFilters$default (Ldev/voir/areca/viewmodel/list/BaseListViewModel;Ldev/voir/areca/viewmodel/list/ReloadStrategy;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	protected final fun handleLoad (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	protected final fun handleLoadNextPage ()V
+	protected final fun handleRefresh (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	protected final fun handleRetry (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	protected final fun handleRetryLoadNextPage ()V
+	protected final fun handleUpdateFilters (Ljava/lang/Object;Ldev/voir/areca/viewmodel/list/ReloadStrategy;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun handleUpdateFilters$default (Ldev/voir/areca/viewmodel/list/BaseListViewModel;Ljava/lang/Object;Ldev/voir/areca/viewmodel/list/ReloadStrategy;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	protected final fun handleUpdateSorting (Ljava/lang/Object;Ldev/voir/areca/viewmodel/list/ReloadStrategy;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun handleUpdateSorting$default (Ldev/voir/areca/viewmodel/list/BaseListViewModel;Ljava/lang/Object;Ldev/voir/areca/viewmodel/list/ReloadStrategy;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	protected fun onRefreshError (Ljava/lang/Throwable;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class dev/voir/areca/viewmodel/list/BaseListViewModel$Companion {
+}
+
+public abstract class dev/voir/areca/viewmodel/list/BaseSimpleListViewModel : dev/voir/areca/viewmodel/list/BaseListViewModel {
+	public fun <init> ()V
+	public fun <init> (I)V
+	public synthetic fun <init> (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun fetchPage (ILjava/lang/Object;Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	protected final fun fetchPage (ILkotlin/Unit;Lkotlin/Unit;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	protected abstract fun fetchPage (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class dev/voir/areca/viewmodel/list/ListState {
+	public fun <init> ()V
+	public fun <init> (Ljava/util/List;Ldev/voir/areca/viewmodel/list/PagingMeta;Ljava/lang/Object;Ljava/lang/Object;ZZZLjava/lang/Throwable;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/util/List;Ldev/voir/areca/viewmodel/list/PagingMeta;Ljava/lang/Object;Ljava/lang/Object;ZZZLjava/lang/Throwable;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ldev/voir/areca/viewmodel/list/PagingMeta;
+	public final fun component3 ()Ljava/lang/Object;
+	public final fun component4 ()Ljava/lang/Object;
+	public final fun component5 ()Z
+	public final fun component6 ()Z
+	public final fun component7 ()Z
+	public final fun component8 ()Ljava/lang/Throwable;
+	public final fun component9 ()Ljava/lang/Throwable;
+	public final fun copy (Ljava/util/List;Ldev/voir/areca/viewmodel/list/PagingMeta;Ljava/lang/Object;Ljava/lang/Object;ZZZLjava/lang/Throwable;Ljava/lang/Throwable;)Ldev/voir/areca/viewmodel/list/ListState;
+	public static synthetic fun copy$default (Ldev/voir/areca/viewmodel/list/ListState;Ljava/util/List;Ldev/voir/areca/viewmodel/list/PagingMeta;Ljava/lang/Object;Ljava/lang/Object;ZZZLjava/lang/Throwable;Ljava/lang/Throwable;ILjava/lang/Object;)Ldev/voir/areca/viewmodel/list/ListState;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFilters ()Ljava/lang/Object;
+	public final fun getItems ()Ljava/util/List;
+	public final fun getNextPageError ()Ljava/lang/Throwable;
+	public final fun getPagingMeta ()Ldev/voir/areca/viewmodel/list/PagingMeta;
+	public final fun getRefreshError ()Ljava/lang/Throwable;
+	public final fun getSorting ()Ljava/lang/Object;
+	public fun hashCode ()I
+	public final fun isLoadingNextPage ()Z
+	public final fun isRefreshing ()Z
+	public final fun isReloading ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/viewmodel/list/ListStateExtensionsKt {
+	public static final fun getHasContent (Ldev/voir/areca/viewmodel/list/ListState;)Z
+	public static final fun isAnyOperationInProgress (Ldev/voir/areca/viewmodel/list/ListState;)Z
+	public static final fun isEmpty (Ldev/voir/areca/viewmodel/list/ListState;)Z
+}
+
+public final class dev/voir/areca/viewmodel/list/PageResult {
+	public fun <init> (Ljava/util/List;ILjava/lang/Integer;Ljava/lang/Integer;Z)V
+	public synthetic fun <init> (Ljava/util/List;ILjava/lang/Integer;Ljava/lang/Integer;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()I
+	public final fun component3 ()Ljava/lang/Integer;
+	public final fun component4 ()Ljava/lang/Integer;
+	public final fun component5 ()Z
+	public final fun copy (Ljava/util/List;ILjava/lang/Integer;Ljava/lang/Integer;Z)Ldev/voir/areca/viewmodel/list/PageResult;
+	public static synthetic fun copy$default (Ldev/voir/areca/viewmodel/list/PageResult;Ljava/util/List;ILjava/lang/Integer;Ljava/lang/Integer;ZILjava/lang/Object;)Ldev/voir/areca/viewmodel/list/PageResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCurrentPage ()I
+	public final fun getHasNextPage ()Z
+	public final fun getItems ()Ljava/util/List;
+	public final fun getTotalItems ()Ljava/lang/Integer;
+	public final fun getTotalPages ()Ljava/lang/Integer;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/viewmodel/list/PagingMeta {
+	public fun <init> ()V
+	public fun <init> (ILjava/lang/Integer;Ljava/lang/Integer;ZI)V
+	public synthetic fun <init> (ILjava/lang/Integer;Ljava/lang/Integer;ZIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun component2 ()Ljava/lang/Integer;
+	public final fun component3 ()Ljava/lang/Integer;
+	public final fun component4 ()Z
+	public final fun component5 ()I
+	public final fun copy (ILjava/lang/Integer;Ljava/lang/Integer;ZI)Ldev/voir/areca/viewmodel/list/PagingMeta;
+	public static synthetic fun copy$default (Ldev/voir/areca/viewmodel/list/PagingMeta;ILjava/lang/Integer;Ljava/lang/Integer;ZIILjava/lang/Object;)Ldev/voir/areca/viewmodel/list/PagingMeta;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCurrentPage ()I
+	public final fun getHasNextPage ()Z
+	public final fun getPageSize ()I
+	public final fun getTotalItems ()Ljava/lang/Integer;
+	public final fun getTotalPages ()Ljava/lang/Integer;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/viewmodel/list/ReloadStrategy : java/lang/Enum {
+	public static final field FullScreen Ldev/voir/areca/viewmodel/list/ReloadStrategy;
+	public static final field Inline Ldev/voir/areca/viewmodel/list/ReloadStrategy;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/viewmodel/list/ReloadStrategy;
+	public static fun values ()[Ldev/voir/areca/viewmodel/list/ReloadStrategy;
+}
+

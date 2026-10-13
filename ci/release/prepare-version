@@ -1,0 +1,119 @@
+#!/usr/bin/env bash
+#
+# Resolves the release version from `VERSION` and writes it back, to `VERSION` and to the `version`
+# of the Claude Code plugin manifest, `.claude-plugin/plugin.json`, which follows it exactly.
+#
+# `VERSION` holds a release, `MAJOR.MINOR.PATCH`, or a development version not released yet,
+# `MAJOR.MINOR.PATCH-SNAPSHOT`, which SemVer orders just below its release.
+#
+# Inputs: RELEASE_TYPE (patch, minor or major) selects the bump, the lowest release of that kind
+# above `VERSION`: from 1.2.3, patch, minor and major give 1.2.4, 1.3.0 and 2.0.0; from
+# 1.2.3-SNAPSHOT they give 1.2.3, 1.3.0 and 2.0.0; from 1.0.0-SNAPSHOT all three give 1.0.0.
+# RELEASE_VERSION_INPUT, when not empty, is an exact `MAJOR.MINOR.PATCH` released instead of the
+# bump; it must be greater than `VERSION`.
+#
+# Outputs to GITHUB_OUTPUT when it is set: `version`, and `release_type` (the bump, or `explicit`).
+# Fails before changing anything when a version is invalid, not greater, or already tagged.
+set -euo pipefail
+
+cd "$(dirname "$0")/../.."
+
+core='(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)'
+
+current="$(tr -d '[:space:]' < VERSION)"
+if [[ ! "$current" =~ ^$core(-SNAPSHOT)?$ ]]; then
+  echo "VERSION holds '$current', which is not MAJOR.MINOR.PATCH or MAJOR.MINOR.PATCH-SNAPSHOT." >&2
+  exit 1
+fi
+major="${BASH_REMATCH[1]}"
+minor="${BASH_REMATCH[2]}"
+patch="${BASH_REMATCH[3]}"
+snapshot="${BASH_REMATCH[4]}"
+
+requested="${RELEASE_VERSION_INPUT:-}"
+requested="${requested#"${requested%%[![:space:]]*}"}"
+requested="${requested%"${requested##*[![:space:]]}"}"
+
+if [ -n "$requested" ]; then
+  if [[ ! "$requested" =~ ^$core$ ]]; then
+    echo "The requested version '$requested' is not a release MAJOR.MINOR.PATCH, such as 1.2.3." >&2
+    exit 1
+  fi
+  requested_parts=("${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}" "${BASH_REMATCH[3]}")
+  current_parts=("$major" "$minor" "$patch")
+
+  # SemVer precedence: the cores compare part by part, and with equal cores a release is greater
+  # than its own pre-release.
+  order=0
+  for i in 0 1 2; do
+    if ((requested_parts[i] != current_parts[i])); then
+      order=$((requested_parts[i] > current_parts[i] ? 1 : -1))
+      break
+    fi
+  done
+  if ((order == 0)) && [ -n "$snapshot" ]; then
+    order=1
+  fi
+
+  if ((order <= 0)); then
+    echo "The requested version $requested is not greater than the current VERSION $current." >&2
+    exit 1
+  fi
+  version="$requested"
+  release_type=explicit
+else
+  case "${RELEASE_TYPE:-}" in
+    patch)
+      if [ -n "$snapshot" ]; then
+        version="$major.$minor.$patch"
+      else
+        version="$major.$minor.$((patch + 1))"
+      fi
+      ;;
+    minor)
+      if [ -n "$snapshot" ] && ((patch == 0)); then
+        version="$major.$minor.0"
+      else
+        version="$major.$((minor + 1)).0"
+      fi
+      ;;
+    major)
+      if [ -n "$snapshot" ] && ((minor == 0 && patch == 0)); then
+        version="$major.0.0"
+      else
+        version="$((major + 1)).0.0"
+      fi
+      ;;
+    *)
+      echo "RELEASE_TYPE must be patch, minor or major, not '${RELEASE_TYPE:-}'." >&2
+      exit 1
+      ;;
+  esac
+  release_type="$RELEASE_TYPE"
+fi
+
+# A tag is the mark of a completed release; a version is never released twice.
+if git ls-remote --exit-code --tags origin "refs/tags/v$version" > /dev/null; then
+  echo "v$version is already tagged, so it cannot be released again." >&2
+  exit 1
+fi
+
+# A JSON edit, not a text substitution: only the `version` value changes, and the manifest keeps its
+# key order and two-space layout.
+python3 - "$version" <<'PYTHON'
+import json
+import pathlib
+import sys
+
+manifest = pathlib.Path(".claude-plugin/plugin.json")
+plugin = json.loads(manifest.read_text())
+plugin["version"] = sys.argv[1]
+manifest.write_text(json.dumps(plugin, indent=2, ensure_ascii=False) + "\n")
+PYTHON
+printf '%s\n' "$version" > VERSION
+echo "Releasing $version (was $current, $release_type)."
+
+if [ -n "${GITHUB_OUTPUT:-}" ]; then
+  echo "version=$version" >> "$GITHUB_OUTPUT"
+  echo "release_type=$release_type" >> "$GITHUB_OUTPUT"
+fi

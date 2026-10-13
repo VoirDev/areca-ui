@@ -1,0 +1,48 @@
+package dev.voir.areca.icons
+
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.path
+import androidx.compose.ui.unit.dp
+
+/**
+ * Log in icon.
+ *
+ * Mirrored horizontally in right-to-left layouts.
+ *
+ * Converted from Lucide `log-in` (ISC).
+ */
+public val ArecaIcons.LogIn: ImageVector
+    get() = cachedLogIn ?: ImageVector.Builder(
+        name = "LogIn",
+        defaultWidth = 24.dp,
+        defaultHeight = 24.dp,
+        viewportWidth = 24f,
+        viewportHeight = 24f,
+        autoMirror = true,
+    ).apply {
+        path(
+            stroke = SolidColor(Color.Black),
+            strokeLineWidth = 2f,
+            strokeLineCap = StrokeCap.Round,
+            strokeLineJoin = StrokeJoin.Round,
+        ) {
+            moveTo(10f, 17f)
+            lineTo(15f, 12f)
+            lineTo(10f, 7f)
+            moveTo(15f, 12f)
+            horizontalLineTo(3f)
+            moveTo(15f, 3f)
+            horizontalLineTo(19f)
+            arcTo(2f, 2f, 0f, false, true, 21f, 5f)
+            verticalLineTo(19f)
+            arcTo(2f, 2f, 0f, false, true, 19f, 21f)
+            horizontalLineTo(15f)
+        }
+    }.build().also { cachedLogIn = it }
+
+/** `LogIn` vector, built on first access and reused afterwards. */
+private var cachedLogIn: ImageVector? = null

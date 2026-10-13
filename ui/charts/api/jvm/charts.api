@@ -1,0 +1,357 @@
+public final class dev/voir/areca/charts/BarChartBar {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/charts/BarChartBar$Companion;
+	public synthetic fun <init> (FLjava/lang/String;Ldev/voir/areca/charts/BarChartFill;Landroidx/compose/ui/graphics/Color;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (FLjava/lang/String;Ldev/voir/areca/charts/BarChartFill;Landroidx/compose/ui/graphics/Color;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()F
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ldev/voir/areca/charts/BarChartFill;
+	public final fun component4-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
+	public final fun copy-gP2Z1ig (FLjava/lang/String;Ldev/voir/areca/charts/BarChartFill;Landroidx/compose/ui/graphics/Color;)Ldev/voir/areca/charts/BarChartBar;
+	public static synthetic fun copy-gP2Z1ig$default (Ldev/voir/areca/charts/BarChartBar;FLjava/lang/String;Ldev/voir/areca/charts/BarChartFill;Landroidx/compose/ui/graphics/Color;ILjava/lang/Object;)Ldev/voir/areca/charts/BarChartBar;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFill ()Ldev/voir/areca/charts/BarChartFill;
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getTrackColor-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
+	public final fun getValue ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/charts/BarChartBar$Companion {
+	public final fun formatValue (F)Ljava/lang/String;
+}
+
+public abstract interface class dev/voir/areca/charts/BarChartBarWidth {
+}
+
+public final class dev/voir/areca/charts/BarChartBarWidth$Fill : dev/voir/areca/charts/BarChartBarWidth {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/voir/areca/charts/BarChartBarWidth$Fill;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/charts/BarChartBarWidth$Fixed : dev/voir/areca/charts/BarChartBarWidth {
+	public static final field $stable I
+	public synthetic fun <init> (FLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-D9Ej5fM ()F
+	public final fun copy-0680j_4 (F)Ldev/voir/areca/charts/BarChartBarWidth$Fixed;
+	public static synthetic fun copy-0680j_4$default (Ldev/voir/areca/charts/BarChartBarWidth$Fixed;FILjava/lang/Object;)Ldev/voir/areca/charts/BarChartBarWidth$Fixed;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getWidth-D9Ej5fM ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/charts/BarChartBarWidth$Range : dev/voir/areca/charts/BarChartBarWidth {
+	public static final field $stable I
+	public synthetic fun <init> (FFLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-D9Ej5fM ()F
+	public final fun component2-D9Ej5fM ()F
+	public final fun copy-YgX7TsA (FF)Ldev/voir/areca/charts/BarChartBarWidth$Range;
+	public static synthetic fun copy-YgX7TsA$default (Ldev/voir/areca/charts/BarChartBarWidth$Range;FFILjava/lang/Object;)Ldev/voir/areca/charts/BarChartBarWidth$Range;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMax-D9Ej5fM ()F
+	public final fun getMin-D9Ej5fM ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/charts/BarChartColor : java/lang/Enum {
+	public static final field Brand Ldev/voir/areca/charts/BarChartColor;
+	public static final field Danger Ldev/voir/areca/charts/BarChartColor;
+	public static final field Info Ldev/voir/areca/charts/BarChartColor;
+	public static final field Neutral Ldev/voir/areca/charts/BarChartColor;
+	public static final field Success Ldev/voir/areca/charts/BarChartColor;
+	public static final field Warning Ldev/voir/areca/charts/BarChartColor;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/charts/BarChartColor;
+	public static fun values ()[Ldev/voir/areca/charts/BarChartColor;
+}
+
+public abstract interface class dev/voir/areca/charts/BarChartFill {
+}
+
+public final class dev/voir/areca/charts/BarChartFill$Gradient : dev/voir/areca/charts/BarChartFill {
+	public static final field $stable I
+	public fun <init> (Landroidx/compose/ui/graphics/Brush;)V
+	public final fun component1 ()Landroidx/compose/ui/graphics/Brush;
+	public final fun copy (Landroidx/compose/ui/graphics/Brush;)Ldev/voir/areca/charts/BarChartFill$Gradient;
+	public static synthetic fun copy$default (Ldev/voir/areca/charts/BarChartFill$Gradient;Landroidx/compose/ui/graphics/Brush;ILjava/lang/Object;)Ldev/voir/areca/charts/BarChartFill$Gradient;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBrush ()Landroidx/compose/ui/graphics/Brush;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/charts/BarChartFill$Solid : dev/voir/areca/charts/BarChartFill {
+	public static final field $stable I
+	public synthetic fun <init> (JLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun copy-8_81llA (J)Ldev/voir/areca/charts/BarChartFill$Solid;
+	public static synthetic fun copy-8_81llA$default (Ldev/voir/areca/charts/BarChartFill$Solid;JILjava/lang/Object;)Ldev/voir/areca/charts/BarChartFill$Solid;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getColor-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/charts/BarChartGroup {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/charts/BarChartGroup$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/util/List;)Ldev/voir/areca/charts/BarChartGroup;
+	public static synthetic fun copy$default (Ldev/voir/areca/charts/BarChartGroup;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Ldev/voir/areca/charts/BarChartGroup;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBars ()Ljava/util/List;
+	public final fun getLabel ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/charts/BarChartGroup$Companion {
+	public final fun singleBars (Ljava/util/List;)Ljava/util/List;
+}
+
+public final class dev/voir/areca/charts/BarChartHorizontalAlignment : java/lang/Enum {
+	public static final field Center Ldev/voir/areca/charts/BarChartHorizontalAlignment;
+	public static final field End Ldev/voir/areca/charts/BarChartHorizontalAlignment;
+	public static final field Start Ldev/voir/areca/charts/BarChartHorizontalAlignment;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/charts/BarChartHorizontalAlignment;
+	public static fun values ()[Ldev/voir/areca/charts/BarChartHorizontalAlignment;
+}
+
+public final class dev/voir/areca/charts/BarChartKt {
+	public static final fun BarChart (Ljava/util/List;Landroidx/compose/ui/Modifier;Ldev/voir/areca/charts/BarChartStyle;Ldev/voir/areca/charts/BarChartSize;Ldev/voir/areca/charts/BarChartOptions;Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class dev/voir/areca/charts/BarChartOptions {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (ZZZZLdev/voir/areca/charts/BarChartShape;Landroidx/compose/foundation/layout/PaddingValues;FLjava/lang/Float;Ldev/voir/areca/charts/BarChartBarWidth;Ldev/voir/areca/charts/BarChartHorizontalAlignment;)V
+	public synthetic fun <init> (ZZZZLdev/voir/areca/charts/BarChartShape;Landroidx/compose/foundation/layout/PaddingValues;FLjava/lang/Float;Ldev/voir/areca/charts/BarChartBarWidth;Ldev/voir/areca/charts/BarChartHorizontalAlignment;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun component10 ()Ldev/voir/areca/charts/BarChartHorizontalAlignment;
+	public final fun component2 ()Z
+	public final fun component3 ()Z
+	public final fun component4 ()Z
+	public final fun component5 ()Ldev/voir/areca/charts/BarChartShape;
+	public final fun component6 ()Landroidx/compose/foundation/layout/PaddingValues;
+	public final fun component7 ()F
+	public final fun component8 ()Ljava/lang/Float;
+	public final fun component9 ()Ldev/voir/areca/charts/BarChartBarWidth;
+	public final fun copy (ZZZZLdev/voir/areca/charts/BarChartShape;Landroidx/compose/foundation/layout/PaddingValues;FLjava/lang/Float;Ldev/voir/areca/charts/BarChartBarWidth;Ldev/voir/areca/charts/BarChartHorizontalAlignment;)Ldev/voir/areca/charts/BarChartOptions;
+	public static synthetic fun copy$default (Ldev/voir/areca/charts/BarChartOptions;ZZZZLdev/voir/areca/charts/BarChartShape;Landroidx/compose/foundation/layout/PaddingValues;FLjava/lang/Float;Ldev/voir/areca/charts/BarChartBarWidth;Ldev/voir/areca/charts/BarChartHorizontalAlignment;ILjava/lang/Object;)Ldev/voir/areca/charts/BarChartOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBarWidth ()Ldev/voir/areca/charts/BarChartBarWidth;
+	public final fun getContentPadding ()Landroidx/compose/foundation/layout/PaddingValues;
+	public final fun getHorizontalAlignment ()Ldev/voir/areca/charts/BarChartHorizontalAlignment;
+	public final fun getMaxValue ()Ljava/lang/Float;
+	public final fun getMinValue ()F
+	public final fun getShape ()Ldev/voir/areca/charts/BarChartShape;
+	public final fun getShowBarTrack ()Z
+	public final fun getShowXAxis ()Z
+	public final fun getShowYAxis ()Z
+	public final fun getShowYGuides ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/charts/BarChartShape : java/lang/Enum {
+	public static final field Rounded Ldev/voir/areca/charts/BarChartShape;
+	public static final field Square Ldev/voir/areca/charts/BarChartShape;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/charts/BarChartShape;
+	public static fun values ()[Ldev/voir/areca/charts/BarChartShape;
+}
+
+public final class dev/voir/areca/charts/BarChartSize {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/charts/BarChartSize$Companion;
+	public synthetic fun <init> (FLandroidx/compose/ui/graphics/Shape;FFFFFFFFFFFFFLandroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;IIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (FLandroidx/compose/ui/graphics/Shape;FFFFFFFFFFFFFLandroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-D9Ej5fM ()F
+	public final fun component10-D9Ej5fM ()F
+	public final fun component11-D9Ej5fM ()F
+	public final fun component12-D9Ej5fM ()F
+	public final fun component13-D9Ej5fM ()F
+	public final fun component14-D9Ej5fM ()F
+	public final fun component15-D9Ej5fM ()F
+	public final fun component16 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component17 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component18 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component19 ()I
+	public final fun component2 ()Landroidx/compose/ui/graphics/Shape;
+	public final fun component20 ()I
+	public final fun component3-D9Ej5fM ()F
+	public final fun component4-D9Ej5fM ()F
+	public final fun component5-D9Ej5fM ()F
+	public final fun component6-D9Ej5fM ()F
+	public final fun component7-D9Ej5fM ()F
+	public final fun component8-D9Ej5fM ()F
+	public final fun component9-D9Ej5fM ()F
+	public final fun copy-zNo5t1I (FLandroidx/compose/ui/graphics/Shape;FFFFFFFFFFFFFLandroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;II)Ldev/voir/areca/charts/BarChartSize;
+	public static synthetic fun copy-zNo5t1I$default (Ldev/voir/areca/charts/BarChartSize;FLandroidx/compose/ui/graphics/Shape;FFFFFFFFFFFFFLandroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;IIILjava/lang/Object;)Ldev/voir/areca/charts/BarChartSize;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAxisStroke-D9Ej5fM ()F
+	public final fun getBarCornerRadius-D9Ej5fM ()F
+	public final fun getBarGap-D9Ej5fM ()F
+	public final fun getGroupGap-D9Ej5fM ()F
+	public final fun getGroupLabelBottomPadding-D9Ej5fM ()F
+	public final fun getGroupLabelGap-D9Ej5fM ()F
+	public final fun getGroupLabelMaxLines ()I
+	public final fun getGroupLabelTextStyle ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getGuideDash-D9Ej5fM ()F
+	public final fun getGuideStroke-D9Ej5fM ()F
+	public final fun getHeight-D9Ej5fM ()F
+	public final fun getMinBarHeight-D9Ej5fM ()F
+	public final fun getPlotShape ()Landroidx/compose/ui/graphics/Shape;
+	public final fun getUnboundedBarWidth-D9Ej5fM ()F
+	public final fun getXLabelGap-D9Ej5fM ()F
+	public final fun getXLabelMaxLines ()I
+	public final fun getXLabelTextStyle ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getYLabelGap-D9Ej5fM ()F
+	public final fun getYLabelTextStyle ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getYLabelWidth-D9Ej5fM ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/charts/BarChartSize$Companion {
+	public final fun getLarge (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/charts/BarChartSize;
+	public final fun getMedium (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/charts/BarChartSize;
+	public final fun getSmall (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/charts/BarChartSize;
+}
+
+public final class dev/voir/areca/charts/BarChartSizeKt {
+	public static final fun getLocalBarChartSize ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
+public final class dev/voir/areca/charts/BarChartStyle {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/charts/BarChartStyle$Companion;
+	public synthetic fun <init> (JJJJJJJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-0d7_KjU ()J
+	public final fun component5-0d7_KjU ()J
+	public final fun component6-0d7_KjU ()J
+	public final fun component7-0d7_KjU ()J
+	public final fun component8-0d7_KjU ()J
+	public final fun component9-0d7_KjU ()J
+	public final fun copy-5r9EGqc (JJJJJJJJJ)Ldev/voir/areca/charts/BarChartStyle;
+	public static synthetic fun copy-5r9EGqc$default (Ldev/voir/areca/charts/BarChartStyle;JJJJJJJJJILjava/lang/Object;)Ldev/voir/areca/charts/BarChartStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAxis-0d7_KjU ()J
+	public final fun getBar-0d7_KjU ()J
+	public final fun getBg-0d7_KjU ()J
+	public final fun getGroupLabel-0d7_KjU ()J
+	public final fun getGuide-0d7_KjU ()J
+	public final fun getPlotBg-0d7_KjU ()J
+	public final fun getTrack-0d7_KjU ()J
+	public final fun getXLabel-0d7_KjU ()J
+	public final fun getYLabel-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/charts/BarChartStyle$Companion {
+	public final fun getDefault (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/charts/BarChartStyle;
+	public final fun of-v1fvUNM (Ldev/voir/areca/charts/BarChartColor;JJJJJJJLandroidx/compose/runtime/Composer;II)Ldev/voir/areca/charts/BarChartStyle;
+}
+
+public final class dev/voir/areca/charts/BarChartStyleKt {
+	public static final fun getLocalBarChartStyle ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
+public final class dev/voir/areca/charts/BarChartYAxisLabel {
+	public static final field $stable I
+	public fun <init> (FLjava/lang/String;)V
+	public final fun component1 ()F
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (FLjava/lang/String;)Ldev/voir/areca/charts/BarChartYAxisLabel;
+	public static synthetic fun copy$default (Ldev/voir/areca/charts/BarChartYAxisLabel;FLjava/lang/String;ILjava/lang/Object;)Ldev/voir/areca/charts/BarChartYAxisLabel;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getValue ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/charts/StackedBarChartKt {
+	public static final fun StackedBarChart (Ljava/util/List;Landroidx/compose/ui/Modifier;Ldev/voir/areca/charts/StackedBarChartStyle;Ldev/voir/areca/charts/StackedBarChartSize;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class dev/voir/areca/charts/StackedBarChartSize {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/charts/StackedBarChartSize$Companion;
+	public synthetic fun <init> (FLandroidx/compose/ui/graphics/Shape;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-D9Ej5fM ()F
+	public final fun component2 ()Landroidx/compose/ui/graphics/Shape;
+	public final fun copy-D5KLDUw (FLandroidx/compose/ui/graphics/Shape;)Ldev/voir/areca/charts/StackedBarChartSize;
+	public static synthetic fun copy-D5KLDUw$default (Ldev/voir/areca/charts/StackedBarChartSize;FLandroidx/compose/ui/graphics/Shape;ILjava/lang/Object;)Ldev/voir/areca/charts/StackedBarChartSize;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getHeight-D9Ej5fM ()F
+	public final fun getShape ()Landroidx/compose/ui/graphics/Shape;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/charts/StackedBarChartSize$Companion {
+	public final fun getLarge (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/charts/StackedBarChartSize;
+	public final fun getMedium (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/charts/StackedBarChartSize;
+	public final fun getSmall (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/charts/StackedBarChartSize;
+}
+
+public final class dev/voir/areca/charts/StackedBarChartSizeKt {
+	public static final fun getLocalStackedBarChartSize ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
+public final class dev/voir/areca/charts/StackedBarChartStyle {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/charts/StackedBarChartStyle$Companion;
+	public synthetic fun <init> (JLjava/util/List;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component2 ()Ljava/util/List;
+	public final fun copy-DxMtmZc (JLjava/util/List;)Ldev/voir/areca/charts/StackedBarChartStyle;
+	public static synthetic fun copy-DxMtmZc$default (Ldev/voir/areca/charts/StackedBarChartStyle;JLjava/util/List;ILjava/lang/Object;)Ldev/voir/areca/charts/StackedBarChartStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPalette ()Ljava/util/List;
+	public final fun getTrack-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/charts/StackedBarChartStyle$Companion {
+	public final fun default-3J-VO9M (JLjava/util/List;Landroidx/compose/runtime/Composer;II)Ldev/voir/areca/charts/StackedBarChartStyle;
+	public final fun getDefault (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/charts/StackedBarChartStyle;
+}
+
+public final class dev/voir/areca/charts/StackedBarChartStyleKt {
+	public static final fun getLocalStackedBarChartStyle ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
+public final class dev/voir/areca/charts/StackedBarSegment {
+	public static final field $stable I
+	public synthetic fun <init> (FLandroidx/compose/ui/graphics/Color;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (FLandroidx/compose/ui/graphics/Color;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()F
+	public final fun component2-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy-bi-UJ9A (FLandroidx/compose/ui/graphics/Color;Ljava/lang/String;)Ldev/voir/areca/charts/StackedBarSegment;
+	public static synthetic fun copy-bi-UJ9A$default (Ldev/voir/areca/charts/StackedBarSegment;FLandroidx/compose/ui/graphics/Color;Ljava/lang/String;ILjava/lang/Object;)Ldev/voir/areca/charts/StackedBarSegment;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getColor-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
+	public final fun getFraction ()F
+	public final fun getLabel ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
