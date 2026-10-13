@@ -7,6 +7,9 @@ account menu and the devices signed in — and recipes for putting them together
 implementation("dev.voir.areca:flow-profile:<version>")
 ```
 
+Areca is published to GitHub Packages, so the build needs its repository first; see
+[Installing](../../README.md#installing).
+
 The module's own glyphs are bundled with it. The recipes below also draw glyphs of the
 application's choosing from `ArecaIcons` — a phone, an at sign, a share arrow — which needs
 `dev.voir.areca:icons` as well. Their words come from the application's own `composeResources`

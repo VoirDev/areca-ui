@@ -8,6 +8,9 @@ putting them together.
 implementation("dev.voir.areca:flow-attachments:<version>")
 ```
 
+Areca is published to GitHub Packages, so the build needs its repository first; see
+[Installing](../../README.md#installing).
+
 Every recipe below is also a compiled page in the playground, under **Attachments flow → Screens**,
 driven by a sample application that picks, copies, uploads and downloads offline.
 

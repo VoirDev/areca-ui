@@ -53,6 +53,9 @@ kotlin {
 }
 ```
 
+Areca is published to GitHub Packages, so the build needs its repository first; see
+[Installing](../../README.md#installing).
+
 Use `api("dev.voir.areca:viewmodel:<version>")` instead when the consuming module exposes Areca
 ViewModel types in its own public API.
 

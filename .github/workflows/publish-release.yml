@@ -44,19 +44,19 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: ./ci/release/detect
 
-  publish-maven-central:
-    name: Publish to Maven Central
+  publish-github-packages:
+    name: Publish to GitHub Packages
     needs: detect
     if: needs.detect.outputs.should_publish == 'true'
     runs-on: ubuntu-latest
-    # Covers Central's validation and publication, which the upload script waits for.
-    timeout-minutes: 90
-    # Approval happens here. The signing key and the Central token are secrets of this environment
-    # only, so no other job, and no pull request, can read them.
+    timeout-minutes: 30
+    # Approval happens here: nothing is uploaded until a reviewer of the `release` environment
+    # approves the run.
     environment: release
     permissions:
       actions: read
       contents: read
+      packages: write
 
     steps:
       - name: Checkout pushed commit
@@ -73,17 +73,14 @@ jobs:
       - name: Publish kept artifacts unchanged
         env:
           RELEASE_VERSION: ${{ needs.detect.outputs.version }}
-          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
-          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
-          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
-        run: ./ci/release/publish-maven-central release-artifacts
+          GITHUB_TOKEN: ${{ github.token }}
+        run: ./ci/release/publish-github-packages release-artifacts
 
   finalize:
     name: Create tag and GitHub Release
     needs:
       - detect
-      - publish-maven-central
+      - publish-github-packages
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:

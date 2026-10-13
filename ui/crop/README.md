@@ -22,6 +22,9 @@ implementation("dev.voir.areca:crop:<version>")
 implementation("dev.voir.areca:foundation:<version>")
 ```
 
+Areca is published to GitHub Packages, so the build needs its repository first; see
+[Installing](../../README.md#installing).
+
 The cropper draws with the Areca theme, so an `ArecaThemeProvider` must sit above it — usually the one
 at the application's root:
 

@@ -4,7 +4,7 @@
 Usage: check-staging STAGING_DIR VERSION COORDINATES_FILE
 
 Every component under `dev/voir/areca` must be at VERSION, carry a POM with its checksums, and,
-unless it is a POM-only component, carry the sources and javadoc jars Maven Central requires. Every
+unless it is a POM-only component, carry the sources and javadoc jars every release ships. Every
 platform variant a root component's Gradle module metadata points at must be staged too, so a
 publication can never be released without one of its targets.
 
@@ -60,7 +60,7 @@ def main() -> int:
         if not packaging_is_pom:
             for classifier in ("sources", "javadoc"):
                 if f"{prefix}-{classifier}.jar" not in files:
-                    failures.append(f"{artifact}: the {classifier} jar Maven Central requires is missing.")
+                    failures.append(f"{artifact}: the {classifier} jar every release ships is missing.")
 
         module = version_dir / f"{prefix}.module"
         if module.exists():

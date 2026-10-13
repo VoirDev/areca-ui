@@ -11,6 +11,9 @@ dependencies {
 }
 ```
 
+Areca is published to GitHub Packages, so the build needs its repository first; see
+[Installing](../../README.md#installing).
+
 ## Usage
 
 Every icon is an extension property on `ArecaIcons` in `dev.voir.areca.icons`. Each property needs its own

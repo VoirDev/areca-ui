@@ -19,6 +19,32 @@ what is drawn and how.
 
 ## Set up an app once
 
+Areca is published to GitHub Packages, not Maven Central. Add its repository to
+`settings.gradle.kts`, limited to the Areca group:
+
+```kotlin
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+        exclusiveContent {
+            forRepository {
+                maven("https://maven.pkg.github.com/VoirDev/areca-ui") {
+                    name = "Areca"
+                    credentials(PasswordCredentials::class)
+                }
+            }
+            filter { includeGroup("dev.voir.areca") }
+        }
+    }
+}
+```
+
+GitHub Packages asks for credentials even for public packages: the Gradle properties
+`ArecaUsername` (a GitHub user name) and `ArecaPassword` (a classic personal access token with
+`read:packages`), set in `~/.gradle/gradle.properties` or, on CI, as
+`ORG_GRADLE_PROJECT_ArecaUsername` and `ORG_GRADLE_PROJECT_ArecaPassword`. Never commit them.
+
 ```kotlin
 commonMain.dependencies {
     implementation("dev.voir.areca:foundation:1.0.0")

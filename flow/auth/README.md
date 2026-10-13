@@ -6,6 +6,9 @@ Parts for building authentication screens, and recipes for putting them together
 implementation("dev.voir.areca:flow-auth:<version>")
 ```
 
+Areca is published to GitHub Packages, so the build needs its repository first; see
+[Installing](../../README.md#installing).
+
 ## What this is not
 
 It is not a `SignInScreen`.

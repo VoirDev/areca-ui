@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+#
+# Publishes the kept release artifacts to GitHub Packages unchanged.
+#
+# Usage: publish-github-packages ARTIFACTS_DIR
+#
+# ARTIFACTS_DIR is what `ci/release/build-artifacts` kept. Every file is checked against the kept
+# manifest, then uploaded with a PUT to this repository's Maven registry, as a Maven client deploys.
+# Gradle is not involved: its publish tasks rebuild, and publication ships only what the release pull
+# request built. The registry keeps the version listing, so no `maven-metadata.xml` is uploaded.
+#
+# Rerunnable: a file the registry already serves is compared with the kept one and skipped when they
+# are identical, so a rerun completes a partial upload. A file that differs fails the run; a
+# published version is never overwritten.
+#
+# Environment: RELEASE_VERSION, GITHUB_TOKEN (with `packages: write`), and the GITHUB_ACTOR and
+# GITHUB_REPOSITORY of the run.
+set -euo pipefail
+
+artifacts="$(cd "${1:?Usage: publish-github-packages ARTIFACTS_DIR}" && pwd)"
+
+missing=()
+for name in RELEASE_VERSION GITHUB_TOKEN GITHUB_ACTOR GITHUB_REPOSITORY; do
+  if [ -z "${!name:-}" ]; then
+    missing+=("$name")
+  fi
+done
+if [ "${#missing[@]}" -gt 0 ]; then
+  echo "Missing ${missing[*]}." >&2
+  exit 1
+fi
+
+registry="https://maven.pkg.github.com/$GITHUB_REPOSITORY"
+
+echo "==> Checking the kept artifacts against their manifest"
+kept_version="$(tr -d '[:space:]' < "$artifacts/VERSION")"
+if [ "$kept_version" != "$RELEASE_VERSION" ]; then
+  echo "The kept artifacts are $kept_version, not $RELEASE_VERSION." >&2
+  exit 1
+fi
+(cd "$artifacts" && shasum -a 256 --check --quiet SHA256SUMS)
+listed="$(wc -l < "$artifacts/SHA256SUMS" | tr -d ' ')"
+present="$(cd "$artifacts" && find maven -type f | wc -l | tr -d ' ')"
+if [ "$listed" != "$present" ]; then
+  echo "The manifest lists $listed files, but $present are present." >&2
+  exit 1
+fi
+
+work="$(mktemp -d)"
+trap 'rm -rf "$work"' EXIT
+
+# The credentials go to curl in a config file, so the token never appears in a command line.
+curl_config="$work/curl.config"
+(umask 077 && printf 'user = "%s:%s"\n' "$GITHUB_ACTOR" "$GITHUB_TOKEN" > "$curl_config")
+
+echo "==> Uploading $RELEASE_VERSION to $registry"
+uploaded=0
+skipped=0
+while IFS= read -r file; do
+  path="${file#maven/}"
+  remote="$work/remote"
+  status="$(curl --config "$curl_config" --silent --location --output "$remote" --write-out '%{http_code}' \
+    "$registry/$path" || true)"
+  if [ "$status" = 200 ]; then
+    if ! cmp -s "$remote" "$artifacts/$file"; then
+      echo "$path is already published with different content; a version is never overwritten." >&2
+      exit 1
+    fi
+    skipped=$((skipped + 1))
+    continue
+  fi
+
+  curl --config "$curl_config" --silent --show-error --fail-with-body \
+    --upload-file "$artifacts/$file" "$registry/$path"
+  uploaded=$((uploaded + 1))
+done < <(cd "$artifacts" && find maven -type f | LC_ALL=C sort)
+
+echo "Uploaded $uploaded files; $skipped were already published unchanged."

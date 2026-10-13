@@ -7,6 +7,9 @@ them — buttons, text, fields, lists, overlays, navigation — for Android, iOS
 implementation("dev.voir.areca:foundation:1.0.0")
 ```
 
+Areca is published to GitHub Packages, so the build needs its repository first; see
+[Installing](../../README.md#installing).
+
 Every other `ui` and `flow` module depends on this one, and everything they draw reads the tokens it
 provides, so an application has exactly one theme to set up. The module carries `compose-runtime`,
 `compose-foundation` and `compose-ui` as API dependencies and nothing else. It does not depend on
