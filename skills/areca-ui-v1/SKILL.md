@@ -105,7 +105,7 @@ Column(
 
 | Accessor | Members |
 | --- | --- |
-| `ArecaTheme.colors` | Grounds `bgCanvas` (page), `bgSurface` (cards), `bgSubtle`, `bgMuted`, `bgContrast`, `bgDisabled`, overlays; per tone `bg{Brand,Danger,Success,Warn,Info,Neutral}{Muted,Base,Intense}`. Foregrounds `fgBase`, `fgSubtle`, `fgMuted`, `fgDisabled`, `fgOnContrast`, `fgOnFill`, marks `fg{Brand,Danger,Success,Info,Warn}` and text `fg{…}Text`. Borders `borderBase`, `borderStrong`, `borderSubtle`, `border{Danger,Success,Info,Warn}`. Accent `accentBase` … `accentMuted` |
+| `ArecaTheme.colors` | Grounds `bgCanvas` (page), `bgSurface` (cards), `bgSubtle` (settings sections, grouped regions), `bgMuted` (tracks and wells), `bgContrast`, `bgDisabled`, overlays; per tone `bg{Brand,Danger,Success,Warn,Info,Neutral}{Muted,Base,Intense}`. Foregrounds `fgBase`, `fgSubtle`, `fgMuted`, `fgDisabled`, `fgOnContrast`, `fgOnFill`, marks `fg{Brand,Danger,Success,Info,Warn}` and text `fg{…}Text`. Borders `borderBase`, `borderStrong`, `borderSubtle`, `borderOnSubtle` (hairlines on `bgSubtle`), `border{Danger,Success,Info,Warn}`. Accent `accentBase` … `accentMuted` |
 | `ArecaTheme.spacing` | `none` 0, `xs2` 2, `xs` 4, `sm` 6, `md` 8, `lg` 12, `xl` 16, `xl2` 20, `xl3` 24, `xl4` 32, `xl5` 40, `xl6` 48, `xl7` 64, `xl8` 80, `xl9` 96; `horizontalContentInsets` 16, `verticalContentInsets` 24 |
 | `ArecaTheme.shapes` / `radius` | `none`, `xs`, `sm`, `md`, `lg`, `xl`, `xl2`, plus shapes `full`, `tile`, `button`; prefer `shapes` |
 | `ArecaTheme.typography` | `display`, `heading{ExtraSmall…ExtraLarge}`, `body{ExtraSmall…ExtraLarge}`, `label{Small,Medium,Large}`, `caption` |
@@ -283,12 +283,14 @@ without opting in.
 | Pick from a short list; a long or searchable one | `SelectField`; `SelectFlowModal` |
 | Filter chips; colour; small integer | `BadgeSelect` / `FlowBadgeSelect` / `LazyBadgeSelect`; `SwatchPicker`; `NumberStepper` |
 | On/off setting; tick in a form; one of many | `Toggle`; `Checkbox`; `Radio`, each inside its list or settings row |
-| Settings screen | `Settings { Section { SettingsToggleRow / SettingsSelectRow / SettingsRow / SettingsTextFieldRow / SettingsOptionRow } }` |
+| Settings screen; a short, bounded group of rows | `Settings { Section { SettingsToggleRow / SettingsSelectRow / SettingsRow / SettingsTextFieldRow / SettingsOptionRow } }`; loading row `SettingsRowSkeleton`; free content `SettingsBlock` |
+| Second action in a pressable row; line of detail under a subtitle | `trailing = { SettingsRowLink("Verify", onVerify) }`; the row's `caption` slot |
 | Grouped rows on one surface | `List { item(…) }` (eager), `LazyList` (lazy), `ListItemColumn` (hand-composed) |
 | Row that navigates; row that expands | `NavigationListItem`; `ExpandableListItem` |
 | Remote list with loading, empty and error faces | `ContentList` (one load), `PagedContentList` (pages, pull-to-refresh), `Grouped…` variants |
 | Grid with group headers; tabular data | `LazyVerticalGroupedGrid` / `LazyHorizontalGroupedGrid`; `Table` / `LazyTable` |
-| Grouping surface; show and hide a region; separator | `Card` (expandable overload); `Expandable`; `HorizontalDivider` / `VerticalDivider` |
+| Grouping surface; with status and actions along its bottom | `Card` (expandable overload); `Card(footer = { … }, footerStyle = CardFooterStyle.soft(ActionColor.Brand))` |
+| Show and hide a region; separator | `Expandable`; `HorizontalDivider` / `VerticalDivider` |
 | Screen frame; title bar; large collapsing title | `BaseLayout`; `TopBar` with `BackAction` and the named `…Action` controls; `LargeTopBar` + `rememberTopBarScrollState(TopBarScrollBehavior.ExitUntilCollapsed)` |
 | Progress under the bar; collapsing hero | `TopBarProgress` in the bar's `bottom`; `CollapsingHeaderLayout` |
 | App destinations; views within a screen; sidebar | `TabBar` / `FloatingTabBar`; `Tabs` (`TabsVariant.Underline` or `Button`); `NavList` |
@@ -302,6 +304,152 @@ without opting in.
 | Scroll wheel; dates and times | `WheelPicker { WheelPickerColumn(…) }`; `dev.voir.areca:datetime` |
 
 Exact signatures, overloads and packages: [reference/signatures.md](reference/signatures.md).
+
+## Rows, sections and cards
+
+### Pick the surface by what the rows are
+
+- A `Settings` section holds a short, fixed set: options, switches, a form typed in place, a few
+  actions, or a bounded group of things — the sign-in methods of one account, the devices it is
+  signed in on, the files on one record. About one to ten rows a section; split a longer one into
+  named sections.
+- Anything that can grow without limit — transactions, messages, search results, a file library —
+  is a `List` / `LazyList` of `ListItem` or `NavigationListItem` rows, or `ContentList` /
+  `PagedContentList` when it loads. A settings section composes every row at once, does not page
+  and has no empty or error face.
+- **When the request does not say how many items a list holds and the answer decides between the
+  two, ask before building it.** Offer both: grouped settings rows read calmer for a few items; a
+  list scales. Do not guess.
+- Keep one vocabulary across the app. Once a kind of thing is shown one way — devices as settings
+  rows, an edit screen as `SettingsTextFieldRow`s — show it that way on every screen, or ask before
+  departing from it.
+
+### Text roles
+
+A row's slots carry fixed roles; plain `Text("…")` in a slot takes the role's size and ink.
+
+| Role | Slot | Style · ink | Holds |
+| --- | --- | --- | --- |
+| Title | `title` | `bodyMedium` · `fgBase` | What the row is, or the fact itself |
+| Subtitle | `subtitle` | `bodySmall` · `fgMuted` | What the fact is, or a short explanation |
+| Caption | `caption` | `bodyExtraSmall` · subtitle's ink | Detail: last seen, size, date |
+| Value | `value` | `bodyMedium` · `fgSubtle` | The current answer: "English", "2.4 GB" |
+| Badge | `badge` | extra-small neutral `Badge` | State of the title: "New", "Unverified" |
+| Second action | `trailing = { SettingsRowLink(…) }` | value size, row ink, underlined | "Verify", "Resend" |
+| Section header · footer | `Section(header, footer)` | `labelMedium` · `fgSubtle`; `bodySmall` · `fgMuted` | Group name; what the group means |
+
+- Never pass `style` or `fontWeight` to text in a row slot; `maxLines` and `overflow` are fine.
+  Colour comes from `tone`, `status` and `badge`; the one exception is a line that reports a
+  problem to act on — a file that failed to upload — which takes its family's text ink
+  (`fgWarnText`, `fgDangerText`), never a grey picked to look quieter or louder.
+- Never stack lines in `subtitle` with a `Column`: a third line is the `caption`.
+- A short answer is the `value` ("Language" — "English"). Long data — an address, a phone number —
+  is the `title`, with what it is as the `subtitle` ("ada@…" over "Email").
+- A row with one action is pressable and names it in `value` ("Link", "Download"); only a second
+  action takes a `SettingsRowLink`.
+- A row built by hand next to rows — a summary at the top of a card — reads its type and ink from
+  `SettingsTheme.sizes.row` and `SettingsTheme.styles.row` instead of picking its own.
+
+### Alignment: pick by scenario
+
+A row's leading visual and trailing content line up with its text according to a
+`SlotRowAlignment`. List and settings rows use `Auto`, which picks `Center` or `Top` from how much
+text the row holds — so most rows need nothing. Choose by the scenario, never by nudging:
+
+| Scenario | Alignment | What lines up |
+| --- | --- | --- |
+| One line — a switch, a menu entry, "Language — English" | `Center` (via `Auto`) | Everything on the row's centre |
+| Two lines — title over subtitle, a value over its label, a person with a handle, an account with its balance, a card's name over its detail | `Center` (via `Auto`) | Visual, text block and trailing all centred; an amount or chevron sits level with the icon |
+| Three lines or more — a wrapped description, title + subtitle + caption, a growing field | `Top` (via `Auto`) | Visual and text start at the top and the text runs down; the trailing switch, checkbox or amount stays level with the visual |
+| Everything pinned to the top whatever the length — a feed entry, a comment | `Top` | As above, without switching to centred for short text |
+| A marker no taller than a line — a legend dot, a bullet, a tiny status glyph | `FirstLine` | The marker and the trailing value centre on the first line of text |
+
+- Rows: leave `layout` alone for `Auto`; pass `layout = SlotRowLayout.Top`, `.Center` or
+  `.FirstLine` only when the scenario says so.
+- A row of your own: `SlotRow(layout = SlotRowLayout.Auto)` (or the scenario's preset) and
+  `Modifier.firstLineCenter(textStyle)` on the text that is its first line — `Auto` measures the
+  text in lines from it.
+- A trailing control never aligns to the top of the text on its own; it follows the visual.
+- Never pad a glyph, a dot or a control to line it up. If it looks wrong, the scenario is wrong.
+
+### Leading visuals
+
+Within one section or list, every leading visual has **one size and one shape**, so the visuals
+read as a column and the text beside them starts at one edge:
+
+- Glyphs go on a `SettingsRowIcon` tile.
+- Anything else — a flag, a photo, a brand or provider mark — goes in `SettingsRowTile { … }`,
+  which crops it to the same tile.
+- People are round avatars; give `SettingsRowTile` `shape = ArecaTheme.shapes.full` around a picture
+  at the tile size rather than mixing a larger avatar into a column of tiles. A list that is only
+  people may use a larger avatar throughout.
+- Do not mix a bare glyph, a tile and a flag in one column.
+
+### Card corners
+
+Corners are part of the layout, so they are decided once per app, not per card:
+
+- **One radius per role.** Every full-width card — `Card`, settings sections, notices, banners —
+  shares one corner (Areca's defaults are all `shapes.lg`), whether it sits on the page or on a
+  full-width panel or sheet: a surface that spans the screen counts as the page. Compact cards (a
+  half-width tile in a grid) and cards nested inside another card step down one radius. Icon tiles
+  are `shapes.tile`; people are `shapes.full`.
+- **Set it once.** Provide the app's card corner through `LocalCardStyle` / the `CardStyle` preset
+  and the settings section style, and reuse those; never pass `shape =` to one card on a screen.
+- **The same kind of card has the same corner everywhere.** Two plan cards, two wallet cards, a
+  card in a list and the same card in a picker are the same object and must not differ by radius.
+- **Concentric nesting.** A nested surface's radius is the outer radius minus the padding between
+  them, rounded to the scale — never larger than the outer one.
+
+### Section bands
+
+A section's closing action — "Terminate all other sessions", "Add device" — sits on the section's
+`band`, a strip at the bottom of its card separated by colour, not by one more row behind a
+hairline:
+
+```kotlin
+Section(
+    header = { Text(thisDeviceHeader) },
+    bandColor = ArecaTheme.colors.bgDangerMuted,
+    band = {
+        SettingsRow(
+            title = { Text(signOutOthersLabel) },
+            tone = SettingsRowTone.Danger,
+            onClick = onSignOutOthers,
+        )
+    },
+) { SessionRow(session = current) }
+```
+
+The band's default colour is the neutral step past the card; use the danger tint under a danger
+row. One band per section, holding one row.
+
+### Card footers
+
+A card's status and actions go in its `footer`, not in a divider and a row drawn by hand:
+
+```kotlin
+Card(
+    modifier = Modifier.fillMaxWidth(),
+    style = CardStyle.Outlined,
+    footerStyle = CardFooterStyle.soft(ActionColor.Brand),
+    footer = {
+        Text(renewalLine, modifier = Modifier.weight(1f))
+        Button(onClick = onManage) { Text(manageLabel) }
+    },
+) { padding -> PlanSummary(plan, Modifier.padding(padding)) }
+```
+
+`plain()` for supporting detail, `soft(color)` for a state worth noticing (`Warning` for a trial
+ending, `Danger` for a failed payment), `solid(color)` for the card's call to action — one per
+screen — and `of(bg, content)` for a colour outside the families. The footer hands its ink and a
+matching borderless button style to what is inside it, so do not style the copy or the buttons.
+
+### Surfaces
+
+The page is `bgCanvas`. Settings sections and other grouped regions are `bgSubtle` — the section
+card's default — with `borderOnSubtle` hairlines; tracks and wells inside them are `bgMuted`;
+raised cards are `bgSurface` or a `CardStyle` preset. Do not put a `bgSubtle` region on another.
 
 ## Add a module for
 
@@ -395,3 +543,13 @@ fun <T> UiState<ListState<T, *, *>>.toPagedContentListState(
 - [ ] `BaseLayout` padding applied; insets split between the top bar and `contentWindowInsets`.
 - [ ] Overlays composed unconditionally; state hoisted to the screen or ViewModel.
 - [ ] Experimental pull-to-refresh opted in explicitly; module-specific rules followed.
+- [ ] Settings sections hold short, bounded groups; open-ended collections are lists, and the user
+      was asked when the size was unclear.
+- [ ] Row text is plain `Text` in the role's slot — no style, colour or weight; a third line is
+      the `caption`; no glyph nudged by padding or a custom `layout`.
+- [ ] A card's status and actions sit in its `footer`, inked by its `CardFooterStyle`.
+- [ ] The same kind of thing looks the same on every screen.
+- [ ] Row alignment comes from the scenario (`Auto` unless a table row says otherwise); no padding
+      nudges a glyph or control into line.
+- [ ] One size and shape of leading visual per section; non-glyph visuals in `SettingsRowTile`.
+- [ ] One card corner per nesting level, set once; the same card has the same corner everywhere.

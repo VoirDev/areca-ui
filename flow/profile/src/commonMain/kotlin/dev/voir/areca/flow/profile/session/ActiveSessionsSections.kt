@@ -103,19 +103,25 @@ public fun SettingsScope.ActiveSessionsSections(
             } else {
                 null
             },
+            // The way out of every other session closes this card on the danger band rather than
+            // as one more row behind a hairline: it acts on the list below, not on this device.
+            bandColor = ArecaTheme.colors.bgDangerMuted,
+            band = if (showSignOutOthers) {
+                {
+                    SettingsRow(
+                        title = { Text(signOutOthersLabel) },
+                        leading = { Icon(BundledIcons.Hand, contentDescription = null) },
+                        tone = SettingsRowTone.Danger,
+                        status = if (signingOut) SettingsRowStatus.Loading else SettingsRowStatus.Idle,
+                        onClick = onSignOutOthers,
+                        onClickLabel = signOutOthersClickLabel,
+                    )
+                }
+            } else {
+                null
+            },
         ) {
             SessionRow(session = current)
-
-            if (showSignOutOthers) {
-                SettingsRow(
-                    title = { Text(signOutOthersLabel) },
-                    leading = { Icon(BundledIcons.Hand, contentDescription = null) },
-                    tone = SettingsRowTone.Danger,
-                    status = if (signingOut) SettingsRowStatus.Loading else SettingsRowStatus.Idle,
-                    onClick = onSignOutOthers,
-                    onClickLabel = signOutOthersClickLabel,
-                )
-            }
         }
     } else if (state == ActiveSessionsState.Loading) {
         // Held at its final height, so the card does not appear above the list when it arrives.

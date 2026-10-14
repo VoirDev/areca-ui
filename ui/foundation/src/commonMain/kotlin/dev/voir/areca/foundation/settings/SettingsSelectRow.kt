@@ -13,6 +13,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import dev.voir.areca.foundation.list.CheckmarkListItem
 import dev.voir.areca.foundation.list.ListItemSize
 import dev.voir.areca.foundation.list.ListItemStyle
+import dev.voir.areca.foundation.list.LocalListItemLayout
 import dev.voir.areca.foundation.list.LocalListItemState
 import dev.voir.areca.foundation.overlay.AnchoredPlacement
 import dev.voir.areca.foundation.overlay.DropdownPopup
@@ -53,8 +54,8 @@ import dev.voir.areca.theme.ArecaTheme
  * @param interactionSource Source of the row interactions; pass one to observe them from outside.
  * @param style Colors of the row; defaults to the list's, with its interactive value color.
  * @param size Metrics and typography of the row.
- * @param layout Slot alignment of the row; defaults to the list's, top-aligned when there is a
- * [subtitle].
+ * @param layout Slot alignment of the row; defaults to the list's [SlotRowLayout.Auto], centred for
+ * one or two lines and from the top beyond.
  */
 @Composable
 public fun <T> SettingsSelectRow(
@@ -74,7 +75,7 @@ public fun <T> SettingsSelectRow(
     interactionSource: MutableInteractionSource? = null,
     style: ListItemStyle = SettingsTheme.styles.rowStyle(SettingsRowTone.Default, interactive = true),
     size: ListItemSize = SettingsTheme.sizes.row,
-    layout: SlotRowLayout = settingsRowLayout(hasSubtitle = subtitle != null),
+    layout: SlotRowLayout = LocalListItemLayout.current,
 ) {
     val dropdown = rememberDropdownPopup(placement = AnchoredPlacement.BelowEnd)
 

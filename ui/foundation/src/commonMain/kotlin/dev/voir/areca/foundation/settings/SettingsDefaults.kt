@@ -1,7 +1,6 @@
 package dev.voir.areca.foundation.settings
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -101,8 +100,11 @@ public object SettingsDefaults {
     /**
      * Colors of a section.
      *
-     * The card is the grouped-region fill: place the list on `bgCanvas` and the cards separate from
-     * it in both themes.
+     * The card is the grouped-region fill, `bgSubtle`: place the list on `bgCanvas` and the cards
+     * separate from it in both themes.
+     *
+     * The hairlines between rows take `borderOnSubtle`, one step past the card's fill in each theme;
+     * `borderBase` sits level with the light card and would vanish on it.
      *
      * @param bg Card background.
      * @param border Card border color; [Color.Unspecified] draws no border.
@@ -113,6 +115,8 @@ public object SettingsDefaults {
      * @param footerDisabled Footer color while the section is disabled.
      * @param separator Color of the hairlines between rows.
      * @param shape Shape of the card.
+     * @param band Fill of a section's band: a step past the card, so the band reads as the card's
+     * closing strip. Pass the danger tint for a band that holds a danger row.
      * @return Colors of a section.
      */
     @Composable
@@ -124,8 +128,9 @@ public object SettingsDefaults {
         headerDisabled: Color = ArecaTheme.colors.fgDisabled,
         footer: Color = ArecaTheme.colors.fgMuted,
         footerDisabled: Color = ArecaTheme.colors.fgDisabled,
-        separator: Color = ArecaTheme.colors.borderBase,
-        shape: Shape = RoundedCornerShape(ArecaTheme.radius.lg),
+        separator: Color = ArecaTheme.colors.borderOnSubtle,
+        shape: Shape = ArecaTheme.shapes.lg,
+        band: Color = ArecaTheme.colors.bgMuted,
     ): SettingsSectionStyle = SettingsSectionStyle(
         bg = bg,
         border = border,
@@ -136,6 +141,7 @@ public object SettingsDefaults {
         footerDisabled = footerDisabled,
         separator = separator,
         shape = shape,
+        band = band,
     )
 
     /**
@@ -154,7 +160,7 @@ public object SettingsDefaults {
     public fun sizes(
         row: ListItemSize = rowSize(),
         section: SettingsSectionSize = sectionSize(),
-        iconTile: FeaturedIconSize = FeaturedIconSize(container = 30.dp, icon = 18.dp, borderWidth = 1.dp),
+        iconTile: FeaturedIconSize = FeaturedIconSize(container = 28.dp, icon = 16.dp, borderWidth = 1.dp),
         splitDividerHeight: Dp = 24.dp,
         spinner: SpinnerSize = SpinnerSize(container = 18.dp),
         statusTextStyle: TextStyle = ArecaTheme.typography.bodySmall,
@@ -172,15 +178,18 @@ public object SettingsDefaults {
     /**
      * Metrics of a settings row.
      *
-     * The medium list density with three changes. A single-line row comes to 48dp, one touch
-     * target and no taller, so a long screen of switches does not become a long scroll. The value
-     * is set at title size, because in a settings row the value is the answer to the title rather
-     * than a footnote to it. And the leading slot stands a full step away from the text, so a column
-     * of icon tiles reads as its own column.
+     * The medium list density with four changes. The row is padded 16dp across and 12dp down —
+     * roughly 4:3 rather than the medium density's 2:1, so a row with a subtitle breathes instead of
+     * reading as a squashed line. A single-line text row still comes to 48dp, one touch target and
+     * no taller, so a long screen of switches does not become a long scroll. The value is set at
+     * title size, because in a settings row the value is the answer to the title rather than a
+     * footnote to it. And the leading slot stands a full step away from the text, so a column of
+     * icon tiles reads as its own column.
      *
      * @param titleTextStyle Text style of the title.
      * @param subtitleTextStyle Text style of the subtitle.
      * @param valueTextStyle Text style of the inline value.
+     * @param captionTextStyle Text style of the caption under the subtitle.
      * @return Metrics of a settings row.
      */
     @Composable
@@ -188,11 +197,17 @@ public object SettingsDefaults {
         titleTextStyle: TextStyle = ArecaTheme.typography.bodyMedium,
         subtitleTextStyle: TextStyle = ArecaTheme.typography.bodySmall,
         valueTextStyle: TextStyle = ArecaTheme.typography.bodyMedium,
+        captionTextStyle: TextStyle = ArecaTheme.typography.bodyExtraSmall,
     ): ListItemSize = ListItemSize.Medium.copy(
         titleTextStyle = titleTextStyle,
         subtitleTextStyle = subtitleTextStyle,
         valueTextStyle = valueTextStyle,
-        minHeight = 32.dp,
+        captionTextStyle = captionTextStyle,
+        contentPadding = PaddingValues(
+            horizontal = ArecaTheme.spacing.xl,
+            vertical = ArecaTheme.spacing.lg,
+        ),
+        minHeight = 24.dp,
         leadingGap = ArecaTheme.spacing.xl,
         icon = 22.dp,
     )

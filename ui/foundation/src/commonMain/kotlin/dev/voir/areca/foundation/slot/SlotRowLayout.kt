@@ -31,6 +31,10 @@ import androidx.compose.ui.unit.dp
  *   *within* a slot is placed by that slot's own alignment instead.
  * @property arrangement Whether the slots are laid out one after another or around the row's centre
  *   line.
+ * @property alignment How the side slots line up with a middle slot of text that may run to several
+ *   lines — see [SlotRowAlignment] for which scenario takes which. `null` leaves the slots to
+ *   [verticalAlignment], which is what a button or a bar wants. Applies under
+ *   [SlotRowArrangement.Sequential] only.
  */
 @Immutable
 public data class SlotRowLayout(
@@ -46,6 +50,7 @@ public data class SlotRowLayout(
     public val minHeight: Dp = Dp.Unspecified,
     public val verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
     public val arrangement: SlotRowArrangement = SlotRowArrangement.Sequential,
+    public val alignment: SlotRowAlignment? = null,
 ) {
     /**
      * Space to draw between the leading and middle slots.
@@ -66,6 +71,37 @@ public data class SlotRowLayout(
          * The list-row arrangement, and what most rows want.
          */
         public val Default: SlotRowLayout = SlotRowLayout()
+
+        /**
+         * [Default], with every slot centred on the row: [SlotRowAlignment.Center].
+         *
+         * A row of one or two lines — a switch, a person with a handle, an account with its
+         * balance. Unlike [Default], it centres the group within [minHeight] the same way the
+         * other aligned layouts do, so rows built on any of them line up.
+         */
+        public val Center: SlotRowLayout = SlotRowLayout(alignment = SlotRowAlignment.Center)
+
+        /**
+         * [Default], with the visual and the text starting at the top: [SlotRowAlignment.Top].
+         *
+         * A row of three lines or more, whose trailing control still keeps level with its visual.
+         */
+        public val Top: SlotRowLayout = SlotRowLayout(alignment = SlotRowAlignment.Top)
+
+        /**
+         * [Default], with the side slots centred on the middle slot's first line:
+         * [SlotRowAlignment.FirstLine]. For a marker no taller than a line — a legend dot, a bullet.
+         */
+        public val FirstLine: SlotRowLayout = SlotRowLayout(alignment = SlotRowAlignment.FirstLine)
+
+        /**
+         * [Center] for up to about two lines of text, [Top] beyond: [SlotRowAlignment.Auto].
+         *
+         * The list-row arrangement. Every [dev.voir.areca.foundation.list.ListItem] uses it unless
+         * given another layout; a row of your own gets the same by reporting its title with
+         * [firstLineCenter].
+         */
+        public val Auto: SlotRowLayout = SlotRowLayout(alignment = SlotRowAlignment.Auto)
 
         /**
          * The middle slot holds the row's centre line, and the side slots keep their own width.

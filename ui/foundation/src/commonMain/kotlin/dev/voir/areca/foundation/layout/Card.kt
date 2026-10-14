@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -17,20 +18,29 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dev.voir.areca.foundation.LocalContentColor
+import dev.voir.areca.foundation.button.ButtonSize
 import dev.voir.areca.indication.FadeIndication
 import dev.voir.areca.indication.StrokeIndication
 import dev.voir.areca.indication.TouchIndication
+import dev.voir.areca.modifier.MinimumTouchTarget
 import dev.voir.areca.modifier.clickCursor
+import dev.voir.areca.modifier.thenIf
 import dev.voir.areca.theme.ArecaTheme
 
 /**
  * Colors, shape, and interaction feedback for [Card].
+ *
+ * Every preset takes `shapes.lg`, the corner of a settings section and a notice, so the surfaces of
+ * one screen share one corner. A card nested inside another surface steps down one radius; see the
+ * card-corner rule in the foundation guide.
  *
  * Three states rather than two: besides disabled, a card can be **active** — selected, current, or
  * expanded — which is a state the card is *in* rather than one the user is causing. A pressed card
@@ -109,7 +119,7 @@ public data class CardStyle(
             bg: Color = ArecaTheme.colors.bgSurface,
             border: Color = Color.Unspecified,
             content: Color = ArecaTheme.colors.fgBase,
-            shape: Shape = ArecaTheme.shapes.md,
+            shape: Shape = ArecaTheme.shapes.lg,
             indication: Indication? = FadeIndication.tint(shape),
         ): CardStyle = CardStyle(
             bg = bg,
@@ -126,7 +136,7 @@ public data class CardStyle(
          * @return The preset style with [shape] applied to its fill, border, and indication.
          */
         @Composable
-        public fun outlined(shape: Shape = ArecaTheme.shapes.md): CardStyle =
+        public fun outlined(shape: Shape = ArecaTheme.shapes.lg): CardStyle =
             CardStyle(
                 bg = ArecaTheme.colors.bgCanvas,
                 bgDisabled = ArecaTheme.colors.bgDisabled,
@@ -151,7 +161,7 @@ public data class CardStyle(
          * @return The preset style with [shape] applied to its fill, border, and indication.
          */
         @Composable
-        public fun softNeutral(shape: Shape = ArecaTheme.shapes.md): CardStyle =
+        public fun softNeutral(shape: Shape = ArecaTheme.shapes.lg): CardStyle =
             CardStyle(
                 bg = ArecaTheme.colors.bgSubtle,
                 bgDisabled = ArecaTheme.colors.bgDisabled,
@@ -176,7 +186,7 @@ public data class CardStyle(
          * @return The preset style with [shape] applied to its fill, border, and indication.
          */
         @Composable
-        public fun solidBrand(shape: Shape = ArecaTheme.shapes.md): CardStyle =
+        public fun solidBrand(shape: Shape = ArecaTheme.shapes.lg): CardStyle =
             CardStyle(
                 bg = ArecaTheme.colors.bgBrandBase,
                 bgDisabled = ArecaTheme.colors.bgDisabled,
@@ -201,7 +211,7 @@ public data class CardStyle(
          * @return The preset style with [shape] applied to its fill, border, and indication.
          */
         @Composable
-        public fun ghostNeutral(shape: Shape = ArecaTheme.shapes.md): CardStyle =
+        public fun ghostNeutral(shape: Shape = ArecaTheme.shapes.lg): CardStyle =
             CardStyle(
                 bg = ArecaTheme.colors.bgSubtle.copy(alpha = 0f),
                 bgDisabled = ArecaTheme.colors.bgSubtle.copy(alpha = 0f),
@@ -224,19 +234,28 @@ public data class CardStyle(
 }
 
 /**
- * Padding and border width for [Card].
+ * Padding, border width and footer metrics for [Card].
  *
  * [padding] is handed to the content slot rather than applied by the card, so a card can have an
  * edge-to-edge image at the top and padded text below it without fighting a container that has
- * already inset everything.
+ * already inset everything. The footer, which the card lays out itself, is padded by
+ * [footerPadding].
  *
  * @property padding Inner spacing offered to the content.
  * @property borderWidth Width of the border, drawn for styles that define one.
+ * @property footerPadding Inner spacing of the footer strip.
+ * @property footerTextStyle Text style handed to the footer's copy.
+ * @property footerButton Size handed to the buttons in the footer.
+ * @property footerMinHeight Smallest height of the footer's line, inside [footerPadding].
  */
 @Immutable
 public data class CardSize(
     public val padding: PaddingValues,
     public val borderWidth: Dp,
+    public val footerPadding: PaddingValues,
+    public val footerTextStyle: TextStyle,
+    public val footerButton: ButtonSize,
+    public val footerMinHeight: Dp,
 ) {
     /** Theme-backed presets and builders. */
     public companion object {
@@ -248,15 +267,41 @@ public data class CardSize(
         /**
          * Builds a size from the current theme.
          *
+         * The footer's line is one touch target tall, with or without a button in it, so footers
+         * of every kind are the same height. A footer that only states — a date on a band, never a
+         * button — can drop [footerMinHeight] to `0.dp` and pad itself as tightly as it likes. It is inset like the body at the start and barely at
+         * the end, because a footer's button is borderless and carries its own padding: its label
+         * then ends about where the body's copy would.
+         *
          * @param padding Inner spacing offered to the content.
          * @param borderWidth Width of the border.
+         * @param footerPadding Inner spacing of the footer strip.
+         * @param footerTextStyle Text style of the footer's copy.
+         * @param footerButton Size of the buttons in the footer.
+         * @param footerMinHeight Smallest height of the footer's line.
          * @return A card size containing the supplied values.
          */
         @Composable
         public fun default(
             padding: PaddingValues = PaddingValues(ArecaTheme.spacing.xl),
             borderWidth: Dp = 1.dp,
-        ): CardSize = CardSize(padding = padding, borderWidth = borderWidth)
+            footerPadding: PaddingValues = PaddingValues(
+                start = ArecaTheme.spacing.xl,
+                end = ArecaTheme.spacing.xs,
+                top = ArecaTheme.spacing.xs,
+                bottom = ArecaTheme.spacing.xs,
+            ),
+            footerTextStyle: TextStyle = ArecaTheme.typography.bodySmall,
+            footerButton: ButtonSize = ButtonSize.Small,
+            footerMinHeight: Dp = MinimumTouchTarget,
+        ): CardSize = CardSize(
+            padding = padding,
+            borderWidth = borderWidth,
+            footerPadding = footerPadding,
+            footerTextStyle = footerTextStyle,
+            footerButton = footerButton,
+            footerMinHeight = footerMinHeight,
+        )
     }
 }
 
@@ -280,6 +325,26 @@ public val LocalCardStyle: ProvidableCompositionLocal<CardStyle?> = compositionL
  *
  * A pressable card is announced as a button, with [onClickLabel] naming what pressing it does.
  *
+ * A [footer] is a strip along the bottom of the card, laid out by the card rather than handed
+ * padding: its status and its actions, filled and inked by [footerStyle] — a renewal date with a
+ * "Manage" action, a failed payment with "Update card". Copy in it takes [CardFooterStyle.content]
+ * and buttons in it take [CardFooterStyle.button], so a brand-filled footer reads white without
+ * restyling what goes in it. The strip follows the card's bottom corners.
+ *
+ * ```kotlin
+ * Card(
+ *     modifier = Modifier.fillMaxWidth(),
+ *     style = CardStyle.Outlined,
+ *     footerStyle = CardFooterStyle.soft(ActionColor.Brand),
+ *     footer = {
+ *         Text("Renews on 12 November", modifier = Modifier.weight(1f))
+ *         Button(onClick = onManage) { Text("Manage") }
+ *     },
+ * ) { padding ->
+ *     PlanSummary(modifier = Modifier.padding(padding))
+ * }
+ * ```
+ *
  * @param modifier Modifier applied to the card.
  * @param style Colors, shape, and indication. Defaults to the theme's.
  * @param size Padding and border width. Defaults to the theme's, or [CardSize.Default].
@@ -290,6 +355,8 @@ public val LocalCardStyle: ProvidableCompositionLocal<CardStyle?> = compositionL
  *   [onClick] is `null`.
  * @param interactionSource Source of the card's press, hover, and focus interactions. `null` lets
  *   the card create its own.
+ * @param footerStyle Fill and ink of [footer].
+ * @param footer Strip along the bottom of the card, its items laid out in a row; `null` for none.
  * @param content The card's body, handed [size]'s padding.
  */
 @Composable
@@ -302,6 +369,8 @@ public fun Card(
     onClick: (() -> Unit)? = null,
     onClickLabel: String? = null,
     interactionSource: MutableInteractionSource? = null,
+    footerStyle: CardFooterStyle = CardFooterStyle.Default,
+    footer: (@Composable RowScope.() -> Unit)? = null,
     content: @Composable BoxScope.(padding: PaddingValues) -> Unit,
 ) {
     val bgColor = when {
@@ -343,9 +412,19 @@ public fun Card(
             .background(bgColor, style.shape)
             .border(width = size.borderWidth, color = borderColor, shape = style.shape)
             .then(pressModifier)
+            // Only a footer needs the content clipped, so its fill follows the bottom corners; the
+            // border is drawn over it, and the press indication sits outside the clip.
+            .thenIf(footer != null) { clip(style.shape) }
     ) {
         CompositionLocalProvider(LocalContentColor provides contentColor) {
-            content(size.padding)
+            if (footer == null) {
+                content(size.padding)
+            } else {
+                CardBodyWithFooter(
+                    body = { Box { content(size.padding) } },
+                    footer = { CardFooter(style = footerStyle, size = size, content = footer) },
+                )
+            }
         }
     }
 }
@@ -371,6 +450,8 @@ public fun Card(
  * @param interactionSource Source of the card's press, hover, and focus interactions. `null` lets
  *   the card create its own.
  * @param transition How the lower half opens and closes.
+ * @param footerStyle Fill and ink of [footer].
+ * @param footer Strip along the bottom of the card, below the part that opens; `null` for none.
  * @param expandedContent The part that opens, handed [size]'s padding.
  * @param content The part that is always shown, handed [size]'s padding.
  */
@@ -386,6 +467,8 @@ public fun Card(
     onClickLabel: String? = null,
     interactionSource: MutableInteractionSource? = null,
     transition: ExpandableTransition = ExpandableTransition.Default,
+    footerStyle: CardFooterStyle = CardFooterStyle.Default,
+    footer: (@Composable RowScope.() -> Unit)? = null,
     expandedContent: @Composable ColumnScope.(padding: PaddingValues) -> Unit,
     content: @Composable ColumnScope.(padding: PaddingValues) -> Unit,
 ) {
@@ -398,6 +481,8 @@ public fun Card(
         onClick = onClick,
         onClickLabel = onClickLabel,
         interactionSource = interactionSource,
+        footerStyle = footerStyle,
+        footer = footer,
     ) { padding ->
         Column(modifier = Modifier.fillMaxWidth()) {
             content(padding)

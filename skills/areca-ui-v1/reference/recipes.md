@@ -1,8 +1,8 @@
 # Screen recipes
 
 Open this when building a whole screen or a common interaction: a settings screen, a validated
-form, a remote list, a confirmation, a tabbed shell, a sheet, a menu, a dark region, or a custom
-pressable surface. Validated against `dev.voir.areca:foundation` 1.0.0 and `dev.voir.areca:icons`
+form, a remote list, a confirmation, a tabbed shell, a sheet, a menu, a dark region, a subscription
+card with a footer, or a custom pressable surface. Validated against `dev.voir.areca:foundation` 1.0.0 and `dev.voir.areca:icons`
 1.0.0.
 
 The first recipe lists its imports in full; the others import from the packages in
@@ -260,9 +260,7 @@ fun InvoicesScreen(
             NavigationListItem(
                 title = { Text(invoice.customer) },
                 onClick = { onOpen(invoice) },
-                subtitle = {
-                    Text(invoice.due, variant = TextVariant.BodySmall, color = TextColor.Subtle)
-                },
+                subtitle = { Text(invoice.due) },
                 value = { Text(invoice.amount) },
                 onClickLabel = "Open invoice",
             )
@@ -529,6 +527,45 @@ fun PhotoViewer(photo: Painter, onClose: () -> Unit) {
 To name a dark colour before the dark scope begins (a style default resolved at the call site),
 read `ArecaTheme.darkColors`. In a dialog, pair `SystemBars` with `edgeToEdgeDialogProperties()`.
 
+## Subscription card
+
+The plan in the card's body, its renewal and the way to change it in a footer. The footer's style
+inks the copy and the button, so neither is styled here; a failed payment swaps the style and the
+words, not the layout.
+
+```kotlin
+@Composable
+fun SubscriptionCard(
+    plan: PlanUi,
+    onManage: () -> Unit,
+    onUpdateCard: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val failed = plan.paymentFailed
+
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        style = CardStyle.Outlined,
+        footerStyle = CardFooterStyle.soft(if (failed) ActionColor.Danger else ActionColor.Brand),
+        footer = {
+            Text(
+                text = if (failed) plan.failureLine else plan.renewalLine,
+                modifier = Modifier.weight(1f),
+            )
+            Button(onClick = if (failed) onUpdateCard else onManage) {
+                Text(if (failed) "Update card" else "Manage")
+            }
+        },
+    ) { padding ->
+        Heading(
+            title = { Text(plan.name) },
+            supportive = { Text(plan.priceLine) },
+            modifier = Modifier.padding(padding),
+        )
+    }
+}
+```
+
 ## Custom pressable surface
 
 Only when no component fits. Fill with `background(color, shape)`, never `clip`, and give the
@@ -577,4 +614,12 @@ fun Tile(label: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
 | A wrapper composable that only changes a component's colours | `style = XStyle.….copy(…)` or `LocalXStyle provides …` |
 | Ignoring `BaseLayout`'s `padding` | Apply it as `contentPadding` or `Modifier.padding(padding)` |
 | A `Row` of `Text` and `Icon` pretending to be a list row | `ListItem(title, leading, trailing, onClick)` |
+| `subtitle = { Column { Text(a, color = …); Text(b) } }` | `subtitle = { Text(a) }, caption = { Text(b) }` |
+| `title = { Text(name, fontWeight = FontWeight.SemiBold) }` in a row | `title = { Text(name) }`; the row owns its type |
+| `Modifier.padding(top = 2.dp)` on a row's icon to line it up | Nothing: rows align by scenario (`SlotRowLayout.Auto`); pick `.Top`, `.Center` or `.FirstLine` if the scenario differs |
+| A flag or a photo beside icon tiles at its own size | `SettingsRowTile { … }`, the tile's size and shape |
+| `shape =` passed to one card on a screen | One corner per nesting level, set once through the card style |
+| A danger row behind a hairline at the bottom of a section | `Section(band = { SettingsRow(tone = Danger, …) }, bandColor = bgDangerMuted)` |
+| A `Card` with a `HorizontalDivider` and a `Row` of buttons at the bottom | `Card(footer = { … }, footerStyle = …)` |
+| `forEach` over an open-ended collection inside a `Section` | `LazyList` / `PagedContentList` of `ListItem` rows, or ask which the product wants |
 | `Box(Modifier.height(1.dp).background(…))`, a divider between two list rows | `HorizontalDivider()`; a `List` draws its own hairlines |

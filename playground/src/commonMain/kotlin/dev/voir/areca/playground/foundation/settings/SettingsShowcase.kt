@@ -1,11 +1,15 @@
 package dev.voir.areca.playground.foundation.settings
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.FocusInteraction
 import androidx.compose.foundation.interaction.HoverInteraction
 import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -17,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
@@ -37,8 +42,10 @@ import dev.voir.areca.foundation.settings.SettingsHeaderPlacement
 import dev.voir.areca.foundation.settings.SettingsOptionRow
 import dev.voir.areca.foundation.settings.SettingsRow
 import dev.voir.areca.foundation.settings.SettingsRowIcon
+import dev.voir.areca.foundation.settings.SettingsRowLink
 import dev.voir.areca.foundation.settings.SettingsRowSkeleton
 import dev.voir.areca.foundation.settings.SettingsRowStatus
+import dev.voir.areca.foundation.settings.SettingsRowTile
 import dev.voir.areca.foundation.settings.SettingsRowTone
 import dev.voir.areca.foundation.settings.SettingsSelectRow
 import dev.voir.areca.foundation.settings.SettingsTextFieldRow
@@ -46,11 +53,16 @@ import dev.voir.areca.foundation.settings.SettingsToggleRow
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.icons.ArecaIcons
 import dev.voir.areca.icons.Bell
+import dev.voir.areca.icons.Database
 import dev.voir.areca.icons.Globe
+import dev.voir.areca.icons.Hand
 import dev.voir.areca.icons.Image
 import dev.voir.areca.icons.Lock
 import dev.voir.areca.icons.LogOut
+import dev.voir.areca.icons.Mail
+import dev.voir.areca.icons.MessageCircle
 import dev.voir.areca.icons.MoonAlt
+import dev.voir.areca.icons.Phone
 import dev.voir.areca.icons.Translate
 import dev.voir.areca.playground.showcase.ShowcaseScaffold
 import dev.voir.areca.playground.showcase.section.Anatomy
@@ -330,7 +342,7 @@ fun SettingsShowcase() = ShowcaseScaffold(
         }
     }
 
-    Anatomy(description = "A settings screen is sections on cards; a row has six optional slots.") {
+    Anatomy(description = "A settings screen is sections on cards; a row has seven optional slots.") {
         slot(
             name = "Header",
             description = "Names the group. Inside the card by default, or above it.",
@@ -352,8 +364,129 @@ fun SettingsShowcase() = ShowcaseScaffold(
             }
         }
         slot(
+            name = "Text roles",
+            description = "Title, subtitle, caption and value each have one size and one ink. " +
+                "Pass plain Text into the slots; never restyle them per screen.",
+        ) {
+            Settings(modifier = Modifier.fillMaxWidth()) {
+                Section {
+                    SettingsRow(
+                        title = { Text("Storage") },
+                        subtitle = { Text("Photos, videos and voice messages") },
+                        caption = { Text("Last cleared 3 days ago") },
+                        value = { Text("2.4 GB") },
+                        leading = { SettingsRowIcon(ArecaIcons.Database) },
+                        trailing = { ListItemChevron() },
+                        onClick = {},
+                    )
+                    SettingsRow(
+                        title = { Text("alex.mercer@example.com") },
+                        subtitle = { Text("Email") },
+                        badge = { Badge { Text("Unverified") } },
+                        leading = { SettingsRowIcon(ArecaIcons.Mail) },
+                        trailing = { SettingsRowLink(text = "Verify", onClick = {}) },
+                        onClick = {},
+                    )
+                }
+            }
+        }
+        slot(
+            name = "Alignment",
+            description = "Rows of one or two lines centre everything. Longer rows start the " +
+                "visual and the text at the top, and keep the switch level with the visual. A " +
+                "visual as tall as the text — an avatar — centres with it.",
+        ) {
+            var showPreviews by remember { mutableStateOf(true) }
+            var muted by remember { mutableStateOf(false) }
+
+            Settings(modifier = Modifier.fillMaxWidth()) {
+                Section {
+                    SettingsToggleRow(
+                        checked = muted,
+                        onCheckedChange = { muted = it },
+                        title = { Text("Mute group chats") },
+                        leading = { SettingsRowIcon(ArecaIcons.Bell) },
+                    )
+                    SettingsRow(
+                        title = { Text("Alex Mercer") },
+                        subtitle = { Text("@alex · Product design") },
+                        leading = { Avatar(size = AvatarSize.ExtraSmall, letters = "Alex Mercer") },
+                        trailing = { ListItemChevron() },
+                        onClick = {},
+                    )
+                    SettingsToggleRow(
+                        checked = showPreviews,
+                        onCheckedChange = { showPreviews = it },
+                        title = { Text("Message previews") },
+                        subtitle = {
+                            Text("Show the first line of a message on the lock screen and in notifications.")
+                        },
+                        leading = {
+                            SettingsRowIcon(ArecaIcons.MessageCircle, color = ActionColor.Brand)
+                        },
+                    )
+                }
+            }
+        }
+        slot(
+            name = "Leading visuals",
+            description = "One size and one shape down a section: glyphs on SettingsRowIcon tiles, " +
+                "anything else — a flag, a mark — cropped by SettingsRowTile.",
+        ) {
+            Settings(modifier = Modifier.fillMaxWidth()) {
+                Section {
+                    SettingsRow(
+                        title = { Text("Language") },
+                        value = { Text("English") },
+                        leading = { SettingsRowIcon(ArecaIcons.Translate) },
+                        onClick = {},
+                    )
+                    SettingsRow(
+                        title = { Text("Region") },
+                        value = { Text("Serbia") },
+                        leading = {
+                            SettingsRowTile {
+                                // A stand-in flag: three bands, cropped to the tile like a real one.
+                                Column(Modifier.fillMaxSize()) {
+                                    Box(Modifier.weight(1f).fillMaxWidth().background(Color(0xFFC6363C)))
+                                    Box(Modifier.weight(1f).fillMaxWidth().background(Color(0xFF0C4076)))
+                                    Box(Modifier.weight(1f).fillMaxWidth().background(Color(0xFFFFFFFF)))
+                                }
+                            }
+                        },
+                        onClick = {},
+                    )
+                }
+            }
+        }
+        slot(
+            name = "Band",
+            description = "A section's closing action on a strip of its own colour, instead of a " +
+                "last row behind a hairline.",
+        ) {
+            Settings(modifier = Modifier.fillMaxWidth()) {
+                Section(
+                    bandColor = ArecaTheme.colors.bgDangerMuted,
+                    band = {
+                        SettingsRow(
+                            title = { Text("Terminate all other sessions") },
+                            leading = { Icon(ArecaIcons.Hand, contentDescription = null) },
+                            tone = SettingsRowTone.Danger,
+                            onClick = {},
+                        )
+                    },
+                ) {
+                    SettingsRow(
+                        title = { Text("Pixel 9 Pro") },
+                        subtitle = { Text("This device · online") },
+                        leading = { SettingsRowIcon(ArecaIcons.Phone) },
+                    )
+                }
+            }
+        }
+        slot(
             name = "Row slots",
-            description = "leading, title with badge, subtitle, value, trailing and bottom.",
+            description = "leading, title with badge, subtitle, caption, value, trailing and bottom.",
         ) {
             Settings(modifier = Modifier.fillMaxWidth()) {
                 Section {

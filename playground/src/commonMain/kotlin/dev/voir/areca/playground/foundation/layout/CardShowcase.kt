@@ -15,7 +15,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
+import dev.voir.areca.foundation.button.ActionColor
+import dev.voir.areca.foundation.button.Button
 import dev.voir.areca.foundation.layout.Card
+import dev.voir.areca.foundation.layout.CardFooterStyle
 import dev.voir.areca.foundation.layout.CardSize
 import dev.voir.areca.foundation.layout.CardStyle
 import dev.voir.areca.foundation.text.Text
@@ -48,6 +51,21 @@ private enum class CardStyleOption {
     GhostNeutral,
 }
 
+/** Footer presets offered by [CardFooterStyle], as a selectable list. */
+private enum class CardFooterOption {
+    /** No footer. */
+    None,
+
+    /** [CardFooterStyle.plain]: no fill, a hairline above. */
+    Plain,
+
+    /** [CardFooterStyle.soft]: the family's muted tint. */
+    Soft,
+
+    /** [CardFooterStyle.solid]: the family's base fill. */
+    Solid,
+}
+
 /** Showcase for [Card]. */
 @Composable
 fun CardShowcase() = ShowcaseScaffold(
@@ -69,6 +87,19 @@ fun CardShowcase() = ShowcaseScaffold(
             description = "The selected or open appearance.",
         )
         val clickable by booleanControl("clickable", default = true)
+        val footer by enumControl(
+            key = "footer",
+            default = CardFooterOption.None,
+            options = CardFooterOption.entries,
+            optionLabel = { it.name },
+        )
+        val footerColor by enumControl(
+            key = "footerColor",
+            default = ActionColor.Brand,
+            options = ActionColor.entries,
+            optionLabel = { it.name },
+            description = "Color family of a soft or solid footer.",
+        )
 
         preview {
             Card(
@@ -77,6 +108,15 @@ fun CardShowcase() = ShowcaseScaffold(
                 active = active,
                 onClick = if (clickable) ({}) else null,
                 modifier = Modifier.fillMaxWidth(),
+                footerStyle = footer.resolve(footerColor),
+                footer = if (footer == CardFooterOption.None) {
+                    null
+                } else {
+                    {
+                        Text("Renews on 12 November", modifier = Modifier.weight(1f))
+                        Button(onClick = {}) { Text("Manage") }
+                    }
+                },
             ) { padding ->
                 CardBody(
                     padding = padding,
@@ -106,6 +146,37 @@ fun CardShowcase() = ShowcaseScaffold(
                     )
                 }
             }
+        }
+    }
+
+    Variants(
+        title = "Footers",
+        description = "A strip along the bottom for the card's status and actions. Copy and " +
+            "buttons in it take the footer's ink, so a filled footer reads without restyling.",
+        layout = VariantLayout.Vertical,
+    ) {
+        variant(name = "Plain", detail = "CardFooterStyle.plain()") {
+            FooterSample(CardFooterStyle.plain(), "Updated 2 minutes ago", action = "Refresh")
+        }
+        for (color in ActionColor.entries.filter { it != ActionColor.NeutralDark }) {
+            variant(name = "Soft / ${color.name}", detail = "CardFooterStyle.soft(${color.name})") {
+                FooterSample(CardFooterStyle.soft(color), color.footerStatus(), action = "Review")
+            }
+        }
+        for (color in listOf(ActionColor.Brand, ActionColor.Danger, ActionColor.NeutralDark)) {
+            variant(name = "Solid / ${color.name}", detail = "CardFooterStyle.solid(${color.name})") {
+                FooterSample(CardFooterStyle.solid(color), color.footerStatus(), action = "Review")
+            }
+        }
+        variant(name = "Custom", detail = "CardFooterStyle.of(bg, content)") {
+            FooterSample(
+                style = CardFooterStyle.of(
+                    bg = ArecaTheme.colors.bgInfoMuted,
+                    content = ArecaTheme.colors.fgInfoText,
+                ),
+                status = "New export format available",
+                action = "Learn more",
+            )
         }
     }
 
@@ -165,6 +236,54 @@ fun CardShowcase() = ShowcaseScaffold(
                     title = "Design system",
                     subtitle = if (expanded) "Click to collapse" else "Click to expand",
                 )
+            }
+        }
+        recipe(
+            name = "Subscription card",
+            description = "The plan in the body; its renewal and the way to change it in the footer.",
+        ) {
+            Card(
+                style = CardStyle.Outlined,
+                modifier = Modifier.fillMaxWidth(),
+                footerStyle = CardFooterStyle.soft(ActionColor.Brand),
+                footer = {
+                    Text("Renews on 12 November", modifier = Modifier.weight(1f))
+                    Button(onClick = {}) { Text("Manage") }
+                },
+            ) { padding ->
+                CardBody(padding, title = "Team plan", subtitle = "$12 per seat a month · 14 seats")
+            }
+        }
+        recipe(
+            name = "Failed payment",
+            description = "The danger footer carries the problem and the one action that fixes it.",
+        ) {
+            Card(
+                style = CardStyle.Outlined,
+                modifier = Modifier.fillMaxWidth(),
+                footerStyle = CardFooterStyle.soft(ActionColor.Danger),
+                footer = {
+                    Text("Payment failed on 3 November", modifier = Modifier.weight(1f))
+                    Button(onClick = {}) { Text("Update card") }
+                },
+            ) { padding ->
+                CardBody(padding, title = "Team plan", subtitle = "Visa ending 4242")
+            }
+        }
+        recipe(
+            name = "Upgrade offer",
+            description = "A solid brand footer is the card's call to action — one per screen.",
+        ) {
+            Card(
+                style = CardStyle.Outlined,
+                modifier = Modifier.fillMaxWidth(),
+                footerStyle = CardFooterStyle.solid(ActionColor.Brand),
+                footer = {
+                    Text("Two months free on yearly billing", modifier = Modifier.weight(1f))
+                    Button(onClick = {}) { Text("Upgrade") }
+                },
+            ) { padding ->
+                CardBody(padding, title = "Free plan", subtitle = "3 of 3 projects used")
             }
         }
         recipe(
@@ -244,6 +363,55 @@ private fun CardBody(padding: PaddingValues, title: String, subtitle: String) {
         Text(text = title, variant = TextVariant.LabelLarge)
         Text(text = subtitle, variant = TextVariant.BodySmall, color = TextColor.Subtle)
     }
+}
+
+/**
+ * A card with a body and a footer of [style], as the footer variants draw it.
+ *
+ * @param style Footer colors.
+ * @param status Line of status at the start of the footer.
+ * @param action Label of the footer's button.
+ */
+@Composable
+private fun FooterSample(style: CardFooterStyle, status: String, action: String) {
+    Card(
+        style = CardStyle.Outlined,
+        modifier = Modifier.fillMaxWidth(),
+        footerStyle = style,
+        footer = {
+            Text(status, modifier = Modifier.weight(1f))
+            Button(onClick = {}) { Text(action) }
+        },
+    ) { padding ->
+        CardBody(padding, title = "Team plan", subtitle = "$12 per seat a month")
+    }
+}
+
+/**
+ * A line of footer status that suits this color family.
+ *
+ * @return Realistic status copy for a footer of this color.
+ */
+private fun ActionColor.footerStatus(): String = when (this) {
+    ActionColor.Brand -> "Renews on 12 November"
+    ActionColor.Danger -> "Payment failed on 3 November"
+    ActionColor.Success -> "Payment received"
+    ActionColor.Warning -> "Trial ends in 3 days"
+    ActionColor.Neutral -> "Billed to the workspace"
+    ActionColor.NeutralDark -> "Your plan changes on 1 December"
+}
+
+/**
+ * Resolves the footer preset this option names, in [color] where the preset takes one.
+ *
+ * @param color Color family of a soft or solid footer.
+ * @return The matching [CardFooterStyle].
+ */
+@Composable
+private fun CardFooterOption.resolve(color: ActionColor): CardFooterStyle = when (this) {
+    CardFooterOption.None, CardFooterOption.Plain -> CardFooterStyle.plain()
+    CardFooterOption.Soft -> CardFooterStyle.soft(color)
+    CardFooterOption.Solid -> CardFooterStyle.solid(color)
 }
 
 /**

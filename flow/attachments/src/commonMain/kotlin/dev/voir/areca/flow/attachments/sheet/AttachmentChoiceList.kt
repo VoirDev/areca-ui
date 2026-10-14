@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
 import dev.voir.areca.foundation.icon.Icon
 import dev.voir.areca.foundation.icon.IconSize
+import dev.voir.areca.foundation.layout.DividerStyle
 import dev.voir.areca.foundation.layout.HorizontalDivider
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.indication.FadeIndication
@@ -72,6 +73,8 @@ internal fun AttachmentChoiceList(
 
     val radius = ArecaTheme.radius.lg
     val square = ArecaTheme.radius.none
+    // Drawn on the block's fill, which the resting border sits level with.
+    val separator = DividerStyle.default(line = ArecaTheme.colors.borderOnSubtle)
 
     Column(
         modifier = modifier
@@ -79,7 +82,7 @@ internal fun AttachmentChoiceList(
             .background(bg, RoundedCornerShape(radius)),
     ) {
         choices.forEachIndexed { index, choice ->
-            if (index > 0) HorizontalDivider()
+            if (index > 0) HorizontalDivider(style = separator)
 
             val tint = if (choice.isDestructive) ArecaTheme.colors.fgDanger else ArecaTheme.colors.fgBase
             val shape = RoundedCornerShape(

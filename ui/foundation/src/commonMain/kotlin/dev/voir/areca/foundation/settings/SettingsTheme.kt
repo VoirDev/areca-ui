@@ -91,6 +91,8 @@ public enum class SettingsRowTone {
  * @property footerDisabled Footer color while the section is disabled.
  * @property separator Color of the hairlines between rows.
  * @property shape Shape of the card; rows clip their states to it so they keep its corners.
+ * @property band Default fill of a section's band, the strip at the bottom of its card;
+ * [Color.Unspecified] draws none.
  */
 @Immutable
 public data class SettingsSectionStyle(
@@ -105,6 +107,7 @@ public data class SettingsSectionStyle(
     public val footerDisabled: Color,
     public val separator: Color,
     public val shape: Shape,
+    public val band: Color = Color.Unspecified,
 )
 
 /**

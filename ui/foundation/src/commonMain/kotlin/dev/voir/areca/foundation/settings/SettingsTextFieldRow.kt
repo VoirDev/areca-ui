@@ -29,6 +29,9 @@ import dev.voir.areca.foundation.LocalContentColor
 import dev.voir.areca.foundation.list.ListItemSize
 import dev.voir.areca.foundation.list.ListItemStyle
 import dev.voir.areca.foundation.list.LocalListEnabled
+import dev.voir.areca.foundation.slot.SlotRow
+import dev.voir.areca.foundation.slot.SlotRowLayout
+import dev.voir.areca.foundation.slot.firstLineCenter
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.theme.ArecaTheme
 
@@ -144,49 +147,52 @@ public fun SettingsTextFieldRow(
                 .defaultMinSize(minHeight = size.minHeight),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            if (leading != null) {
-                CompositionLocalProvider(LocalContentColor provides extraColor) {
-                    Box(contentAlignment = Alignment.Center, content = leading)
-                }
-                Spacer(modifier = Modifier.width(size.leadingGap))
-            }
-
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .separatorText(anchor),
-                contentAlignment = Alignment.CenterStart,
-            ) {
-                BasicTextField(
-                    value = value,
-                    onValueChange = { text ->
-                        onValueChange(if (maxLength != null) text.takeCodePoints(maxLength) else text)
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .semantics { contentDescription = placeholder },
-                    enabled = rowEnabled,
-                    readOnly = loading,
-                    textStyle = size.titleTextStyle.merge(color = textColor),
-                    keyboardOptions = keyboardOptions,
-                    keyboardActions = keyboardActions,
-                    singleLine = singleLine,
-                    maxLines = maxLines,
-                    interactionSource = interactionSource,
-                    cursorBrush = SolidColor(styles.cursor),
-                    decorationBox = { field ->
-                        if (value.isEmpty()) {
-                            Text(
-                                text = placeholder,
-                                style = size.titleTextStyle,
-                                color = if (rowEnabled) styles.placeholder else style.titleDisabled,
-                                maxLines = maxLines,
-                            )
+            // Aligned like every other row: centred while the field is a line or two, and from the
+            // top once a bio grows past that, so the glyph stays with the start of the text.
+            SlotRow(
+                modifier = Modifier.weight(1f),
+                layout = SlotRowLayout.Auto.copy(startGap = size.leadingGap),
+                start = leading?.let { slot ->
+                    {
+                        CompositionLocalProvider(LocalContentColor provides extraColor) {
+                            Box(contentAlignment = Alignment.Center, content = slot)
                         }
-                        field()
-                    },
-                )
-            }
+                    }
+                },
+                center = {
+                    BasicTextField(
+                        value = value,
+                        onValueChange = { text ->
+                            onValueChange(if (maxLength != null) text.takeCodePoints(maxLength) else text)
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .separatorText(anchor)
+                            .firstLineCenter(size.titleTextStyle)
+                            .semantics { contentDescription = placeholder },
+                        enabled = rowEnabled,
+                        readOnly = loading,
+                        textStyle = size.titleTextStyle.merge(color = textColor),
+                        keyboardOptions = keyboardOptions,
+                        keyboardActions = keyboardActions,
+                        singleLine = singleLine,
+                        maxLines = maxLines,
+                        interactionSource = interactionSource,
+                        cursorBrush = SolidColor(styles.cursor),
+                        decorationBox = { field ->
+                            if (value.isEmpty()) {
+                                Text(
+                                    text = placeholder,
+                                    style = size.titleTextStyle,
+                                    color = if (rowEnabled) styles.placeholder else style.titleDisabled,
+                                    maxLines = maxLines,
+                                )
+                            }
+                            field()
+                        },
+                    )
+                },
+            )
 
             if (end != null) {
                 Spacer(modifier = Modifier.width(size.trailingGap))

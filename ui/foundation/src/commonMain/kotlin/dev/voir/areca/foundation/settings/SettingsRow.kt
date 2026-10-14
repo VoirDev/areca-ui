@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import dev.voir.areca.foundation.list.ListItem
 import dev.voir.areca.foundation.list.ListItemSize
 import dev.voir.areca.foundation.list.ListItemStyle
+import dev.voir.areca.foundation.list.LocalListItemLayout
 import dev.voir.areca.foundation.slot.SlotRowLayout
 
 /**
@@ -28,10 +29,10 @@ import dev.voir.areca.foundation.slot.SlotRowLayout
  * - **Status.** A [SettingsRowStatus] shows a spinner in place of the value while a change is in
  *   flight, and a message under the text when it failed.
  *
- * By default a row with only a title centres its slots on that line, and a row with a subtitle aligns
- * them to the top, so the icon tile and the trailing content stay beside the title rather than
- * floating halfway down a paragraph; pass [layout] to align them otherwise. Inside a [Section], the
- * separator above and below the row starts at its text.
+ * The slots align by the list's [SlotRowLayout.Auto]: a row of one or two lines centres its tile,
+ * its text and its trailing content, and a longer one starts the tile and the text at the top with
+ * the trailing content level with the tile. Pass [layout] to align them otherwise. Inside a
+ * [Section], the separator above and below the row starts at its text.
  *
  * ```kotlin
  * SettingsRow(
@@ -46,6 +47,8 @@ import dev.voir.areca.foundation.slot.SlotRowLayout
  * @param title Main copy of the row.
  * @param modifier Modifier applied to the row.
  * @param subtitle Supporting copy below [title].
+ * @param caption A line of detail below [subtitle] — when a device was last seen, how large a file
+ * is — smaller than the subtitle and in its color.
  * @param value Current value, drawn at the end of the row before [trailing].
  * @param badge Content right after [title].
  * @param leading Slot before the text, tinted with the tone's glyph color.
@@ -65,14 +68,15 @@ import dev.voir.areca.foundation.slot.SlotRowLayout
  * @param style Colors of the row; defaults to the list's style for [tone], with its interactive
  * value color when [onClick] is given.
  * @param size Metrics and typography of the row.
- * @param layout Slot alignment of the row; defaults to the list's, top-aligned when there is a
- * [subtitle].
+ * @param layout Slot alignment of the row; defaults to the list's [SlotRowLayout.Auto], centred for
+ * one or two lines and from the top beyond.
  */
 @Composable
 public fun SettingsRow(
     title: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     subtitle: (@Composable () -> Unit)? = null,
+    caption: (@Composable () -> Unit)? = null,
     value: (@Composable () -> Unit)? = null,
     badge: (@Composable () -> Unit)? = null,
     leading: (@Composable BoxScope.() -> Unit)? = null,
@@ -88,7 +92,7 @@ public fun SettingsRow(
     interactionSource: MutableInteractionSource? = null,
     style: ListItemStyle = SettingsTheme.styles.rowStyle(tone, interactive = onClick != null),
     size: ListItemSize = SettingsTheme.sizes.row,
-    layout: SlotRowLayout = settingsRowLayout(hasSubtitle = subtitle != null),
+    layout: SlotRowLayout = LocalListItemLayout.current,
 ) {
     val anchor = rememberSeparatorAnchor()
 
@@ -96,6 +100,7 @@ public fun SettingsRow(
         modifier = Modifier.separatorAnchor(anchor).then(modifier),
         title = { SettingsRowTitle(anchor = anchor, title = title, badge = badge) },
         subtitle = subtitle,
+        caption = caption,
         layout = layout,
         value = statusValue(status, value),
         enabled = enabled,

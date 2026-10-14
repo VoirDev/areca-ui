@@ -185,7 +185,7 @@ ordered ramp, `Vertical` when each item needs full width.
 
 Everything under `dev.voir.areca.playground.showcase` is **chrome**. Chrome is built from:
 
-- `ArecaTheme.colors`, `ArecaTheme.space`, `ArecaTheme.radius`, `ArecaTheme.typography`
+- `ArecaTheme.colors`, `ArecaTheme.spacing`, `ArecaTheme.radius`, `ArecaTheme.typography`
 - raw Compose foundation: `Box`, `Column`, `Row`, `Surface`, `BasicText`, `BasicTextField`,
   `clickable`, `border`, `background`
 

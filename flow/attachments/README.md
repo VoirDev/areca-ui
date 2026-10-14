@@ -444,7 +444,9 @@ to say a file is still being added.
 
 Where files are read by name — a dozen documents on a record, the files on a ticket — a strip asks
 someone to open each one to find the one they want. `AttachmentRow` is a `SettingsRow`, so it goes
-in a `Section` beside the application's own rows:
+in a `Section` beside the application's own rows. That suits a record's files, which a limit keeps
+to a handful; a library that grows without one belongs in a `LazyList` or a `PagedContentList` of
+`ListItem` rows instead, since a section composes every row at once and never pages:
 
 ```kotlin
 Settings {

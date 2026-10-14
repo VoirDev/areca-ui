@@ -44,6 +44,10 @@ import androidx.compose.ui.unit.dp
  * one — except beside a [SlotSize.Fixed] slot, which keeps both its width and its gap so the
  * middle slots of a column of rows start at the same x whether or not each row fills it.
  *
+ * With a [SlotRowLayout.alignment], the side slots line up with a middle slot of text the way the
+ * scenario asks — centred for a row of one or two lines, from the top for a longer one, on the first
+ * line for a marker — reading the first line the middle slot reports through [firstLineCenter].
+ *
  * The middle slot is required. A row with nothing in the middle is two boxes and a gap, which is a
  * `Row`.
  *
@@ -62,13 +66,26 @@ public fun SlotRow(
     end: (@Composable BoxScope.() -> Unit)? = null,
 ) {
     when (layout.arrangement) {
-        SlotRowArrangement.Sequential -> SequentialSlotRow(
-            modifier = modifier,
-            layout = layout,
-            start = start,
-            center = center,
-            end = end,
-        )
+        // Aligning against the text needs the middle slot's height before the sides are placed,
+        // which a Row cannot give, so it has a layout of its own.
+        SlotRowArrangement.Sequential -> if (layout.alignment != null) {
+            AlignedSlotRow(
+                modifier = modifier,
+                layout = layout,
+                alignment = layout.alignment,
+                start = start,
+                center = center,
+                end = end,
+            )
+        } else {
+            SequentialSlotRow(
+                modifier = modifier,
+                layout = layout,
+                start = start,
+                center = center,
+                end = end,
+            )
+        }
 
         // The centred arrangement carries its own minimum height, because it measures the row
         // rather than delegating to a Row.

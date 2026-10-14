@@ -26,7 +26,7 @@ public data class ArecaColors(
     // Background colors
     /** The page itself. Nothing sits behind it. */
     public val bgCanvas: Color,
-    /** A region set off from the canvas without a border, such as a grouped list background. */
+    /** A region set off from the canvas without a border, such as a settings card or a grouped list. */
     public val bgSubtle: Color,
     /** A region set further back than [bgSubtle], such as an inset well or a disabled track. */
     public val bgMuted: Color,
@@ -167,6 +167,11 @@ public data class ArecaColors(
     public val borderIntense: Color,
     /** Barely visible divider between rows of the same group. */
     public val borderSubtle: Color,
+    /**
+     * Divider drawn on a [bgSubtle] region, such as the hairline between the rows of a settings
+     * card: one step past that fill in each theme, where [borderBase] sits level with it.
+     */
+    public val borderOnSubtle: Color,
 
     /** Border of a control the user cannot act on. */
     public val borderDisabled: Color,
@@ -209,8 +214,10 @@ public data class ArecaColors(
          */
         public fun light(baseColors: ArecaBaseColors = ArecaBaseColors()): ArecaColors = ArecaColors(
             bgCanvas = baseColors.baseWhite,
-            bgSubtle = baseColors.neutral10,
-            bgMuted = baseColors.neutral20,
+            bgSubtle = baseColors.neutral15,
+            // A full step past the subtle region, so a track or a well still reads on a settings
+            // card: neutral20 sits level with neutral15.
+            bgMuted = baseColors.neutral30,
             bgSurface = baseColors.baseWhite,
             bgContrast = baseColors.neutral100,
             bgContrastMuted = baseColors.neutral60,
@@ -268,6 +275,7 @@ public data class ArecaColors(
             borderStrong = baseColors.neutral30,
             borderIntense = baseColors.neutral40,
             borderSubtle = baseColors.neutral10,
+            borderOnSubtle = baseColors.neutral30,
 
             borderDisabled = baseColors.neutral30,
 
@@ -366,6 +374,7 @@ public data class ArecaColors(
             borderStrong = baseColors.neutral70,
             borderIntense = baseColors.neutral60,
             borderSubtle = baseColors.neutral90,
+            borderOnSubtle = baseColors.neutral80,
 
             borderDisabled = baseColors.neutral70,
 

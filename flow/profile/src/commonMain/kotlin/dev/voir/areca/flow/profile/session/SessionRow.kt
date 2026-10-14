@@ -1,11 +1,9 @@
 package dev.voir.areca.flow.profile.session
 
 import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import dev.voir.areca.flow.profile.icon.Browser
 import dev.voir.areca.flow.profile.icon.BundledIcons
@@ -54,33 +52,15 @@ public fun SessionRow(
     enabled: Boolean = true,
     trailing: (@Composable BoxScope.() -> Unit)? = null,
 ) {
+    // The three lines are the row's own roles — title, subtitle, caption — so a session reads like
+    // every other row on the card rather than carrying a weight and an ink of its own.
     SettingsRow(
-        title = {
-            Text(
-                text = session.name,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                fontWeight = FontWeight.SemiBold,
-            )
+        title = { Text(text = session.name, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        subtitle = session.client?.let { client ->
+            { Text(text = client, maxLines = 1, overflow = TextOverflow.Ellipsis) }
         },
-        subtitle = if (session.client != null || session.seen != null) {
-            {
-                Column {
-                    session.client?.let { client ->
-                        Text(
-                            text = client,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            color = ArecaTheme.colors.fgBase,
-                        )
-                    }
-                    session.seen?.let { seen ->
-                        Text(text = seen, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                    }
-                }
-            }
-        } else {
-            null
+        caption = session.seen?.let { seen ->
+            { Text(text = seen, maxLines = 1, overflow = TextOverflow.Ellipsis) }
         },
         modifier = modifier,
         leading = {
