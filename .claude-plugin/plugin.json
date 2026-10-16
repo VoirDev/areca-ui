@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "areca",
   "displayName": "Areca",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Agent Skills for building Compose Multiplatform UI with the Areca design system and for Areca ViewModel presentation code",
   "author": {
     "name": "Voir",
