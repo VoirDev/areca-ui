@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+#
+# Checks that `.claude-plugin/plugin.json` changed, against the checked-out commit, in its `version`
+# line only, to exactly PLUGIN_VERSION, and that PLUGIN_VERSION is greater than the version it
+# replaces. Used by library and skills release preparation alike.
+set -euo pipefail
+
+cd "$(dirname "$0")/../.."
+
+: "${PLUGIN_VERSION:?PLUGIN_VERSION is required.}"
+
+manifest=".claude-plugin/plugin.json"
+
+read_version() {
+  python3 -c 'import json, sys; print(json.load(sys.stdin)["version"])'
+}
+
+written="$(read_version < "$manifest")"
+if [ "$written" != "$PLUGIN_VERSION" ]; then
+  echo "$manifest states version '$written', not the resolved $PLUGIN_VERSION." >&2
+  exit 1
+fi
+
+previous="$(git show "HEAD:$manifest" | read_version)"
+if ! python3 - "$previous" "$PLUGIN_VERSION" <<'PYTHON'
+import sys
+
+previous, current = (tuple(int(part) for part in value.split(".")) for value in sys.argv[1:])
+sys.exit(0 if current > previous else 1)
+PYTHON
+then
+  echo "The plugin version $PLUGIN_VERSION is not greater than $previous." >&2
+  exit 1
+fi
+
+# The manifest changes in its `version` line only.
+if [ "$(git diff --numstat -- "$manifest" | cut -f1,2)" != "$(printf '1\t1')" ] ||
+  ! git diff --unified=0 -- "$manifest" | grep -q '^+  "version": '; then
+  echo "Release preparation must change only the version line of $manifest:" >&2
+  git diff -- "$manifest" >&2
+  exit 1
+fi

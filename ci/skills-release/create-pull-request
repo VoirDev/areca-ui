@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+#
+# Commits the plugin manifest's new `version` on `skills-release/vX.Y.Z`, pushes it and opens the
+# skills release pull request. Merging it is the release: installs pick up a new plugin version from
+# the default branch, and no library is built or published.
+#
+# Rerunnable: an existing branch for the same version is kept as it is, never force-pushed, and an
+# existing pull request is updated instead of duplicated. A branch holding another version fails.
+set -euo pipefail
+
+cd "$(dirname "$0")/../.."
+
+: "${PLUGIN_VERSION:?PLUGIN_VERSION is required.}"
+: "${RELEASE_TYPE:?RELEASE_TYPE is required.}"
+: "${DEFAULT_BRANCH:?DEFAULT_BRANCH is required.}"
+: "${RELEASE_BOT_NAME:?RELEASE_BOT_NAME is required.}"
+: "${RELEASE_BOT_EMAIL:?RELEASE_BOT_EMAIL is required.}"
+
+manifest=".claude-plugin/plugin.json"
+branch="skills-release/v$PLUGIN_VERSION"
+title="Release skills v$PLUGIN_VERSION"
+
+git config user.name "$RELEASE_BOT_NAME"
+git config user.email "$RELEASE_BOT_EMAIL"
+
+if git ls-remote --exit-code --heads origin "refs/heads/$branch" > /dev/null; then
+  git fetch --no-tags origin "refs/heads/$branch"
+  existing="$(git show "FETCH_HEAD:$manifest" |
+    python3 -c 'import json, sys; print(json.load(sys.stdin)["version"])')"
+  if [ "$existing" != "$PLUGIN_VERSION" ]; then
+    echo "$branch exists but its plugin version is '$existing'. Resolve the branch by hand." >&2
+    exit 1
+  fi
+  echo "$branch already exists with plugin version $PLUGIN_VERSION; it is left unchanged."
+else
+  git switch --create "$branch"
+  git add "$manifest"
+  git commit --message "$title"
+  git push origin "refs/heads/$branch"
+fi
+
+body="$(cat <<BODY
+Releases the Areca skills as plugin \`$PLUGIN_VERSION\`, a $RELEASE_TYPE bump.
+
+This pull request changes only the \`version\` of \`$manifest\`. \`VERSION\` and the published
+libraries stay as they are. Merging it is the release: \`claude plugin update areca@areca-ui\` picks
+up the new version from the default branch.
+BODY
+)"
+
+pull="$(gh pr list --head "$branch" --state open --json number --jq '.[0].number // empty')"
+if [ -n "$pull" ]; then
+  gh pr edit "$pull" --title "$title" --body "$body"
+  echo "Updated pull request #$pull."
+else
+  gh pr create --base "$DEFAULT_BRANCH" --head "$branch" --title "$title" --body "$body"
+fi

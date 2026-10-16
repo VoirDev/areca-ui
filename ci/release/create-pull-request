@@ -12,6 +12,7 @@ cd "$(dirname "$0")/../.."
 
 : "${RELEASE_VERSION:?RELEASE_VERSION is required.}"
 : "${RELEASE_TYPE:?RELEASE_TYPE is required.}"
+: "${PLUGIN_VERSION:?PLUGIN_VERSION is required.}"
 : "${DEFAULT_BRANCH:?DEFAULT_BRANCH is required.}"
 : "${RELEASE_BOT_NAME:?RELEASE_BOT_NAME is required.}"
 : "${RELEASE_BOT_EMAIL:?RELEASE_BOT_EMAIL is required.}"
@@ -31,7 +32,7 @@ if git ls-remote --exit-code --heads origin "refs/heads/$branch" > /dev/null; th
   fi
   existing_plugin="$(git show FETCH_HEAD:.claude-plugin/plugin.json |
     python3 -c 'import json, sys; print(json.load(sys.stdin)["version"])')"
-  if [ "$existing_plugin" != "$RELEASE_VERSION" ]; then
+  if [ "$existing_plugin" != "$PLUGIN_VERSION" ]; then
     echo "$branch exists but its plugin version is '$existing_plugin'. Resolve the branch by hand." >&2
     exit 1
   fi
@@ -52,8 +53,8 @@ fi
 body="$(cat <<EOF
 Releases \`$RELEASE_VERSION\`, $reason.
 
-This pull request changes only \`VERSION\` and the \`version\` of \`.claude-plugin/plugin.json\`, which
-follows it. Verify checks the whole repository, and **Build release artifacts** builds, inspects and
+This pull request changes only \`VERSION\` and the \`version\` of \`.claude-plugin/plugin.json\`,
+which every library release raises by the same kind, here to \`$PLUGIN_VERSION\`. Verify checks the whole repository, and **Build release artifacts** builds, inspects and
 keeps every publication for GitHub Packages. Merging publishes those
 kept artifacts unchanged, after approval in the \`release\` environment, then tags \`v$RELEASE_VERSION\`
 and creates the GitHub Release.

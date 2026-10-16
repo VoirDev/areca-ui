@@ -23,6 +23,7 @@ Load them as `areca:areca-ui-v1` and `areca:areca-viewmodel-v1`, or read `skills
 - The skills in `skills/`, `ui/foundation/AGENTS.md` and the module READMEs describe the same public
   API and behaviour. A change to a published module's public API or behaviour updates the affected
   files in `skills/`, `ui/foundation/AGENTS.md` and the module's README in the same change.
-- `.claude-plugin/plugin.json` states the same `version` as `VERSION`. Only release preparation
-  changes either, and `check` fails when they differ.
+- `.claude-plugin/plugin.json` has its own `version`, separate from `VERSION`. Every library release
+  raises it (Prepare Release); a skills-only release raises it alone (Prepare Skills Release). Only
+  those two workflows change it, and installs update only when it changes.
 - Edit skills in `skills/` only; `.agents/skills/` holds symlinks to them.

@@ -51,37 +51,37 @@ val releaseStagingRepository = "ReleaseStaging"
 val publishedJvmTarget = JvmTarget.JVM_17
 
 /**
- * Fails the build when the Claude Code plugin manifest states a version other than `VERSION`.
+ * Fails the build when the Claude Code plugin manifest's version is not a release `MAJOR.MINOR.PATCH`.
  *
- * The repository root is the `areca` plugin, whose skills describe the library at this version, so
- * `.claude-plugin/plugin.json` repeats `VERSION` exactly. `ci/release/prepare-version` writes both,
- * and this check, part of `check`, keeps any other change from moving one without the other.
+ * The repository root is the `areca` plugin. Its version is the skills' own, not `VERSION`:
+ * `ci/release/prepare-version` raises it with every library release, and
+ * `ci/skills-release/prepare-version` raises it alone for a skills release. Installs update only
+ * when it changes.
  */
 val verifyPluginVersion = tasks.register("verifyPluginVersion") {
     group = LifecycleBasePlugin.VERIFICATION_GROUP
-    description = "Checks that .claude-plugin/plugin.json states the version in VERSION."
+    description = "Checks that .claude-plugin/plugin.json states a MAJOR.MINOR.PATCH version."
 
-    val versionFile = layout.projectDirectory.file("VERSION").asFile
     val manifestFile = layout.projectDirectory.file(".claude-plugin/plugin.json").asFile
-    inputs.files(versionFile, manifestFile).withPathSensitivity(PathSensitivity.RELATIVE)
+    inputs.files(manifestFile).withPathSensitivity(PathSensitivity.RELATIVE)
 
-    // Nothing is produced; the marker lets Gradle skip the task when neither file changed.
+    // Nothing is produced; the marker lets Gradle skip the task when the manifest did not change.
     val marker = layout.buildDirectory.file("plugin-version/checked.txt")
     outputs.file(marker)
 
     doLast {
-        val version = versionFile.readText().trim()
         val manifest = groovy.json.JsonSlurper().parse(manifestFile) as Map<*, *>
         val manifestVersion = manifest["version"]
-        if (manifestVersion != version) {
+        val release = Regex("(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)")
+        if (manifestVersion !is String || !release.matches(manifestVersion)) {
             throw GradleException(
-                ".claude-plugin/plugin.json states version '$manifestVersion', but VERSION holds " +
-                    "'$version'. The plugin version follows VERSION exactly; set it to '$version'.",
+                ".claude-plugin/plugin.json states version '$manifestVersion', which is not " +
+                    "MAJOR.MINOR.PATCH. Raise it with Prepare Release or Prepare Skills Release.",
             )
         }
         marker.get().asFile.apply {
             parentFile.mkdirs()
-            writeText("$version\n")
+            writeText("$manifestVersion\n")
         }
     }
 }

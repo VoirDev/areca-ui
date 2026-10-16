@@ -12,8 +12,8 @@ echo "==> Building and checking every module"
 # `build` runs assemble plus check for every target: compilation for JVM, Android and iOS, the unit
 # tests, and the verifications wired into `check` — each published module's public API against its
 # committed `api/` dump, the bundled icons, the playground's showcase conventions, including the
-# chrome contract of `playground/SHOWCASES.md` §5, and the Claude Code plugin manifest's version
-# against `VERSION`.
+# chrome contract of `playground/SHOWCASES.md` §5, and that the Claude Code plugin manifest states a
+# release version.
 ./gradlew build --no-daemon
 
 echo "==> Validating that the published libraries still publish"

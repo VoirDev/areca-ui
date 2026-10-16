@@ -70,6 +70,7 @@ jobs:
       - name: Validate release changes
         env:
           RELEASE_VERSION: ${{ steps.version.outputs.version }}
+          PLUGIN_VERSION: ${{ steps.version.outputs.plugin_version }}
         run: ./ci/release/validate-changes
 
       - name: Create or update release pull request
@@ -78,6 +79,7 @@ jobs:
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
           RELEASE_TYPE: ${{ steps.version.outputs.release_type }}
           RELEASE_VERSION: ${{ steps.version.outputs.version }}
+          PLUGIN_VERSION: ${{ steps.version.outputs.plugin_version }}
           RELEASE_BOT_NAME: ${{ vars.RELEASE_BOT_NAME }}
           RELEASE_BOT_EMAIL: ${{ vars.RELEASE_BOT_EMAIL }}
         run: ./ci/release/create-pull-request
