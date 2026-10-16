@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+#
+# Raises the `version` of `.claude-plugin/plugin.json` for a skills release: new or changed skills
+# shipped without a library release. `VERSION` and the published libraries do not change.
+#
+# Inputs: RELEASE_TYPE (patch, minor or major) selects the bump of the plugin version.
+#
+# Outputs to GITHUB_OUTPUT when it is set: `plugin_version` and `release_type`.
+set -euo pipefail
+
+cd "$(dirname "$0")/../.."
+
+: "${RELEASE_TYPE:?RELEASE_TYPE is required.}"
+
+plugin_version="$(./ci/release/bump-plugin-version "$RELEASE_TYPE")"
+echo "Releasing skills $plugin_version ($RELEASE_TYPE)."
+
+if [ -n "${GITHUB_OUTPUT:-}" ]; then
+  echo "plugin_version=$plugin_version" >> "$GITHUB_OUTPUT"
+  echo "release_type=$RELEASE_TYPE" >> "$GITHUB_OUTPUT"
+fi

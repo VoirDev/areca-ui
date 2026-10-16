@@ -1,0 +1,76 @@
+name: Prepare Skills Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: Plugin version bump type
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+permissions:
+  contents: read
+
+concurrency:
+  group: prepare-skills-release-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    name: Prepare skills release PR
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Validate source branch and release configuration
+        shell: bash
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          RELEASE_BOT_TOKEN: ${{ secrets.RELEASE_BOT_TOKEN }}
+          RELEASE_BOT_NAME: ${{ vars.RELEASE_BOT_NAME }}
+          RELEASE_BOT_EMAIL: ${{ vars.RELEASE_BOT_EMAIL }}
+        run: |
+          set -euo pipefail
+          if [ "$GITHUB_REF_NAME" != "$DEFAULT_BRANCH" ]; then
+            echo "Prepare Skills Release must run from the default branch, $DEFAULT_BRANCH." >&2
+            exit 1
+          fi
+          if [ -z "$RELEASE_BOT_TOKEN" ] || [ -z "$RELEASE_BOT_NAME" ] || [ -z "$RELEASE_BOT_EMAIL" ]; then
+            echo "The RELEASE_BOT_TOKEN secret and the RELEASE_BOT_NAME and RELEASE_BOT_EMAIL variables are required." >&2
+            exit 1
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          # The release bot's token, so the pushed branch and the pull request start Verify; pushes
+          # and pull requests made with GITHUB_TOKEN start no workflows.
+          token: ${{ secrets.RELEASE_BOT_TOKEN }}
+
+      - name: Resolve and apply plugin version
+        id: version
+        env:
+          RELEASE_TYPE: ${{ inputs.release_type }}
+        run: ./ci/skills-release/prepare-version
+
+      - name: Validate skills release changes
+        env:
+          PLUGIN_VERSION: ${{ steps.version.outputs.plugin_version }}
+        run: ./ci/skills-release/validate-changes
+
+      - name: Create or update skills release pull request
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_BOT_TOKEN }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          RELEASE_TYPE: ${{ steps.version.outputs.release_type }}
+          PLUGIN_VERSION: ${{ steps.version.outputs.plugin_version }}
+          RELEASE_BOT_NAME: ${{ vars.RELEASE_BOT_NAME }}
+          RELEASE_BOT_EMAIL: ${{ vars.RELEASE_BOT_EMAIL }}
+        run: ./ci/skills-release/create-pull-request

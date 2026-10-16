@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 #
-# Resolves the release version from `VERSION` and writes it back, to `VERSION` and to the `version`
-# of the Claude Code plugin manifest, `.claude-plugin/plugin.json`, which follows it exactly.
+# Resolves the release version from `VERSION` and writes it back, then raises the `version` of the
+# Claude Code plugin manifest, `.claude-plugin/plugin.json`, by the same kind of release: the major,
+# minor or patch number that changed in `VERSION`. The plugin version is the skills' own and may be
+# ahead of `VERSION` after skills releases, but every library release raises it.
 #
 # `VERSION` holds a release, `MAJOR.MINOR.PATCH`, or a development version not released yet,
 # `MAJOR.MINOR.PATCH-SNAPSHOT`, which SemVer orders just below its release.
@@ -12,7 +14,8 @@
 # RELEASE_VERSION_INPUT, when not empty, is an exact `MAJOR.MINOR.PATCH` released instead of the
 # bump; it must be greater than `VERSION`.
 #
-# Outputs to GITHUB_OUTPUT when it is set: `version`, and `release_type` (the bump, or `explicit`).
+# Outputs to GITHUB_OUTPUT when it is set: `version`, `release_type` (the bump, or `explicit`), and
+# `plugin_version`.
 # Fails before changing anything when a version is invalid, not greater, or already tagged.
 set -euo pipefail
 
@@ -98,22 +101,23 @@ if git ls-remote --exit-code --tags origin "refs/tags/v$version" > /dev/null; th
   exit 1
 fi
 
-# A JSON edit, not a text substitution: only the `version` value changes, and the manifest keeps its
-# key order and two-space layout.
-python3 - "$version" <<'PYTHON'
-import json
-import pathlib
-import sys
+# The skills follow the library by the same kind of change, so a library release always reaches
+# installed plugins.
+[[ "$version" =~ ^$core$ ]]
+if ((BASH_REMATCH[1] != major)); then
+  plugin_bump=major
+elif ((BASH_REMATCH[2] != minor)); then
+  plugin_bump=minor
+else
+  plugin_bump=patch
+fi
+plugin_version="$(./ci/release/bump-plugin-version "$plugin_bump")"
 
-manifest = pathlib.Path(".claude-plugin/plugin.json")
-plugin = json.loads(manifest.read_text())
-plugin["version"] = sys.argv[1]
-manifest.write_text(json.dumps(plugin, indent=2, ensure_ascii=False) + "\n")
-PYTHON
 printf '%s\n' "$version" > VERSION
-echo "Releasing $version (was $current, $release_type)."
+echo "Releasing $version (was $current, $release_type), plugin $plugin_version."
 
 if [ -n "${GITHUB_OUTPUT:-}" ]; then
   echo "version=$version" >> "$GITHUB_OUTPUT"
   echo "release_type=$release_type" >> "$GITHUB_OUTPUT"
+  echo "plugin_version=$plugin_version" >> "$GITHUB_OUTPUT"
 fi

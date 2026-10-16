@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+#
+# Checks that skills release preparation changed only the `version` of `.claude-plugin/plugin.json`,
+# to a greater PLUGIN_VERSION, and left `VERSION` alone.
+set -euo pipefail
+
+cd "$(dirname "$0")/../.."
+
+: "${PLUGIN_VERSION:?PLUGIN_VERSION is required.}"
+
+manifest=".claude-plugin/plugin.json"
+
+changed="$(git status --porcelain --untracked-files=all | cut -c4-)"
+if [ "$changed" != "$manifest" ]; then
+  echo "Skills release preparation must change only $manifest; it changed:" >&2
+  echo "$changed" >&2
+  exit 1
+fi
+
+./ci/release/validate-plugin-version
+
+git diff --check

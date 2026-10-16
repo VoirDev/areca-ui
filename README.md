@@ -246,9 +246,26 @@ the `areca-ui` marketplace that lists it (`.claude-plugin/marketplace.json`), so
 /plugin install areca@areca-ui
 ```
 
-The plugin version is the library version: `plugin.json` repeats `VERSION`, Prepare Release
-changes both, and `check` fails when they differ. An installed plugin updates with
-`/plugin update areca@areca-ui` once a release raises that version.
+The plugin has its own version, separate from `VERSION`, because installs update only when it
+changes:
+
+- every library release raises it by the same kind as `VERSION` — a `minor` library release raises
+  the plugin's minor number — so new library behaviour always reaches the skills;
+- **Prepare Skills Release** (manual, from `main`, a `patch`, `minor` or `major` bump) raises it
+  alone and opens the `Release skills vX.Y.Z` pull request from `skills-release/vX.Y.Z`
+  (`ci/skills-release/prepare-version`, `ci/skills-release/validate-changes`,
+  `ci/skills-release/create-pull-request`). Merging it is the release; no library is built or
+  published.
+
+After either release merges, update an install with:
+
+```bash
+claude plugin marketplace update areca-ui
+```
+
+```bash
+claude plugin update areca@areca-ui --scope user
+```
 
 The skills describe the public API and behaviour, so a change to either updates `skills/`,
 [ui/foundation/AGENTS.md](ui/foundation/AGENTS.md) and the module's README in the same pull
@@ -264,11 +281,11 @@ build. It holds either the last release, `X.Y.Z`, or, before the first release, 
 version `1.0.0-SNAPSHOT`, which local builds (`publishToMavenLocal` included) publish as; an app
 consuming a local build pins `1.0.0-SNAPSHOT`. Only releases change `VERSION`; it keeps the released version until the
 next release, never moving on to a further `-SNAPSHOT`. The `version` of
-`.claude-plugin/plugin.json` repeats `VERSION` exactly (see [Agent skills](#agent-skills)), and
-`check` fails when the two differ:
+`.claude-plugin/plugin.json` is the skills' own and moves on its own between library releases (see
+[Agent skills](#agent-skills)); `check` fails when it is not `MAJOR.MINOR.PATCH`:
 
-1. **Prepare Release** (manual, from `main`) sets `VERSION` and the plugin version to the next
-   release and opens the `Release vX.Y.Z` pull request from `release/vX.Y.Z`
+1. **Prepare Release** (manual, from `main`) sets `VERSION` to the next release, raises the plugin
+   version by the same kind (`ci/release/bump-plugin-version`), and opens the `Release vX.Y.Z` pull request from `release/vX.Y.Z`
    (`ci/release/prepare-version`, `ci/release/validate-changes`, `ci/release/create-pull-request`).
    The `patch`, `minor` or `major` bump gives the lowest release of that kind above `VERSION`: from `1.2.3` they give `1.2.4`, `1.3.0` and `2.0.0`; from
    `1.2.3-SNAPSHOT`, `1.2.3`, `1.3.0` and `2.0.0`. Its optional `version` input sets an exact
@@ -285,8 +302,8 @@ next release, never moving on to a further `-SNAPSHOT`. The `version` of
    yet serve.
 
 The first release is 1.0.0: run Prepare Release with `version` set to `1.0.0`, or with any bump,
-since from `1.0.0-SNAPSHOT` all three give `1.0.0`. Its pull request changes `VERSION` and the
-plugin version from `1.0.0-SNAPSHOT` to `1.0.0`, and nothing else, and merging it publishes as
+since from `1.0.0-SNAPSHOT` all three give `1.0.0`. Its pull request changes `VERSION` from
+`1.0.0-SNAPSHOT` to `1.0.0` and raises the plugin version, and nothing else, and merging it publishes as
 above. Only a release is ever built for
 publication: `build-artifacts`, `check-staging` and `detect` reject a `-SNAPSHOT`.
 
