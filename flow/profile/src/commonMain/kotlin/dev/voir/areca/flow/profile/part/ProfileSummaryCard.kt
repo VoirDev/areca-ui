@@ -30,6 +30,7 @@ import dev.voir.areca.foundation.icon.ChevronDirection
 import dev.voir.areca.foundation.icon.ChevronSize
 import dev.voir.areca.foundation.slot.SlotRow
 import dev.voir.areca.foundation.slot.SlotRowLayout
+import dev.voir.areca.foundation.slot.firstLineCenter
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.indication.FadeIndication
 import dev.voir.areca.modifier.clickCursor
@@ -242,9 +243,11 @@ private fun ProfileSummaryRow(
     modifier: Modifier = Modifier,
     end: (@Composable BoxScope.() -> Unit)? = null,
 ) {
+    // Aligned as a list row is: two lines beside an avatar centre as one block, so the chevron at
+    // the end sits level with the picture rather than with the name.
     SlotRow(
         modifier = modifier,
-        layout = SlotRowLayout(gap = ArecaTheme.spacing.lg),
+        layout = SlotRowLayout.Auto.copy(gap = ArecaTheme.spacing.lg),
         start = {
             ProfileAvatar(
                 name = summary.name,
@@ -257,6 +260,7 @@ private fun ProfileSummaryRow(
                 val name: @Composable () -> Unit = {
                     Text(
                         text = summary.name,
+                        modifier = Modifier.firstLineCenter(ArecaTheme.typography.labelLarge),
                         style = ArecaTheme.typography.labelLarge,
                         color = ArecaTheme.colors.fgBase,
                         maxLines = 1,
@@ -289,7 +293,7 @@ private fun ProfileSummaryRowPlaceholder(
 ) {
     SlotRow(
         modifier = modifier.clearAndSetSemantics { this.contentDescription = contentDescription },
-        layout = SlotRowLayout(gap = ArecaTheme.spacing.lg),
+        layout = SlotRowLayout.Auto.copy(gap = ArecaTheme.spacing.lg),
         start = {
             Skeleton(
                 width = AvatarSize.Medium.container,

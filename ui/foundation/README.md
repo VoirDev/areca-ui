@@ -648,7 +648,7 @@ Box {
 | `BaseLayout` | A screen's frame: top and bottom bars drawn over full-height content that is handed their height as padding |
 | `CollapsingHeaderLayout` | A header that scrolls away above a strip that stays — artwork over tabs |
 | `PullToRefreshLayout` | Pull-to-refresh around scrolling content. Experimental — see below |
-| `Card` | A surface that groups content, optionally pressable or expandable |
+| `Card` | A surface that groups content, optionally pressable or expandable, with an optional footer for its status and actions |
 | `Expandable` | A section that opens and closes under a trigger you supply |
 | `HorizontalDivider` / `VerticalDivider` | A rule, optionally labelled — "or" between two choices |
 | `RelativePositionLayout` | A companion on one of eight sides of its content — a label above a bar |
@@ -669,6 +669,29 @@ The content is laid out under the bars, so it must apply the padding it is hande
 lazy list's `contentPadding` — or the bars hide its first and last items. A `Card`'s content is
 handed the card's padding the same way, so a full-bleed image can ignore it.
 
+A card's status and actions go in its `footer`: a strip along the bottom, filled and inked by a
+`CardFooterStyle` — `plain()` with a hairline, `soft(ActionColor)` tinted, `solid(ActionColor)`
+filled, or `of(bg, content)` in colours of your own. Copy in the footer takes the style's ink and
+buttons take its borderless button style, so a brand-filled footer reads white without restyling.
+
+```kotlin
+Card(
+    modifier = Modifier.fillMaxWidth(),
+    style = CardStyle.Outlined,
+    footerStyle = CardFooterStyle.soft(ActionColor.Danger),
+    footer = {
+        Text("Payment failed on 3 November", modifier = Modifier.weight(1f))
+        Button(onClick = onUpdateCard) { Text("Update card") }
+    },
+) { padding ->
+    Heading(
+        title = { Text("Team plan") },
+        supportive = { Text("Visa ending 4242") },
+        modifier = Modifier.padding(padding),
+    )
+}
+```
+
 ### `slot`
 
 `SlotRow` is the row most components are built on: a start slot, a required centre and an end slot,
@@ -678,12 +701,27 @@ them. Reach for it to build a row of your own that lines up with theirs.
 
 ```kotlin
 SlotRow(
-    layout = SlotRowLayout(gap = ArecaTheme.spacing.lg),
-    start = { Icon(ArecaIcons.Lock, contentDescription = null) },
-    center = { Text("Two-step verification", variant = TextVariant.LabelLarge) },
-    end = { Text("On", variant = TextVariant.LabelMedium, color = TextColor.Subtle) },
+    layout = SlotRowLayout.Auto.copy(gap = ArecaTheme.spacing.lg),
+    start = { Avatar(letters = person.name, size = AvatarSize.Small) },
+    center = {
+        Column {
+            Text(
+                text = person.name,
+                modifier = Modifier.firstLineCenter(ArecaTheme.typography.labelLarge),
+                variant = TextVariant.LabelLarge,
+            )
+            Text(text = person.handle, variant = TextVariant.BodySmall, color = TextColor.Muted)
+        }
+    },
+    end = { Chevron(ChevronDirection.Right) },
 )
 ```
+
+A `SlotRowLayout.alignment` lines the sides up with a middle slot of text by scenario:
+`SlotRowLayout.Center` for one or two lines, `.Top` for three or more — the visual and the text
+start at the top and the trailing slot stays level with the visual — `.FirstLine` for a marker no
+taller than a line, and `.Auto`, which picks `Center` or `Top` by measuring the middle slot in the
+lines its `Modifier.firstLineCenter(textStyle)` reports. Every list and settings row uses `Auto`.
 
 `SlotSize.Fixed` keeps a start slot's width when it is empty, so a column of rows lines up whether
 or not each has an icon. `SlotRowLayout.Centered` keeps the middle on the row's centre line, for a
@@ -695,12 +733,13 @@ title between two controls.
 | --- | --- |
 | `List` / `LazyList` | A grouped list declared with `item(...)` and `divider(...)`: eager for a short list, lazy for a long one |
 | `ListItemColumn` | A group of row composables, with the separators drawn for you |
-| `ListItem` | A row: overline, title, subtitle, value, leading and trailing slots |
+| `ListItem` | A row: overline, title, subtitle, caption, value, leading and trailing slots |
 | `NavigationListItem` | A row that opens something, with a chevron |
 | `CheckboxListItem` / `RadioListItem` / `ToggleListItem` / `CheckmarkListItem` | A row that is a selection control; the row reports the state |
 | `ExpandableListItem` | A row that discloses content under it |
 | `ListItemSkeleton` | A row-shaped placeholder |
 | `Settings` | A settings screen: sections of rows, each section on its own card |
+| `SettingsRowLink` | A second action at the end of a pressable settings row — "Verify" beside an address |
 
 ```kotlin
 List {
@@ -730,6 +769,22 @@ two rows by hand. A row is one accessibility node: its slots merge into it. `Set
 styles and sizes from `SettingsDefaults.styles()` and `SettingsDefaults.sizes()` and hands them to
 the `SettingsRow`, `SettingsToggleRow`, `SettingsSelectRow`, `SettingsOptionRow` and
 `SettingsTextFieldRow` inside it; the list does not scroll, so put it in a scrolling container.
+
+A row's slots are roles with one size and one ink each, so pass plain `Text` and let the slot style
+it: the title (`bodyMedium`, base ink), the subtitle under it (`bodySmall`, muted), a caption under
+that for detail such as when a device was last seen (`bodyExtraSmall`, the subtitle's ink), and the
+value at the end (`bodyMedium` in a settings row). A row of one or two lines centres its visual,
+its text and its trailing content; a longer one starts the visual and the text at the top and keeps
+the trailing content level with the visual (`SlotRowLayout.Auto`). Leading visuals in a section
+share one size and shape — glyphs on `SettingsRowIcon` tiles, anything else in `SettingsRowTile`.
+A section's closing action goes on its `band`, a strip at the bottom of the card in a colour of
+its own (`bandColor`), rather than behind a hairline. Settings rows are padded 16dp across and 12dp down, sit on `bgSubtle` cards on the
+`bgCanvas` page, and are divided by `borderOnSubtle` hairlines.
+
+A settings section is for a short, bounded group — options, a form typed in place, a few actions,
+the handful of devices an account is signed in on. A collection that can grow without limit belongs
+in a `LazyList` or a `PagedContentList` of `ListItem` rows: a section composes every row at once,
+does not page and has no empty or error face.
 
 ### `collection`
 

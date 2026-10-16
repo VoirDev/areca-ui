@@ -59,7 +59,8 @@ fun ColorsShowcase() = ShowcaseScaffold(
             description = "Surfaces, text and borders. The ramp the theme direction inverts.",
             steps = ArecaTheme.baseColors.let {
                 listOf(
-                    "10" to it.neutral10, "20" to it.neutral20, "30" to it.neutral30,
+                    "10" to it.neutral10, "15" to it.neutral15, "20" to it.neutral20,
+                    "30" to it.neutral30,
                     "40" to it.neutral40, "50" to it.neutral50, "60" to it.neutral60,
                     "70" to it.neutral70, "80" to it.neutral80, "90" to it.neutral90,
                     "100" to it.neutral100,
@@ -310,6 +311,7 @@ fun ColorsShowcase() = ShowcaseScaffold(
         canvasState = canvas,
     ) {
         token("borderSubtle", colors.borderSubtle, "Barely visible divider between rows of a group.")
+        token("borderOnSubtle", colors.borderOnSubtle, "Divider on a bgSubtle region, such as a settings card.")
         token("borderBase", colors.borderBase, "Default border: a card or input at rest.")
         token("borderStrong", colors.borderStrong, "Separates more clearly than borderBase — a hovered control.")
         token("borderIntense", colors.borderIntense, "Strongest neutral border: focused or pressed.")

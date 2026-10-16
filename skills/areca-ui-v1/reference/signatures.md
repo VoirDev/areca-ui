@@ -24,8 +24,8 @@ Every foundation symbol is imported from its family's package. Extension composa
 | `….foundation.field.select` | `SelectField`, `SelectOption`, `SelectSelectionMode`, `SelectFieldLabels`, `SelectFlowModal`, `SelectSegment` |
 | `….foundation.selection` | `Checkbox`, `Radio`, `Toggle`, `ToggleState`, `BinaryToggleCycle`, `TriStateToggleCycle`, `NumberStepper`, `Swatch`, `SwatchPicker` |
 | `….foundation.list` | `List`, `LazyList`, `ListItem`, `NavigationListItem`, `CheckboxListItem`, `RadioListItem`, `ToggleListItem`, `CheckmarkListItem`, `ExpandableListItem`, `ListItemColumn`, `ListItemSkeleton`, `ListItemChevron`, `ListItemStyle`, `ListItemSize` |
-| `….foundation.settings` | `Settings`, `Section`, `SettingsRow`, `SettingsToggleRow`, `SettingsSelectRow`, `SettingsTextFieldRow`, `SettingsOptionRow`, `SettingsBlock`, `SettingsRowIcon`, `SettingsRowStatus`, `SettingsRowTone`, `SettingsRowSkeleton`, `SettingsDefaults` |
-| `….foundation.layout` | `BaseLayout`, `Card`, `CardStyle`, `CardSize`, `HorizontalDivider`, `VerticalDivider`, `Expandable`, `PullToRefreshLayout`, `CollapsingHeaderLayout`, `Overlay`, `RelativePositionLayout` |
+| `….foundation.settings` | `Settings`, `Section`, `SettingsRow`, `SettingsToggleRow`, `SettingsSelectRow`, `SettingsTextFieldRow`, `SettingsOptionRow`, `SettingsBlock`, `SettingsRowIcon`, `SettingsRowTile`, `SettingsRowLink`, `SettingsRowStatus`, `SettingsRowTone`, `SettingsRowSkeleton`, `SettingsDefaults` |
+| `….foundation.layout` | `BaseLayout`, `Card`, `CardStyle`, `CardSize`, `CardFooterStyle`, `HorizontalDivider`, `VerticalDivider`, `Expandable`, `PullToRefreshLayout`, `CollapsingHeaderLayout`, `Overlay`, `RelativePositionLayout` |
 | `….foundation.topbar` | `TopBar`, `LargeTopBar`, `rememberTopBarScrollState`, `TopBarScrollBehavior`, `TopBarStyle`, `TopBarSize`, `TopBarActionStyle`, the `…Action` controls, `TopBarProgress` |
 | `….foundation.tabbar`, `….foundation.tabs` | `TabBar`, `FloatingTabBar`, `TabBarItem`, `rememberTabBarState`; `Tabs`, `TabItem`, `TabsVariant`, `rememberTabsState` |
 | `….foundation.overlay` | `Dialog`, `ModalDefaults`, `ConfirmationDialog`, `ConfirmSheet`, `FlowModal`, `rememberFlowModal`, `FlowModalController`, `FlowModalActionBar`, `DropdownPopup`, `rememberDropdownPopup`, `anchored`, `edgeToEdgeDialogProperties` |
@@ -33,7 +33,7 @@ Every foundation symbol is imported from its family's package. Extension composa
 | `….foundation.notice`, `….foundation.status` | `Notice`, `NoticeText`, `NoticeTone`, `NoticeEmphasis`, `AnimatedNotice`; `StatusScene`, `StatusSceneActions`, `StatusMark`, `StatusMarkState` |
 | `….foundation.badge`, `….foundation.avatar` | `Badge`, `BadgeStyle`, `NotificationBadge`, `IndicatorDot`, `BadgeSelect`, `LazyBadgeSelect`, `FlowBadgeSelect`; `Avatar` |
 | `….foundation.collection`, `….foundation.table` | `ContentList`, `PagedContentList`, `GroupedContentList`, `GroupedPagedContentList`, `LimitedContentListState`, `PagedContentListState`, `ContentListLabels`, `ContentListDefaults`, `LazyVerticalGroupedGrid`, `LazyHorizontalGroupedGrid`; `Table`, `LazyTable`, `TableColumn` |
-| `….foundation.navigation`, `….foundation.wheel`, `….foundation.slot` | `NavList`, `NavItem`, `SwipePager`, `PagerControls`, `PageIndicator`, `rememberPagerController`; `WheelPicker`, `WheelPickerColumn`, `rememberWheelPickerColumnState`; `SlotRow`, `SlotRowLayout` |
+| `….foundation.navigation`, `….foundation.wheel`, `….foundation.slot` | `NavList`, `NavItem`, `SwipePager`, `PagerControls`, `PageIndicator`, `rememberPagerController`; `WheelPicker`, `WheelPickerColumn`, `rememberWheelPickerColumnState`; `SlotRow`, `SlotRowLayout` (`Default`, `Auto`, `Center`, `Top`, `FirstLine`, `Centered`, `Fill`, `wrap(…)`), `SlotRowAlignment`, `Modifier.firstLineCenter(textStyle)`, `FirstLineCenter` |
 | `dev.voir.areca.indication`, `.modifier`, `.platform`, `.shape` | `TouchIndication`, `FadeIndication`, `StrokeIndication`, `LiquidSweepIndication`, `FocusOutline`; `clickCursor`, `minimumTouchTarget`, `thenIf`; `SystemBars`; `SquircleShape` |
 | `dev.voir.areca` | `ExperimentalArecaApi` |
 
@@ -257,7 +257,8 @@ A `null` callback draws a display-only control whose state the enclosing row rep
 ```kotlin
 fun ListItem(modifier: Modifier = Modifier, title: (@Composable () -> Unit)? = null,
     subtitle: (@Composable () -> Unit)? = null, overline: (@Composable () -> Unit)? = null,
-    value: (@Composable () -> Unit)? = null, enabled: Boolean = true, selected: Boolean = false,
+    caption: (@Composable () -> Unit)? = null, value: (@Composable () -> Unit)? = null,
+    enabled: Boolean = true, selected: Boolean = false,
     highlightSelected: Boolean = true, dragging: Boolean = false, nestingLevel: Int = 0,
     style: ListItemStyle = LocalListItemStyle.current ?: ListItemStyle.Default,
     size: ListItemSize = LocalListItemSize.current ?: ListItemSize.Default,
@@ -362,10 +363,14 @@ fun Settings(modifier: Modifier = Modifier, styles: SettingsStyles = SettingsDef
 fun SettingsScope.Section(modifier: Modifier = Modifier, header: (@Composable () -> Unit)? = null,
     footer: (@Composable () -> Unit)? = null, enabled: Boolean = true, separated: Boolean = true,
     headerPlacement: SettingsHeaderPlacement = LocalSettingsHeaderPlacement.current,
+    bandColor: Color = SettingsTheme.styles.section.band, band: (@Composable () -> Unit)? = null,
     content: @Composable SettingsSectionScope.() -> Unit)
+// `band`: a strip at the bottom of the card for the section's closing action — one row, usually a
+// SettingsRow in the matching tone; `bandColor = ArecaTheme.colors.bgDangerMuted` under a danger row.
 
 fun SettingsRow(title: @Composable () -> Unit, modifier: Modifier = Modifier,
-    subtitle: (@Composable () -> Unit)? = null, value: (@Composable () -> Unit)? = null,
+    subtitle: (@Composable () -> Unit)? = null, caption: (@Composable () -> Unit)? = null,
+    value: (@Composable () -> Unit)? = null,
     badge: (@Composable () -> Unit)? = null, leading: (@Composable BoxScope.() -> Unit)? = null,
     trailing: (@Composable BoxScope.() -> Unit)? = null,
     bottom: (@Composable ColumnScope.() -> Unit)? = null,
@@ -375,7 +380,7 @@ fun SettingsRow(title: @Composable () -> Unit, modifier: Modifier = Modifier,
     onClickLabel: String? = null, interactionSource: MutableInteractionSource? = null,
     style: ListItemStyle = SettingsTheme.styles.rowStyle(tone, interactive = onClick != null),
     size: ListItemSize = SettingsTheme.sizes.row,
-    layout: SlotRowLayout = settingsRowLayout(hasSubtitle = subtitle != null))
+    layout: SlotRowLayout = LocalListItemLayout.current)
 
 fun SettingsToggleRow(checked: Boolean, onCheckedChange: (Boolean) -> Unit,
     title: @Composable () -> Unit, modifier: Modifier = Modifier,
@@ -386,7 +391,7 @@ fun SettingsToggleRow(checked: Boolean, onCheckedChange: (Boolean) -> Unit,
     nestingLevel: Int = 0, onClick: (() -> Unit)? = null, onClickLabel: String? = null,
     interactionSource: MutableInteractionSource? = null,
     style: ListItemStyle = SettingsTheme.styles.row, size: ListItemSize = SettingsTheme.sizes.row,
-    layout: SlotRowLayout = settingsRowLayout(hasSubtitle = subtitle != null))
+    layout: SlotRowLayout = LocalListItemLayout.current)
 // Overload: `state: ToggleState`, `onToggle: (ToggleState) -> Unit`, and
 // `cycleOrder: List<ToggleState> = BinaryToggleCycle` after `onClickLabel`.
 
@@ -415,6 +420,16 @@ fun SettingsRowIcon(imageVector: ImageVector, modifier: Modifier = Modifier,
     shape: Shape = ArecaTheme.shapes.tile, size: FeaturedIconSize = SettingsTheme.sizes.iconTile)
 // Overload: `style: FeaturedIconStyle` after `imageVector`, in place of `color`.
 // SettingsRowStatus.Idle | Loading | Error(message); SettingsRowTone.Default | Brand | Danger.
+
+fun SettingsRowTile(modifier: Modifier = Modifier, shape: Shape = ArecaTheme.shapes.tile,
+    size: Dp = SettingsTheme.sizes.iconTile.container, content: @Composable BoxScope.() -> Unit)
+// Any visual — a flag, a photo, a brand mark — cropped to the icon tile, so a section's leading
+// visuals share one size and shape.
+
+fun SettingsRowLink(text: String, onClick: () -> Unit, modifier: Modifier = Modifier,
+    enabled: Boolean = true, onClickLabel: String? = null)
+// A second action in a pressable row's `trailing` slot ("Verify"): row ink, underlined, a 48dp
+// target that overhangs the line instead of making the row taller.
 ```
 
 ## Layout
@@ -431,11 +446,17 @@ fun Card(modifier: Modifier = Modifier,
     size: CardSize = LocalCardSize.current ?: CardSize.Default, enabled: Boolean = true,
     active: Boolean = false, onClick: (() -> Unit)? = null, onClickLabel: String? = null,
     interactionSource: MutableInteractionSource? = null,
+    footerStyle: CardFooterStyle = CardFooterStyle.Default,
+    footer: (@Composable RowScope.() -> Unit)? = null,
     content: @Composable BoxScope.(padding: PaddingValues) -> Unit)
-// Overload: leading `expanded: Boolean`, then the same parameters, `transition`,
-// `expandedContent` and `content`, both `@Composable ColumnScope.(padding: PaddingValues) -> Unit`.
+// Overload: leading `expanded: Boolean`, then the same parameters, `transition`, `footerStyle`,
+// `footer`, `expandedContent` and `content`, both
+// `@Composable ColumnScope.(padding: PaddingValues) -> Unit`.
 // CardStyle presets: Default, Outlined, SoftNeutral, GhostNeutral, SolidBrand; factories
 // outlined(shape), softNeutral(shape), …, and default(…).
+// CardFooterStyle presets: Default (= plain()), plain(divider), soft(ActionColor = Neutral),
+// solid(ActionColor = Brand), of(bg, content, divider, button) for a color of your own. The footer
+// hands its `content` color and its `button` style to what is inside it.
 
 fun HorizontalDivider(modifier: Modifier = Modifier,
     style: DividerStyle = LocalDividerStyle.current ?: DividerStyle.Default,

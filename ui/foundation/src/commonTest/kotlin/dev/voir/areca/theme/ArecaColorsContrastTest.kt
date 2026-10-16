@@ -335,6 +335,20 @@ class ArecaColorsContrastTest {
         }
     }
 
+    /**
+     * A settings card is `bgSubtle`, and the hairlines between its rows are `borderOnSubtle`. The
+     * line has to be a value of its own on that fill, or a section's rows run together.
+     */
+    @Test
+    fun `dividers separate from the subtle region they cross`() {
+        forEachTheme { name, colors ->
+            assertTrue(
+                colors.borderOnSubtle != colors.bgSubtle && colors.borderOnSubtle != colors.bgCanvas,
+                "$name: borderOnSubtle collapsed onto the region it divides",
+            )
+        }
+    }
+
     @Test
     fun `the two themes are actually different`() {
         val light = ArecaColors.light()

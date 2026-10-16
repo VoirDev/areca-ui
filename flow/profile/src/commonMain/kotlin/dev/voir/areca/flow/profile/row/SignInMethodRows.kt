@@ -1,32 +1,18 @@
 package dev.voir.areca.flow.profile.row
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import dev.voir.areca.flow.profile.icon.BundledIcons
 import dev.voir.areca.flow.profile.icon.Mail
 import dev.voir.areca.foundation.badge.Badge
 import dev.voir.areca.foundation.settings.SettingsRow
 import dev.voir.areca.foundation.settings.SettingsRowIcon
+import dev.voir.areca.foundation.settings.SettingsRowLink
 import dev.voir.areca.foundation.settings.SettingsRowStatus
-import dev.voir.areca.foundation.settings.SettingsTheme
+import dev.voir.areca.foundation.settings.SettingsRowTile
 import dev.voir.areca.foundation.text.Text
-import dev.voir.areca.foundation.text.TextColor
-import dev.voir.areca.foundation.text.TextVariant
-import dev.voir.areca.indication.FadeIndication
-import dev.voir.areca.modifier.MinimumTouchTarget
-import dev.voir.areca.modifier.clickCursor
-import dev.voir.areca.theme.ArecaTheme
 
 /**
  * The address the account signs in with, and whether it has been confirmed.
@@ -71,7 +57,7 @@ public fun EmailRow(
     verifyLabel: String = "Verify",
     enabled: Boolean = true,
     trailing:(@Composable BoxScope.() -> Unit)? = if (email != null && !isVerified && onVerify != null) {
-        { VerifyLink(text = verifyLabel, onClick = onVerify, enabled = enabled) }
+        { SettingsRowLink(text = verifyLabel, onClick = onVerify, enabled = enabled) }
     } else {
         null
     },
@@ -90,46 +76,6 @@ public fun EmailRow(
         onClick = onClick,
         onClickLabel = onClickLabel,
     )
-}
-
-/**
- * The "Verify" link at the end of an [EmailRow]: underlined, so it reads as a link rather than as
- * the row's value, and a target of at least 48 dp however short its word is — the row around it is
- * pressable too, so a near miss would otherwise land on the row.
- *
- * @param text What the link says.
- * @param onClick Called when it is pressed.
- * @param enabled Whether it accepts a press; drawn in the disabled ink when not.
- */
-@Composable
-private fun VerifyLink(
-    text: String,
-    onClick: () -> Unit,
-    enabled: Boolean,
-) {
-    val shape = ArecaTheme.shapes.md
-
-    Box(
-        modifier = Modifier
-            .sizeIn(minWidth = MinimumTouchTarget, minHeight = MinimumTouchTarget)
-            .clickCursor(enabled = enabled)
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = FadeIndication.tint(shape),
-                enabled = enabled,
-                role = Role.Button,
-                onClick = onClick,
-            ),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(
-            text = text,
-            variant = TextVariant.BodyMedium,
-            // Neutral like every other value in the list; the underline is what says it is a link.
-            color = if (enabled) TextColor.Base else TextColor.Disabled,
-            textDecoration = TextDecoration.Underline,
-        )
-    }
 }
 
 /**
@@ -203,13 +149,8 @@ public fun LinkedAccountRow(
             LinkedAccountAction.None -> null
         },
         modifier = modifier,
-        leading = {
-            Box(
-                modifier = Modifier.size(SettingsTheme.sizes.iconTile.container),
-                contentAlignment = Alignment.Center,
-                content = icon,
-            )
-        },
+        // The provider's mark cropped to the icon tile, so it lines up with the tiles around it.
+        leading = { SettingsRowTile(content = icon) },
         status = status,
         enabled = enabled,
         onClick = when (presentation.action) {

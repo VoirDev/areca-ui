@@ -1,10 +1,16 @@
 package dev.voir.areca.foundation.settings
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.Dp
 import dev.voir.areca.foundation.button.ActionColor
 import dev.voir.areca.foundation.icon.FeaturedIcon
 import dev.voir.areca.foundation.icon.FeaturedIconSize
@@ -90,5 +96,42 @@ public fun SettingsRowIcon(
         style = style,
         size = size,
         shape = shape,
+    )
+}
+
+/**
+ * Any visual — a flag, a photo, a brand mark — at the size and in the shape of an icon tile, for
+ * the leading slot of a settings row.
+ *
+ * Every leading visual in a section should be one size and one shape, or the column of visuals
+ * stops reading as a column and the text beside them starts at a ragged edge. Glyphs go on a
+ * [SettingsRowIcon] tile; anything else goes in this box, which crops it to the same tile. Pass
+ * [ArecaTheme.shapes.full][dev.voir.areca.theme.ArecaShapes.full] for a person, whose picture is round
+ * wherever it appears — but keep the size, so the text still starts where the other rows' does.
+ *
+ * Like the icon tile, it fades with a disabled row.
+ *
+ * @param modifier Modifier applied to the tile.
+ * @param shape Shape the visual is cropped to.
+ * @param size Width and height of the tile; defaults to the list's icon tile.
+ * @param content The visual, centred and cropped to the tile.
+ */
+@Composable
+public fun SettingsRowTile(
+    modifier: Modifier = Modifier,
+    shape: Shape = ArecaTheme.shapes.tile,
+    size: Dp = SettingsTheme.sizes.iconTile.container,
+    content: @Composable BoxScope.() -> Unit,
+) {
+    val enabled = LocalListItemState.current.enabled
+
+    Box(
+        modifier = modifier
+            .size(size)
+            .alpha(if (enabled) 1f else DISABLED_TILE_ALPHA)
+            // A visual, never a control, so cropping it costs no focus ring.
+            .clip(shape),
+        contentAlignment = Alignment.Center,
+        content = content,
     )
 }

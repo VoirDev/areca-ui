@@ -67,7 +67,7 @@ Read through `ArecaTheme` inside composition. Every accessor is `@Composable`.
 
 | Accessor | Type | Members |
 | --- | --- | --- |
-| `ArecaTheme.colors` | `ArecaColors` | Backgrounds `bgCanvas` (page), `bgSurface` (cards), `bgSubtle`, `bgMuted`, `bgContrast`, `bgContrastMuted`, `bgOverlayDark`, `bgOverlayLight`, `bgDisabled`; per tone `bg{Brand,Danger,Success,Warn,Info,Neutral}{Muted,Base,Intense}`. Foregrounds `fgBase`, `fgSubtle`, `fgMuted`, `fgDisabled`, `fgOnContrast`, `fgOnFill`, `fgOnWarn`, `fgNeutral`, `fg{Brand,Danger,Success,Info,Warn}` (marks) and `fg{…}Text` (type). Borders `borderBase`, `borderStrong`, `borderIntense`, `borderSubtle`, `borderDisabled`, `border{Danger,Success,Info,Warn}`. Accent `accentBase`, `accentStrong`, `accentIntense`, `accentSubtle`, `accentMuted` |
+| `ArecaTheme.colors` | `ArecaColors` | Backgrounds `bgCanvas` (page), `bgSurface` (cards), `bgSubtle` (settings sections, grouped regions), `bgMuted` (tracks and wells), `bgContrast`, `bgContrastMuted`, `bgOverlayDark`, `bgOverlayLight`, `bgDisabled`; per tone `bg{Brand,Danger,Success,Warn,Info,Neutral}{Muted,Base,Intense}`. Foregrounds `fgBase`, `fgSubtle`, `fgMuted`, `fgDisabled`, `fgOnContrast`, `fgOnFill`, `fgOnWarn`, `fgNeutral`, `fg{Brand,Danger,Success,Info,Warn}` (marks) and `fg{…}Text` (type). Borders `borderBase`, `borderStrong`, `borderIntense`, `borderSubtle`, `borderOnSubtle` (hairlines on `bgSubtle`), `borderDisabled`, `border{Danger,Success,Info,Warn}`. Accent `accentBase`, `accentStrong`, `accentIntense`, `accentSubtle`, `accentMuted` |
 | `ArecaTheme.spacing` | `ArecaSpacing` | `none` 0, `xs2` 2, `xs` 4, `sm` 6, `md` 8, `lg` 12, `xl` 16, `xl2` 20, `xl3` 24, `xl4` 32, `xl5` 40, `xl6` 48, `xl7` 64, `xl8` 80, `xl9` 96; `horizontalContentInsets` 16, `verticalContentInsets` 24 |
 | `ArecaTheme.shapes` | `ArecaShapes` | `none`, `xs`, `sm`, `md`, `lg`, `xl`, `xl2`, `full`, `tile`, `button` |
 | `ArecaTheme.radius` | `ArecaRadius` | `none`, `xs`, `sm`, `md`, `lg`, `xl`, `xl2` (raw `Dp`; prefer `shapes`) |
@@ -111,13 +111,15 @@ Read through `ArecaTheme` inside composition. Every accessor is `@Composable`.
 | Small integer | `NumberStepper` |
 | On/off setting; tick in a form; one of many | `Toggle`; `Checkbox`; `Radio` |
 | Those controls in a row with a title | `ToggleListItem`, `CheckboxListItem`, `RadioListItem`, `CheckmarkListItem` |
-| Settings screen | `Settings { Section { SettingsToggleRow / SettingsSelectRow / SettingsRow / SettingsTextFieldRow / SettingsOptionRow } }`; loading row `SettingsRowSkeleton`; free content `SettingsBlock` |
+| Settings screen; a short, bounded group of rows | `Settings { Section { SettingsToggleRow / SettingsSelectRow / SettingsRow / SettingsTextFieldRow / SettingsOptionRow } }`; loading row `SettingsRowSkeleton`; free content `SettingsBlock` (see "Rows, sections and cards" below) |
+| Second action in a pressable row; line of detail under a subtitle | `trailing = { SettingsRowLink("Verify", onVerify) }`; the row's `caption` slot |
 | Grouped rows on one surface | `List { item(…) }` (eager), `LazyList { … }` (lazy), `ListItemColumn` (hand-composed rows) |
 | Row that navigates; row that expands | `NavigationListItem`; `ExpandableListItem` |
 | Remote list with loading, empty and error | `ContentList` (eager), `PagedContentList` (lazy, paging, pull-to-refresh), `Grouped…` variants |
 | Grid with group headers | `LazyVerticalGroupedGrid`, `LazyHorizontalGroupedGrid` |
 | Tabular data | `Table`, `LazyTable` |
 | Surface grouping content, optionally pressable | `Card`; with a disclosed part `Card(expanded, …, expandedContent)` |
+| Card with its status and actions along the bottom | `Card(footer = { … }, footerStyle = CardFooterStyle.soft(ActionColor.Brand))` |
 | Show and hide a region | `Expandable` |
 | Separator, optionally labelled | `HorizontalDivider`, `VerticalDivider` |
 | Screen frame with bars | `BaseLayout(topBar, bottomBar, overlay) { padding -> … }` |
@@ -143,11 +145,157 @@ Read through `ArecaTheme` inside composition. Every accessor is `@Composable`.
 | Waiting; known progress | `Spinner`; `ProgressBar` |
 | Status label; count; dot | `Badge(style = BadgeStyle.Success)`; `NotificationBadge`; `IndicatorDot` |
 | Person | `Avatar(letters, contentDescription)` |
-| Custom start, centre, end row | `SlotRow` |
+| Custom start, centre, end row | `SlotRow`; aligned like a list row, `SlotRow(layout = SlotRowLayout.Auto)` + `Modifier.firstLineCenter(textStyle)` |
 | Content placed beside other content; scrim over a box | `RelativePositionLayout`; `BoxScope.Overlay` |
 | Tell a screen reader something changed | `AnnounceOnChange(text)` |
 | Region that is always dark; system bar colour | `ArecaDarkTheme`; `SystemBars` |
 | Custom pressable surface | `Modifier.clickable(indication = TouchIndication(shape))` + `clickCursor()` (§7) |
+
+### Rows, sections and cards
+
+#### Pick the surface by what the rows are
+
+- A `Settings` section holds a short, fixed set: options, switches, a form typed in place, a few
+  actions, or a bounded group of things — the sign-in methods of one account, the devices it is
+  signed in on, the files on one record. About one to ten rows a section; split a longer one into
+  named sections.
+- Anything that can grow without limit — transactions, messages, search results, a file library —
+  is a `List` / `LazyList` of `ListItem` or `NavigationListItem` rows, or `ContentList` /
+  `PagedContentList` when it loads. A settings section composes every row at once, does not page
+  and has no empty or error face.
+- **When the request does not say how many items a list holds and the answer decides between the
+  two, ask before building it.** Offer both: grouped settings rows read calmer for a few items; a
+  list scales. Do not guess.
+- Keep one vocabulary across the app. Once a kind of thing is shown one way — devices as settings
+  rows, an edit screen as `SettingsTextFieldRow`s — show it that way on every screen, or ask before
+  departing from it.
+
+#### Text roles
+
+A row's slots carry fixed roles; plain `Text("…")` in a slot takes the role's size and ink.
+
+| Role | Slot | Style · ink | Holds |
+| --- | --- | --- | --- |
+| Title | `title` | `bodyMedium` · `fgBase` | What the row is, or the fact itself |
+| Subtitle | `subtitle` | `bodySmall` · `fgMuted` | What the fact is, or a short explanation |
+| Caption | `caption` | `bodyExtraSmall` · subtitle's ink | Detail: last seen, size, date |
+| Value | `value` | `bodyMedium` · `fgSubtle` | The current answer: "English", "2.4 GB" |
+| Badge | `badge` | extra-small neutral `Badge` | State of the title: "New", "Unverified" |
+| Second action | `trailing = { SettingsRowLink(…) }` | value size, row ink, underlined | "Verify", "Resend" |
+| Section header · footer | `Section(header, footer)` | `labelMedium` · `fgSubtle`; `bodySmall` · `fgMuted` | Group name; what the group means |
+
+- Never pass `style` or `fontWeight` to text in a row slot; `maxLines` and `overflow` are fine.
+  Colour comes from `tone`, `status` and `badge`; the one exception is a line that reports a
+  problem to act on — a file that failed to upload — which takes its family's text ink
+  (`fgWarnText`, `fgDangerText`), never a grey picked to look quieter or louder.
+- Never stack lines in `subtitle` with a `Column`: a third line is the `caption`.
+- A short answer is the `value` ("Language" — "English"). Long data — an address, a phone number —
+  is the `title`, with what it is as the `subtitle` ("ada@…" over "Email").
+- A row with one action is pressable and names it in `value` ("Link", "Download"); only a second
+  action takes a `SettingsRowLink`.
+- A row built by hand next to rows — a summary at the top of a card — reads its type and ink from
+  `SettingsTheme.sizes.row` and `SettingsTheme.styles.row` instead of picking its own.
+
+#### Alignment: pick by scenario
+
+A row's leading visual and trailing content line up with its text according to a
+`SlotRowAlignment`. List and settings rows use `Auto`, which picks `Center` or `Top` from how much
+text the row holds — so most rows need nothing. Choose by the scenario, never by nudging:
+
+| Scenario | Alignment | What lines up |
+| --- | --- | --- |
+| One line — a switch, a menu entry, "Language — English" | `Center` (via `Auto`) | Everything on the row's centre |
+| Two lines — title over subtitle, a value over its label, a person with a handle, an account with its balance, a card's name over its detail | `Center` (via `Auto`) | Visual, text block and trailing all centred; an amount or chevron sits level with the icon |
+| Three lines or more — a wrapped description, title + subtitle + caption, a growing field | `Top` (via `Auto`) | Visual and text start at the top and the text runs down; the trailing switch, checkbox or amount stays level with the visual |
+| Everything pinned to the top whatever the length — a feed entry, a comment | `Top` | As above, without switching to centred for short text |
+| A marker no taller than a line — a legend dot, a bullet, a tiny status glyph | `FirstLine` | The marker and the trailing value centre on the first line of text |
+
+- Rows: leave `layout` alone for `Auto`; pass `layout = SlotRowLayout.Top`, `.Center` or
+  `.FirstLine` only when the scenario says so.
+- A row of your own: `SlotRow(layout = SlotRowLayout.Auto)` (or the scenario's preset) and
+  `Modifier.firstLineCenter(textStyle)` on the text that is its first line — `Auto` measures the
+  text in lines from it.
+- A trailing control never aligns to the top of the text on its own; it follows the visual.
+- Never pad a glyph, a dot or a control to line it up. If it looks wrong, the scenario is wrong.
+
+#### Leading visuals
+
+Within one section or list, every leading visual has **one size and one shape**, so the visuals
+read as a column and the text beside them starts at one edge:
+
+- Glyphs go on a `SettingsRowIcon` tile.
+- Anything else — a flag, a photo, a brand or provider mark — goes in `SettingsRowTile { … }`,
+  which crops it to the same tile.
+- People are round avatars; give `SettingsRowTile` `shape = ArecaTheme.shapes.full` around a picture
+  at the tile size rather than mixing a larger avatar into a column of tiles. A list that is only
+  people may use a larger avatar throughout.
+- Do not mix a bare glyph, a tile and a flag in one column.
+
+#### Card corners
+
+Corners are part of the layout, so they are decided once per app, not per card:
+
+- **One radius per role.** Every full-width card — `Card`, settings sections, notices, banners —
+  shares one corner (Areca's defaults are all `shapes.lg`), whether it sits on the page or on a
+  full-width panel or sheet: a surface that spans the screen counts as the page. Compact cards (a
+  half-width tile in a grid) and cards nested inside another card step down one radius. Icon tiles
+  are `shapes.tile`; people are `shapes.full`.
+- **Set it once.** Provide the app's card corner through `LocalCardStyle` / the `CardStyle` preset
+  and the settings section style, and reuse those; never pass `shape =` to one card on a screen.
+- **The same kind of card has the same corner everywhere.** Two plan cards, two wallet cards, a
+  card in a list and the same card in a picker are the same object and must not differ by radius.
+- **Concentric nesting.** A nested surface's radius is the outer radius minus the padding between
+  them, rounded to the scale — never larger than the outer one.
+
+#### Section bands
+
+A section's closing action — "Terminate all other sessions", "Add device" — sits on the section's
+`band`, a strip at the bottom of its card separated by colour, not by one more row behind a
+hairline:
+
+```kotlin
+Section(
+    header = { Text(thisDeviceHeader) },
+    bandColor = ArecaTheme.colors.bgDangerMuted,
+    band = {
+        SettingsRow(
+            title = { Text(signOutOthersLabel) },
+            tone = SettingsRowTone.Danger,
+            onClick = onSignOutOthers,
+        )
+    },
+) { SessionRow(session = current) }
+```
+
+The band's default colour is the neutral step past the card; use the danger tint under a danger
+row. One band per section, holding one row.
+
+#### Card footers
+
+A card's status and actions go in its `footer`, not in a divider and a row drawn by hand:
+
+```kotlin
+Card(
+    modifier = Modifier.fillMaxWidth(),
+    style = CardStyle.Outlined,
+    footerStyle = CardFooterStyle.soft(ActionColor.Brand),
+    footer = {
+        Text(renewalLine, modifier = Modifier.weight(1f))
+        Button(onClick = onManage) { Text(manageLabel) }
+    },
+) { padding -> PlanSummary(plan, Modifier.padding(padding)) }
+```
+
+`plain()` for supporting detail, `soft(color)` for a state worth noticing (`Warning` for a trial
+ending, `Danger` for a failed payment), `solid(color)` for the card's call to action — one per
+screen — and `of(bg, content)` for a colour outside the families. The footer hands its ink and a
+matching borderless button style to what is inside it, so do not style the copy or the buttons.
+
+#### Surfaces
+
+The page is `bgCanvas`. Settings sections and other grouped regions are `bgSubtle` — the section
+card's default — with `borderOnSubtle` hairlines; tracks and wells inside them are `bgMuted`;
+raised cards are `bgSurface` or a `CardStyle` preset. Do not put a `bgSubtle` region on another.
 
 ### Packages
 
@@ -165,8 +313,8 @@ Every foundation symbol is imported from its family's package. Extension composa
 | `….foundation.field.select` | `SelectField`, `SelectOption`, `SelectSelectionMode`, `SelectFieldLabels`, `SelectFlowModal`, `SelectSegment` |
 | `….foundation.selection` | `Checkbox`, `Radio`, `Toggle`, `ToggleState`, `NumberStepper`, `Swatch`, `SwatchPicker` |
 | `….foundation.list` | `List`, `LazyList`, `ListItem`, `NavigationListItem`, `CheckboxListItem`, `RadioListItem`, `ToggleListItem`, `CheckmarkListItem`, `ExpandableListItem`, `ListItemColumn`, `ListItemSkeleton`, `ListItemStyle`, `ListItemSize` |
-| `….foundation.settings` | `Settings`, `Section`, `SettingsRow`, `SettingsToggleRow`, `SettingsSelectRow`, `SettingsTextFieldRow`, `SettingsOptionRow`, `SettingsRowIcon`, `SettingsRowStatus`, `SettingsRowTone`, `SettingsRowSkeleton` |
-| `….foundation.layout` | `BaseLayout`, `Card`, `CardStyle`, `CardSize`, `HorizontalDivider`, `VerticalDivider`, `Expandable`, `PullToRefreshLayout`, `CollapsingHeaderLayout`, `Overlay`, `RelativePositionLayout` |
+| `….foundation.settings` | `Settings`, `Section`, `SettingsRow`, `SettingsToggleRow`, `SettingsSelectRow`, `SettingsTextFieldRow`, `SettingsOptionRow`, `SettingsBlock`, `SettingsRowIcon`, `SettingsRowTile`, `SettingsRowLink`, `SettingsRowStatus`, `SettingsRowTone`, `SettingsRowSkeleton` |
+| `….foundation.layout` | `BaseLayout`, `Card`, `CardStyle`, `CardSize`, `CardFooterStyle`, `HorizontalDivider`, `VerticalDivider`, `Expandable`, `PullToRefreshLayout`, `CollapsingHeaderLayout`, `Overlay`, `RelativePositionLayout` |
 | `….foundation.topbar` | `TopBar`, `LargeTopBar`, `rememberTopBarScrollState`, `TopBarScrollBehavior`, `TopBarStyle`, `TopBarSize`, the `…Action` controls, `TopBarProgress` |
 | `….foundation.tabbar`, `….foundation.tabs` | `TabBar`, `FloatingTabBar`, `TabBarItem`; `Tabs`, `TabItem`, `TabsVariant`, `rememberTabsState` |
 | `….foundation.overlay` | `Dialog`, `ModalDefaults`, `ConfirmationDialog`, `ConfirmSheet`, `FlowModal`, `rememberFlowModal`, `FlowModalController`, `FlowModalActionBar`, `DropdownPopup`, `rememberDropdownPopup`, `anchored` |
@@ -174,7 +322,7 @@ Every foundation symbol is imported from its family's package. Extension composa
 | `….foundation.notice`, `….foundation.status` | `Notice`, `NoticeText`, `NoticeTone`, `NoticeEmphasis`, `AnimatedNotice`; `StatusScene`, `StatusSceneActions`, `StatusMark`, `StatusMarkState` |
 | `….foundation.badge`, `….foundation.avatar` | `Badge`, `BadgeStyle`, `NotificationBadge`, `IndicatorDot`, `BadgeSelect`; `Avatar` |
 | `….foundation.collection`, `….foundation.table` | `ContentList`, `PagedContentList`, `LimitedContentListState`, `PagedContentListState`, `ContentListLabels`, `ContentListDefaults`, `LazyVerticalGroupedGrid`; `Table`, `LazyTable`, `TableColumn` |
-| `….foundation.navigation`, `….foundation.wheel`, `….foundation.slot` | `NavList`, `SwipePager`, `PagerControls`, `PageIndicator`, `rememberPagerController`; `WheelPicker`, `WheelPickerColumn`, `rememberWheelPickerColumnState`; `SlotRow` |
+| `….foundation.navigation`, `….foundation.wheel`, `….foundation.slot` | `NavList`, `SwipePager`, `PagerControls`, `PageIndicator`, `rememberPagerController`; `WheelPicker`, `WheelPickerColumn`, `rememberWheelPickerColumnState`; `SlotRow`, `SlotRowLayout` (`Default`, `Auto`, `Center`, `Top`, `FirstLine`, `Centered`, `Fill`, `wrap(…)`), `SlotRowAlignment`, `Modifier.firstLineCenter(textStyle)`, `FirstLineCenter` |
 | `dev.voir.areca.indication`, `.modifier`, `.platform`, `.shape` | `TouchIndication`, `FadeIndication`, `StrokeIndication`, `FocusOutline`; `clickCursor`, `minimumTouchTarget`, `thenIf`; `SystemBars`; `SquircleShape` |
 
 ---
@@ -395,7 +543,8 @@ fun Toggle(state: ToggleState, onToggle: ((ToggleState) -> Unit)?, modifier: Mod
 ```kotlin
 fun ListItem(modifier: Modifier = Modifier, title: (@Composable () -> Unit)? = null,
     subtitle: (@Composable () -> Unit)? = null, overline: (@Composable () -> Unit)? = null,
-    value: (@Composable () -> Unit)? = null, enabled: Boolean = true, selected: Boolean = false,
+    caption: (@Composable () -> Unit)? = null, value: (@Composable () -> Unit)? = null,
+    enabled: Boolean = true, selected: Boolean = false,
     highlightSelected: Boolean = true, dragging: Boolean = false, nestingLevel: Int = 0,
     style: ListItemStyle = LocalListItemStyle.current ?: ListItemStyle.Default,
     size: ListItemSize = LocalListItemSize.current ?: ListItemSize.Default,
@@ -536,10 +685,14 @@ fun Settings(modifier: Modifier = Modifier, styles: SettingsStyles = SettingsDef
 fun SettingsScope.Section(modifier: Modifier = Modifier, header: (@Composable () -> Unit)? = null,
     footer: (@Composable () -> Unit)? = null, enabled: Boolean = true, separated: Boolean = true,
     headerPlacement: SettingsHeaderPlacement = LocalSettingsHeaderPlacement.current,
+    bandColor: Color = SettingsTheme.styles.section.band, band: (@Composable () -> Unit)? = null,
     content: @Composable SettingsSectionScope.() -> Unit)
+// `band`: a strip at the bottom of the card for the section's closing action — one row, usually a
+// SettingsRow in the matching tone; `bandColor = ArecaTheme.colors.bgDangerMuted` under a danger row.
 
 fun SettingsRow(title: @Composable () -> Unit, modifier: Modifier = Modifier,
-    subtitle: (@Composable () -> Unit)? = null, value: (@Composable () -> Unit)? = null,
+    subtitle: (@Composable () -> Unit)? = null, caption: (@Composable () -> Unit)? = null,
+    value: (@Composable () -> Unit)? = null,
     badge: (@Composable () -> Unit)? = null, leading: (@Composable BoxScope.() -> Unit)? = null,
     trailing: (@Composable BoxScope.() -> Unit)? = null,
     bottom: (@Composable ColumnScope.() -> Unit)? = null,
@@ -549,7 +702,7 @@ fun SettingsRow(title: @Composable () -> Unit, modifier: Modifier = Modifier,
     onClickLabel: String? = null, interactionSource: MutableInteractionSource? = null,
     style: ListItemStyle = SettingsTheme.styles.rowStyle(tone, interactive = onClick != null),
     size: ListItemSize = SettingsTheme.sizes.row,
-    layout: SlotRowLayout = settingsRowLayout(hasSubtitle = subtitle != null))
+    layout: SlotRowLayout = LocalListItemLayout.current)
 
 fun SettingsToggleRow(checked: Boolean, onCheckedChange: (Boolean) -> Unit,
     title: @Composable () -> Unit, modifier: Modifier = Modifier,
@@ -560,7 +713,7 @@ fun SettingsToggleRow(checked: Boolean, onCheckedChange: (Boolean) -> Unit,
     nestingLevel: Int = 0, onClick: (() -> Unit)? = null, onClickLabel: String? = null,
     interactionSource: MutableInteractionSource? = null,
     style: ListItemStyle = SettingsTheme.styles.row, size: ListItemSize = SettingsTheme.sizes.row,
-    layout: SlotRowLayout = settingsRowLayout(hasSubtitle = subtitle != null))
+    layout: SlotRowLayout = LocalListItemLayout.current)
 // Overload: `state: ToggleState`, `onToggle: (ToggleState) -> Unit` in place of `checked` /
 // `onCheckedChange`, and `cycleOrder: List<ToggleState> = BinaryToggleCycle` after `onClickLabel`.
 
@@ -574,10 +727,20 @@ fun <T> SettingsSelectRow(title: @Composable () -> Unit, options: List<T>, selec
     style: ListItemStyle =
         SettingsTheme.styles.rowStyle(SettingsRowTone.Default, interactive = true),
     size: ListItemSize = SettingsTheme.sizes.row,
-    layout: SlotRowLayout = settingsRowLayout(hasSubtitle = subtitle != null))
+    layout: SlotRowLayout = LocalListItemLayout.current)
 // SettingsRowStatus.Idle | Loading | Error(message); SettingsRowTone.Default | Brand | Danger.
 // SettingsTextFieldRow(value, onValueChange, placeholder, …) and
 // SettingsOptionRow(selected, onClick, title, …) complete the row set.
+
+fun SettingsRowTile(modifier: Modifier = Modifier, shape: Shape = ArecaTheme.shapes.tile,
+    size: Dp = SettingsTheme.sizes.iconTile.container, content: @Composable BoxScope.() -> Unit)
+// Any visual — a flag, a photo, a brand mark — cropped to the icon tile, so a section's leading
+// visuals share one size and shape.
+
+fun SettingsRowLink(text: String, onClick: () -> Unit, modifier: Modifier = Modifier,
+    enabled: Boolean = true, onClickLabel: String? = null)
+// A second action in a pressable row's `trailing` slot ("Verify"): row ink, underlined, a 48dp
+// target that overhangs the line instead of making the row taller.
 ```
 
 ### Layout
@@ -594,9 +757,14 @@ fun Card(modifier: Modifier = Modifier,
     size: CardSize = LocalCardSize.current ?: CardSize.Default, enabled: Boolean = true,
     active: Boolean = false, onClick: (() -> Unit)? = null, onClickLabel: String? = null,
     interactionSource: MutableInteractionSource? = null,
+    footerStyle: CardFooterStyle = CardFooterStyle.Default,
+    footer: (@Composable RowScope.() -> Unit)? = null,
     content: @Composable BoxScope.(padding: PaddingValues) -> Unit)
-// Overload: leading `expanded: Boolean`, then `transition`, `expandedContent` and `content`, both
-// `@Composable ColumnScope.(padding: PaddingValues) -> Unit`.
+// Overload: leading `expanded: Boolean`, then `transition`, `footerStyle`, `footer`,
+// `expandedContent` and `content`, both `@Composable ColumnScope.(padding: PaddingValues) -> Unit`.
+// CardFooterStyle presets: Default (= plain()), plain(divider), soft(ActionColor = Neutral),
+// solid(ActionColor = Brand), of(bg, content, divider, button) for a color of your own. The footer
+// hands its `content` color and its `button` style to what is inside it.
 
 fun HorizontalDivider(modifier: Modifier = Modifier,
     style: DividerStyle = LocalDividerStyle.current ?: DividerStyle.Default,
@@ -1156,9 +1324,7 @@ fun InvoicesScreen(
             NavigationListItem(
                 title = { Text(invoice.customer) },
                 onClick = { onOpen(invoice) },
-                subtitle = {
-                    Text(invoice.due, variant = TextVariant.BodySmall, color = TextColor.Subtle)
-                },
+                subtitle = { Text(invoice.due) },
                 value = { Text(invoice.amount) },
                 onClickLabel = "Open invoice",
             )
@@ -1408,6 +1574,14 @@ fun MoreMenu(onRename: () -> Unit, onArchive: () -> Unit) {
 | A wrapper composable that only changes a component's colours | `style = XStyle.….copy(…)` or `LocalXStyle provides …` |
 | Ignoring `BaseLayout`'s `padding` | Apply it as `contentPadding` or `Modifier.padding(padding)` |
 | A `Row` of `Text` and `Icon` pretending to be a list row | `ListItem(title, leading, trailing, onClick)` |
+| `subtitle = { Column { Text(a, color = …); Text(b) } }` | `subtitle = { Text(a) }, caption = { Text(b) }` |
+| `title = { Text(name, fontWeight = FontWeight.SemiBold) }` in a row | `title = { Text(name) }`; the row owns its type |
+| `Modifier.padding(top = 2.dp)` on a row's icon to line it up | Nothing: rows align by scenario (`SlotRowLayout.Auto`); pick `.Top`, `.Center` or `.FirstLine` if the scenario differs |
+| A flag or a photo beside icon tiles at its own size | `SettingsRowTile { … }`, the tile's size and shape |
+| `shape =` passed to one card on a screen | One corner per nesting level, set once through the card style |
+| A danger row behind a hairline at the bottom of a section | `Section(band = { SettingsRow(tone = Danger, …) }, bandColor = bgDangerMuted)` |
+| A `Card` with a `HorizontalDivider` and a `Row` of buttons at the bottom | `Card(footer = { … }, footerStyle = …)` |
+| `forEach` over an open-ended collection inside a `Section` | `LazyList` / `PagedContentList` of `ListItem` rows, or ask which the product wants |
 | `Box(Modifier.height(1.dp).background(…))` | `HorizontalDivider()` |
 
 A custom pressable surface, when no component fits:

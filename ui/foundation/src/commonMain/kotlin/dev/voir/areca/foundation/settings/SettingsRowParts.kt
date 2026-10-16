@@ -1,17 +1,19 @@
 package dev.voir.areca.foundation.settings
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import dev.voir.areca.foundation.LocalTextStyle
 import dev.voir.areca.foundation.badge.LocalBadgeSize
 import dev.voir.areca.foundation.badge.LocalBadgeStyle
 import dev.voir.areca.foundation.feedback.Spinner
 import dev.voir.areca.foundation.feedback.SpinnerStyle
+import dev.voir.areca.foundation.slot.SlotRow
+import dev.voir.areca.foundation.slot.SlotRowLayout
+import dev.voir.areca.foundation.slot.SlotSize
+import dev.voir.areca.foundation.slot.firstLineCenter
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.theme.ArecaTheme
 
@@ -47,18 +49,24 @@ internal fun SettingsRowTitle(
         return
     }
 
-    Row(
+    // The badge centres on the title's first line, as the row's side slots do, so a title that
+    // wraps keeps its badge beside the line it belongs to.
+    val titleStyle = LocalTextStyle.current
+    SlotRow(
         modifier = Modifier.separatorText(anchor),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.sm),
-    ) {
-        Box(modifier = Modifier.weight(1f, fill = false)) { title() }
-        CompositionLocalProvider(
-            LocalBadgeSize provides SettingsTheme.sizes.badge,
-            LocalBadgeStyle provides SettingsTheme.styles.badge,
-            content = badge,
-        )
-    }
+        layout = SlotRowLayout.FirstLine.copy(
+            center = SlotSize.Weight(1f, fill = false),
+            endGap = ArecaTheme.spacing.sm,
+        ),
+        center = { Box(modifier = Modifier.firstLineCenter(titleStyle)) { title() } },
+        end = {
+            CompositionLocalProvider(
+                LocalBadgeSize provides SettingsTheme.sizes.badge,
+                LocalBadgeStyle provides SettingsTheme.styles.badge,
+                content = badge,
+            )
+        },
+    )
 }
 
 /**

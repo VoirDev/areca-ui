@@ -25,7 +25,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -412,17 +411,21 @@ internal fun DevicesSettingsSample() {
         Section(
             header = { Text("This device") },
             footer = { Text("Signs out every device except this one.") },
+            // The section's closing action on the danger band, separated by colour, not a hairline.
+            bandColor = ArecaTheme.colors.bgDangerMuted,
+            band = {
+                SettingsRow(
+                    title = { Text("Terminate all other sessions") },
+                    leading = { Icon(ArecaIcons.Hand, contentDescription = null) },
+                    tone = SettingsRowTone.Danger,
+                    enabled = sessions.isNotEmpty(),
+                    onClick = { sessions = emptyList() },
+                )
+            },
         ) {
             SessionRow(
                 session = SampleSession("Pixel 9 Pro", "Android 12.10.3", "Belgrade, Serbia · online", ArecaIcons.Phone),
                 current = true,
-            )
-            SettingsRow(
-                title = { Text("Terminate all other sessions") },
-                leading = { Icon(ArecaIcons.Hand, contentDescription = null) },
-                tone = SettingsRowTone.Danger,
-                enabled = sessions.isNotEmpty(),
-                onClick = { sessions = emptyList() },
             )
         }
 
@@ -642,21 +645,19 @@ private fun BirthdayFooter() {
 @Composable
 private fun SessionRow(session: SampleSession, current: Boolean) {
     SettingsRow(
-        title = { Text(session.device, fontWeight = FontWeight.SemiBold) },
-        subtitle = {
-            Column {
-                Text(session.client, color = ArecaTheme.colors.fgBase)
-                Text(session.seen)
-            }
-        },
+        title = { Text(session.device) },
+        subtitle = { Text(session.client) },
+        caption = { Text(session.seen) },
         leading = {
             FeaturedIcon(
                 imageVector = session.icon,
                 contentDescription = null,
                 size = FeaturedIconSize.Small,
-                style = FeaturedIconStyle.solid(
-                    if (current) ActionColor.Success else ActionColor.Neutral,
-                ),
+                style = if (current) {
+                    FeaturedIconStyle.solid(ActionColor.NeutralDark)
+                } else {
+                    FeaturedIconStyle.soft(ActionColor.Neutral)
+                },
                 shape = CircleShape,
             )
         },

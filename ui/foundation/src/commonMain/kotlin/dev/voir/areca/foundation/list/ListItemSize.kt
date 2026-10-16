@@ -82,6 +82,7 @@ public data class ListItemStateAnimation(
  * @property titleTextStyle Text style of the title.
  * @property subtitleTextStyle Text style of the subtitle.
  * @property valueTextStyle Text style of the inline value.
+ * @property captionTextStyle Text style of the caption, the line of detail under the subtitle.
  */
 @Immutable
 public data class ListItemSize(
@@ -104,6 +105,7 @@ public data class ListItemSize(
     public val titleTextStyle: TextStyle,
     public val subtitleTextStyle: TextStyle,
     public val valueTextStyle: TextStyle,
+    public val captionTextStyle: TextStyle,
 ) {
     /** Theme-backed presets and builders. */
     public companion object {
@@ -138,6 +140,7 @@ public data class ListItemSize(
                 titleTextStyle = ArecaTheme.typography.bodySmall,
                 subtitleTextStyle = ArecaTheme.typography.bodyExtraSmall,
                 valueTextStyle = ArecaTheme.typography.bodyExtraSmall,
+                captionTextStyle = ArecaTheme.typography.bodyExtraSmall,
             )
 
         /** The default row density, tall enough to be a comfortable touch target. */
@@ -166,6 +169,7 @@ public data class ListItemSize(
                 titleTextStyle = ArecaTheme.typography.bodyMedium,
                 subtitleTextStyle = ArecaTheme.typography.bodySmall,
                 valueTextStyle = ArecaTheme.typography.bodySmall,
+                captionTextStyle = ArecaTheme.typography.bodyExtraSmall,
             )
 
         /** Roomy rows for primary content — contacts, conversations, media. */
@@ -194,6 +198,7 @@ public data class ListItemSize(
                 titleTextStyle = ArecaTheme.typography.bodyLarge,
                 subtitleTextStyle = ArecaTheme.typography.bodyMedium,
                 valueTextStyle = ArecaTheme.typography.bodySmall,
+                captionTextStyle = ArecaTheme.typography.bodySmall,
             )
     }
 }
@@ -223,7 +228,8 @@ internal fun currentListItemSize(): ListItemSize =
  * Slot layout shared by the rows of the enclosing list.
  *
  * A row overrides the gaps from its own [ListItemSize], so this carries the slot widths and
- * alignments only.
+ * alignments only. [SlotRowLayout.Auto] by default: centred for a row of one or two lines, from the
+ * top for a longer one.
  */
 public val LocalListItemLayout: ProvidableCompositionLocal<SlotRowLayout> =
-    compositionLocalOf { SlotRowLayout.Default }
+    compositionLocalOf { SlotRowLayout.Auto }

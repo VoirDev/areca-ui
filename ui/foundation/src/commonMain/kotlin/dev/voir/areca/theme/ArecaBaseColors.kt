@@ -63,6 +63,15 @@ public data class ArecaBaseColors(
     /** Neutral ramp, step 10, the lightest. */
     public val neutral10: Color = Color(0xFFF7F9FA),
 
+    /**
+     * Neutral ramp, step 15: a half step between [neutral10] and [neutral20].
+     *
+     * The light theme's grouped-region fill. [neutral10] sits too close to white for a settings card
+     * to read as a surface on the canvas, and [neutral20] is already the resting border and the
+     * inset well, so the region takes a step of its own.
+     */
+    public val neutral15: Color = Color(0xFFF2F4F5),
+
     /** Neutral ramp, step 20. */
     public val neutral20: Color = Color(0xFFF0F2F3),
 

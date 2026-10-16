@@ -55,6 +55,7 @@ import dev.voir.areca.foundation.icon.LocalChevronSize
 import dev.voir.areca.foundation.icon.LocalIconSize
 import dev.voir.areca.foundation.slot.SlotRow
 import dev.voir.areca.foundation.slot.SlotRowLayout
+import dev.voir.areca.foundation.slot.firstLineCenter
 import dev.voir.areca.indication.buildShapePath
 import dev.voir.areca.modifier.clickCursor
 import dev.voir.areca.modifier.thenIf
@@ -73,6 +74,12 @@ import dev.voir.areca.theme.tween
  * Content comes from either the text block — [overline], [title] and [subtitle] — or from
  * [content], never both; one of the two is required. [value] renders inline before [trailing],
  * which is the usual shape of a row that states a current value and then a chevron.
+ *
+ * The row aligns its slots by [SlotRowLayout.Auto]: a row of one or two lines centres everything,
+ * and a longer one starts its visual and its text at the top, with the trailing slot level with the
+ * visual — see [dev.voir.areca.foundation.slot.SlotRowAlignment]. Pass [layout] for a scenario that
+ * asks otherwise — [SlotRowLayout.FirstLine] beside a legend dot, say. [content] that wants the
+ * same reports its first line with [dev.voir.areca.foundation.slot.firstLineCenter].
  *
  * The appearance is chosen rather than assembled: pick a [ListItemStyle] appearance and a
  * [ListItemColor] instead of passing a background per row.
@@ -95,6 +102,8 @@ import dev.voir.areca.theme.tween
  * @param title Main copy of the row; ignored when [content] is provided.
  * @param subtitle Supporting copy below [title].
  * @param overline Small copy above [title], for a category or a timestamp.
+ * @param caption A line of detail below [subtitle] — when a device was last seen, how large a file
+ * is — set smaller than the subtitle and in its color.
  * @param value Inline value rendered at the end of the row, before [trailing].
  * @param enabled Whether the row accepts input and uses its enabled colors. A row inside a disabled
  * list is disabled regardless of this flag.
@@ -109,7 +118,8 @@ import dev.voir.areca.theme.tween
  * @param nestingLevel Indentation steps of [ListItemSize.nestedLevelOffset] to add.
  * @param style Colors of the row across its states.
  * @param size Metrics and typography of the row.
- * @param layout Slot layout of the main row line; its gaps come from [size].
+ * @param layout Slot layout of the main row line; its gaps come from [size]. The list's, which is
+ * [SlotRowLayout.Auto] unless a list provides another.
  * @param interactionSource Source of the row interactions; pass one to observe them from outside.
  * @param onClick Click handler; omit for a row that only displays.
  * @param onClickLabel Accessibility description of what the click does.
@@ -126,6 +136,7 @@ public fun ListItem(
     title: (@Composable () -> Unit)? = null,
     subtitle: (@Composable () -> Unit)? = null,
     overline: (@Composable () -> Unit)? = null,
+    caption: (@Composable () -> Unit)? = null,
     value: (@Composable () -> Unit)? = null,
     enabled: Boolean = true,
     selected: Boolean = false,
@@ -150,6 +161,7 @@ public fun ListItem(
         title = title,
         subtitle = subtitle,
         overline = overline,
+        caption = caption,
         value = value,
         enabled = enabled,
         selected = selected,
@@ -246,6 +258,7 @@ internal sealed interface ListItemAction {
  * @param trailing Slot after the text block.
  * @param bottom Content below the main row line, inside the row hit area.
  * @param content Replacement for the whole text block.
+ * @param caption Line of detail below [subtitle], in the subtitle's colors.
  * @throws IllegalArgumentException When neither [title] nor [content] is provided.
  */
 @Composable
@@ -269,6 +282,7 @@ internal fun ListItemLayout(
     trailing: (@Composable BoxScope.() -> Unit)?,
     bottom: (@Composable ColumnScope.() -> Unit)?,
     content: (@Composable BoxScope.() -> Unit)?,
+    caption: (@Composable () -> Unit)? = null,
 ) {
     require(content != null || title != null) {
         "Either content or title must be provided"
@@ -465,6 +479,7 @@ internal fun ListItemLayout(
                             title = title,
                             subtitle = subtitle,
                             overline = overline,
+                            caption = caption,
                             titleColor = titleColor,
                             subtitleColor = subtitleColor,
                             overlineColor = overlineColor,
@@ -597,11 +612,12 @@ private fun trailingSlot(
 }
 
 /**
- * Overline, title and subtitle block used by [ListItem] when it has no replacement content.
+ * Overline, title, subtitle and caption block used by [ListItem] when it has no replacement content.
  *
  * @param title Main copy.
  * @param subtitle Supporting copy below [title].
  * @param overline Small copy above [title].
+ * @param caption Line of detail below [subtitle], drawn in [subtitleColor].
  * @param titleColor Current color of [title].
  * @param subtitleColor Current color of [subtitle].
  * @param overlineColor Current color of [overline].
@@ -612,6 +628,7 @@ private fun ListItemText(
     title: @Composable () -> Unit,
     subtitle: (@Composable () -> Unit)?,
     overline: (@Composable () -> Unit)?,
+    caption: (@Composable () -> Unit)?,
     titleColor: Color,
     subtitleColor: Color,
     overlineColor: Color,
@@ -631,13 +648,25 @@ private fun ListItemText(
             LocalContentColor provides titleColor,
             LocalTextStyle provides size.titleTextStyle,
         ) {
-            title()
+            // The title's first line is what the row measures its text in and aligns against.
+            Box(modifier = Modifier.firstLineCenter(size.titleTextStyle)) { title() }
         }
 
         subtitle?.let {
             CompositionLocalProvider(
                 LocalContentColor provides subtitleColor,
                 LocalTextStyle provides size.subtitleTextStyle,
+            ) {
+                it()
+            }
+        }
+
+        // Smaller than the subtitle rather than paler: two muted inks a step apart read as one
+        // line that faded, while a size step reads as a line of lesser detail.
+        caption?.let {
+            CompositionLocalProvider(
+                LocalContentColor provides subtitleColor,
+                LocalTextStyle provides size.captionTextStyle,
             ) {
                 it()
             }

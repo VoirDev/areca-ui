@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import dev.voir.areca.flow.profile.icon.AlertTriangle
 import dev.voir.areca.flow.profile.rememberLastNonNull
@@ -33,6 +32,9 @@ import dev.voir.areca.foundation.icon.FeaturedIcon
 import dev.voir.areca.foundation.icon.FeaturedIconSize
 import dev.voir.areca.foundation.icon.FeaturedIconStyle
 import dev.voir.areca.foundation.settings.SettingsTheme
+import dev.voir.areca.foundation.slot.SlotRow
+import dev.voir.areca.foundation.slot.SlotRowLayout
+import dev.voir.areca.foundation.slot.firstLineCenter
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.theme.ArecaTheme
 import kotlin.math.roundToInt
@@ -184,36 +186,42 @@ private fun StatusHeading(
     message: String?,
     end: (@Composable () -> Unit)?,
 ) {
-    Row(
+    // Set in the settings row's own roles and aligned like a row, because it sits on a section's
+    // card beside rows and should read as one of them.
+    val rowSize = SettingsTheme.sizes.row
+    val rowStyle = SettingsTheme.styles.row
+
+    SlotRow(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        FeaturedIcon(
-            imageVector = if (failed) BundledIcons.AlertTriangle else BundledIcons.UploadCloud,
-            contentDescription = null,
-            size = FeaturedIconSize.Small,
-            shape = ArecaTheme.shapes.md,
-            style = FeaturedIconStyle.soft(if (failed) ActionColor.Danger else ActionColor.Neutral),
-        )
-
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = title,
-                style = ArecaTheme.typography.labelMedium,
-                color = ArecaTheme.colors.fgBase,
+        layout = SlotRowLayout.Auto.copy(gap = rowSize.leadingGap),
+        start = {
+            FeaturedIcon(
+                imageVector = if (failed) BundledIcons.AlertTriangle else BundledIcons.UploadCloud,
+                contentDescription = null,
+                size = FeaturedIconSize.Small,
+                shape = ArecaTheme.shapes.md,
+                style = FeaturedIconStyle.soft(if (failed) ActionColor.Danger else ActionColor.Neutral),
             )
-            if (message != null) {
+        },
+        center = {
+            Column(verticalArrangement = Arrangement.spacedBy(rowSize.textGap)) {
                 Text(
-                    text = message,
-                    style = ArecaTheme.typography.bodySmall,
-                    color = ArecaTheme.colors.fgSubtle,
+                    text = title,
+                    modifier = Modifier.firstLineCenter(rowSize.titleTextStyle),
+                    style = rowSize.titleTextStyle,
+                    color = rowStyle.title,
                 )
+                if (message != null) {
+                    Text(
+                        text = message,
+                        style = rowSize.subtitleTextStyle,
+                        color = rowStyle.subtitle,
+                    )
+                }
             }
-        }
-
-        end?.invoke()
-    }
+        },
+        end = end?.let { slot -> { slot() } },
+    )
 }
 
 /**
@@ -225,8 +233,8 @@ private fun StatusHeading(
 private fun ProgressLabel(text: String) {
     Text(
         text = text,
-        style = ArecaTheme.typography.labelMedium,
-        color = ArecaTheme.colors.fgSubtle,
+        style = SettingsTheme.sizes.row.valueTextStyle,
+        color = SettingsTheme.styles.row.value,
     )
 }
 

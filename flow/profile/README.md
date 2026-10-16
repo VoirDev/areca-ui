@@ -56,6 +56,14 @@ card is the field and the hairline its underline — so the module adds nothing 
 Where every row in a section carries a tile, pass `separated = false`: the tiles already separate
 the rows.
 
+The rows set their copy in the settings row's roles — title, subtitle, caption, value — and align
+their tiles and trailing content as every settings row does: centred for one or two lines, from the
+top for more. The summary card and the upload band, drawn by hand, read the same type and ink from
+`SettingsTheme` and line up the same way. The way out of every other session sits on the "This
+device" card's danger band rather than behind a hairline, and a provider's mark is cropped to the
+icon tile by `SettingsRowTile`, so every leading visual in a section has one size and shape. A row of the application's own beside them should pass plain `Text` into the slots
+rather than styling it, or it will be the one row on the card that looks different.
+
 The cards — header, cover, summary — and the status bands are drawn on a section's card, read from
 `SettingsTheme.styles.section`, so a card above a settings list reads as its first block. Put
 them on the canvas, pad them with `Modifier.horizontalContentInsets()`, and space them from the list
@@ -106,7 +114,7 @@ Settings(styles = SettingsDefaults.styles(section = SettingsDefaults.sectionStyl
 | | |
 | --- | --- |
 | `ActiveSessionsSections` | "This device" with "Sign out all other devices", then every other session — loading, failure and emptiness drawn in the card |
-| `SessionRow` | One device: a round tile and up to three lines, pressable when given `onClick` |
+| `SessionRow` | One device: a round tile and up to three lines — the device as the title, what it runs as the subtitle, where and when it was last seen as the caption — pressable when given `onClick` |
 
 ### Sheets
 
@@ -697,8 +705,8 @@ The parts carry what applications usually miss:
   `ActiveSessionsSections` takes `sessionClickLabel` for its sessions and
   `signOutOthersClickLabel` for the row that ends them. These are optional, since
   the row's own words are read out anyway, and worth passing where they do not say the action.
-- The "Verify" link on an unconfirmed address is underlined, so it is not mistaken for a value, and
-  is a target of at least 48 dp inside the row.
+- The "Verify" link on an unconfirmed address is foundation's `SettingsRowLink`: underlined, so it
+  is not mistaken for a value, and a target of at least 48 dp inside the row.
 - `ProfileGreeting` has no press tint, but it is a button to assistive technology and shows the
   focus ring when keyboard focus reaches it.
 - The upload band's heading and the username verdict — or the complaint in its place — are

@@ -2,8 +2,10 @@ package dev.voir.areca.playground.foundation.slot
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -16,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import dev.voir.areca.foundation.slot.SlotRow
 import dev.voir.areca.foundation.slot.SlotRowLayout
 import dev.voir.areca.foundation.slot.SlotSize
+import dev.voir.areca.foundation.slot.firstLineCenter
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.foundation.text.TextColor
 import dev.voir.areca.foundation.text.TextVariant
@@ -121,6 +124,38 @@ fun ThreeSlotRowShowcase() = ShowcaseScaffold(
         }
     }
 
+    Variants(
+        title = "Alignment",
+        description = "How the sides line up with text that runs to several lines. Rows pick by " +
+            "scenario; the middle reports its first line with Modifier.firstLineCenter.",
+        layout = VariantLayout.Vertical,
+    ) {
+        for (option in AlignmentOption.entries) {
+            variant(name = option.name, detail = option.label) {
+                SlotRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    layout = option.layout.copy(gap = ArecaTheme.spacing.lg),
+                    start = { SlotSquare(option.visual, ArecaTheme.colors.bgBrandMuted) },
+                    center = {
+                        Column {
+                            Text(
+                                text = "Message previews",
+                                modifier = Modifier.firstLineCenter(ArecaTheme.typography.labelLarge),
+                                variant = TextVariant.LabelLarge,
+                            )
+                            Text(
+                                text = option.body,
+                                variant = TextVariant.BodySmall,
+                                color = TextColor.Muted,
+                            )
+                        }
+                    },
+                    end = { SlotSquare(ArecaTheme.spacing.xl3, ArecaTheme.colors.bgSuccessMuted) },
+                )
+            }
+        }
+    }
+
     Recipes {
         recipe(
             name = "Screen header",
@@ -211,6 +246,53 @@ fun ThreeSlotRowShowcase() = ShowcaseScaffold(
             )
         }
     }
+}
+
+/** The four row alignments, each shown with the amount of text its scenario usually carries. */
+private enum class AlignmentOption(
+    val label: String,
+    val layout: SlotRowLayout,
+    val visual: Dp,
+    val body: String,
+) {
+    /** One or two lines: everything centred. */
+    Center("SlotRowLayout.Center — one or two lines", SlotRowLayout.Center, 28.dp, "On the lock screen"),
+
+    /** Three lines or more: visual and text from the top, trailing level with the visual. */
+    Top(
+        "SlotRowLayout.Top — three lines or more",
+        SlotRowLayout.Top,
+        28.dp,
+        "Show the first line of every message on the lock screen and in notifications, " +
+            "including messages from muted chats.",
+    ),
+
+    /** A marker no taller than a line, on the first line. */
+    FirstLine("SlotRowLayout.FirstLine — a marker on the first line", SlotRowLayout.FirstLine, 8.dp, "Groceries"),
+
+    /** The list rows' default: Center for two lines, Top beyond. */
+    Auto(
+        "SlotRowLayout.Auto — what every list row does",
+        SlotRowLayout.Auto,
+        28.dp,
+        "Centred while it is two lines; from the top once the text wraps past them.",
+    ),
+}
+
+/**
+ * A plain square standing in for a visual or a control.
+ *
+ * @param size Width and height of the square.
+ * @param color Fill of the square.
+ */
+@Composable
+private fun SlotSquare(size: Dp, color: Color) {
+    Box(
+        modifier = Modifier
+            .size(size)
+            .clip(RoundedCornerShape(ArecaTheme.radius.sm))
+            .background(color),
+    )
 }
 
 @Composable

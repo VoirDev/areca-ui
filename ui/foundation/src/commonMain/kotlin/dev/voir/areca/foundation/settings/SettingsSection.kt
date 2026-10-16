@@ -9,9 +9,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.addOutline
+import androidx.compose.ui.graphics.drawscope.clipPath
+import androidx.compose.ui.layout.onPlaced
+import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
@@ -52,6 +63,12 @@ public class SettingsSectionScope internal constructor() {
  * stray hairline at its top or bottom. Turn them off with [separated] for a group of rows that each
  * carry a leading tile, where the tiles already separate the rows.
  *
+ * **Band.** A strip along the bottom of the card, on a colour of its own, for the section's closing
+ * action — "Terminate all other sessions", "Add a device". The colour is what separates it from the
+ * rows above, so no hairline is drawn there, and it follows the card's bottom corners. Put a row in
+ * it — usually a [SettingsRow] in the matching tone — and give it [bandColor]: the danger tint under
+ * a danger row, the default neutral under anything else.
+ *
  * **Enabled.** Disabling the section disables every row inside it and shades the header and
  * footer, which is how to present a group the current user cannot act on.
  *
@@ -65,6 +82,8 @@ public class SettingsSectionScope internal constructor() {
  * @param enabled Whether the rows of the section accept input and use their enabled colors.
  * @param separated Whether hairlines are drawn between adjacent rows.
  * @param headerPlacement Where [header] is drawn.
+ * @param bandColor Fill of [band].
+ * @param band Content of the strip along the bottom of the card, or `null` for none.
  * @param content Rows of the section, top to bottom.
  */
 @Composable
@@ -75,12 +94,16 @@ public fun SettingsScope.Section(
     enabled: Boolean = true,
     separated: Boolean = true,
     headerPlacement: SettingsHeaderPlacement = LocalSettingsHeaderPlacement.current,
+    bandColor: Color = SettingsTheme.styles.section.band,
+    band: (@Composable () -> Unit)? = null,
     content: @Composable SettingsSectionScope.() -> Unit,
 ) {
     val styles = SettingsTheme.styles.section
     val sizes = SettingsTheme.sizes.section
     val sectionEnabled = enabled && LocalListEnabled.current
     val cardPlacement = remember { PlacedCoordinates() }
+    // Where the band starts within the card, written when it is placed and read while drawing.
+    var bandTop by remember { mutableFloatStateOf(Float.NaN) }
 
     Column(
         modifier = modifier
@@ -106,6 +129,21 @@ public fun SettingsScope.Section(
                     color = if (sectionEnabled) styles.bg else styles.bgDisabled,
                     shape = styles.shape,
                 )
+                .thenIf(band != null) {
+                    // The band is drawn by the card, inside its outline, so it follows the bottom
+                    // corners without the card clipping its rows and their focus rings.
+                    drawBehind {
+                        if (bandTop.isNaN() || bandColor == Color.Unspecified) return@drawBehind
+                        val outline = styles.shape.createOutline(size, layoutDirection, this)
+                        clipPath(Path().apply { addOutline(outline) }) {
+                            drawRect(
+                                color = bandColor,
+                                topLeft = Offset(0f, bandTop),
+                                size = Size(size.width, size.height - bandTop),
+                            )
+                        }
+                    }
+                }
                 .thenIf(sizes.borderWidth > 0.dp && styles.border != Color.Unspecified) {
                     border(
                         width = sizes.borderWidth,
@@ -140,6 +178,16 @@ public fun SettingsScope.Section(
                     fallbackInset = sizes.separatorInset,
                 ) {
                     SettingsSectionScope.Instance.content()
+                }
+
+                if (band != null) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .onPlaced { coordinates -> bandTop = coordinates.positionInParent().y },
+                    ) {
+                        band()
+                    }
                 }
             }
         }

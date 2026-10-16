@@ -31,6 +31,7 @@ import dev.voir.areca.flow.profile.icon.Camera
 import dev.voir.areca.flow.profile.icon.Image
 import dev.voir.areca.flow.profile.icon.Trash
 import dev.voir.areca.foundation.icon.Icon
+import dev.voir.areca.foundation.layout.DividerStyle
 import dev.voir.areca.foundation.layout.HorizontalDivider
 import dev.voir.areca.foundation.overlay.FlowModal
 import dev.voir.areca.foundation.overlay.rememberFlowModal
@@ -175,6 +176,8 @@ public fun AvatarSourceSheet(
             // No block at all for no options, rather than an empty one.
             if (options.isNotEmpty()) {
                 val radius = ArecaTheme.radius.lg
+                // The block is the subtle fill, which the resting border sits level with.
+                val separator = DividerStyle.default(line = ArecaTheme.colors.borderOnSubtle)
 
                 Column(
                     modifier = Modifier
@@ -184,13 +187,15 @@ public fun AvatarSourceSheet(
                         .background(ArecaTheme.colors.bgSubtle, RoundedCornerShape(radius)),
                 ) {
                     options.forEachIndexed { index, option ->
-                        if (index > 0) HorizontalDivider()
+                        if (index > 0) HorizontalDivider(style = separator)
 
                         SourceChoice(
                             icon = option.icon,
                             label = option.label,
+                            // The danger row's own ink: the icon step, which reads as red rather
+                            // than brown at a row's size.
                             content = if (option.isDestructive) {
-                                ArecaTheme.colors.fgDangerText
+                                ArecaTheme.colors.fgDanger
                             } else {
                                 ArecaTheme.colors.fgBase
                             },
