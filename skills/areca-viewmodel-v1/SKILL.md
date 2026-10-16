@@ -61,9 +61,39 @@ The core types live in `dev.voir.areca.viewmodel`; the list types (`BaseListView
 | Effect | One-shot UI impulse, such as a navigation request, a transient message, or a permission prompt; never dropped, but it may arrive late |
 | ViewModel | Maps use-case output and actions into state |
 
-Use a ViewModel for a navigation destination or independently owned feature that needs retained
-state. Use a plain UI state holder for reusable components. Share a ViewModel only through an
-explicit navigation-graph or DI scope with a known owner and closing boundary; default to a factory.
+Scope a ViewModel to one presentation feature, not to a screen: one data area and the actions on
+it, such as a library, a profile summary, or this month's stats. A screen that shows four features
+binds four ViewModels, one in each stateful composable that renders a feature, and needs no screen
+ViewModel unless it has state of its own, such as a multi-step form's current step. Use a plain UI
+state holder for UI-only state that no use case feeds.
+
+Reuse a ViewModel class wherever its feature appears, and pass what differs between placements as a
+constructor parameter: a preview of the four latest items and the full list are one ViewModel with
+a window parameter, not two ViewModels calling the same use cases. Each placement gets its own
+instance from a factory; both observe the same use-case `Flow`, so they stay consistent without
+sharing an instance. Share one instance only when placements shown together must agree on transient
+state, such as a draft, and only through an explicit navigation-graph or DI scope with a known owner
+and closing boundary.
+
+```kotlin
+/** How much of the library a placement shows. */
+sealed interface LibraryWindow {
+    /** The [count] most recently added items. */
+    data class Latest(val count: Int) : LibraryWindow
+
+    /** Every item. */
+    data object All : LibraryWindow
+}
+
+internal class LibraryViewModel(
+    private val window: LibraryWindow,
+    private val library: LibraryUseCase,
+    private val mapper: LibraryItemMapper,
+) : BaseViewModel<LibraryAction, LibraryEffect, LibraryState>(LibraryState())
+
+// Home: koinViewModel<LibraryViewModel>(key = "library-preview") { parametersOf(LibraryWindow.Latest(4)) }
+// Library page: koinViewModel<LibraryViewModel> { parametersOf(LibraryWindow.All) }
+```
 
 State flows down and actions flow up. UI renders state and calls public ViewModel methods; it does
 not call use cases. A ViewModel depends on presentation mappers and domain use cases, never network,
@@ -232,7 +262,8 @@ drops an effect. An effect sent while no collector is active waits and is delive
 the next collector, so it can arrive late, after the UI that caused it is gone; a navigation request
 sent while the screen is in the background is delivered when it returns. Collectors compete rather
 than each receiving a copy, so collect effects with exactly one lifecycle-aware collector per
-screen.
+ViewModel instance, in the composable that owns the instance. A screen with several feature
+ViewModels has one collector for each; a shared instance is collected only by its owner.
 
 Collect state and effects with the platform's lifecycle-aware mechanism. On Compose platforms, use
 `collectAsStateWithLifecycle` and `repeatOnLifecycle` from
@@ -297,11 +328,13 @@ Use fake use cases and deterministic inputs. Do not test data layers through a V
 
 ## Checklist
 
+- [ ] Each ViewModel serves one presentation feature, not a screen; placements of the same feature
+      reuse its class with a parameter instead of repeating its use-case calls.
 - [ ] ViewModel scope and owner are explicit, it is obtained through a `ViewModelStoreOwner`, and
-      reusable UI uses a plain holder where sufficient.
+      UI-only state uses a plain holder.
 - [ ] State is immutable and complete, and holds every outcome the screen must keep showing.
 - [ ] Navigation requests, transient messages, and permission prompts are effects, collected by
-      exactly one lifecycle-aware collector per screen.
+      exactly one lifecycle-aware collector per ViewModel instance.
 - [ ] State helpers run only from `reduce` or from `viewModelScope` coroutines that have not
       switched dispatcher.
 - [ ] Concurrency, cancellation, and long-running work are intentional; `runAction` only replaces

@@ -322,12 +322,38 @@ complaints, and keep validation, networking and navigation in the app. Usage rul
 
 ## Feed screens from presentation state
 
-Split a screen into a route that obtains the ViewModel and collects its state, and a stateless
-screen composable that takes state and callbacks. Only the stateless screen uses Areca components,
-so it previews and tests without a ViewModel. Collect state and effects as
-`areca:areca-viewmodel-v1` prescribes, with one lifecycle-aware effect collector in the route: it
-performs navigation requests, shows transient messages with `ToastState.show(…)` and raises
-permission prompts. Render an outcome the screen must keep showing from state.
+Split UI into stateful composables that obtain a ViewModel and collect its state, and stateless
+composables that take state and callbacks. Only stateless composables use Areca components, so
+they preview and test without a ViewModel.
+
+- A screen is a layout of stateful composables, one per feature it shows — `HomeScreen` lays out
+  `GreetingSection`, `LibraryPreviewSection` and `StatsSection`, each bound to its own feature
+  ViewModel. A screen showing one feature is one stateful composable and its stateless content.
+- Each stateful composable renders its own loading, empty and error state — `Skeleton`,
+  `EmptyState`, and `ErrorState` or an inline `Notice`. One failing section never replaces the screen; a full-screen
+  error is only for the screen's precondition.
+- Each stateful composable has one lifecycle-aware effect collector for the ViewModel it owns, as
+  `areca:areca-viewmodel-v1` prescribes: it shows transient messages with `ToastState.show(…)`,
+  raises permission prompts, and turns navigation requests into the callbacks its parent passed
+  in. Sections never see routes.
+- Pull-to-refresh on a screen of sections belongs to the screen: it asks every section to refresh
+  and shows the indicator while any of them is still refreshing.
+- Render an outcome the screen must keep showing from state.
+
+```kotlin
+@Composable
+fun LibraryPreviewSection(
+    onOpenItem: (LibraryItemId) -> Unit,
+    onSeeAll: () -> Unit,
+    viewModel: LibraryViewModel = koinViewModel(key = "library-preview") {
+        parametersOf(LibraryWindow.Latest(4))
+    },
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    LibraryEffects(viewModel.effects, onOpenItem = onOpenItem)
+    LibraryPreviewContent(state = state, onOpen = viewModel::open, onRetry = viewModel::refresh, onSeeAll = onSeeAll)
+}
+```
 
 Map Areca ViewModel list state to the foundation list state in the UI module:
 
@@ -394,4 +420,6 @@ fun <T> UiState<ListState<T, *, *>>.toPagedContentListState(
 - [ ] `ArecaIcons` used only with the `icons` dependency declared.
 - [ ] `BaseLayout` padding applied; insets split between the top bar and `contentWindowInsets`.
 - [ ] Overlays composed unconditionally; state hoisted to the screen or ViewModel.
+- [ ] Every independently loaded region is a stateful composable with its own loading, empty and
+      error state and one effect collector; stateless composables take no ViewModel.
 - [ ] Experimental pull-to-refresh opted in explicitly; module-specific rules followed.
