@@ -607,6 +607,11 @@ ConfirmSheet(
 )
 ```
 
+A `ConfirmSheet` is a `FlowModal` underneath and takes its sheet from the flow modal defaults in
+scope where it is drawn, so an application's `LocalFlowModalStyle` reaches it, and inside
+`ArecaDarkTheme` it is dark. `LocalConfirmSheetStyle` and `LocalConfirmSheetSize` are `null` unless
+provided.
+
 A `FlowModal` is driven by a `FlowModalController` from `rememberFlowModal`; give it a `TopBar` as
 `header` and a `FlowModalActionBar` as `footer`, so every sheet commits from the same corner:
 

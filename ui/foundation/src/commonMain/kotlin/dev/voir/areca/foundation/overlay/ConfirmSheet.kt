@@ -395,10 +395,22 @@ public fun ConfirmSheet(
  */
 private const val NoteTintAlpha = 0.12f
 
-/** Default [ConfirmSheetStyle] in scope, seeded by [dev.voir.areca.theme.ArecaThemeProvider]. */
+/**
+ * [ConfirmSheetStyle] in scope, or null for the theme default.
+ *
+ * Not seeded by [dev.voir.areca.theme.ArecaThemeProvider]: the default is built on
+ * [LocalFlowModalStyle], so it is resolved where each sheet is drawn and follows the flow modal
+ * style in scope — an application's own, or a nested dark theme's.
+ */
 public val LocalConfirmSheetStyle: ProvidableCompositionLocal<ConfirmSheetStyle?> =
     compositionLocalOf { null }
 
-/** Default [ConfirmSheetSize] in scope, seeded by [dev.voir.areca.theme.ArecaThemeProvider]. */
+/**
+ * [ConfirmSheetSize] in scope, or null for the theme default.
+ *
+ * Not seeded by [dev.voir.areca.theme.ArecaThemeProvider]: the default is built on
+ * [LocalFlowModalSize], so it is resolved where each sheet is drawn and follows the flow modal
+ * size in scope — an application's own, or a nested dark theme's.
+ */
 public val LocalConfirmSheetSize: ProvidableCompositionLocal<ConfirmSheetSize?> =
     compositionLocalOf { null }
