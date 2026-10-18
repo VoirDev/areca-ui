@@ -244,7 +244,8 @@ is an extension property needing two imports: `dev.voir.areca.icons.ArecaIcons` 
   `visible` + `onDismiss`. Use the `rememberXState` helpers only for state that belongs to the
   screen and nothing else; state a ViewModel owns is passed in.
 - Call `FlowModal` unconditionally and drive it with `show()` / `hide()`; pass `ConfirmSheet` its
-  `visible` flag. Never wrap either in `if`, or it cannot animate out.
+  `visible` flag. Never wrap either in `if`, or it cannot animate out. A `ConfirmSheet` takes its
+  sheet from the `LocalFlowModalStyle` in scope, so restyle sheets there, not per confirmation.
 
 ### Frame screens with `BaseLayout`
 

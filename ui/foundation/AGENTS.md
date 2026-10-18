@@ -370,7 +370,9 @@ fun CustomisingExamples(onSave: () -> Unit, onCancel: () -> Unit, onDelete: () -
 - **`.copy(…)`** changes one property of a built style. `ButtonStyle` and `IconButtonStyle` draw
   their indication in the style's `shape`, so `.copy(shape = …)` moves the feedback with it.
 - **`LocalXStyle` / `LocalXSize`** (nullable, seeded by `ArecaThemeProvider`) restyle every instance
-  in a subtree. Settings lists take `styles = SettingsDefaults.styles(…)` and
+  in a subtree. `LocalNoticeStyle`, `LocalConfirmSheetStyle` and `LocalConfirmSheetSize` stay `null`
+  unless provided: a notice derives its style from its tone, and a confirm sheet builds its default
+  on the `LocalFlowModalStyle` / `LocalFlowModalSize` in scope where it is drawn. Settings lists take `styles = SettingsDefaults.styles(…)` and
   `sizes = SettingsDefaults.sizes(…)` instead.
 - **App-wide** retuning is `ArecaThemeProvider(baseColors = …, fonts = …, radius = …, …)`; see
   [README.md](README.md).

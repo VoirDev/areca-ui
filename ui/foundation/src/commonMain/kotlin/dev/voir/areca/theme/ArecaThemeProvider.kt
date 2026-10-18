@@ -110,8 +110,6 @@ import dev.voir.areca.foundation.navigation.PageIndicatorStyle
 import dev.voir.areca.foundation.notice.LocalNoticeSize
 import dev.voir.areca.foundation.notice.LocalNoticeStyle
 import dev.voir.areca.foundation.notice.NoticeSize
-import dev.voir.areca.foundation.overlay.ConfirmSheetSize
-import dev.voir.areca.foundation.overlay.ConfirmSheetStyle
 import dev.voir.areca.foundation.overlay.ConfirmationDialogSize
 import dev.voir.areca.foundation.overlay.ConfirmationDialogStyle
 import dev.voir.areca.foundation.overlay.DropdownPopupSize
@@ -367,8 +365,12 @@ public fun ArecaThemeProvider(
             LocalDropdownPopupSize provides DropdownPopupSize.Default,
             LocalConfirmationDialogSize provides ConfirmationDialogSize.Default,
             LocalConfirmationDialogStyle provides ConfirmationDialogStyle.Default,
-            LocalConfirmSheetSize provides ConfirmSheetSize.Default,
-            LocalConfirmSheetStyle provides ConfirmSheetStyle.Default,
+            // Null on purpose: a confirm sheet is built on the flow modal's style and size, and a
+            // default built here would read them from *outside* this provider — the light sheet
+            // of an application's own override under a nested dark theme, say. Unseeded, each
+            // sheet builds its default where it is drawn, from the flow modal defaults in scope.
+            LocalConfirmSheetSize provides null,
+            LocalConfirmSheetStyle provides null,
             content = content,
         )
     }
