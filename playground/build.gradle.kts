@@ -118,6 +118,29 @@ kotlin {
     }
 }
 
+/**
+ * Renders the documentation screenshots into `docs/images`, light and dark, from the shots in
+ * `src/jvmMain/kotlin/dev/voir/areca/playground/docs`. Pass `-Pshots=charts,datetime` to render some.
+ *
+ * Not part of `check`: text rasterises differently from one machine to the next, so the images are
+ * rendered on demand and committed.
+ */
+tasks.register<JavaExec>("renderDocImages") {
+    group = "documentation"
+    description = "Renders the documentation screenshots into docs/images, in light and dark."
+
+    val main = kotlin.jvm().compilations.getByName("main")
+    classpath(main.output.allOutputs, main.runtimeDependencyFiles)
+    dependsOn(main.compileTaskProvider)
+    mainClass.set("dev.voir.areca.playground.docs.RenderDocImagesKt")
+    javaLauncher.set(javaToolchains.launcherFor { languageVersion.set(JavaLanguageVersion.of(21)) })
+    jvmArgs("-Djava.awt.headless=true", "--enable-native-access=ALL-UNNAMED")
+
+    val output = rootProject.layout.projectDirectory.dir("docs/images").asFile.absolutePath
+    val shots = providers.gradleProperty("shots").orElse("")
+    argumentProviders.add(CommandLineArgumentProvider { listOf(output) + shots.get().split(',').filter(String::isNotBlank) })
+}
+
 compose.desktop {
     application {
         mainClass = "dev.voir.areca.playground.MainKt"

@@ -1,6 +1,7 @@
 package dev.voir.areca.charts
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -53,7 +54,7 @@ public data class StackedBarSegment(
  * @param modifier Modifier applied to the bar.
  * @param style Track and palette. Defaults to [LocalStackedBarChartStyle], or
  *   [StackedBarChartStyle.Default].
- * @param size Height and shape of the bar. Defaults to [LocalStackedBarChartSize], or
+ * @param size Height, shape and segment gap of the bar. Defaults to [LocalStackedBarChartSize], or
  *   [StackedBarChartSize.Medium].
  * @param contentDescription What assistive technology reads for the chart, or `null` to generate a
  *   description of the segments. Pass one when the generated wording does not suit the locale.
@@ -86,6 +87,7 @@ public fun StackedBarChart(
             .height(size.height)
             .clip(size.shape)
             .background(style.track),
+        horizontalArrangement = Arrangement.spacedBy(size.segmentGap),
     ) {
         segments.forEachIndexed { index, segment ->
             val share = shares[index]

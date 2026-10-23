@@ -3,6 +3,7 @@ package dev.voir.areca.theme
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 
 /**
  * Semantic color tokens for a single theme direction.
@@ -26,6 +27,14 @@ public data class ArecaColors(
     // Background colors
     /** The page itself. Nothing sits behind it. */
     public val bgCanvas: Color,
+    /**
+     * The softest ground set off from the canvas: an expanded group, a highlighted row, a note block.
+     *
+     * One step short of [bgSubtle], so a control filled with [bgSubtle] — a chip, a search pill, a
+     * round icon button — still reads on it. Use it for a block that holds such controls, or for a
+     * region that should barely separate from the page.
+     */
+    public val bgSoft: Color,
     /** A region set off from the canvas without a border, such as a settings card or a grouped list. */
     public val bgSubtle: Color,
     /** A region set further back than [bgSubtle], such as an inset well or a disabled track. */
@@ -196,7 +205,19 @@ public data class ArecaColors(
     public val accentSubtle: Color,
     /** Accent tint behind selected content. */
     public val accentMuted: Color,
+    /**
+     * Sequential accent shades for data, from the faintest to the strongest against the canvas.
+     *
+     * Eight steps, for shading a value on a scale: a heat-map day, a density cell. Index `0` sits
+     * nearest the canvas and the last index furthest from it, in both themes, so a shade picked by
+     * index reads as "more" the same way in light and dark. Never empty.
+     */
+    public val accentScale: List<Color>,
 ) {
+    init {
+        require(accentScale.isNotEmpty()) { "accentScale must hold at least one colour." }
+    }
+
     /** Factories that map a palette to one theme direction. */
     public companion object {
         /**
@@ -214,6 +235,7 @@ public data class ArecaColors(
          */
         public fun light(baseColors: ArecaBaseColors = ArecaBaseColors()): ArecaColors = ArecaColors(
             bgCanvas = baseColors.baseWhite,
+            bgSoft = baseColors.neutral10,
             bgSubtle = baseColors.neutral15,
             // A full step past the subtle region, so a track or a well still reads on a settings
             // card: neutral20 sits level with neutral15.
@@ -289,6 +311,10 @@ public data class ArecaColors(
             accentIntense = baseColors.brand100,
             accentSubtle = baseColors.brand40,
             accentMuted = baseColors.brand20,
+            accentScale = listOf(
+                baseColors.brand10, baseColors.brand20, baseColors.brand30, baseColors.brand40,
+                baseColors.brand50, baseColors.brand60, baseColors.brand70, baseColors.brand80,
+            ),
         )
 
         /**
@@ -315,6 +341,9 @@ public data class ArecaColors(
          */
         public fun dark(baseColors: ArecaBaseColors = ArecaBaseColors()): ArecaColors = ArecaColors(
             bgCanvas = baseColors.neutral100,
+            // The palette has no step between the canvas and neutral90, so the soft ground is
+            // halfway between them.
+            bgSoft = lerp(baseColors.neutral100, baseColors.neutral90, 0.5f),
             bgSubtle = baseColors.neutral90,
             bgMuted = baseColors.neutral80,
             bgSurface = baseColors.neutral90,
@@ -388,6 +417,11 @@ public data class ArecaColors(
             accentIntense = baseColors.brand30,
             accentSubtle = baseColors.brand70,
             accentMuted = baseColors.brand90,
+            // Read from the dark end, so the faintest shade still sits nearest the canvas.
+            accentScale = listOf(
+                baseColors.brand90, baseColors.brand80, baseColors.brand70, baseColors.brand60,
+                baseColors.brand50, baseColors.brand40, baseColors.brand30, baseColors.brand20,
+            ),
         )
     }
 }

@@ -1,41 +1,137 @@
 # `flow-profile`
 
-Parts for building account screens — the profile, the screen that edits it, the username, the
-account menu and the devices signed in — and recipes for putting them together.
+Parts for account screens: the profile, its edit form, the username, the account menu and the
+devices signed in. They draw and report what was pressed; loading the profile, saving it and
+uploading a picture are the application's.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../../docs/images/flow-profile-dark.png">
+  <img alt="A profile screen built from flow-profile: a header card with picture, name and actions above a settings list of the account's details" src="../../docs/images/flow-profile-light.png" width="390">
+</picture>
+
+There is no `ProfileScreen`. Copy a [recipe](#recipes) and edit it.
+
+## Install
 
 ```kotlin
 implementation("dev.voir.areca:flow-profile:<version>")
 ```
 
-Areca is published to GitHub Packages, so the build needs its repository first; see
-[Installing](../../README.md#installing).
+It brings `dev.voir.areca:foundation` and `dev.voir.areca:datetime` (for `BirthdayRow`, which puts
+`kotlinx-datetime` on your API surface). The module's own glyphs are bundled; the `ArecaIcons`
+glyphs the recipes draw — a phone, an at sign, a share arrow — need `dev.voir.areca:icons`.
+Repository and credentials: [Getting started](../../docs/getting-started.md).
 
-The module's own glyphs are bundled with it. The recipes below also draw glyphs of the
-application's choosing from `ArecaIcons` — a phone, an at sign, a share arrow — which needs
-`dev.voir.areca:icons` as well. Their words come from the application's own `composeResources`
-(`Res.string.…`), as under [Words](#words).
+## Quick start
 
-## What this is not
+A profile: the header card, the account's details and a way out. The rows are foundation
+`SettingsRow`s, so they go in a foundation `Settings` list.
 
-It is not a `ProfileScreen`.
+```kotlin
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import dev.voir.areca.flow.profile.ProfileSummary
+import dev.voir.areca.flow.profile.part.ProfileHeaderCard
+import dev.voir.areca.flow.profile.row.EmailRow
+import dev.voir.areca.flow.profile.row.ProfileInfoRow
+import dev.voir.areca.flow.profile.row.SignOutRow
+import dev.voir.areca.foundation.settings.Section
+import dev.voir.areca.foundation.settings.Settings
+import dev.voir.areca.foundation.text.Text
+import dev.voir.areca.theme.ArecaTheme
+import dev.voir.areca.theme.horizontalContentInsets
 
-Every application with accounts has a profile, and no two agree on what is on it. One shows a
-birthday and one a phone number; one signs out from the profile and one from a menu two screens
-away; one deletes the account at the foot of the edit form and one behind a support conversation. A
-composable taking every one of those decisions as a parameter is longer than the screen it replaces,
-and still wrong for the next product.
+@Composable
+fun Profile(summary: ProfileSummary, phone: String, onSignOut: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(ArecaTheme.colors.bgCanvas)
+            .verticalScroll(rememberScrollState())
+            .windowInsetsPadding(WindowInsets.systemBars),
+    ) {
+        ProfileHeaderCard(summary = summary, modifier = Modifier.horizontalContentInsets())
 
-So the module ships the pieces, each carrying the things applications reliably get wrong, and this
-file ships the assemblies. **Copy a recipe and edit it.** That is the intended use.
+        Spacer(Modifier.height(ArecaTheme.spacing.lg))
 
-It has no connection to `flow-auth`. The two are separate flows: an application can use either
-without the other. See [`../FLOWS.md`](../FLOWS.md).
+        Settings {
+            Section(header = { Text("Your info") }) {
+                ProfileInfoRow(value = phone, label = "Mobile")
+                EmailRow(email = summary.email, isVerified = summary.isVerified)
+            }
+            Section { SignOutRow(onClick = onSignOut) }
+        }
+    }
+}
 
-## Built on the settings list
+// The account, already worded by the application.
+val ada = ProfileSummary(name = "Ada Lovelace", handle = "@ada", email = "ada@example.com", isVerified = true)
+```
 
-A profile screen is a settings screen with a person at the top. So the module does not ship a list
-of its own: its rows are foundation `SettingsRow`s and they go in a foundation `Settings` list, in
-`Section`s, beside any row the application writes itself.
+## Parts
+
+| Part | Use it for | Package |
+| --- | --- | --- |
+| `ProfileAvatar` | The picture, or the initials, with an optional spinner | `dev.voir.areca.flow.profile.part` |
+| `EditableAvatar` | The picture with a camera badge, one target for both | `dev.voir.areca.flow.profile.part` |
+| `ProfileHeaderCard` | The card a profile opens with: picture, name, handle, caption and a row of actions | `dev.voir.areca.flow.profile.part` |
+| `ProfileCardAction` | One icon-and-label tile in `ProfileHeaderCard`'s `actions` | `dev.voir.areca.flow.profile.part` |
+| `ProfileCoverCard` | A cover band with the picture overlapping it, the name, handle, bio and caption | `dev.voir.areca.flow.profile.part` |
+| `ProfileSummaryCard` | A compact pressable card that leads into the account, at the top of a menu | `dev.voir.areca.flow.profile.part` |
+| `ProfileSummaryCardAction` | The trailing "Edit" affordance of `ProfileSummaryCard` | `dev.voir.areca.flow.profile.part` |
+| `ProfileSummaryCaption` | A caption of your own in `ProfileSummaryCard`'s `caption` slot | `dev.voir.areca.flow.profile.part` |
+| `ProfileGreeting` | The summary row with no card and no press tint, for a home screen | `dev.voir.areca.flow.profile.part` |
+| `ProfileSummaryCardPlaceholder` | Loading stand-in for `ProfileSummaryCard`, at its final height | `dev.voir.areca.flow.profile.part` |
+| `ProfileGreetingPlaceholder` | Loading stand-in for `ProfileGreeting` | `dev.voir.areca.flow.profile.part` |
+| `AvatarUploadStatus` | What a picture change is doing: progress, or why it stopped | `dev.voir.areca.flow.profile.part` |
+| `StaleDetailsNotice` | Says the details below were not just fetched | `dev.voir.areca.flow.profile.part` |
+| `ProfileLoadFailure` | The whole-screen state for a profile that could not be loaded | `dev.voir.areca.flow.profile.part` |
+| `ProfileInfoRow` | One fact: the value as the title, what it is under it — "@ada" over "Username" | `dev.voir.areca.flow.profile.row` |
+| `BirthdayRow` | A birthday chosen from a calendar sheet, and removed | `dev.voir.areca.flow.profile.row` |
+| `EmailRow` | The address, an "Unverified" badge until confirmed, an optional "Verify" | `dev.voir.areca.flow.profile.row` |
+| `LinkedAccountRow` | One sign-in provider: link, unlink, or why it cannot be unlinked | `dev.voir.areca.flow.profile.row` |
+| `DataExportRow` | "Download your data": idle, preparing, ready, failed | `dev.voir.areca.flow.profile.row` |
+| `AccountRow` | One account in a switcher, the current one ticked | `dev.voir.areca.flow.profile.row` |
+| `AddAccountRow` | "Add account" at the foot of a switcher | `dev.voir.areca.flow.profile.row` |
+| `SignOutRow` | Signing out of this device, in the danger tone | `dev.voir.areca.flow.profile.row` |
+| `DeleteAccountRow` | Deleting the account, in the danger tone | `dev.voir.areca.flow.profile.row` |
+| `UsernameCheckFooter` | The line under a username field: hint, checking, available, taken, or a complaint | `dev.voir.areca.flow.profile.row` |
+| `ActiveSessionsSections` | "This device" with "Sign out all other devices", then every other session, with loading, failure and empty states (a `SettingsScope` extension) | `dev.voir.areca.flow.profile.session` |
+| `SessionRow` | One device: tile, name, client, where and when last seen | `dev.voir.areca.flow.profile.session` |
+| `AvatarSourceSheet` | Where a new picture comes from: camera, library, remove, or your own choices | `dev.voir.areca.flow.profile.sheet` |
+| `SignOutSheet` | Confirms signing out of this device | `dev.voir.areca.flow.profile.sheet` |
+| `SignOutOthersSheet` | Confirms ending every other session | `dev.voir.areca.flow.profile.sheet` |
+| `RevokeSessionSheet` | Confirms ending one session, naming the device | `dev.voir.areca.flow.profile.sheet` |
+| `DeleteAccountSheet` | Confirms deletion, optionally behind a typed phrase | `dev.voir.areca.flow.profile.sheet` |
+
+The state the parts draw:
+
+| Type | Holds | Package |
+| --- | --- | --- |
+| `ProfileSummary` | Who the account is, already worded: name, handle, email, verified, avatar model, caption | `dev.voir.areca.flow.profile` |
+| `AvatarImageLoader`, `AvatarImageState`, `LocalAvatarImageLoader` | How pictures are loaded; see [Pictures](#pictures) | `dev.voir.areca.flow.profile` |
+| `AvatarUploadState` | `Idle`, `Uploading(progress)`, `Failed(message)` | `dev.voir.areca.flow.profile.part` |
+| `DataExportState` | `Idle`, `Preparing`, `Ready`, `Failed(message)` | `dev.voir.areca.flow.profile.row` |
+| `UsernameCheck` | `Idle`, `Checking`, `Available`, `Taken` | `dev.voir.areca.flow.profile.row` |
+| `ActiveSessionsState`, `SessionItem`, `SessionDevice` | The device list: `Loading`, `Failed`, `Loaded(sessions)` | `dev.voir.areca.flow.profile.session` |
+| `AvatarSourceOption`, `AvatarSourceOptions` | One picture source; the ready-made `camera`, `library` and `remove` | `dev.voir.areca.flow.profile.sheet` |
+
+## On the settings list
+
+The rows are foundation `SettingsRow`s and go in a `Settings` list's `Section`s, beside any row the
+application writes. They take everything the settings list does: section cards, headers and
+footers, the danger tone, a spinner while a change saves and a message when it fails
+(`SettingsRowStatus`). Names and a bio are plain `SettingsTextFieldRow`s.
 
 ```kotlin
 Settings {
@@ -47,32 +143,13 @@ Settings {
 }
 ```
 
-Everything the settings list does, these rows do: the neutral look, the section card and its
-header and footer, the hairlines that start at the text, the press, hover and focus answer, the
-danger tone, the spinner in place of the value while a change saves, and the message under the row
-when it fails (`SettingsRowStatus`). The names and the bio are plain `SettingsTextFieldRow`s — the
-card is the field and the hairline its underline — so the module adds nothing there.
-
-Where every row in a section carries a tile, pass `separated = false`: the tiles already separate
-the rows.
-
-The rows set their copy in the settings row's roles — title, subtitle, caption, value — and align
-their tiles and trailing content as every settings row does: centred for one or two lines, from the
-top for more. The summary card and the upload band, drawn by hand, read the same type and ink from
-`SettingsTheme` and line up the same way. The way out of every other session sits on the "This
-device" card's danger band rather than behind a hairline, and a provider's mark is cropped to the
-icon tile by `SettingsRowTile`, so every leading visual in a section has one size and shape. A row of the application's own beside them should pass plain `Text` into the slots
-rather than styling it, or it will be the one row on the card that looks different.
-
-The cards — header, cover, summary — and the status bands are drawn on a section's card, read from
-`SettingsTheme.styles.section`, so a card above a settings list reads as its first block. Put
-them on the canvas, pad them with `Modifier.horizontalContentInsets()`, and space them from the list
-with `ArecaTheme.spacing.lg`, the list's own section gap.
-
-An application that restyles its sections — a white card on a grey page, say, through
-`Settings(styles = …)` — composes the cards inside that same list, as its first children. They then
-take the list's fill and corner instead of the theme default, and the list's section gap spaces them
-from the sections below for free:
+- Where every row in a section carries a tile, pass `separated = false`.
+- A row of your own beside them passes plain `Text` into the slots, so it matches.
+- The cards — header, cover, summary — and the status bands take the section card's fill from
+  `SettingsTheme`. Put them on the canvas, pad them with `Modifier.horizontalContentInsets()`, and
+  space them from the list with `ArecaTheme.spacing.lg`.
+- With restyled sections, compose the cards inside the same list, as its first children, so they
+  take its fill and spacing:
 
 ```kotlin
 Settings(styles = SettingsDefaults.styles(section = SettingsDefaults.sectionStyle(bg = surface))) {
@@ -81,77 +158,12 @@ Settings(styles = SettingsDefaults.styles(section = SettingsDefaults.sectionStyl
 }
 ```
 
-## The pieces
+## Recipes
 
-### Who the account is
+### The profile
 
-| | |
-| --- | --- |
-| `ProfileAvatar` | The picture, or the initials. Initials, spinner and picture told apart on sight |
-| `ProfileHeaderCard` | The card a profile opens with: picture, name, handle, caption, and a row of `ProfileCardAction` tiles |
-| `ProfileCoverCard` | A cover band, the picture overlapping it, and the name, handle, bio and caption |
-| `ProfileSummaryCard` | A compact card that leads into the account, at the top of a menu |
-| `ProfileGreeting` | The same row with no card and no press tint, for the top of a home screen |
-| `ProfileSummaryCaption` | The quiet line of either, for a caption of your own |
-| `ProfileSummaryCardPlaceholder` `ProfileGreetingPlaceholder` | Loading stand-ins at the final height |
-| `EditableAvatar` | The picture with a camera badge, one tap target for both |
-
-### Rows, for a `Section`
-
-| | |
-| --- | --- |
-| `ProfileInfoRow` | One fact: the value as the title, what it is under it — "@ada" over "Username" |
-| `BirthdayRow` | A birthday chosen from a calendar — bounded to today unless told otherwise — and removed from it |
-| `EmailRow` | The address, an "Unverified" badge until it is confirmed, and an optional "Verify" |
-| `LinkedAccountRow` | One sign-in provider; pressing links or unlinks it, or says why it cannot |
-| `DataExportRow` | "Download your data", through idle, preparing, ready and failed |
-| `AccountRow` `AddAccountRow` | The account switcher: the account in use ticked, the others one press away |
-| `SignOutRow` `DeleteAccountRow` | The two ways out, in the danger tone |
-| `UsernameCheckFooter` | The line under a username field that says whether the name can be had |
-
-### Devices
-
-| | |
-| --- | --- |
-| `ActiveSessionsSections` | "This device" with "Sign out all other devices", then every other session — loading, failure and emptiness drawn in the card |
-| `SessionRow` | One device: a round tile and up to three lines — the device as the title, what it runs as the subtitle, where and when it was last seen as the caption — pressable when given `onClick` |
-
-### Sheets
-
-| | |
-| --- | --- |
-| `AvatarSourceSheet` `AvatarSourceOption` `AvatarSourceOptions` | Any choices the product offers for a new picture — camera, library and remove ready-made, and its own |
-| `SignOutSheet` | Confirms signing out of this device |
-| `SignOutOthersSheet` | Confirms ending every other session |
-| `RevokeSessionSheet` | Confirms ending one session, naming the device |
-| `DeleteAccountSheet` | Confirms deletion, optionally behind a typed phrase |
-
-### Status
-
-| | |
-| --- | --- |
-| `AvatarUploadStatus` | What a picture change is doing: progress, or why it stopped |
-| `StaleDetailsNotice` | Says the details below were not just fetched |
-| `ProfileLoadFailure` | The whole-screen state for a profile that could not be loaded at all |
-
-### State
-
-| | |
-| --- | --- |
-| `ProfileSummary` | Who the account is, already worded |
-| `UsernameCheck` | What `UsernameCheckFooter` shows: nothing asked, checking, available, taken |
-| `ActiveSessionsState` `SessionItem` `SessionDevice` | The device list |
-| `AvatarUploadState` `DataExportState` | The two long-running things a profile does |
-
-All of it is UI state — what to draw. There is no form state, no validation and no rules: what a
-valid name or username is, what may be unlinked, which session may be revoked and how old a person
-must be are the application's. The parts take the answers as parameters — a complaint to show, a
-`canUnlink`, an `onClick` or none, a `maxDate` — and draw them.
-
-Nothing here reaches the network, stores a picture, knows what a session is or decides what a
-valid profile is. It draws, and it reports what was pressed.
-
-## Recipe: the profile
+A stale-data notice, the header card with three actions, the account's details and a link to
+devices:
 
 ```kotlin
 @Composable
@@ -172,7 +184,7 @@ fun ProfileScreen(
             .verticalScroll(rememberScrollState())
             .windowInsetsPadding(WindowInsets.systemBars),
     ) {
-        // Above the card it is talking about: it describes everything below it.
+        // Above everything it describes.
         if (staleReason != null) {
             StaleDetailsNotice(message = staleReason, modifier = Modifier.horizontalContentInsets())
             Spacer(Modifier.height(ArecaTheme.spacing.lg))
@@ -214,7 +226,7 @@ fun ProfileScreen(
 }
 ```
 
-A profile with more to say — a bio, a cover — opens with `ProfileCoverCard` instead:
+A profile with a bio or a cover opens with `ProfileCoverCard` instead:
 
 ```kotlin
 ProfileCoverCard(
@@ -226,7 +238,7 @@ ProfileCoverCard(
 )
 ```
 
-When the profile cannot be loaded at all there is nothing to draw, so the screen is the failure:
+When the profile cannot be loaded at all, the screen is the failure:
 
 ```kotlin
 when (val state = uiState) {
@@ -235,7 +247,9 @@ when (val state = uiState) {
 }
 ```
 
-## Recipe: editing the profile
+### Editing the profile
+
+The picture with its upload status, the names, a bio, the details, Save, and deletion:
 
 ```kotlin
 Column(
@@ -244,7 +258,7 @@ Column(
         .background(ArecaTheme.colors.bgCanvas)
         .verticalScroll(rememberScrollState())
         .windowInsetsPadding(WindowInsets.systemBars)
-        // The fields are low on the page; the keyboard has to lift them, not cover them.
+        // The keyboard lifts the fields rather than covering them.
         .imePadding(),
 ) {
     EditableAvatar(
@@ -261,7 +275,7 @@ Column(
     Settings {
         Section(
             header = { Text(stringResource(Res.string.your_name)) },
-            // The application's complaint about the name, if it has one, under the name.
+            // The application's complaint about the name, if it has one.
             footer = state.nameError?.let { error -> { Text(error, color = ArecaTheme.colors.fgDangerText) } },
         ) {
             SettingsTextFieldRow(
@@ -295,7 +309,7 @@ Column(
     }
 
     Settings {
-        // A section of its own with no header: "Danger zone" would name a group of one.
+        // A section of its own, with no header.
         Section { DeleteAccountRow(onClick = onDelete, enabled = !state.saving) }
     }
 }
@@ -304,15 +318,12 @@ AvatarSourceSheet(visible = pickingAvatar, options = avatarOptions, onDismiss = 
 DeleteAccountSheet(visible = confirmingDelete, confirmationPhrase = stringResource(Res.string.delete_phrase), onConfirm = onDeleteConfirmed, onDismiss = onDeleteDismissed)
 ```
 
-The fields, their values and whatever is wrong with them are the screen's own state; the module
-holds none of it. The picture, though, is a separate transaction from the rest: a new photo takes
-effect when its upload finishes, with no Save involved, so keep `AvatarUploadState` apart from the
-form's state and a failed upload leaves a half-filled form untouched.
+The fields and their complaints are the screen's state. A new picture takes effect when its upload
+finishes, without Save, so keep `AvatarUploadState` apart from the form's state.
 
-## Recipe: the username
+### The username
 
-A screen of its own, because choosing a username is a conversation with the service: its verdict
-arrives while the name is still being typed, and it belongs under the field.
+A username field whose footer shows the service's verdict while the name is typed:
 
 ```kotlin
 Settings {
@@ -338,14 +349,15 @@ Settings {
 }
 ```
 
-With a `hint`, the footer's line is there from the start and a verdict replaces it; with none,
-nothing is drawn until there is something to say, so the first verdict adds a line — and a verdict
-or complaint longer than the hint wraps onto more. The line is neutral until there is an answer,
-and announced when there is one. It checks nothing itself: the
-service's verdict arrives as `check`, the application's own objections — its rules, a failed save
-— as `complaint`, which outranks the verdict, and the product's rules are stated in `hint`.
+- `check` is the service's verdict (`UsernameCheck`); `complaint` is the application's own
+  objection — its rules, a failed save — and outranks the verdict; `hint` states the rules.
+- With a `hint`, the line is there from the start and a verdict replaces it; with none, nothing is
+  drawn until there is something to say.
+- The line is neutral until there is an answer, and announced when there is one.
 
-## Recipe: the account menu
+### The account menu
+
+A summary card, sign-in methods, data export, an account switcher and the ways out:
 
 ```kotlin
 ProfileSummaryCard(
@@ -387,7 +399,7 @@ Settings {
         AddAccountRow(onClick = onAddAccount)
     }
 
-    // Each way out in a section of its own, so neither is pressed on the way to something else.
+    // Each way out in a section of its own.
     Section { SignOutRow(onClick = onSignOut) }
     Section { DeleteAccountRow(onClick = onDelete) }
 }
@@ -395,18 +407,19 @@ Settings {
 SignOutSheet(visible = confirmingSignOut, confirming = signingOut, note = unsyncedNote, onConfirm = onSignOutConfirmed, onDismiss = onSignOutDismissed)
 ```
 
-`LinkedAccountRow` takes the provider's mark as a slot. Brand marks have fixed colours and usage
-terms of their own; the application that agreed to those terms supplies the artwork.
+- `LinkedAccountRow` takes the provider's mark in its `icon` slot; the application supplies the
+  artwork.
+- `canUnlink = false` stops the row offering to remove the account's last way to sign in; pass
+  `lockedReason` to say why. The application counts the sign-in methods.
+- While the account loads, `ProfileSummaryCardPlaceholder()` stands in at the card's final height.
+  A caption of your own — sync state, a plan name — goes in the card's `caption` slot as a
+  `ProfileSummaryCaption`.
+- On a home screen, `ProfileGreeting(summary, onClick, greeting = …)` draws the same row without a
+  card; `ProfileGreetingPlaceholder()` stands in while it loads.
 
-`canUnlink = false` keeps the row from offering to remove the account's last way to sign in. The
-module cannot count sign-in methods — only the application knows about passwords and providers it
-has not drawn — so the application answers the question.
+### Devices
 
-While the account loads, `ProfileSummaryCardPlaceholder()` stands in at the card's final height. A
-caption of your own — synchronisation state, a plan name — goes in the card's `caption` slot as a
-`ProfileSummaryCaption`.
-
-## Recipe: devices
+This device, every other session, and an auto-sign-out setting, with the sheets that confirm:
 
 ```kotlin
 Settings {
@@ -441,19 +454,20 @@ SignOutOthersSheet(
 )
 ```
 
-Each sheet closes as soon as it is answered, and the row's own spinner — `SessionItem.isRevoking`,
-`ActiveSessionsState.Loaded.isSigningOutOthers` — shows the work. To keep a sheet up with its
-spinner instead, pass `confirming` and clear the session or `visible` when the work ends.
+- Each sheet closes as soon as it is answered and the row's spinner shows the work
+  (`SessionItem.isRevoking`, `ActiveSessionsState.Loaded.isSigningOutOthers`). To keep a sheet up
+  with its spinner instead, pass `confirming` and clear the session or `visible` when the work
+  ends.
+- Signing out of this device is not in these sections; use `SignOutRow` in the account menu.
+- `SessionRow` draws one session on its own, for a list of your own; it is pressable when given
+  `onClick`.
 
-Signing out of *this* device is deliberately not in these sections. It is a different act from
-revoking a session — it clears local data too — and it lives in the account menu as `SignOutRow`.
+### Changing the photo, with cropping
 
-## Recipe: changing the photo, with cropping
-
-Pick, crop, upload. The module draws the first and the last step; the crop in between is the
-application's own crop screen from `:ui:crop` (see its README), opened with the spec this product
-wants for avatars. `flow-profile` does not depend on the cropper — a product that never crops leaves
-the middle step out and uploads the pick, as under [Picture choices](#picture-choices).
+Pick, crop, upload. The module draws the first and last steps; the crop is the application's own
+`CropScreen`, built from `dev.voir.areca:crop` as in the [crop README](../../ui/crop/README.md).
+`flow-profile` does not depend on the cropper — leave the middle step out to upload the pick as it
+is, as under [Picture choices](#picture-choices).
 
 ```kotlin
 // The application's, once: what cropping an avatar means in this product.
@@ -498,19 +512,14 @@ picked?.let { photo ->
 }
 ```
 
-**Store the square.** `EditableAvatar` and `ProfileAvatar` clip the picture to their circle, so the
-crop is rendered rectangular (`applyMask = false`). The stored picture then suits whatever shape the
-product draws avatars in later; the spec's mask is only the guide the person frames against.
-
-**A different avatar shape is a different spec**, and nothing else changes: the parts above take the
-same arguments for a squircle product as for a circle one.
+Store the square (`applyMask = false`): `EditableAvatar` and `ProfileAvatar` clip to their circle,
+and the stored picture then suits any shape drawn later. A different avatar shape is a different
+`CropSpec`; the parts take the same arguments.
 
 ## Pictures
 
-The module has no image loader and never will: an application that uses Coil should not have to
-take a second one, and an application that does not use Coil should not have to take the first.
-Every part that draws a picture reads one from `LocalAvatarImageLoader` instead, and the
-application provides it once, above everything:
+Every part that draws a picture reads it from `LocalAvatarImageLoader`. Provide a loader once,
+above everything — here, one built on Coil:
 
 ```kotlin
 object CoilAvatarImageLoader : AvatarImageLoader {
@@ -532,28 +541,24 @@ CompositionLocalProvider(LocalAvatarImageLoader provides CoilAvatarImageLoader) 
 ```
 
 `ProfileSummary.avatar` is whatever that loader understands — a URL, bytes, a file, a platform URI.
-The module passes it through and never looks at it.
 
-| | |
+| `AvatarImageState` | Draws |
 | --- | --- |
-| `Loading` | The initials, under the avatar's own spinner |
-| `Ready` | The picture, cropped to the circle |
-| `Failed` | The initials. Never an empty circle — that reads as a picture still arriving, forever |
+| `Loading` | The initials, under the avatar's spinner |
+| `Ready(painter)` | The picture, cropped to the circle |
+| `Failed` | The initials |
 
-With no loader provided, `AvatarImageLoader.None` answers `Failed` for everything, so an application
-with no pictures yet gets initials rather than a spinner that never stops. An application that
-already holds decoded pictures can hand a state to one avatar directly:
+With no loader provided, `AvatarImageLoader.None` answers `Failed`, so every avatar draws initials.
+To hand one avatar a decoded picture directly:
 `ProfileAvatar(name = "Ada Lovelace", state = AvatarImageState.Ready(BitmapPainter(bitmap)))`.
 
-The cover card's band is a slot, not a model: a cover is the product's artwork as much as the
-person's, and the product decides how it is fetched and cropped.
+`ProfileCoverCard`'s `cover` is a slot: draw the band with any image composable.
 
 ## Picture choices
 
-`AvatarSourceSheet` offers exactly the options it is given. `AvatarSourceOptions` builds the common
-three with the module's wording and glyphs; anything else — an avatar set, an import from a linked
-account — is an `AvatarSourceOption` of the product's own. A camera option that opens nothing is
-worse than none, so list only what the current platform can complete:
+`AvatarSourceSheet` offers exactly the options it is given. `AvatarSourceOptions` builds `camera`,
+`library` and `remove` with the module's words and glyphs; anything else is an
+`AvatarSourceOption` of your own. List only what the platform can complete:
 
 ```kotlin
 var picking by remember { mutableStateOf(false) }
@@ -573,55 +578,46 @@ AvatarSourceSheet(
 )
 ```
 
-Capturing, picking, cropping and uploading are all the application's. The sheet reports which
-source was chosen and does not close itself, so every choice clears the state that shows it;
-`AvatarUploadStatus` shows what happened next. To crop between the pick and the
-upload, see [Recipe: changing the photo, with cropping](#recipe-changing-the-photo-with-cropping).
+The sheet reports the choice and does not close itself, so every choice clears the state that
+shows it. Capturing, picking, cropping and uploading are the application's; `AvatarUploadStatus`
+shows what happened next.
 
-## Sheets are driven by state
+## Sheets
 
-Every sheet takes `visible` — or, for `RevokeSessionSheet`, the session itself — and reports
-`onDismiss`. Whether it is up belongs to the caller's state, not to the sheet, so a confirmation
-survives the screen being rebuilt and cannot get out of step with the work it is confirming.
-Dismissing by the scrim, by the back gesture and by Cancel all arrive as `onDismiss`.
+- **Driven by state.** Every sheet takes `visible` — `RevokeSessionSheet` takes the `session`
+  itself — and reports `onDismiss` for the scrim, back and Cancel alike.
+- **`confirming = true`** shows the confirming button's spinner and blocks further presses,
+  the scrim's included; clear it when the work ends.
+- **Answered once.** Only the first press while the sheet rests open counts. Answer `onConfirm` by
+  closing the sheet or setting `confirming`.
+- **Words.** `title`, `confirmText` and `cancelText` default to English; `description` and `note`
+  default to none. `RevokeSessionSheet`'s `description` is a function of the session — by default
+  its name, client and last-seen line joined by " · ".
+- **`DeleteAccountSheet(confirmationPhrase = "DELETE")`** adds a box that must hold the phrase
+  (case and surrounding spaces ignored) before the button enables. Say whether deletion is instant,
+  scheduled or reversible in `description`.
 
-A sheet whose work is in flight takes `confirming = true`: the confirming button shows its spinner
-and neither button accepts a second press — nor does the scrim, so clear it when the work ends,
-however it ends.
+## Colour
 
-A confirmation is answered once. Its buttons, the scrim, a drag and back count only while the
-sheet rests open, and only the first of them counts: a press while it rises or slides away is
-ignored, so a double tap on Cancel cannot land on the confirming button as the sheet drops. So
-answer `onConfirm` by closing the sheet or by setting `confirming` — a sheet left up with neither
-takes no further press. `RevokeSessionSheet` confirms only the session it shows, and only while
-`session` is set.
+Nothing the module draws is in the brand colour except foundation's focus ring. Colour marks
+meaning only: the danger tone on the ways out, danger and success in the username verdict, the
+warning in a sign-out note. For brand accents, pass styles to the settings list through
+`SettingsDefaults.styles`, and the rows follow.
 
-Every sheet's words are parameters — `title`, `confirmText` and `cancelText` with English
-defaults, `description` and `note` with none — so a product whose deletion is reversible says so
-in the sheet itself, and one with nothing at stake simply passes no note. `RevokeSessionSheet`'s
-`description` is a function of the session, by default its name, client and last-seen line joined
-by " · ".
+## Birthdays
 
-Each sheet carries at most one coloured thing, the note that says what is at stake, and the
-confirming button is the neutral dark one every primary action uses. `DeleteAccountSheet(
-confirmationPhrase = "DELETE")` adds a box that must hold that phrase — case and surrounding spaces
-ignored — before the button enables. Whether deletion is instant, scheduled or reversible is the
-application's to say, in `description`.
+`BirthdayRow` takes a `kotlinx.datetime.LocalDate?` and opens a calendar sheet.
 
-## Neutral by default
-
-Nothing the module draws is in the brand colour; only foundation's focus ring, shared by every
-Areca control, is. Tiles are neutral, the verified tick is the inverted neutral disc, the current
-device's tile is the one dark disc on the devices card, the upload bar fills with that same
-inverted neutral, and links and values are the list's own ink. Colour is kept for what it means: the danger tone on the ways out,
-danger and success in the username verdict, the warning in a sign-out note that has something to
-lose. A product that wants brand accents passes them to the settings list — see
-`SettingsDefaults.styles` — and the rows follow.
+- The calendar is bounded by `minDate`–`maxDate`; `maxDate` is today by default. Move it back for
+  an age requirement. A `null` limit falls back to the calendar's range, 1900 to 2100.
+- A tap marks a day and Save (`applyLabel`) commits it; Save stays disabled until a day is tapped.
+- The left action is Remove (`removeLabel`) while a date is set and Cancel (`cancelLabel`)
+  otherwise; `removable = false` always shows Cancel.
 
 ## Words
 
-There is no string table. Every word a part draws is a parameter of that part, and the application
-passes its own — from its `composeResources`, in its language — where it composes the part:
+Every word a part draws is a parameter, and the application passes its own from its
+`composeResources`:
 
 ```kotlin
 DeleteAccountRow(
@@ -646,93 +642,64 @@ BirthdayRow(
 )
 ```
 
-Two kinds of words, two rules:
+- **Required words** — a row's title, a button's label, a sheet's question, `EditableAvatar`'s
+  `changePhotoLabel`, `verifiedDescription`, `currentDescription` — default to plain English.
+  Override every one in a localised application.
+- **Optional words** — a subtitle, a footer, a sheet's description and note, a hint — default to
+  `null`, which draws nothing.
+- **Words around a value** are functions: `availableText`, `takenText`, `DeleteAccountSheet`'s
+  `confirmationPrompt`, `RevokeSessionSheet`'s `description` and `AvatarUploadStatus`'s
+  `formatProgress` are composable, so they can call `stringResource`; `formatDate` is a plain
+  `(LocalDate) -> String`.
+- **The calendar's words** come from `calendarLabels`, a `CalendarLabels` from
+  `dev.voir.areca:datetime`, and its first day from `startDayOfWeek`. Both default to English and
+  Monday.
+- Device names, session details, captions and failure messages arrive already worded, in the
+  state.
 
-- **Words the part cannot do without** — a row's title, a button's label, a sheet's question, the
-  label of an icon-only control such as `EditableAvatar`'s `changePhotoLabel`, and the description
-  of a mark with no words beside it such as `verifiedDescription` and `currentDescription` — have a
-  plain English default, so a part drops in and works before the application has translated it.
-  Override every one of them in a localised application.
-- **Words that are optional** — a subtitle, a footer, a sheet's description and note, a hint, an
-  accessibility label for something already visible — default to `null`, and `null` draws nothing.
-  The part never invents copy the product did not write.
-
-Anything that names or formats something takes a function rather than a string — the username in
-the verdict (`availableText`, `takenText`), the phrase in `DeleteAccountSheet`'s
-`confirmationPrompt`, the session in `RevokeSessionSheet`'s `description`, the upload percentage
-(`formatProgress`), the birthday (`formatDate`) — so a translation decides where the value goes and
-a locale decides how a date reads. All but `formatDate` are composable, so they can call
-`stringResource` with the value, as above; `formatDate` is a plain `(LocalDate) -> String`.
-
-The birthday calendar's own words — its month and weekday names, each day's description and its
-navigation actions, all read out by assistive technology — come from `calendarLabels`, a
-`CalendarLabels` from `dev.voir.areca:datetime`, and the first day of its week from
-`startDayOfWeek`. Both default to English and Monday.
-
-Device names, session details ("Belgrade, Serbia · 10:18"), the member-since caption and every
-failure message arrive already worded. They come from the application's data, and only the
-application knows how to phrase them.
-
-## Birthdays and `kotlinx-datetime`
-
-`BirthdayRow` uses `kotlinx.datetime.LocalDate`, so this module puts `kotlinx-datetime` on your API
-surface through `dev.voir.areca:datetime`. The calendar opens on the date in force and cannot page
-outside `minDate`–`maxDate` — up to today by default, since a birthday is in the past; a product
-with an age requirement moves `maxDate` back. A `null` limit falls back to the calendar's own range,
-1 January 1900 to 31 December 2100.
-
-The sheet's heading holds only its title. Its actions are in the action bar at its foot, as on
-every other sheet: Save (`applyLabel`) on the right, and on the left Remove (`removeLabel`) while a
-date is in force, or Cancel (`cancelLabel`) while there is none to remove. With `removable = false`
-Cancel is always the left action. While Remove is offered there is no Cancel button; the scrim, a
-drag or back closes the sheet without saving.
-
-A tap marks a day and Save commits it, so a mis-tap is never the answer. With no date in force
-nothing is marked when the sheet opens — the calendar shows today's month, pulled inside the
-limits — and Save stays disabled until a day is tapped, so an untouched calendar never saves today
-as somebody's birthday.
+Every module's words in one place: [Localisation](../../docs/localisation.md).
 
 ## Accessibility
 
-The parts carry what applications usually miss:
+What the parts already do, and what to pass. General guidance:
+[Accessibility](../../docs/accessibility.md).
 
 - A fact row reads as one item — "@ada, Username" — and a pressable one as one button.
-- The avatar and its camera badge are one target, announced once with `changePhotoLabel` —
-  "Change photo" unless you pass your own; the badge alone would be under the minimum touch size.
-- The verified tick and the current-account tick are always announced, with `verifiedDescription`
-  ("Verified") and `currentDescription` ("Current account") — pass your translations.
-- Every pressable card and row the module ships takes an `onClickLabel` saying what pressing does;
-  `ActiveSessionsSections` takes `sessionClickLabel` for its sessions and
-  `signOutOthersClickLabel` for the row that ends them. These are optional, since
-  the row's own words are read out anyway, and worth passing where they do not say the action.
-- The "Verify" link on an unconfirmed address is foundation's `SettingsRowLink`: underlined, so it
-  is not mistaken for a value, and a target of at least 48 dp inside the row.
-- `ProfileGreeting` has no press tint, but it is a button to assistive technology and shows the
-  focus ring when keyboard focus reaches it.
-- The upload band's heading and the username verdict — or the complaint in its place — are
-  announced as they appear and whenever they change, not only drawn. The upload percentage is not,
-  and neither are the username hint and the checking line, so neither a running upload nor typing
-  talks over everything else.
-- Loading placeholders are read as one item each — `contentDescription` on
-  `ProfileSummaryCardPlaceholder` and `ProfileGreetingPlaceholder`, `loadingDescription` on
-  `ActiveSessionsSections` — rather than as nothing at all.
-- `DeleteAccountSheet`'s box is labelled with its instruction ("Type DELETE to confirm."), not only
-  by its placeholder.
-- A row with nothing to do takes no `onClick` and is not pressable, rather than a control that
-  silently does nothing — `ActiveSessionsSections` leaves this device inert, and the account in use
-  is usually passed `onClick = null`.
+- The avatar and its camera badge are one target, announced with `changePhotoLabel`.
+- The verified and current-account ticks are announced with `verifiedDescription` and
+  `currentDescription`; pass your translations.
+- Every pressable card and row takes an `onClickLabel`; `ActiveSessionsSections` takes
+  `sessionClickLabel` and `signOutOthersClickLabel`. Pass them where the row's words do not say
+  the action.
+- `EmailRow`'s "Verify" is foundation's `SettingsRowLink`: underlined, with a 48 dp target.
+- `ProfileGreeting` has no press tint but is a button to assistive technology and shows the focus
+  ring.
+- `AvatarUploadStatus`'s heading and the username verdict or complaint are announced when they
+  appear and change; the upload percentage, the hint and the checking line are not.
+- Placeholders read as one item each: `contentDescription` on `ProfileSummaryCardPlaceholder` and
+  `ProfileGreetingPlaceholder`, `loadingDescription` on `ActiveSessionsSections`.
+- `DeleteAccountSheet`'s box is labelled with its instruction ("Type DELETE to confirm.").
+- A row with nothing to do takes no `onClick` and is not pressable — pass `onClick = null` for the
+  account in use.
 - Card and section headings carry the heading role.
 
 ## Where to look
 
-The playground renders all of this live. Under **Profile flow → Screens**, the recipe screens —
-[`ProfileShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/profile/ProfileShowcase.kt),
-[`EditProfileShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/profile/EditProfileShowcase.kt),
-[`ChangePhotoShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/profile/ChangePhotoShowcase.kt),
-[`UsernameShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/profile/UsernameShowcase.kt),
-[`AccountShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/profile/AccountShowcase.kt)
-and
-[`DevicesShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/profile/DevicesShowcase.kt)
-— hold the same assemblies as compiled code, so they cannot drift from something that builds. The
-group's other sections give every public part a page of its own, in
-[`playground/flow/profile`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/profile).
+- **Playground:** under **Profile flow → Screens**, the recipes as compiled code —
+  [`ProfileShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/profile/ProfileShowcase.kt),
+  [`EditProfileShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/profile/EditProfileShowcase.kt),
+  [`ChangePhotoShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/profile/ChangePhotoShowcase.kt),
+  [`UsernameShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/profile/UsernameShowcase.kt),
+  [`AccountShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/profile/AccountShowcase.kt),
+  [`DevicesShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/profile/DevicesShowcase.kt)
+  — and a page for every part, in
+  [`playground/flow/profile`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/profile).
+- **KDoc:** every part's parameters, in the sources under
+  [`src/commonMain`](src/commonMain/kotlin/dev/voir/areca/flow/profile).
+- **For agents:** the `areca-ui-v1` skill's
+  [`reference/flow-profile.md`](../../skills/areca-ui-v1/reference/flow-profile.md).
+- **Related:** [`flow-auth`](../auth/README.md) for signing in; [`ui/crop`](../../ui/crop/README.md)
+  for cropping a new picture; [`ui/datetime`](../../ui/datetime/README.md) for `CalendarLabels`;
+  foundation's settings list.
+
+For contributors: [`../FLOWS.md`](../FLOWS.md) is the contract every flow module follows.

@@ -6,7 +6,7 @@ description: Areca ViewModel 1.x conventions for Kotlin Multiplatform state, act
 # Areca ViewModel Guidelines
 
 > **Audience:** Kotlin Multiplatform presentation developers and coding agents
-> **Validated library version:** `dev.voir.areca:viewmodel` 1.0.0
+> **Library version:** the latest `dev.voir.areca:viewmodel` release
 
 ## Role
 
@@ -42,15 +42,17 @@ GitHub Packages asks for credentials even for public packages: the Gradle proper
 
 ```kotlin
 commonMain.dependencies {
-    implementation("dev.voir.areca:viewmodel:1.0.0")
+    implementation("dev.voir.areca:viewmodel:<version>")
 }
 ```
 
 Use `api` only when the module intentionally exposes Areca types in its public contract.
 
-The core types live in `dev.voir.areca.viewmodel`; the list types (`BaseListViewModel`,
-`BaseSimpleListViewModel`, `ListState`, `PageResult`, `PagingMeta`, `ReloadStrategy`) live in
-`dev.voir.areca.viewmodel.list`.
+The core types (`BaseViewModel`, `UiState`, `displayOrNull`, `RefreshGate`) live in
+`dev.voir.areca.viewmodel`; the list types (`BaseListViewModel`, `BaseSimpleListViewModel`,
+`ListState` and its `isEmpty`, `hasContent` and `isAnyOperationInProgress`, `PageResult`,
+`PagingMeta`, `ReloadStrategy`) live in `dev.voir.areca.viewmodel.list`. Every public declaration
+with its parameters and defaults: [reference/api.md](reference/api.md).
 
 ## Model
 
@@ -89,7 +91,9 @@ internal class LibraryViewModel(
     private val window: LibraryWindow,
     private val library: LibraryUseCase,
     private val mapper: LibraryItemMapper,
-) : BaseViewModel<LibraryAction, LibraryEffect, LibraryState>(LibraryState())
+) : BaseViewModel<LibraryAction, LibraryEffect, LibraryState>(LibraryState()) {
+    override suspend fun reduce(action: LibraryAction) { /* … */ }
+}
 
 // Home: koinViewModel<LibraryViewModel>(key = "library-preview") { parametersOf(LibraryWindow.Latest(4)) }
 // Library page: koinViewModel<LibraryViewModel> { parametersOf(LibraryWindow.All) }
@@ -288,9 +292,9 @@ throws `IllegalArgumentException` otherwise.
 | --- | --- | --- | --- |
 | `handleLoad` / `handleRetry` | Top-level `Loading` | Replace with page 1 | Top-level `Error` |
 | `handleRefresh` with content | `isRefreshing`, items kept | Replace with page 1 | Items kept, `refreshError` set |
-| `handleLoadNextPage` | `isLoadingNextPage` | Append the page | Pages kept, `nextPageError` set |
-| Filter/sort, `ReloadStrategy.FullScreen` | Top-level `Loading` | Replace with page 1 | Top-level `Error`; retry uses the new query |
-| Filter/sort, `ReloadStrategy.Inline` | `isReloading`, items kept | Replace with page 1 | Items kept, previous query restored, `refreshError` set |
+| `handleLoadNextPage` / `handleRetryLoadNextPage` | `isLoadingNextPage` | Append the page | Pages kept, `nextPageError` set |
+| `handleUpdateFilters` / `handleClearFilters` / `handleUpdateSorting`, `ReloadStrategy.FullScreen` | Top-level `Loading` | Replace with page 1 | Top-level `Error`; retry uses the new query |
+| The same, `ReloadStrategy.Inline` | `isReloading`, items kept | Replace with page 1 | Items kept, previous query restored, `refreshError` set |
 
 - Render `ListState.refreshError` with the retained content. `onRefreshError` is an optional extra,
   such as a snackbar effect; the failure is already in state.
@@ -303,11 +307,16 @@ throws `IllegalArgumentException` otherwise.
 - The `handle*` functions that take a strategy default to `ReloadStrategy.FullScreen`; choose
   inline reload deliberately.
 - Prefer domain-owned paging when cached or observed pages are authoritative.
+- In the UI, show the empty state when `ListState.isEmpty` (loaded, no items), not when `items` is
+  merely empty; `hasContent` and `isAnyOperationInProgress` drive the rest.
+- `pageSize` defaults to `BaseListViewModel.DEFAULT_PAGE_SIZE` (20) and is kept in
+  `PagingMeta.pageSize`.
 
 `RefreshGate` rejects concurrent refreshes and requests inside its cooldown; it does not queue them.
 Every successful `tryReserve` must reach exactly one `runReserved`; `dispatch` never drops an
-action, so reserving in front of `dispatch` is safe. Create one gate per refresh owner and use
-`Duration.ZERO` when only overlap prevention is needed.
+action, so reserving in front of `dispatch` is safe. Create one gate per refresh owner;
+`RefreshGate(cooldown = RefreshGate.DEFAULT_COOLDOWN)` (1 s) is the default, and `Duration.ZERO`
+keeps only overlap prevention.
 
 ## Tests
 
@@ -348,6 +357,10 @@ Use fake use cases and deterministic inputs. Do not test data layers through a V
 
 ## References
 
+- [reference/api.md](reference/api.md) — every public type and function, with parameters and
+  defaults.
+- The `areca:areca-ui-v1` skill — rendering this state with Areca UI, including mapping
+  `ListState` to `PagedContentListState`.
 - [Android UI layer](https://developer.android.com/topic/architecture/ui-layer)
 - [Android UI events](https://developer.android.com/topic/architecture/ui-layer/events)
 - [Android architecture recommendations](https://developer.android.com/topic/architecture/recommendations)

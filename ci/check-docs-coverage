@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+#
+# Checks that every public component is documented: each public top-level composable whose name
+# starts with a capital letter must be named in its module's README and in the `areca-ui-v1` skill,
+# and a foundation component also in `docs/components.md`.
+#
+# Components are read from the committed JVM API dumps (`<module>/api/jvm/*.api`), so the list
+# matches the public API exactly. A name counts as documented when it appears in code — `` `Name` ``,
+# `` `Name<…>` `` or `Name(` — not merely as an English word.
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+modules=(
+  ui/foundation ui/charts ui/crop ui/datetime ui/keyboard
+  flow/auth flow/profile flow/attachments
+)
+skill="skills/areca-ui-v1"
+catalogue="docs/components.md"
+
+components() {
+  grep -hE 'public static final fun [A-Z][A-Za-z0-9]*(-[-A-Za-z0-9_]*)? \(.*Landroidx/compose/runtime/Composer;' \
+    "$1"/api/jvm/*.api \
+    | sed -E 's/.*fun ([A-Za-z0-9]+)[- ].*/\1/' \
+    | LC_ALL=C sort -u
+}
+
+named_in() {
+  local name="$1"
+  shift
+  grep -rqE "(\`${name}[\`<(]|(^|[^A-Za-z0-9_])${name}\()" "$@" 2>/dev/null
+}
+
+missing=0
+total=0
+for module in "${modules[@]}"; do
+  while read -r name; do
+    [ -n "$name" ] || continue
+    total=$((total + 1))
+    places=()
+    named_in "$name" "$module/README.md" || places+=("$module/README.md")
+    named_in "$name" "$skill" || places+=("$skill")
+    if [ "$module" = "ui/foundation" ]; then
+      named_in "$name" "$catalogue" || places+=("$catalogue")
+    fi
+    if [ "${#places[@]}" -gt 0 ]; then
+      echo "$module: $name is not documented in ${places[*]}" >&2
+      missing=$((missing + 1))
+    fi
+  done < <(components "$module")
+done
+
+if [ "$missing" -gt 0 ]; then
+  echo "$missing of $total public components are missing from the docs." >&2
+  exit 1
+fi
+echo "All $total public components are documented."

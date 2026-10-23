@@ -229,6 +229,18 @@ public data class BadgeStyle(
                 contentSoft = ArecaTheme.colors.fgBase,
                 borderSoft = Color.Transparent,
             )
+
+        /**
+         * [Chip] with every chip on a ground of its own: the chosen chip is the solid dark pill, the
+         * rest sit on the subtle fill.
+         *
+         * For chips that must read as tappable before any is chosen — a row of filters on a white
+         * page, tags in a sheet — where bare words would pass for plain text. Pair with
+         * [BadgeSize.Chip]; a chip is chosen when its badge is not soft.
+         */
+        public val FilledChip: BadgeStyle
+            @Composable
+            get() = Chip.copy(bgSoft = ArecaTheme.colors.bgSubtle)
     }
 }
 

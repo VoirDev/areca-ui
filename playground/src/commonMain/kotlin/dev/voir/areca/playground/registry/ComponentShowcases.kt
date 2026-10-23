@@ -40,6 +40,7 @@ import dev.voir.areca.playground.foundation.selection.SwatchShowcase
 import dev.voir.areca.playground.foundation.selection.ToggleShowcase
 import dev.voir.areca.playground.foundation.settings.SettingsShowcase
 import dev.voir.areca.playground.foundation.slot.ThreeSlotRowShowcase
+import dev.voir.areca.playground.foundation.stat.StatShowcase
 import dev.voir.areca.playground.foundation.status.StatusMarkShowcase
 import dev.voir.areca.playground.foundation.status.StatusSceneShowcase
 import dev.voir.areca.playground.foundation.tabbar.FloatingTabBarShowcase
@@ -202,6 +203,15 @@ internal val ComponentShowcases: List<ShowcaseEntry> = listOf(
         summary = "Columns of snapping wheels, driven by drag, throw, scroll wheel or keyboard.",
         keywords = listOf("wheel", "picker", "spinner", "drum", "scroll", "snap", "column"),
         content = { WheelPickerShowcase() },
+    ),
+    ShowcaseEntry(
+        id = "foundation/stat",
+        group = ShowcaseGroup.Components,
+        section = ShowcaseSection.Display,
+        title = "Stat",
+        summary = "A figure with what it is and what it means, alone or in a grid of figures.",
+        keywords = listOf("figure", "metric", "kpi", "number", "summary", "grid", "statistic"),
+        content = { StatShowcase() },
     ),
     ShowcaseEntry(
         id = "foundation/avatar",

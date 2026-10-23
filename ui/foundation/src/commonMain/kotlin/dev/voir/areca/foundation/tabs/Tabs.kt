@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
@@ -31,16 +32,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -56,6 +60,7 @@ import dev.voir.areca.indication.TouchIndication
 import dev.voir.areca.modifier.clickCursor
 import dev.voir.areca.theme.ArecaTheme
 import dev.voir.areca.theme.tween
+import kotlin.math.roundToInt
 import kotlin.time.Duration
 
 /**
@@ -95,12 +100,20 @@ public enum class TabsVerticalPosition {
  *
  * The two are not interchangeable. [Underline] keeps the tabs on one continuous line and moves a
  * single indicator between them, which reads as one control with a current position. [Button] gives
- * the selected tab a fill of its own, which reads as a segmented control. Use [Underline] to switch
- * views within a screen, [Button] to switch a setting.
+ * the selected tab a fill of its own, which reads as a segmented control. [Segmented] sets the tabs
+ * in a capsule track and slides a raised thumb to the selected one — the same meaning as [Button],
+ * drawn as one object. Use [Underline] to switch views within a screen, [Button] or [Segmented] to
+ * switch a setting.
  */
 public enum class TabsVariant {
     /** The selected tab wears a filled background; no divider or indicator is drawn. */
     Button,
+
+    /**
+     * The tabs sit in a [track][TabsStyle.track] and a raised [thumb][TabsStyle.thumb] slides to
+     * the selected one. No divider or underline is drawn.
+     */
+    Segmented,
 
     /** A divider runs the strip's length, with an indicator that slides to the selected tab. */
     Underline,
@@ -156,6 +169,8 @@ public data class TabItemScope(
  * @property bgDisabled Fill behind a disabled tab, in [TabsVariant.Button].
  * @property divider Line running the strip's length, in [TabsVariant.Underline].
  * @property indicator Mark that slides to the selected tab, in [TabsVariant.Underline].
+ * @property track Ground the tabs sit in, in [TabsVariant.Segmented].
+ * @property thumb Raised fill that slides to the selected tab, in [TabsVariant.Segmented].
  */
 @Immutable
 public data class TabsStyle(
@@ -167,6 +182,8 @@ public data class TabsStyle(
     public val bgDisabled: Color,
     public val divider: Color,
     public val indicator: Color,
+    public val track: Color = Color.Transparent,
+    public val thumb: Color = Color.Transparent,
 ) {
     /** Theme-backed presets and builders. */
     public companion object {
@@ -186,6 +203,8 @@ public data class TabsStyle(
          * @param bgDisabled Fill behind a disabled tab, in [TabsVariant.Button].
          * @param divider Line running the strip's length.
          * @param indicator Mark that slides to the selected tab.
+         * @param track Ground the tabs sit in, in [TabsVariant.Segmented].
+         * @param thumb Raised fill under the selected tab, in [TabsVariant.Segmented].
          * @return Style built from the supplied colors.
          */
         @Composable
@@ -198,6 +217,10 @@ public data class TabsStyle(
             bgDisabled: Color = Color.Transparent,
             divider: Color = ArecaTheme.colors.borderBase,
             indicator: Color = ArecaTheme.colors.fgBase,
+            track: Color = ArecaTheme.colors.bgNeutralMuted,
+            // Raised means lighter in both themes: white on the light track, and a step lighter than
+            // the track in dark, where the surface colour sits darker than it.
+            thumb: Color = if (ArecaTheme.isDark) ArecaTheme.colors.bgNeutralBase else ArecaTheme.colors.bgSurface,
         ): TabsStyle = TabsStyle(
             content = content,
             contentSelected = contentSelected,
@@ -207,6 +230,8 @@ public data class TabsStyle(
             bgDisabled = bgDisabled,
             divider = divider,
             indicator = indicator,
+            track = track,
+            thumb = thumb,
         )
     }
 }
@@ -227,7 +252,10 @@ public data class TabsStyle(
  * @property indicatorThickness Thickness of the mark that slides to the selected tab.
  * @property iconSize Size given to icons inside a tab.
  * @property textStyle Style given to a tab's label.
- * @property indicatorDuration Time the indicator takes to travel between tabs.
+ * @property indicatorDuration Time the indicator, or the segmented thumb, takes to travel between
+ *   tabs.
+ * @property trackPadding Space between the track's edge and the tabs, in [TabsVariant.Segmented].
+ * @property thumbElevation Shadow under the thumb, in [TabsVariant.Segmented].
  */
 @Immutable
 public data class TabsSize(
@@ -242,6 +270,8 @@ public data class TabsSize(
     public val iconSize: Dp,
     public val textStyle: TextStyle,
     public val indicatorDuration: Duration,
+    public val trackPadding: Dp = 0.dp,
+    public val thumbElevation: Dp = 0.dp,
 ) {
     /** Theme-backed presets and builders. */
     public companion object {
@@ -249,6 +279,22 @@ public data class TabsSize(
         public val Default: TabsSize
             @Composable
             get() = default()
+
+        /**
+         * Metrics for [TabsVariant.Segmented]: capsule tabs a hairline inside their track, with a
+         * thumb raised one elevation step.
+         */
+        public val Segmented: TabsSize
+            @Composable
+            get() = default(
+                gap = ArecaTheme.spacing.xs2,
+                itemPaddingHorizontal = ArecaTheme.spacing.lg,
+                itemPaddingVertical = ArecaTheme.spacing.xs,
+                itemMinHeight = 32.dp,
+                itemShape = ArecaTheme.shapes.full,
+                trackPadding = ArecaTheme.spacing.xs2,
+                thumbElevation = ArecaTheme.elevation.xs,
+            )
 
         /**
          * Builds a size from the current theme.
@@ -264,6 +310,9 @@ public data class TabsSize(
          * @param iconSize Size given to icons inside a tab.
          * @param textStyle Style given to a tab's label.
          * @param indicatorDuration Time the indicator takes to travel between tabs.
+         * @param trackPadding Space between the track's edge and the tabs, in
+         *   [TabsVariant.Segmented].
+         * @param thumbElevation Shadow under the thumb, in [TabsVariant.Segmented].
          * @return Size built from the supplied metrics.
          */
         @Composable
@@ -279,6 +328,8 @@ public data class TabsSize(
             iconSize: Dp = IconSize.Small,
             textStyle: TextStyle = ArecaTheme.typography.labelMedium,
             indicatorDuration: Duration = ArecaTheme.motion.medium,
+            trackPadding: Dp = 0.dp,
+            thumbElevation: Dp = 0.dp,
         ): TabsSize = TabsSize(
             gap = gap,
             itemPaddingHorizontal = itemPaddingHorizontal,
@@ -291,6 +342,8 @@ public data class TabsSize(
             iconSize = iconSize,
             textStyle = textStyle,
             indicatorDuration = indicatorDuration,
+            trackPadding = trackPadding,
+            thumbElevation = thumbElevation,
         )
     }
 }
@@ -396,6 +449,9 @@ public val LocalTabsSize: ProvidableCompositionLocal<TabsSize?> = compositionLoc
  * @param orientation Which way the strip runs.
  * @param horizontalPosition Edge carrying the divider and indicator, when horizontal.
  * @param verticalPosition Edge carrying the divider and indicator, when vertical.
+ * @param fillWidth Whether the tabs share the strip's width equally, horizontally. The strip then
+ *   fills the width it is given and does not scroll, so every tab must fit. `false` sizes each tab
+ *   to its label.
  */
 @Composable
 public fun <T> Tabs(
@@ -409,8 +465,11 @@ public fun <T> Tabs(
     orientation: TabsOrientation = TabsOrientation.Horizontal,
     horizontalPosition: TabsHorizontalPosition = TabsHorizontalPosition.Bottom,
     verticalPosition: TabsVerticalPosition = TabsVerticalPosition.Start,
+    fillWidth: Boolean = false,
 ) {
     val horizontal = orientation == TabsOrientation.Horizontal
+    val fill = fillWidth && horizontal
+    val segmented = variant == TabsVariant.Segmented
     val scrollState = rememberScrollState()
     val selectedIndex = tabs.indexOfFirst { it.value == selectedValue }
     // A horizontal scroll counts from the start edge, which is the right edge in a right-to-left
@@ -451,10 +510,10 @@ public fun <T> Tabs(
     val stripModifier = modifier
         .onSizeChanged { viewportExtent = if (horizontal) it.width else it.height }
         .then(
-            if (horizontal) {
-                Modifier.horizontalScroll(scrollState)
-            } else {
-                Modifier.verticalScroll(scrollState)
+            when {
+                fill -> Modifier.fillMaxWidth()
+                horizontal -> Modifier.horizontalScroll(scrollState)
+                else -> Modifier.verticalScroll(scrollState)
             }
         )
         // After the scroll, so this is the content's full length rather than the visible window.
@@ -478,7 +537,7 @@ public fun <T> Tabs(
         )
         .selectableGroup()
 
-    val content: @Composable () -> Unit = {
+    val content: @Composable (tabModifier: Modifier) -> Unit = { tabModifier ->
         tabs.forEachIndexed { index, tab ->
             Tab(
                 tab = tab,
@@ -488,7 +547,7 @@ public fun <T> Tabs(
                 size = size,
                 variant = variant,
                 orientation = orientation,
-                modifier = Modifier.onGloballyPositioned {
+                modifier = tabModifier.onGloballyPositioned {
                     val position = it.positionInParent()
                     tabBounds[index] = if (horizontal) {
                         TabBounds(position.x, position.x + it.size.width)
@@ -500,24 +559,84 @@ public fun <T> Tabs(
         }
     }
 
-    if (horizontal) {
-        Row(
-            modifier = stripModifier,
-            horizontalArrangement = Arrangement.spacedBy(size.gap),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            content()
-        }
-    } else {
-        Column(
-            modifier = stripModifier,
-            verticalArrangement = Arrangement.spacedBy(size.gap),
-            horizontalAlignment = Alignment.Start,
-        ) {
-            content()
+    val line: @Composable (Modifier) -> Unit = { lineModifier ->
+        if (horizontal) {
+            Row(
+                modifier = lineModifier,
+                horizontalArrangement = Arrangement.spacedBy(size.gap),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                content(if (fill) Modifier.weight(1f) else Modifier)
+            }
+        } else {
+            Column(
+                modifier = lineModifier,
+                verticalArrangement = Arrangement.spacedBy(size.gap),
+                horizontalAlignment = Alignment.Start,
+            ) {
+                content(Modifier)
+            }
         }
     }
+
+    if (segmented) {
+        // The thumb is a sibling under the tabs rather than a fill on the selected tab, so it can
+        // slide between them. The tabs report their bounds relative to their own line, and the line
+        // sits at the box's padded origin, which is where the thumb is placed from.
+        Box(
+            modifier = stripModifier
+                .background(style.track, size.itemShape)
+                .padding(size.trackPadding),
+        ) {
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .segmentedThumb(indicator::bounds, horizontal)
+                    .shadow(size.thumbElevation, size.itemShape)
+                    .background(style.thumb, size.itemShape),
+            )
+            line(if (fill) Modifier.fillMaxWidth() else Modifier)
+        }
+    } else {
+        line(stripModifier)
+    }
 }
+
+/**
+ * Sizes and places a segmented strip's thumb over the selected tab.
+ *
+ * Reads the animated bounds during layout, so a moving thumb relayouts itself alone rather than
+ * recomposing the strip. Draws nothing while nothing is selected.
+ *
+ * @param bounds Reads where the thumb currently sits, along the strip, or `null` when nothing is
+ *   selected.
+ * @param horizontal Whether the strip runs across rather than down.
+ * @return Modifier laying the thumb out.
+ */
+private fun Modifier.segmentedThumb(bounds: () -> TabBounds?, horizontal: Boolean): Modifier =
+    layout { measurable, constraints ->
+        val current = bounds()
+        if (current == null) {
+            return@layout layout(0, 0) {}
+        }
+        val extent = (current.end - current.start).roundToInt().coerceAtLeast(0)
+        val placeable = measurable.measure(
+            if (horizontal) {
+                Constraints.fixed(extent, constraints.maxHeight)
+            } else {
+                Constraints.fixed(constraints.maxWidth, extent)
+            },
+        )
+        layout(constraints.maxWidth, constraints.maxHeight) {
+            // Bounds are measured from the left, so the thumb is placed from the left too, in either
+            // reading direction.
+            if (horizontal) {
+                placeable.place(current.start.roundToInt(), 0)
+            } else {
+                placeable.place(0, current.start.roundToInt())
+            }
+        }
+    }
 
 /**
  * A strip of tabs whose selection belongs to the strip.
@@ -531,6 +650,7 @@ public fun <T> Tabs(
  * @param orientation Which way the strip runs.
  * @param horizontalPosition Edge carrying the divider and indicator, when horizontal.
  * @param verticalPosition Edge carrying the divider and indicator, when vertical.
+ * @param fillWidth Whether the tabs share the strip's width equally, horizontally.
  */
 @Composable
 public fun <T> Tabs(
@@ -543,6 +663,7 @@ public fun <T> Tabs(
     orientation: TabsOrientation = TabsOrientation.Horizontal,
     horizontalPosition: TabsHorizontalPosition = TabsHorizontalPosition.Bottom,
     verticalPosition: TabsVerticalPosition = TabsVerticalPosition.Start,
+    fillWidth: Boolean = false,
 ) {
     Tabs(
         tabs = tabs,
@@ -555,6 +676,7 @@ public fun <T> Tabs(
         orientation = orientation,
         horizontalPosition = horizontalPosition,
         verticalPosition = verticalPosition,
+        fillWidth = fillWidth,
     )
 }
 
@@ -597,8 +719,8 @@ private fun <T> Tab(
     }
 
     val interactionSource = remember { MutableInteractionSource() }
-    // A button tab already has a fill to tint; an underline tab has none, so it fades instead.
-    val indication = if (variant == TabsVariant.Button) {
+    // A button or segmented tab already has a fill to tint; an underline tab has none, so it fades instead.
+    val indication = if (variant != TabsVariant.Underline) {
         TouchIndication(shape = size.itemShape, color = style.contentSelected)
     } else {
         FadeIndication(shape = size.itemShape)

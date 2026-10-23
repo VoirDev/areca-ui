@@ -1,312 +1,104 @@
 # Foundation
 
-The Areca design system for Compose Multiplatform: the theme tokens, and every component built on
-them — buttons, text, fields, lists, overlays, navigation — for Android, iOS and the JVM.
+The Areca theme and every component built on it — buttons, text, fields, selection controls, lists
+and settings, overlays, navigation and feedback — for Compose Multiplatform on Android, iOS and the
+JVM. Every other `ui` and `flow` module draws with it.
+
+The whole set, one row per component and with pictures, is the
+[component catalogue](../../docs/components.md).
+
+## Install
 
 ```kotlin
-implementation("dev.voir.areca:foundation:1.0.0")
+implementation("dev.voir.areca:foundation:<version>")
 ```
 
-Areca is published to GitHub Packages, so the build needs its repository first; see
-[Installing](../../README.md#installing).
+It brings `compose-runtime`, `compose-foundation` and `compose-ui` as API dependencies, and nothing
+else. The snippets below use `ArecaIcons.*` from the separate, optional icon set,
+`dev.voir.areca:icons` ([README](../../standalone/icons/README.md)). Areca is published to GitHub
+Packages, so the build needs its repository first; see
+[Getting started](../../docs/getting-started.md).
 
-Every other `ui` and `flow` module depends on this one, and everything they draw reads the tokens it
-provides, so an application has exactly one theme to set up. The module carries `compose-runtime`,
-`compose-foundation` and `compose-ui` as API dependencies and nothing else. It does not depend on
-the icon set: the snippets below use `ArecaIcons.*` from `dev.voir.areca:icons`, which an
-application adds itself — see [Icons are opt-in](../../README.md#icons-are-opt-in).
+## Quick start
 
-Where each declaration lives is the root README's [Namespaces](../../README.md#namespaces). For a
-terse guide to picking components, written for coding agents, see [AGENTS.md](AGENTS.md).
-
----
-
-## Setup
-
-### The theme provider
-
-Wrap the application once, near its root, in `ArecaThemeProvider`. It puts the tokens in scope and
-seeds the default style and size of every component:
+Wrap the application once in `ArecaThemeProvider`, then build screens from the components:
 
 ```kotlin
 @Composable
-fun App() {
+fun App(onSignOut: () -> Unit) {
     ArecaThemeProvider(darkTheme = isSystemInDarkTheme()) {
-        Box(Modifier.fillMaxSize().background(ArecaTheme.colors.bgCanvas)) {
-            Home()
+        var push by remember { mutableStateOf(true) }
+
+        BaseLayout(
+            bg = ArecaTheme.colors.bgCanvas,
+            contentWindowInsets = WindowInsets.safeDrawing,
+            topBar = { TopBar("Account") },
+        ) { padding ->
+            Column(
+                modifier = Modifier.padding(padding).horizontalContentInsets(),
+                verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.xl),
+            ) {
+                Settings {
+                    Section(header = { Text("Notifications") }) {
+                        SettingsToggleRow(
+                            checked = push,
+                            onCheckedChange = { push = it },
+                            title = { Text("Push notifications") },
+                        )
+                    }
+                }
+                Button("Sign out", onClick = onSignOut, style = ButtonStyle.soft(ActionColor.Danger))
+            }
         }
     }
 }
 ```
 
-`darkTheme` picks the direction; nothing follows the system on its own, so pass
-`isSystemInDarkTheme()` or the user's own setting. The provider paints nothing, so give the screen
-its ground — `bgCanvas` — yourself.
+`ArecaThemeProvider`, `ArecaTheme` and `horizontalContentInsets` are in `dev.voir.areca.theme`; each
+component is in `dev.voir.areca.foundation.<family>` — here `layout`, `topbar`, `settings`, `text`
+and `button`.
 
-Without a provider, every token and component falls back to the light theme's defaults, so a
-preview or a test composes without wrapping. An application always wraps: only the provider can make
-the theme dark or change a token.
+## Theme and customising
 
-### Changing the theme
-
-Each parameter of `ArecaThemeProvider` defaults to a value derived from the one above it, so
-override at the highest level that says what you mean and the rest follows:
-
-| Parameter | What it is | Derived from |
-| --- | --- | --- |
-| `baseColors` | The raw palette | — |
-| `colors` | Semantic colors: `bgCanvas`, `fgBase`, `borderBase`, `accentBase`, … | `baseColors`, for `darkTheme` |
-| `radius` / `shapes` | Corner lengths, and the shapes built from them | `shapes` from `radius` |
-| `spacing` | The spacing scale and the screen gutters | — |
-| `elevation` | The shadow scale | — |
-| `motion` | Durations and easings | — |
-| `fonts` / `baseTypography` / `typography` | Font families, the raw type scale, the named styles | each from the one before |
-
-```kotlin
-ArecaThemeProvider(
-    darkTheme = isSystemInDarkTheme(),
-    radius = ArecaRadius(md = 12.dp, lg = 20.dp),
-    fonts = ArecaFonts(primary = brandSans),
-) {
-    App()
-}
-```
-
-Supplying `baseColors` re-themes both directions; supplying `colors` replaces the mapping for the
-current direction only.
-
-### Reading tokens
-
-`ArecaTheme` is the only way to read a token. Each accessor resolves the value the nearest provider
-put in scope:
-
-| Accessor | Holds |
-| --- | --- |
-| `ArecaTheme.colors` | Semantic colors — the ones to use |
-| `ArecaTheme.typography` | Named text styles: `headingSmall`, `bodyMedium`, `labelLarge`, … |
-| `ArecaTheme.spacing` | `xs2` (2dp) to `xl9` (96dp), and `horizontalContentInsets` / `verticalContentInsets` |
-| `ArecaTheme.radius` / `ArecaTheme.shapes` | Corner lengths, and shapes from `none` to `full`, plus `tile` and `button` |
-| `ArecaTheme.elevation` | Shadow depths from `none` to `xl` |
-| `ArecaTheme.motion` | Durations from `instant` to `deliberate`, and the `standard`, `enter`, `exit`, `pressIn` and `fade` easings |
-| `ArecaTheme.isDark` | The direction, for a decision no token can carry |
-| `ArecaTheme.baseColors` / `baseTypography` / `fonts` | The raw material, for when no semantic token says what you mean |
-
-```kotlin
-Column(
-    modifier = Modifier
-        .background(ArecaTheme.colors.bgSurface, ArecaTheme.shapes.lg)
-        .padding(ArecaTheme.spacing.xl),
-    verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md),
-) {
-    Text("Storage", style = ArecaTheme.typography.headingSmall)
-    Text("12 GB of 50 GB used", variant = TextVariant.BodySmall, color = TextColor.Subtle)
-}
-```
-
-`Modifier.horizontalContentInsets()`, `verticalContentInsets()` and `contentInsets()` pad by the
-screen gutters.
-
-### Regions that are always dark
-
-A photo editor, a media viewer or a camera is dark whatever the theme around it. Wrap it in
-`ArecaDarkTheme`, which keeps everything the application set — palette, shapes, spacing, motion,
-type — and changes only the direction:
-
-```kotlin
-@Composable
-fun PhotoViewer(photo: Painter) {
-    ArecaDarkTheme {
-        SystemBars(color = ArecaTheme.colors.bgCanvas)
-        Box(Modifier.fillMaxSize().background(ArecaTheme.colors.bgCanvas)) {
-            Image(photo, contentDescription = null, modifier = Modifier.fillMaxSize())
-        }
-    }
-}
-```
-
-A nested `ArecaThemeProvider(darkTheme = true)` would start from the defaults instead, losing the
-application's palette. To name a dark color before the dark scope begins — a style parameter's
-default, which is resolved at the call site — read `ArecaTheme.darkColors`, the dark counterpart of
-the theme in scope.
-
-`SystemBars` paints the window's bars for as long as it is composed and restores them when it
-leaves. It acts on Android and does nothing on iOS and the desktop. In a dialog, pair it with
-`edgeToEdgeDialogProperties()` so the window draws behind the bars.
-
----
-
-## How every component works
-
-The families differ in what they draw, not in how they are configured. Learn this section once.
-
-### Style and size
-
-A component's look is two values:
-
-- **`XStyle`** — colors, and the shape and indication that go with them.
-- **`XSize`** — paddings, gaps, type, minimum bounds and touch target.
-
-Each is a data class whose companion holds the ready-made values:
-
-| On the companion | What it is |
-| --- | --- |
-| `Default` | The theme's value. What the component uses when given nothing |
-| Named presets | A ladder of sizes (`Small`, `Medium`, `Large`, …) or a set of looks (`BadgeStyle.Success`, `CardStyle.Outlined`) |
-| `default(...)` | `Default` with any field replaced, every parameter defaulting to the theme |
-| Style factories | Where the look is a choice: `ButtonStyle.solid(ActionColor.Danger)`, `FieldStyle.filled()` |
-
-```kotlin
-Button(
-    "Delete",
-    onClick = onDelete,
-    style = ButtonStyle.soft(ActionColor.Danger),
-    size = ButtonSize.Small,
-)
-
-ProgressBar(
-    0.4f,
-    style = ProgressBarStyle.default(fill = ArecaTheme.colors.fgSuccess),
-    size = ProgressBarSize.Small,
-)
-```
-
-Most presets and every `default(...)` are `@Composable`: they read the theme where they are called,
-so a style built inside an `ArecaDarkTheme` is a dark one.
-
-### Defaults in scope
-
-Every component reads its style and size from a composition local when it is not given one.
-`Button`'s `style` defaults to `LocalButtonStyle.current ?: ButtonStyle.solid()`, and its `size` to
-`LocalButtonSize.current ?: ButtonSize.Medium`; every other component follows the same pattern with
-its own `LocalXStyle` and `LocalXSize`.
-
-The locals are nullable. `ArecaThemeProvider` seeds them, and the fallback after `?:` is what a
-component uses with no provider at all. To change a default for a subtree — a toolbar of small
-outlined buttons, a dense form — provide your own:
-
-```kotlin
-CompositionLocalProvider(
-    LocalButtonSize provides ButtonSize.Small,
-    LocalButtonStyle provides ButtonStyle.outlined(ActionColor.Neutral),
-) {
-    Row(horizontalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md)) {
-        Button("Archive", onClick = onArchive)
-        Button("Move", onClick = onMove)
-    }
-}
-```
-
-Provided just inside the application's `ArecaThemeProvider`, the same thing changes the default for
-the whole application. A nested `ArecaThemeProvider` or `ArecaDarkTheme` seeds every local again, so
-an override made above one does not reach inside it.
-
-Three locals carry content rather than a component's look, and every family reads them:
-`LocalContentColor` and `LocalTextStyle` (in `dev.voir.areca.foundation`) and `LocalIconSize`. A
-container sets them for its slots — a button provides its label color, a field its type — which is
-why a plain `Text` or `Icon` inside a slot comes out right without arguments.
-
-A few families resolve their defaults differently, and their sections say how: fields read
-`FieldDefaults.style` and `FieldDefaults.size`, a `Notice` builds its style from its tone unless
-`LocalNoticeStyle` is provided, and a `Settings` list hands its rows the styles from
-`SettingsDefaults`.
-
-### `ActionColor`
-
-What an action *means* is an `ActionColor`: `Brand`, `Danger`, `Success`, `Warning`, `Neutral` or
-`NeutralDark`. How *loud* it is, is the style factory. `Button`, `IconButton` and `FeaturedIcon`
-resolve the same family the same way, along the same ladder:
-
-| Factory | Use it for |
-| --- | --- |
-| `solid` | The screen's one primary action. Two solid buttons on a screen means no primary action |
-| `soft` | A secondary action that still reads as its family |
-| `outlined` | A secondary action on a busy surface |
-| `plain` | An action that must not pull the eye — Cancel, a toolbar control (`Button` and `IconButton` only) |
-
-`Danger` is destructive whether it is a filled button or a plain icon. The theme's default button is
-`solid(ActionColor.Brand)`.
-
-### Parameter order
-
-Signatures share one order: the required values first — the value and its change callback, or the
-action and its label — then `modifier` as the first optional parameter, then the rest, with the
-main content slot last so it can be a trailing lambda. A few place `modifier` later. Pass everything
-after the leading value by name, and the order never matters at a call site.
-
-Callbacks are nullable where *no* callback means something. `Button(onClick = null)` draws a button
-with no action, for one inside a row that is itself clickable; a `Checkbox` given a `null`
-`onCheckedChange` draws a display-only box whose state the enclosing row reports.
-
-### Interaction and focus
-
-Every interactive component takes `interactionSource: MutableInteractionSource? = null`. `null`
-creates one internally; pass your own to observe press, hover and focus, or to drive one
-component's state from another:
-
-```kotlin
-val interactions = remember { MutableInteractionSource() }
-val pressed by interactions.collectIsPressedAsState()
-
-Button(
-    if (pressed) "Release to send" else "Hold to send",
-    onClick = onSend,
-    interactionSource = interactions,
-)
-```
-
-A style carries its indication, which draws hover, press and keyboard focus. The four live in
-`dev.voir.areca.indication`:
-
-| Indication | Feedback | Used by |
-| --- | --- | --- |
-| `TouchIndication` | A hover tint and a press that spreads from the finger | Solid and soft buttons, swatches — the default for anything tapped |
-| `FadeIndication` | The background crossfades | Plain buttons, ghost cards |
-| `StrokeIndication` | The outline draws itself and thickens on press | Outlined buttons and cards |
-| `LiquidSweepIndication` | A fill sweeps across in reading order | Nothing by default; for a deliberate, commit-style action of your own |
-
-`ButtonStyle` and `IconButtonStyle` keep their shape and their indication in step: the button draws
-an Areca indication in the style's `shape` whatever shape it was built with, so
-`style.copy(shape = ArecaTheme.shapes.full)` gives a pill that also reacts as a pill.
-
-Every indication draws keyboard focus the same way: a `FocusOutline` ring outside the element's
-bounds, following its shape. Nothing inside the element changes on focus, so hover, press and focus
-can all show at once. Because the ring is outside the bounds, never `Modifier.clip` an element that
-draws one — use `Modifier.background(color, shape)` for a shaped fill.
-
-### Touch targets
-
-`MinimumTouchTarget` is 48dp. A control that draws smaller — a 32dp icon button, a 20dp checkbox —
-reserves the rest in layout around itself, centred, so a neighbour can never sit inside its band.
-The size classes of `Button`, `IconButton`, `Badge`, `Checkbox`, `Radio`, `Toggle`, `Swatch` and
-`SwatchPicker` carry this as `touchTarget`. It is reserved only for a control that has an action:
-one given a `null` callback is display-only and keeps its drawn size.
-
-Give your own small controls the same guarantee with `Modifier.minimumTouchTarget()`, applied
-outside the element's size and before its `clickable`:
-
-```kotlin
-Box(
-    modifier = Modifier
-        .minimumTouchTarget()
-        .size(32.dp)
-        .background(ArecaTheme.colors.bgMuted, ArecaTheme.shapes.full)
-        .clickable(
-            interactionSource = interactions,
-            indication = TouchIndication(shape = ArecaTheme.shapes.full),
-            role = Role.Button,
-            onClick = onPlay,
-        ),
-)
-```
-
----
+- **[Theme](../../docs/theme.md)** — the tokens (colour, typography, spacing, radius, elevation,
+  motion), changing the theme through `ArecaThemeProvider`, regions that are always dark with
+  `ArecaDarkTheme` and `SystemBars` (in `dev.voir.areca.platform`) to colour the system bars around
+  them, and reading tokens through `ArecaTheme`.
+- **[Customising components](../../docs/customising.md)** — every component's `style: XStyle` and
+  `size: XSize`, the `Default` values, presets and `default(...)`, defaults provided for a subtree,
+  `ActionColor`, parameter order, interaction and focus, and touch targets.
 
 ## Components
 
-One section per package under `dev.voir.areca.foundation`. Each component's KDoc is the reference
-for every parameter; this is the map.
+One section per family. Each component's KDoc is the reference for every parameter; this is the
+map and the options that matter.
 
-### `button`
+| Family | Packages under `dev.voir.areca.foundation` |
+| --- | --- |
+| [Buttons and actions](#buttons-and-actions) | `button`, `topbar` |
+| [Text](#text) | `text` |
+| [Icons](#icons) | `icon` |
+| [Badges and avatars](#badges-and-avatars) | `badge`, `avatar` |
+| [Stats](#stats) | `stat` |
+| [Selection controls](#selection-controls) | `selection` |
+| [Fields](#fields) | `field`, `field.select` |
+| [Feedback](#feedback) | `feedback` |
+| [Notices and status](#notices-and-status) | `notice`, `status` |
+| [Overlays](#overlays) | `overlay` |
+| [Layout and surfaces](#layout-and-surfaces) | `layout` |
+| [Slot rows](#slot-rows) | `slot` |
+| [Lists and settings](#lists-and-settings) | `list`, `settings` |
+| [Collections](#collections) | `collection` |
+| [Tables](#tables) | `table` |
+| [Navigation, tabs, tab bar and top bar](#navigation-tabs-tab-bar-and-top-bar) | `navigation`, `tabs`, `tabbar`, `topbar` |
+| [Wheel picker](#wheel-picker) | `wheel` |
+
+### Buttons and actions
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../../docs/images/foundation-buttons-dark.png">
+  <img alt="Buttons in each style and size, and icon buttons" src="../../docs/images/foundation-buttons-light.png" width="600">
+</picture>
 
 | Component | Use it for |
 | --- | --- |
@@ -326,10 +118,42 @@ IconButton(
 
 `enabled = false` says the action is unavailable. `loading = true` says it is under way: the press
 is blocked, a spinner replaces the trailing slot, and assistive technology hears
-`loadingStateDescription`. Sizes run `ExtraSmall` (32dp) to `ExtraLarge` (64dp) for buttons, and
-`Tiny` (20dp) to `ExtraLarge` for icon buttons; `Medium`, 48dp, is the default for both.
+`loadingStateDescription`. Button sizes run `ExtraSmall` (32dp) to `ExtraLarge` (64dp), icon button
+sizes `Tiny` (20dp) to `ExtraLarge`; `Medium`, 48dp, is the default for both. The style factories
+`solid`, `soft`, `outlined` and `plain` take an `ActionColor`; see
+[Customising](../../docs/customising.md).
 
-### `text`
+**Top bar controls.** Inside a `TopBar`'s or `LargeTopBar`'s `leading` and `trailing` slots, use the
+bar's own controls rather than icon buttons. They share one size, one hit target and one distance
+from the edge, and take their look from the bar's `TopBarActionStyle`.
+
+| Component | Use it for |
+| --- | --- |
+| `BackAction` | Go back. A chevron, with an optional `label` |
+| `CloseAction` | Dismiss a sheet or a full-screen task |
+| `DoneAction` / `CancelAction` | Finish or abandon a task, as a word: "Done", "Save"; "Cancel", "Discard" |
+| `TextAction` | Any other control written as a word |
+| `IconAction` | Any other control shown as one icon |
+| `SearchAction`, `ShareAction`, `EditAction`, `DeleteAction`, `AddAction`, `SettingsAction`, `DownloadAction` | The common verbs, each with its icon and an English `contentDescription` |
+| `NotificationsAction` / `FilterAction` | Open notifications or filters, with a count in `badge` |
+| `FavoriteAction` | Mark and unmark a favourite; reports its `selected` state as a toggle |
+| `MenuAction` / `OverflowAction` | Open a navigation drawer; open everything the bar had no room for |
+| `AvatarAction` | Who is signed in, normally opening an account menu |
+| `Action` | A control holding any mark, sized and aligned like the rest |
+
+```kotlin
+TopBar(
+    "Photo",
+    leading = { BackAction(onClick = onBack) },
+    trailing = {
+        FavoriteAction(selected = favourite, onClick = { favourite = !favourite })
+        ShareAction(onClick = onShare)
+        OverflowAction(onClick = onMore)
+    },
+)
+```
+
+### Text
 
 | Component | Use it for |
 | --- | --- |
@@ -352,7 +176,9 @@ Heading(
 SensitiveText("€4,210.50", revealed = revealed, onRevealedChange = { revealed = it })
 ```
 
-### `icon`
+A plain `Text("…")` inside a component's slot takes the slot's type and colour; pass no style.
+
+### Icons
 
 | Component | Use it for |
 | --- | --- |
@@ -374,17 +200,18 @@ Chevron(if (expanded) ChevronDirection.Up else ChevronDirection.Down)
 ```
 
 Pass `contentDescription = null` when the icon repeats something already said beside it, and
-`tint = Color.Unspecified` for a multicolour mark. `IconSize` is plain `Dp` steps, `ExtraSmall`
-(12dp) to `ExtraLarge` (32dp).
+`tint = Color.Unspecified` for a multicolour mark. `IconSize` steps run `ExtraSmall` (12dp) to
+`ExtraLarge` (32dp).
 
-### `badge`
+### Badges and avatars
 
 | Component | Use it for |
 | --- | --- |
 | `Badge` | A short label — a status, a tag, a filter. Pressable with `onClick` |
 | `NotificationBadge` | A count, usually overlaid on something else |
-| `IndicatorDot` | A status carried by color alone: presence, unread |
+| `IndicatorDot` | A status carried by colour alone: presence, unread |
 | `BadgeSelect` / `LazyBadgeSelect` / `FlowBadgeSelect` | A group of chips that select something: one line, one scrolling line, or wrapping lines |
+| `Avatar` | A person or entity: an image, initials from `letters`, or an empty shape |
 
 ```kotlin
 Badge(style = BadgeStyle.Success, soft = true) { Text("Paid") }
@@ -400,14 +227,10 @@ LazyBadgeSelect(
 )
 ```
 
-A badge group does not hold its selection: `onSelect` reports the chip pressed, and the caller
-updates `selected`. With `BadgeSelectionMode.Single` the chips are radio buttons, with `Multiple`
-checkboxes.
-
-### `avatar`
-
-`Avatar` shows a person or entity: an image in its content slot, or initials from `letters`, or an
-empty shape. The slot takes any image loader's output and clips it.
+`BadgeStyle.Chip` leaves unchosen chips as bare words; `BadgeStyle.FilledChip` puts them on the
+subtle fill, for a row that must read as tappable before anything is chosen. A badge group does not
+hold its selection: `onSelect` reports the chip pressed and the caller updates `selected`. With
+`BadgeSelectionMode.Single` the chips are radio buttons, with `Multiple` checkboxes.
 
 ```kotlin
 Avatar(letters = "Ada Lovelace", contentDescription = "Ada Lovelace")
@@ -422,10 +245,46 @@ Avatar(contentDescription = "Ada Lovelace", size = AvatarSize.Large) {
 }
 ```
 
-`letters` is reduced to at most two initials. Without a `contentDescription` the avatar is
-decorative, which is right when the name is printed beside it.
+The avatar's slot takes any image loader's output and clips it. `letters` is reduced to at most two
+initials. Without a `contentDescription` the avatar is decorative — right when the name is printed
+beside it.
 
-### `selection`
+### Stats
+
+| Component | Use it for |
+| --- | --- |
+| `Stat` | One figure with what it is and, optionally, what it means: "Spent · €2,140 · a month" |
+| `StatGrid` | Stats in equal columns, read as a set |
+
+```kotlin
+Stat(
+    label = "October so far",
+    value = "€2,340",
+    note = "€218 under your usual pace",
+    size = StatSize.Large,
+    trailing = { Badge(style = BadgeStyle.Success, soft = true) { Text("−4%") } },
+)
+
+StatGrid(columns = 2) {
+    Stat(label = "Earned", value = "€4,180", note = "a month")
+    Stat(label = "Spent", value = "€2,140", note = "a month")
+    Stat(label = "Kept", value = "41%")
+    Stat(label = "A day", value = "€71", note = "weekends 1.8× weekdays")
+}
+```
+
+`label`, `value` and `note` are plain strings; the style and size decide type and ink, and the value
+uses tabular digits. `StatSize.Default` is a figure in a grid, `StatSize.Large` the figure a section
+is about, with its change in `trailing`. Give a stat `onClick` to open what the figure is about; it
+keeps no visible container and its hit area is at least the minimum touch target. `StatGrid` gives
+every cell an equal width and every cell of a row the row's height; pass the stats in reading order.
+
+### Selection controls
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../../docs/images/foundation-selection-dark.png">
+  <img alt="Checkboxes, radios, toggles, swatches, a number stepper and a badge select" src="../../docs/images/foundation-selection-light.png" width="720">
+</picture>
 
 | Component | Use it for |
 | --- | --- |
@@ -433,7 +292,7 @@ decorative, which is right when the name is printed beside it.
 | `Radio` | One option of several. Put `Modifier.selectableGroup()` on the group |
 | `Toggle` | A setting that applies the moment it is flipped. `ToggleState` with `BinaryToggleCycle` or `TriStateToggleCycle` |
 | `NumberStepper` | A whole number nudged by one between bounds |
-| `Swatch` / `SwatchPicker` | One color sample; a scrolling set of them with a single selection |
+| `Swatch` / `SwatchPicker` | One colour sample; a scrolling set of them with a single selection |
 
 These are the bare controls. With a label and a row-wide tap target, use the list rows
 (`CheckboxListItem`, `RadioListItem`, `ToggleListItem`) or the settings rows.
@@ -452,27 +311,33 @@ NumberStepper(
 )
 ```
 
-`enabled = false` greys a control out as unavailable; `readOnly = true` keeps its colors and refuses
-changes, for a value that is real but not the user's to change. `Checkbox` and `Radio` share
-`SelectionStyle`, which maps checked, disabled and read-only to `SelectionColors`; `Toggle` draws
-from the same `SelectionColors` through its `ToggleStyle`.
+`enabled = false` greys a control out as unavailable; `readOnly = true` keeps its colours and
+refuses changes, for a value that is real but not the user's to change. `Checkbox` and `Radio` share
+`SelectionStyle`; `Toggle` draws from the same `SelectionColors` through its `ToggleStyle`.
 
-### `field`
+### Fields
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../../docs/images/foundation-fields-dark.png">
+  <img alt="Text, password, search and select fields, one showing an error" src="../../docs/images/foundation-fields-light.png" width="720">
+</picture>
 
 Every field is a `Field` container with an editor or a value inside. Put it in a `FieldGroup` for
 its label and its message.
 
 | Component | Use it for |
 | --- | --- |
-| `TextField` | Free text. `format` beautifies the display without touching your state |
+| `TextField` | Free text. `format` changes the display without touching your state |
 | `PasswordField` | A secret, with a reveal control |
 | `SearchField` | A query, with a magnifier, a clear control and the keyboard's search action |
 | `AffixTextField` | A value with a fixed prefix or suffix — a currency sign, a unit |
 | `OtpField` | A one-time code, one character to a cell, with `onComplete` when the last one lands |
-| `select.SelectField` | A value chosen from a dropdown anchored to the field |
-| `select.SelectFlowModal` | A long list chosen from in a sheet, with optional search and an apply button |
-| `FieldRow` | Several parts sharing one border and one status — an amount and its currency |
+| `SelectField` | A value chosen from a dropdown anchored to the field |
+| `SelectFlowModal` | A long list chosen from in a sheet, with optional search and an apply button |
+| `FieldRow` | Several parts sharing one border and one status — a dialling code and a number |
+| `TextSegment` / `SelectSegment` | The parts of a `FieldRow`: one typed into, one chosen from a dropdown |
 | `FieldGroup` | The label above, beside or inside the control, and one assistive or error line |
+| `FieldGroupLayout` | `FieldGroup`'s arrangement with the label and message as slots, for renderers of your own |
 | `Field` | The bare container, for a value no stock field holds |
 
 ```kotlin
@@ -494,14 +359,13 @@ FieldGroup(label = "Email", required = true, error = emailError) { field ->
 
 **Forward the scope.** The group hands its control a `FieldScope` holding the status, the label and
 the focus handle. A field given it draws the error state, announces the label and the error, and
-takes focus when the label is tapped; with `labelPlacement = FieldLabelPlacement.Inside` the label
-is drawn inside the box, which works only through the scope. The group decides the status from
-`error`, so the message and the border cannot disagree.
+takes focus when the label is tapped. `labelPlacement = FieldLabelPlacement.Inside` draws the label
+inside the box, and works only through the scope. The group decides the status from `error`.
 
-**Theming fields.** Fields default to `FieldDefaults.style` and `FieldDefaults.size`, which read
+**Looks.** Fields default to `FieldDefaults.style` and `FieldDefaults.size`, which read
 `LocalFieldStyle` and `LocalFieldSize`. The looks are factories: `outlined()` (the theme's default),
 `filled()`, `soft()`, `solidNeutral()`, `underlined()` and `inline()`, for a field inside a surface
-that already draws the boundary. A form is one look — provide it once for the screen:
+that already draws the boundary. Provide one look for a whole form:
 
 ```kotlin
 CompositionLocalProvider(LocalFieldStyle provides FieldStyle.filled()) {
@@ -509,11 +373,52 @@ CompositionLocalProvider(LocalFieldStyle provides FieldStyle.filled()) {
 }
 ```
 
-`SelectField` and `SelectFlowModal` live in `dev.voir.areca.foundation.field.select`, and take their
-options as `SelectOption(key, value, label)`. Selection is controlled: `onChange` reports the values
-that should be selected next, and nothing moves until your state comes back.
+**Select fields.** `SelectField`, `SelectFlowModal` and `SelectSegment` are in
+`dev.voir.areca.foundation.field.select` and take their options as `SelectOption(key, value, label)`.
+Selection is controlled: `onChange` reports the values that should be selected next, and nothing
+moves until your state comes back.
 
-### `feedback`
+**Compound fields.** A `FieldRow` holds segments that share its border, status and focus ring:
+
+```kotlin
+FieldGroup(label = "Phone number") { field ->
+    FieldRow(modifier = Modifier.fillMaxWidth(), field = field) {
+        SelectSegment(
+            values = setOf(dialCode),
+            onChange = { codes -> codes.firstOrNull()?.let { dialCode = it } },
+            options = dialCodes,
+        )
+        TextSegment(
+            phone,
+            onValueChange = { phone = it },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+        )
+    }
+}
+```
+
+A `TextSegment` takes the leftover width (`weight = 1f`); a `SelectSegment` sizes to its selection
+unless given a `width` or a `weight`.
+
+**Your own label or message.** `FieldGroupLayout` arranges a label slot, the control and a message
+slot the way `FieldGroup` does, but leaves the status to you — for a label with a counter opposite
+it, or a message with an icon:
+
+```kotlin
+FieldGroupLayout(
+    label = { Text("Bio", variant = TextVariant.LabelMedium) },
+    message = { Text("${bio.length} / 160", variant = TextVariant.Caption, color = TextColor.Muted) },
+) {
+    TextField(bio, onValueChange = { bio = it }, modifier = Modifier.fillMaxWidth())
+}
+```
+
+### Feedback
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../../docs/images/foundation-feedback-dark.png">
+  <img alt="A notice, a progress bar, skeleton rows, a toast and a status scene" src="../../docs/images/foundation-feedback-light.png" width="720">
+</picture>
 
 | Component | Use it for |
 | --- | --- |
@@ -523,7 +428,8 @@ that should be selected next, and nothing moves until your state comes back.
 | `Skeleton` | Placeholder bars where content is still loading |
 | `RequirementList` | The rules a value must meet, each ticked off as it is met |
 | `Fallback` | Part of a screen standing in for missing content: empty, failed, offline |
-| `ToastHost` / `Toast` | A brief message about something that just happened |
+| `ToastHost` / `Toast` | A brief message about something that just happened. `Toast` is one toast's surface, drawn by the host |
+| `AnnounceOnChange` | A sentence spoken by the screen reader when it appears or changes, without moving focus |
 
 ```kotlin
 ProgressBar(0.64f, label = "64%", contentDescription = "Uploading report.pdf")
@@ -550,16 +456,18 @@ Box(Modifier.fillMaxSize()) {
 
 `show` returns the toast's id for `dismiss(id)`. A toast's duration is lengthened by the platform's
 accessibility timeout; `duration = null` keeps it until dismissed, which a toast carrying an action
-needs.
+needs. `AnnounceOnChange` is in `dev.voir.areca.foundation`; see [Accessibility](#accessibility).
 
-### `notice` and `status`
+### Notices and status
 
 | Component | Use it for |
 | --- | --- |
 | `Notice` | A block set off from the page to say one thing — a banner with a title, or a one-line note |
+| `NoticeText` | A line of a notice's body; `quiet = true` for a secondary line |
 | `AnimatedNotice` | A notice that is present only while there is something to say |
 | `StatusScene` | A whole screen given over to one piece of work: running, done, or stopped |
 | `StatusMark` | The disc a status scene shows — working, then success or stopped |
+| `StatusSceneActions` | A status scene's primary and secondary buttons |
 
 ```kotlin
 Notice("Payment failed", icon = ArecaIcons.AlertTriangle, tone = NoticeTone.Danger) {
@@ -575,21 +483,26 @@ StatusScene(
 )
 ```
 
-A notice takes its colors from `tone` and `emphasis` through `NoticeStyle.of(...)`; a danger notice
-is filled by default, every other tone subtle. `LocalNoticeStyle` is `null` unless provided; a
-style provided there replaces the tone's for every notice in the subtree, so provide one only where
-every notice should look the same. **StatusScene or Fallback:** a status scene *is* the
-screen and stages its entrance; a fallback stands in for part of one and appears at once. Their
-slots line up one for one.
+A notice takes its colours from `tone` and `emphasis` through `NoticeStyle.of(...)`; a danger notice
+is filled by default, every other tone subtle. A style provided through `LocalNoticeStyle` replaces
+the tone's for every notice in the subtree. A status scene *is* the screen and stages its entrance;
+a `Fallback` stands in for part of one and appears at once. Their slots line up one for one.
 
-### `overlay`
+### Overlays
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../../docs/images/foundation-overlays-dark.png">
+  <img alt="A dialog and a confirm sheet" src="../../docs/images/foundation-overlays-light.png" width="720">
+</picture>
 
 | Component | Use it for |
 | --- | --- |
 | `ConfirmSheet` | A yes-or-no question answered with a thumb: sign out, delete, discard |
 | `ConfirmationDialog` | The same question as a centred dialog, with `suspend` handlers that show progress |
-| `Dialog` | A centred window for a short task — rename, pick one thing |
+| `Dialog` | A centred window for a short task — rename, pick one thing. End it with `ModalDefaults.Actions` |
 | `FlowModal` | A bottom sheet the user can drag between heights and away — a form, a picker, a filter |
+| `FlowModalActionBar` | A sheet's footer: the commit button, and an optional secondary action in `leading` |
+| `FlowModalSecondaryAction` | The secondary button in a `FlowModalActionBar` — "Cancel", "Reset" |
 | `DropdownPopup` | A surface hanging off the control that opened it — a menu |
 
 ```kotlin
@@ -607,13 +520,11 @@ ConfirmSheet(
 )
 ```
 
-A `ConfirmSheet` is a `FlowModal` underneath and takes its sheet from the flow modal defaults in
-scope where it is drawn, so an application's `LocalFlowModalStyle` reaches it, and inside
-`ArecaDarkTheme` it is dark. `LocalConfirmSheetStyle` and `LocalConfirmSheetSize` are `null` unless
-provided.
+A `ConfirmSheet` is a `FlowModal` underneath, so the sheet defaults in scope — `LocalFlowModalStyle`,
+an `ArecaDarkTheme` — reach it.
 
-A `FlowModal` is driven by a `FlowModalController` from `rememberFlowModal`; give it a `TopBar` as
-`header` and a `FlowModalActionBar` as `footer`, so every sheet commits from the same corner:
+A `FlowModal` is driven by a `FlowModalController` from `rememberFlowModal`. Give it a `TopBar` as
+`header` and a `FlowModalActionBar` as `footer`:
 
 ```kotlin
 val filters = rememberFlowModal(autoHeight = true)
@@ -629,7 +540,13 @@ FlowModal(
 }
 ```
 
-A `DropdownPopup` positions itself against the control marked with `Modifier.anchored` and flips to
+The action bar's `layout` decides how its two ends share the width:
+`FlowModalActionBarLayout.Trailing`, the default, keeps the commit at its own width against the end
+edge; `Split(secondaryWeight, confirmWeight)` — `1f` and `2f` by default — stretches both across the
+bar, with a `FlowModalSecondaryAction` in `leading` taking its share. `showDivider = false` drops
+the hairline above the buttons.
+
+A `DropdownPopup` positions itself against the control marked with `Modifier.anchored`, and flips to
 the other side when it would run off screen:
 
 ```kotlin
@@ -643,21 +560,20 @@ Box {
 }
 ```
 
-`Dialog` and `FlowModal` open in their own platform window, above everything, and draw one scrim.
-`ModalDefaults.Actions` is the stacked pair of buttons a dialog usually ends with.
+`Dialog` and `FlowModal` open in their own platform window, above everything, with one scrim.
 
-### `layout`
+### Layout and surfaces
 
 | Component | Use it for |
 | --- | --- |
 | `BaseLayout` | A screen's frame: top and bottom bars drawn over full-height content that is handed their height as padding |
-| `CollapsingHeaderLayout` | A header that scrolls away above a strip that stays — artwork over tabs |
-| `PullToRefreshLayout` | Pull-to-refresh around scrolling content. Experimental — see below |
+| `CollapsingHeaderLayout` | A header that scrolls away above a strip that stays — artwork over tabs — optionally into a compact band that stays |
+| `PullToRefreshLayout` / `PullToRefreshIndicator` | Pull-to-refresh around scrolling content, and its default indicator. [Experimental](#experimental-api) |
 | `Card` | A surface that groups content, optionally pressable or expandable, with an optional footer for its status and actions |
 | `Expandable` | A section that opens and closes under a trigger you supply |
 | `HorizontalDivider` / `VerticalDivider` | A rule, optionally labelled — "or" between two choices |
 | `RelativePositionLayout` | A companion on one of eight sides of its content — a label above a bar |
-| `BoxScope.Overlay` | A tint over a box without changing its size — a loading veil |
+| `Overlay` | A tint over a `Box`'s content without changing its size — a loading veil |
 
 ```kotlin
 BaseLayout(
@@ -670,14 +586,14 @@ BaseLayout(
 }
 ```
 
-The content is laid out under the bars, so it must apply the padding it is handed — normally as a
-lazy list's `contentPadding` — or the bars hide its first and last items. A `Card`'s content is
-handed the card's padding the same way, so a full-bleed image can ignore it.
+The content is laid out under the bars and must apply the padding it is handed — normally as a lazy
+list's `contentPadding` — or the bars hide its first and last items. A `Card`'s content is handed the
+card's padding the same way, so a full-bleed image can ignore it.
 
-A card's status and actions go in its `footer`: a strip along the bottom, filled and inked by a
-`CardFooterStyle` — `plain()` with a hairline, `soft(ActionColor)` tinted, `solid(ActionColor)`
-filled, or `of(bg, content)` in colours of your own. Copy in the footer takes the style's ink and
-buttons take its borderless button style, so a brand-filled footer reads white without restyling.
+A card's status and actions go in its `footer`, a strip along the bottom filled by a
+`CardFooterStyle`: `plain()` with a hairline, `soft(ActionColor)` tinted, `solid(ActionColor)`
+filled, or `of(bg, content)` in colours of your own. Text and buttons in the footer take its ink and
+a matching borderless button style.
 
 ```kotlin
 Card(
@@ -697,12 +613,29 @@ Card(
 }
 ```
 
-### `slot`
+A `CollapsingHeaderLayout` given a `collapsed` band collapses into it rather than out of sight: the
+header stops at the band's height and the band fades in over it. Give the band an opaque ground.
+Hoist `rememberCollapsingHeaderState()` into its `state` to read `collapsedFraction`, `0f` fully
+shown to `1f` collapsed.
 
-`SlotRow` is the row most components are built on: a start slot, a required centre and an end slot,
-divided by a `SlotRowLayout`. A button, a badge, a list row and a top bar are the same three boxes
-with different width rules, which is why an icon sits the same distance from a label in all of
-them. Reach for it to build a row of your own that lines up with theirs.
+`Overlay` is a `BoxScope` extension; declare it last so it draws over what came before:
+
+```kotlin
+Box {
+    ReportPreview()
+    if (refreshing) {
+        Overlay(color = ArecaTheme.colors.bgOverlayDark) {
+            Spinner(contentDescription = "Refreshing")
+        }
+    }
+}
+```
+
+### Slot rows
+
+| Component | Use it for |
+| --- | --- |
+| `SlotRow` | A row of a start slot, a required centre and an end slot — the row buttons, badges, list rows and bars are built on. Build a row of your own with it so it lines up with theirs |
 
 ```kotlin
 SlotRow(
@@ -722,17 +655,19 @@ SlotRow(
 )
 ```
 
-A `SlotRowLayout.alignment` lines the sides up with a middle slot of text by scenario:
-`SlotRowLayout.Center` for one or two lines, `.Top` for three or more — the visual and the text
-start at the top and the trailing slot stays level with the visual — `.FirstLine` for a marker no
-taller than a line, and `.Auto`, which picks `Center` or `Top` by measuring the middle slot in the
-lines its `Modifier.firstLineCenter(textStyle)` reports. Every list and settings row uses `Auto`.
-
-`SlotSize.Fixed` keeps a start slot's width when it is empty, so a column of rows lines up whether
-or not each has an icon. `SlotRowLayout.Centered` keeps the middle on the row's centre line, for a
+Pick the `SlotRowLayout` by the text in the centre: `Center` for one or two lines, `Top` for three
+or more, `FirstLine` for a marker no taller than a line, and `Auto`, which picks `Center` or `Top`
+from the lines `Modifier.firstLineCenter(textStyle)` reports. Every list and settings row uses
+`Auto`. `SlotSize.Fixed` keeps a start slot's width when it is empty, so a column of rows lines up
+with or without icons; `SlotRowLayout.Centered` keeps the centre on the row's centre line, for a
 title between two controls.
 
-### `list` and `settings`
+### Lists and settings
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../../docs/images/foundation-lists-dark.png">
+  <img alt="A grouped list and a settings list" src="../../docs/images/foundation-lists-light.png" width="720">
+</picture>
 
 | Component | Use it for |
 | --- | --- |
@@ -741,10 +676,16 @@ title between two controls.
 | `ListItem` | A row: overline, title, subtitle, caption, value, leading and trailing slots |
 | `NavigationListItem` | A row that opens something, with a chevron |
 | `CheckboxListItem` / `RadioListItem` / `ToggleListItem` / `CheckmarkListItem` | A row that is a selection control; the row reports the state |
-| `ExpandableListItem` | A row that discloses content under it |
+| `ExpandableListItem` | A row that discloses content under it, optionally on a soft ground shared with what it reveals |
 | `ListItemSkeleton` | A row-shaped placeholder |
-| `Settings` | A settings screen: sections of rows, each section on its own card |
+| `ListItemChevron` / `ListItemCheckmark` | The trailing chevron and check mark of a row you compose, taking colour, size and timing from the row |
+| `Settings` / `Section` | A settings screen: sections of rows, each section on its own card |
+| `SettingsRow` | A settings row: a value, a navigation, or an action |
+| `SettingsToggleRow` / `SettingsSelectRow` / `SettingsOptionRow` / `SettingsTextFieldRow` | A row that is a switch, a choice from a dropdown, one option of a set, or a field typed in place |
+| `SettingsRowIcon` / `SettingsRowTile` | A row's leading glyph on a tile; any other leading visual cropped to the same tile |
 | `SettingsRowLink` | A second action at the end of a pressable settings row — "Verify" beside an address |
+| `SettingsBlock` | Free content on a section card, inset like a row — a preview, a swatch picker |
+| `SettingsRowSkeleton` | A settings-row-shaped placeholder |
 
 ```kotlin
 List {
@@ -763,35 +704,53 @@ List {
 ```kotlin
 Settings {
     Section(header = { Text("Notifications") }, footer = { Text("Applies to this device.") }) {
-        SettingsToggleRow(checked = push, onCheckedChange = { push = it }, title = { Text("Push") })
+        SettingsToggleRow(
+            checked = push,
+            onCheckedChange = { push = it },
+            title = { Text("Push") },
+            leading = { SettingsRowIcon(ArecaIcons.Bell) },
+        )
         SettingsRow(title = { Text("Sound") }, value = { Text("Chime") }, onClick = onSound)
+    }
+    Section(header = { Text("Email") }) {
+        if (loading) {
+            SettingsRowSkeleton(showSubtitle = true)
+        } else {
+            SettingsRow(
+                title = { Text(email) },
+                subtitle = { Text("Unverified") },
+                trailing = { SettingsRowLink("Verify", onClick = onVerify) },
+                onClick = onEditEmail,
+            )
+        }
+    }
+    Section(header = { Text("Appearance") }) {
+        SettingsBlock { ThemePreview() }
     }
 }
 ```
 
-A list owns the group's surface and the hairlines between its rows, so never put a divider between
-two rows by hand. A row is one accessibility node: its slots merge into it. `Settings` takes its
-styles and sizes from `SettingsDefaults.styles()` and `SettingsDefaults.sizes()` and hands them to
-the `SettingsRow`, `SettingsToggleRow`, `SettingsSelectRow`, `SettingsOptionRow` and
-`SettingsTextFieldRow` inside it; the list does not scroll, so put it in a scrolling container.
+A list owns the group's surface and the hairlines between its rows; never draw a divider between two
+rows by hand. A row is one accessibility node. `Settings` hands its rows the styles and sizes from
+`SettingsDefaults.styles()` and `SettingsDefaults.sizes()`; it does not scroll, so put it in a
+scrolling container.
 
-A row's slots are roles with one size and one ink each, so pass plain `Text` and let the slot style
-it: the title (`bodyMedium`, base ink), the subtitle under it (`bodySmall`, muted), a caption under
-that for detail such as when a device was last seen (`bodyExtraSmall`, the subtitle's ink), and the
-value at the end (`bodyMedium` in a settings row). A row of one or two lines centres its visual,
-its text and its trailing content; a longer one starts the visual and the text at the top and keeps
-the trailing content level with the visual (`SlotRowLayout.Auto`). Leading visuals in a section
-share one size and shape — glyphs on `SettingsRowIcon` tiles, anything else in `SettingsRowTile`.
-A section's closing action goes on its `band`, a strip at the bottom of the card in a colour of
-its own (`bandColor`), rather than behind a hairline. Settings rows are padded 16dp across and 12dp down, sit on `bgSubtle` cards on the
-`bgCanvas` page, and are divided by `borderOnSubtle` hairlines.
+A row's slots are roles with one size and one ink each, so pass plain `Text`: the `title`, the
+`subtitle` under it, a `caption` under that for detail such as when a device was last seen, and the
+`value` at the end. Leading visuals in a section share one size and shape — glyphs on
+`SettingsRowIcon` tiles, anything else in `SettingsRowTile`. A section's closing action goes on its
+`band`, a strip at the bottom of the card in `bandColor`.
 
-A settings section is for a short, bounded group — options, a form typed in place, a few actions,
-the handful of devices an account is signed in on. A collection that can grow without limit belongs
-in a `LazyList` or a `PagedContentList` of `ListItem` rows: a section composes every row at once,
-does not page and has no empty or error face.
+An `ExpandableListItem` with `container = ExpandableListItemContainer.Soft` sits on a `bgSoft` block
+while expanded, behind the row and what it reveals. `showChevron = false` drops the chevron when the
+row already says it opens. Its `bottom` slot holds content that belongs to the row itself — a meter
+under a category's name.
 
-### `collection`
+A settings section is for a short, bounded group — options, a form typed in place, a few actions.
+A collection that can grow without limit belongs in a `LazyList` or a `PagedContentList` of
+`ListItem` rows. See the [settings recipe](../../docs/recipes/settings.md).
+
+### Collections
 
 | Component | Use it for |
 | --- | --- |
@@ -811,17 +770,17 @@ PagedContentList(
 ```
 
 The state is plain data — `LimitedContentListState` or `PagedContentListState` — that your view
-model produces; the list decides which face to show from it. `ContentListLabels` holds the default
+model produces; the list picks the face to show from it. `ContentListLabels` holds the default
 faces' copy. A paged list's `contentPadding` — the `padding` a `BaseLayout` hands its content —
-insets the items, which scroll under the bars, and the loading, empty and error faces; the
-pull-to-refresh indicator emerges below its top edge.
+insets the items, which scroll under the bars, and the loading, empty and error faces. See the
+[list recipe](../../docs/recipes/list.md).
 
-### `table`
+### Tables
 
-`Table` composes every row in one pass; `LazyTable` composes rows on demand for a long set. Columns
-are `TableColumn`s: fixed when given a `width`, otherwise as wide as their widest content and
-sharing leftover space by `expandWeight`. Both scroll sideways when the columns are wider than the
-table.
+| Component | Use it for |
+| --- | --- |
+| `Table` | Rows and columns of data, every row composed in one pass |
+| `LazyTable` | The same for a long set, composing rows on demand |
 
 ```kotlin
 Table(
@@ -833,16 +792,31 @@ Table(
 )
 ```
 
-### `navigation`, `tabs`, `tabbar` and `topbar`
+A `TableColumn` is fixed when given a `width`, otherwise as wide as its widest content, sharing the
+leftover space by `expandWeight`. Both tables scroll sideways when the columns are wider than the
+table.
+
+### Navigation, tabs, tab bar and top bar
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../../docs/images/foundation-navigation-dark.png">
+  <img alt="A top bar, a strip of tabs and a tab bar" src="../../docs/images/foundation-navigation-light.png" width="400">
+</picture>
 
 | Component | Use it for |
 | --- | --- |
 | `TopBar` | A screen's heading bar: a title between controls, with an optional band underneath |
 | `LargeTopBar` | A large title that collapses into a `TopBar` as the content scrolls |
-| `Tabs` | A strip of tabs switching the content below it, underlined or as buttons |
+| `TopBarProgress` | A hairline of progress along the bar's bottom edge, in its `bottom` band |
+| `Tabs` | A strip of tabs switching the content below it: underlined, as buttons, or segmented in a track |
 | `TabBar` / `FloatingTabBar` | An application's primary destinations, docked to the bottom edge or floating above it |
+| `FloatingTabBarItemContent` | A floating tab bar item's icon and optional label |
 | `NavList` | A sidebar of destinations, with expandable sections |
+| `NavItem` | One destination row, for a sidebar you compose yourself |
 | `SwipePager` / `PagerControls` / `PageIndicator` | Pages swiped sideways with their dots and a next button — an onboarding tour |
+
+The controls in a bar's `leading` and `trailing` slots are under
+[Buttons and actions](#buttons-and-actions).
 
 ```kotlin
 TopBar(
@@ -852,6 +826,22 @@ TopBar(
     trailing = { SearchAction(onClick = onSearch) },
 )
 
+TopBar(
+    "Importing",
+    size = TopBarSize.Default.copy(bottomPadding = PaddingValues()),
+    leading = { CloseAction(onClick = onClose) },
+    bottom = { TopBarProgress(progress, contentDescription = "Importing contacts") },
+)
+```
+
+A bar handed a `rememberTopBarScrollState()` follows the content through the state's
+`nestedScrollConnection`, attached to the scrolling content with `Modifier.nestedScroll`. It then
+shows its rule once content is under it, and with `TopBarScrollBehavior.EnterAlways` or
+`ExitUntilCollapsed` it moves out of the way. `TopBarStyle` sets the bar's look and
+`TopBarActionStyle` (`Plain`, `Tonal`, `Floating`, `Scrim`) its controls'. `TopBarProgress` with
+`progress = null` runs indeterminately.
+
+```kotlin
 Tabs(
     listOf(
         TabItem(value = "inbox") { Text("Inbox") },
@@ -862,24 +852,57 @@ Tabs(
 )
 ```
 
-A top bar's `leading` and `trailing` slots are a `TopBarActionScope`, which brings the bar's
-controls: `BackAction`, `CloseAction`, `IconAction`, `TextAction`, `DoneAction`, `ShareAction` and
-the rest. Use them rather than raw icon buttons — they come out the same size and the same distance
-from the edge on every screen. `TopBarActionStyle` (`Plain`, `Tonal`, `Floating`, `Scrim`) sets
-their appearance, and `TopBarStyle` the bar's.
+`TabsVariant.Underline`, the default, switches views within a screen. `Button` and `Segmented`
+switch a setting: `Segmented` sets the tabs in a track (`TabsStyle.track`) and slides a raised thumb
+(`TabsStyle.thumb`) to the selected one. Pair it with `size = TabsSize.Segmented`.
+`fillWidth = true` shares the width equally between the tabs; the strip then does not scroll, so
+every tab must fit:
 
-A bar handed a `rememberTopBarScrollState()` learns about the content from the state's
-`nestedScrollConnection`, attached to the scrolling content with `Modifier.nestedScroll`. It then
-shows its rule once content is under it, and with `TopBarScrollBehavior.EnterAlways` or
-`ExitUntilCollapsed` it also moves out of the way.
+```kotlin
+Tabs(
+    listOf(
+        TabItem(value = Period.Month) { Text("Month") },
+        TabItem(value = Period.Year) { Text("Year") },
+    ),
+    selectedValue = period,
+    onValueSelected = { period = it },
+    size = TabsSize.Segmented,
+    variant = TabsVariant.Segmented,
+    fillWidth = true,
+)
+```
+
+```kotlin
+FloatingTabBar(
+    listOf(
+        TabBarItem(value = Destination.Home) {
+            FloatingTabBarItemContent(label = "Home") {
+                Icon(ArecaIcons.Home, contentDescription = null)
+            }
+        },
+        TabBarItem(value = Destination.Search) {
+            FloatingTabBarItemContent(label = "Search") {
+                Icon(ArecaIcons.Search, contentDescription = null)
+            }
+        },
+    ),
+    selectedValue = destination,
+    onValueSelected = { destination = it },
+)
+```
 
 Selection is the caller's in `Tabs`, `TabBar`, `FloatingTabBar` and `NavList`. The first three also
-have overloads that hold it in a remembered state — `rememberTabsState`, `rememberTabBarState`.
+have overloads that hold it in a remembered state — `rememberTabsState`, `rememberTabBarState`. See
+the [tabs recipe](../../docs/recipes/tabs.md).
 
-### `wheel`
+### Wheel picker
 
-`WheelPicker` holds one or more `WheelPickerColumn`s and draws what they share: the highlight on the
-centre row and the fade at the edges. Each column needs a width of its own.
+| Component | Use it for |
+| --- | --- |
+| `WheelPicker` | One or more wheels sharing a centre row — hours and minutes, a quantity and a unit |
+| `WheelPickerColumn` | One wheel of items, scrolled to a selection |
+| `WheelPickerItem` | A wheel row's default text, which shrinks and fades away from the centre; call it from your own `itemContent` |
+| `WheelPickerHighlight` / `WheelPickerEdgeFade` | The picker's default decorations — the centre band behind the wheels and the fade over them; pass them, or `{}`, as `backgroundDecoration` and `foregroundDecoration` |
 
 ```kotlin
 val hour = rememberWheelPickerColumnState(initialIndex = 9)
@@ -898,83 +921,34 @@ WheelPicker(horizontalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md))
         modifier = Modifier.weight(1f),
         contentDescription = "Minute",
         onSettledIndexChange = { selectedMinute = minutes[it] },
-    )
+    ) { item -> WheelPickerItem(item.toString().padStart(2, '0')) }
 }
 ```
 
-`valueDescription` turns an item into what a screen reader says for it; the default is `toString()`.
-
----
+Each column needs a width of its own — a `weight` or a fixed `width`. `valueDescription` turns an
+item into what a screen reader says for it; the default is `toString()`. Dates and times have their
+own pickers in [datetime](../datetime/README.md).
 
 ## Accessibility
 
-**What components announce.** Every component sets its own role and state, so a screen reader
-meets the right thing without extra modifiers:
+Every component sets its own role and state — buttons, headings, checked and selected states, tab
+groups, progress — and every row, bar and field mirrors in a right-to-left layout. You supply what a
+component cannot know: a `contentDescription` on an icon that carries meaning, an icon button, a
+`NotificationBadge` ("3 unread messages", not "3"), an `IndicatorDot` that is the only statement of
+a status, and a progress indicator. `AnnounceOnChange(text)` speaks a message that appears, such as
+a validation error; `FieldGroup` already does this for its error.
 
-- Buttons, icon buttons, pressable badges and cards are buttons. A loading button says its
-  `loadingStateDescription`.
-- `Checkbox`, `Radio` and `Toggle` report checked, selected or on in the platform's own words; a
-  read-only control is announced as offering no action. List and settings rows that hold a control
-  report its state on the row.
-- `Heading`, a `TopBar` title, a labelled divider and a settings section header are headings.
-- `Tabs`, `TabBar` and `FloatingTabBar` are tab groups; a single-choice badge group and a
-  `SwatchPicker` are selectable groups. A group of bare `Radio`s is one once you add
-  `Modifier.selectableGroup()`.
-- `ProgressBar`, `StepIndicator` and `Spinner` are progress indicators; `NumberStepper` is one
-  adjustable value the platform's adjust gestures move.
-- A `Table` is a collection of rows and columns whose header cells are headings.
-- A field given its group's `FieldScope` announces the group's label, required marker and error.
-- `SensitiveText` keeps its value from assistive technology while concealed.
-
-**What you supply.** Name what the component cannot know: `contentDescription` on an icon that
-carries meaning, an icon button, a `NotificationBadge` ("3 unread messages", not "3"), an
-`IndicatorDot` that is the only statement of a status, and a progress indicator. Pass `null` for an
-icon that repeats the text beside it.
-
-**Localisation.** Every string a component speaks or shows on its own is a parameter with an English
-default — `loadingStateDescription = "Busy"`, `revealContentDescription = "Show password"`,
-`overlayContentDescription = "Dismiss"`, `BackAction(contentDescription = "Back")`, `ConfirmSheet`'s
-`cancelText = "Cancel"`. Where a component speaks several, they are gathered in a labels object:
-`SelectFieldLabels`, `ContentListLabels`, `RequirementListLabels` and `NumberStepperLabels`, each
-with an `English` value. A localised application passes its own:
-
-```kotlin
-RequirementList(
-    requirements,
-    labels = RequirementListLabels(met = "erfüllt", notMet = "nicht erfüllt"),
-    contentDescription = "Passwortanforderungen",
-)
-```
-
-**Right to left.** Slots are start and end, not left and right, so every row, bar and field mirrors
-in a right-to-left layout. `ChevronDirection.Left` and `Right` mirror with it, so `Right` always
-points towards the end of the line; the bundled chevron icon mirrors itself. A tab indicator, a
-dropdown's offset, a skeleton's shimmer and a `LiquidSweepIndication` all run in reading order, and
-`BaseLayout` hands its content the left and right insets as start and end padding.
-
-**Announcing what appears.** A message composed into existence — a validation error, a failed
-attempt — is not spoken by a live region on every platform. `AnnounceOnChange` speaks a sentence
-when it is first composed and whenever it changes, without moving focus:
-
-```kotlin
-AnnounceOnChange(signInError)
-```
-
-`null` or blank text says nothing. `FieldGroup` already does this for its error. It speaks through
-the screen reader on Android and iOS; the desktop has no announcement API, so there the reader finds
-the message when it reaches it.
-
----
+Every string a component shows or speaks on its own is a parameter with an English default, and
+groups of them are labels objects (`SelectFieldLabels`, `ContentListLabels`,
+`RequirementListLabels`, `NumberStepperLabels`). See [Accessibility](../../docs/accessibility.md)
+and [Localisation](../../docs/localisation.md).
 
 ## Experimental API
 
-`@ExperimentalArecaApi` marks API that is public but not yet stable: it may change or go in any
-release, minor and patch included, without a deprecation cycle. Everything without the marker
-follows the library's compatibility promise.
-
-It marks `PullToRefreshLayout` and everything that belongs to it: `PullToRefreshIndicator`,
+`@ExperimentalArecaApi` marks public API that may change or go in any release without a deprecation
+cycle. It marks `PullToRefreshLayout` and what belongs to it: `PullToRefreshIndicator`,
 `PullToRefreshState`, `rememberPullToRefreshState`, `PullToRefreshStyle`, `PullToRefreshSize` and
-their locals. Using one is a compile error until the call site opts in:
+their locals. Opt in at the call site:
 
 ```kotlin
 @OptIn(ExperimentalArecaApi::class)
@@ -988,20 +962,18 @@ fun Feed(posts: List<Post>, refreshing: Boolean, onRefresh: () -> Unit) {
 }
 ```
 
-A module that uses it in many places can opt in once with the compiler argument
-`-opt-in=dev.voir.areca.ExperimentalArecaApi`. `PagedContentList` uses the layout internally for its
-own pull-to-refresh, which needs no opt-in.
-
----
+Or once for a module, with the compiler argument `-opt-in=dev.voir.areca.ExperimentalArecaApi`.
+`PagedContentList(onRefresh = …)` gives pull-to-refresh without opting in.
 
 ## Where to look
 
-- **The playground.** Most components have a page showing their variants, states and sizes, with
-  controls for their parameters. Run it from the repository root with `./gradlew :playground:run`;
-  the pages are in `playground/src/commonMain/kotlin/dev/voir/areca/playground/foundation/`, one
-  package per component package. See [playground/SHOWCASES.md](../../playground/SHOWCASES.md).
-- **KDoc.** Every public declaration documents its contract, each parameter included, and most
-  components carry a usage example. It is the reference this file leaves out.
-- **The other modules.** [crop](../crop/README.md), [keyboard](../keyboard/README.md) and the flow
-  modules ([FLOWS.md](../../flow/FLOWS.md)) are built from these components and show them assembled
-  into screens.
+- **[Component catalogue](../../docs/components.md)** — every component, by family, with its package
+  and playground page.
+- **The playground** — a page per component with its variants, states and sizes, and controls for
+  its parameters. Run `./gradlew :playground:run` from the repository root; the foundation pages are
+  in `playground/src/commonMain/kotlin/dev/voir/areca/playground/foundation/`.
+- **KDoc** — every public declaration documents its contract and each parameter; most components
+  carry a usage example.
+- **[Recipes](../../docs/recipes/README.md)** — whole screens built from these components.
+- **The `areca-ui-v1` skill** — the same API for coding agents:
+  [skills/areca-ui-v1/SKILL.md](../../skills/areca-ui-v1/SKILL.md).

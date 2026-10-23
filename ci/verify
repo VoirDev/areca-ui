@@ -16,6 +16,11 @@ echo "==> Building and checking every module"
 # release version.
 ./gradlew build --no-daemon
 
+echo "==> Checking that the docs cover every public component"
+# Each public composable must be named in its module's README, in the `areca-ui-v1` skill and, for
+# foundation, in `docs/components.md`. Reads the API dumps `build` has just checked.
+./ci/check-docs-coverage
+
 echo "==> Validating that the published libraries still publish"
 # Catches publication-only breakage — a missing POM field or an unresolvable coordinate — before a
 # release PR does, without needing credentials.

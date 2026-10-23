@@ -18,6 +18,8 @@ import androidx.compose.ui.unit.dp
 import dev.voir.areca.datetime.calendar.Calendar
 import dev.voir.areca.datetime.calendar.CalendarBounds
 import dev.voir.areca.datetime.calendar.CalendarDateRule
+import dev.voir.areca.datetime.calendar.CalendarHeatDay
+import dev.voir.areca.datetime.calendar.CalendarHeatLegend
 import dev.voir.areca.datetime.calendar.CalendarLabels
 import dev.voir.areca.datetime.calendar.CalendarSelection
 import dev.voir.areca.datetime.calendar.CalendarSize
@@ -25,6 +27,7 @@ import dev.voir.areca.datetime.calendar.MonthHeader
 import dev.voir.areca.datetime.calendar.MonthYearPicker
 import dev.voir.areca.datetime.calendar.TodayButton
 import dev.voir.areca.datetime.calendar.WeekdayHeader
+import dev.voir.areca.datetime.calendar.calendarHeatLevel
 import dev.voir.areca.datetime.calendar.plus
 import dev.voir.areca.datetime.calendar.rememberCalendarState
 import dev.voir.areca.foundation.text.Text
@@ -37,6 +40,7 @@ import dev.voir.areca.playground.showcase.section.Playground
 import dev.voir.areca.playground.showcase.section.VariantLayout
 import dev.voir.areca.playground.showcase.section.Variants
 import dev.voir.areca.theme.ArecaTheme
+import kotlin.time.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
@@ -44,7 +48,12 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.todayIn
 import kotlinx.datetime.yearMonth
-import kotlin.time.Clock
+
+/** A month of made-up daily spending, some days empty, for the heat map. */
+private val DemoSpend = listOf(
+    84f, 0f, 32f, 141f, 12f, 0f, 260f, 46f, 18f, 0f, 75f, 120f, 9f, 64f, 0f, 38f,
+    210f, 27f, 0f, 91f, 55f, 14f, 0f, 180f, 42f, 7f, 66f, 0f, 104f, 23f, 58f,
+)
 
 /** Showcase for [Calendar]. */
 @Composable
@@ -249,6 +258,37 @@ fun CalendarShowcase() = ShowcaseScaffold(
                     },
                     selection = CalendarSelection.Single(today),
                 )
+            }
+        }
+    }
+
+    Variants(
+        title = "Heat map",
+        description = "CalendarHeatDay in the day slot: shaded by the day's figure, empty days " +
+            "ringed, days to come flat, today and the pick ringed.",
+        layout = VariantLayout.Vertical,
+    ) {
+        variant("Spending by day", detail = "CalendarHeatDay + CalendarHeatLegend + calendarHeatLevel") {
+            var picked by remember { mutableStateOf(today) }
+            val steps = ArecaTheme.colors.accentScale.size
+            CalendarFrame {
+                Column(verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg)) {
+                    Calendar(
+                        selection = CalendarSelection.Single(picked),
+                        onDateClick = { picked = it },
+                        dateRule = CalendarDateRule { it <= today },
+                        day = { day ->
+                            val spent = DemoSpend[day.date.day % DemoSpend.size]
+                            CalendarHeatDay(
+                                day = day,
+                                level = calendarHeatLevel(spent, max = 280f, steps = steps),
+                                amount = if (spent > 0f) "€${spent.toInt()}" else null,
+                                onClick = { picked = day.date },
+                            )
+                        },
+                    )
+                    CalendarHeatLegend(lowLabel = "€0", highLabel = "€280", emptyLabel = "nothing spent")
+                }
             }
         }
     }

@@ -1,14 +1,26 @@
 # Screen recipes
 
-Open this when building a whole screen or a common interaction: a settings screen, a validated
-form, a remote list, a confirmation, a tabbed shell, a sheet, a menu, a dark region, a subscription
-card with a footer, or a custom pressable surface. Validated against `dev.voir.areca:foundation` 1.0.0 and `dev.voir.areca:icons`
-1.0.0.
+Open this when building a whole screen or a common interaction from foundation: a settings
+screen, a validated form, a remote list, a confirmation, a tabbed shell, a sheet, a menu, a dark
+region, a subscription card with a footer, a custom pressable surface, or an analytics overview
+built on the charts module, at the latest `dev.voir.areca:foundation` and `dev.voir.areca:icons`
+release. Also open it to review UI against the [anti-pattern table](#anti-patterns).
+
+Screens built from a flow module have their recipes in that module's reference:
+
+| Screen | Recipe in |
+| --- | --- |
+| Sign in with a form and providers; providers only; email first; verify a code; the pages an emailed link opens | [flow-auth.md](flow-auth.md) |
+| The profile; editing it; the username; the account menu and switcher; devices; changing the photo with cropping | [flow-profile.md](flow-profile.md) |
+| The attachment strip, its sheets and the viewer; attachments in a form, on a record, as documents; cropping before attaching | [flow-attachments.md](flow-attachments.md) |
+| Cropping a photo on its own | [crop.md](crop.md) |
+| Calendars, date ranges, time and date-time pickers | [datetime.md](datetime.md) |
+| Charts beyond the analytics overview below | [charts.md](charts.md) |
 
 The first recipe lists its imports in full; the others import from the packages in
 [signatures.md](signatures.md) plus the usual Compose ones. Literal strings stand in for the app's
-string resources, and screen state normally comes from a ViewModel (see the SKILL's presentation
-section). Copy a recipe, then edit it; do not wrap it in a configurable "screen" composable.
+string resources, and screen state normally comes from a ViewModel (see the SKILL's "Feed screens
+from presentation state"). Copy a recipe, then edit it; do not wrap it in a configurable "screen" composable.
 
 ## Settings screen
 
@@ -272,6 +284,28 @@ fun InvoicesScreen(
 For a list outside `ContentList`, wrap the scroller in
 `PullToRefreshLayout(isRefreshing, onRefresh) { … }` (opt in to `ExperimentalArecaApi`) and show
 `Fallback` yourself when the screen's state says the content is missing or failed.
+
+With `dev.voir.areca:viewmodel`, map its list state to the foundation list state in the UI module,
+and wire `onRefresh`, `onLoadNextPage`, `onRetryInitial` and `onRetryLoadMore` to the ViewModel's
+public methods:
+
+```kotlin
+fun <T> UiState<ListState<T, *, *>>.toPagedContentListState(
+    loadMoreErrorText: String,
+): PagedContentListState<T> = when (this) {
+    UiState.Initial, UiState.Loading ->
+        PagedContentListState(items = emptyList(), hasNextPage = false, loadingInitial = true)
+    is UiState.Error ->
+        PagedContentListState(items = emptyList(), hasNextPage = false, initialError = message)
+    is UiState.Display -> PagedContentListState(
+        items = data.items,
+        hasNextPage = data.pagingMeta.hasNextPage,
+        loadingNextPage = data.isLoadingNextPage,
+        loadMoreError = loadMoreErrorText.takeIf { data.nextPageError != null },
+        refreshing = data.isRefreshing,
+    )
+}
+```
 
 ## Confirmation flow
 
@@ -589,6 +623,177 @@ fun Tile(label: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
             .padding(ArecaTheme.spacing.xl),
     ) {
         Text(label)
+    }
+}
+```
+
+## Analytics overview
+
+A tab that reads a history and lets the reader pick one period of it. The period chart is the
+picker: tapping a column selects it, the chart scrolls it into view, and every section below reads
+the same selection — except "your usual month", which stays fixed so it can be compared against.
+It needs `dev.voir.areca:charts` beside `foundation`, and `icons` for the glyph.
+
+- The presentation layer hands over periods already summed, labelled and described; the chart draws
+  numbers and strings, it does not aggregate or format. Put the latest period last.
+- Give every column a `contentDescription` that says the whole period ("October: income €4,250,
+  spent €2,340"); the drawn labels alone ("Now") do not.
+- "Back to latest" is selecting the last key — the chart scrolls to it. The chart stays on the
+  latest column as periods arrive until the reader scrolls away, and moves only when the selected
+  key changes, not on a refresh. Hoist `rememberColumnChartState()` only to scroll without selecting
+  (`scrollToEnd()` pins it to the end again), or to read `isAtEnd`, `firstVisibleIndex` and
+  `lastVisibleIndex`.
+- A row whose meter belongs to it goes in `ExpandableListItem`'s `bottom` slot, so tapping the
+  meter opens the row; what it reveals goes in its content.
+- Elsewhere on such a tab: a day-by-day month is a `Calendar` with `CalendarHeatDay` in its `day`
+  slot and `calendarHeatLevel` mapping amounts to shades; a running total against another period is
+  a `LineChart`; a filter sheet's foot is `FlowModalActionBar(layout = FlowModalActionBarLayout.Split(),
+  showDivider = false)`; filter chips that must look tappable before any is chosen use
+  `BadgeStyle.FilledChip`.
+
+```kotlin
+/** One period as the presentation layer hands it over: already summed, labelled and worded. */
+@Immutable
+data class PeriodSummary(
+    val key: String,
+    val label: String,
+    val sublabel: String?,
+    val title: String,
+    val income: Float,
+    val spent: Float,
+    val description: String,
+)
+
+/** One category of the selected period, against its usual amount. */
+@Immutable
+data class CategoryShare(
+    val name: String,
+    val amount: String,
+    val detail: String,
+    val share: Float,
+    val usualShare: Float,
+    val usualAmount: String,
+    val subcategories: List<Pair<String, String>>,
+)
+
+/**
+ * The stateless overview: a period switch, the selected period's figures, the period chart that
+ * picks it, the fixed usual figures, and the categories that follow the selection.
+ */
+@Composable
+fun AnalyticsOverview(
+    periods: List<PeriodSummary>,
+    selectedKey: String,
+    onSelect: (String) -> Unit,
+    usualSpend: Float,
+    usual: List<Triple<String, String, String>>,
+    categories: List<CategoryShare>,
+    modifier: Modifier = Modifier,
+) {
+    val chart = rememberColumnChartState()
+    val latest = periods.last()
+    val period = periods.first { it.key == selectedKey }
+    val income = ArecaTheme.colors.bgBrandBase
+    val spent = ArecaTheme.colors.bgDangerBase
+    var step by remember { mutableStateOf("Month") }
+    var open by remember { mutableStateOf<String?>(null) }
+
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.xl3)) {
+        Column(
+            modifier = Modifier.padding(horizontal = ArecaTheme.spacing.horizontalContentInsets),
+            verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg),
+        ) {
+            Tabs(
+                tabs = listOf("Week", "Month", "Year").map { TabItem(it) { Text(it) } },
+                selectedValue = step,
+                onValueSelected = { step = it },
+                size = TabsSize.Segmented,
+                variant = TabsVariant.Segmented,
+            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(period.title, variant = TextVariant.HeadingSmall, modifier = Modifier.weight(1f))
+                if (selectedKey != latest.key) {
+                    IconButton(
+                        imageVector = ArecaIcons.RefreshCcw,
+                        contentDescription = "Back to ${latest.title}",
+                        onClick = { onSelect(latest.key) },
+                        style = IconButtonStyle.soft(ActionColor.Brand),
+                        size = IconButtonSize.Small,
+                    )
+                }
+            }
+            StatGrid {
+                Stat(label = "Income", value = "€${period.income.toInt()}")
+                Stat(label = "Expenses", value = "€${period.spent.toInt()}")
+            }
+            StackedBarChart(
+                segments = listOf(
+                    StackedBarSegment(period.spent, spent, "Spent"),
+                    StackedBarSegment((period.income - period.spent).coerceAtLeast(0f), income, "Kept"),
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                size = StackedBarChartSize.Tiny,
+            )
+        }
+
+        // Selecting a column is the whole interaction: the chart scrolls it into view, and the
+        // sections below read the selection from the same state.
+        ColumnChart(
+            columns = periods.map { p ->
+                ColumnChartColumn(
+                    key = p.key,
+                    bars = listOf(ColumnChartBar.of(p.income, income), ColumnChartBar.of(p.spent, spent)),
+                    label = p.label,
+                    sublabel = p.sublabel,
+                    contentDescription = p.description,
+                )
+            },
+            selectedKey = selectedKey,
+            onSelect = onSelect,
+            state = chart,
+            referenceLines = listOf(ColumnChartReferenceLine(usualSpend, "usual spend", ArecaTheme.colors.fgDangerText)),
+            contentPadding = PaddingValues(horizontal = ArecaTheme.spacing.horizontalContentInsets),
+        )
+
+        Column(
+            modifier = Modifier.padding(horizontal = ArecaTheme.spacing.horizontalContentInsets),
+            verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg),
+        ) {
+            Text("Your usual month", variant = TextVariant.HeadingExtraSmall)
+            StatGrid {
+                usual.forEach { (label, value, note) -> Stat(label = label, value = value, note = note) }
+            }
+        }
+
+        Column(modifier = Modifier.padding(horizontal = ArecaTheme.spacing.md)) {
+            categories.forEach { category ->
+                ExpandableListItem(
+                    expanded = open == category.name,
+                    onExpandedChange = { open = if (it) category.name else null },
+                    title = { Text(category.name) },
+                    value = { Text(category.amount) },
+                    // The meter is part of the row, so a tap on it opens the category too.
+                    bottom = {
+                        Column(verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md)) {
+                            MeterBar(
+                                fraction = category.share,
+                                marker = category.usualShare,
+                                color = spent,
+                                contentDescription = "Usual ${category.usualAmount}",
+                            )
+                            Text(category.detail, variant = TextVariant.BodyExtraSmall, color = TextColor.Subtle)
+                        }
+                    },
+                    showChevron = false,
+                    container = ExpandableListItemContainer.Soft,
+                    onClickLabel = "Show subcategories",
+                ) {
+                    category.subcategories.forEach { (name, amount) ->
+                        ListItem(title = { Text(name) }, value = { Text(amount) }, nestingLevel = 1)
+                    }
+                }
+            }
+        }
     }
 }
 ```

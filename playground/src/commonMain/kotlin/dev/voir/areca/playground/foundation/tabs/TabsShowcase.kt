@@ -11,6 +11,7 @@ import dev.voir.areca.foundation.tabs.TabItem
 import dev.voir.areca.foundation.tabs.Tabs
 import dev.voir.areca.foundation.tabs.TabsHorizontalPosition
 import dev.voir.areca.foundation.tabs.TabsOrientation
+import dev.voir.areca.foundation.tabs.TabsSize
 import dev.voir.areca.foundation.tabs.TabsVariant
 import dev.voir.areca.foundation.tabs.TabsVerticalPosition
 import dev.voir.areca.foundation.tabs.rememberTabsState
@@ -18,6 +19,7 @@ import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.playground.showcase.ShowcaseScaffold
 import dev.voir.areca.playground.showcase.section.EdgeCases
 import dev.voir.areca.playground.showcase.section.Playground
+import dev.voir.areca.playground.showcase.section.Recipes
 import dev.voir.areca.playground.showcase.section.VariantLayout
 import dev.voir.areca.playground.showcase.section.Variants
 
@@ -76,6 +78,11 @@ fun TabsShowcase() = ShowcaseScaffold(
             optionLabel = { it.name },
             description = "Which edge the indicator sits on when vertical.",
         )
+        val fillWidth by booleanControl(
+            key = "fillWidth",
+            default = false,
+            description = "Share the strip's width equally, horizontally. The strip stops scrolling.",
+        )
 
         preview {
             val state = rememberTabsState(ExampleTab.Overview)
@@ -88,10 +95,12 @@ fun TabsShowcase() = ShowcaseScaffold(
                 } else {
                     Modifier
                 },
+                size = variant.size,
                 variant = variant,
                 orientation = orientation,
                 horizontalPosition = horizontalPosition,
                 verticalPosition = verticalPosition,
+                fillWidth = fillWidth,
             )
         }
     }
@@ -104,7 +113,7 @@ fun TabsShowcase() = ShowcaseScaffold(
         for (variant in TabsVariant.entries) {
             variant(name = "${variant.name} / Horizontal") {
                 val state = rememberTabsState(ExampleTab.Overview)
-                Tabs(tabs = exampleTabs(ShortTabs), state = state, variant = variant)
+                Tabs(tabs = exampleTabs(ShortTabs), state = state, size = variant.size, variant = variant)
             }
         }
         for (variant in TabsVariant.entries) {
@@ -114,6 +123,7 @@ fun TabsShowcase() = ShowcaseScaffold(
                     tabs = exampleTabs(ShortTabs),
                     state = state,
                     modifier = Modifier.height(180.dp),
+                    size = variant.size,
                     variant = variant,
                     orientation = TabsOrientation.Vertical,
                 )
@@ -149,6 +159,34 @@ fun TabsShowcase() = ShowcaseScaffold(
                     verticalPosition = position,
                 )
             }
+        }
+    }
+
+    Recipes {
+        recipe(
+            name = "Period length",
+            description = "A segmented switch for a setting: three short labels, sized to their text.",
+        ) {
+            val state = rememberTabsState("Month")
+            Tabs(
+                tabs = listOf("Week", "Month", "Year").map { TabItem(it) { Text(it) } },
+                state = state,
+                size = TabsSize.Segmented,
+                variant = TabsVariant.Segmented,
+            )
+        }
+        recipe(
+            name = "Sheet filter",
+            description = "Equal segments across a sheet, switching what the list below it shows.",
+        ) {
+            val state = rememberTabsState("Categories")
+            Tabs(
+                tabs = listOf("Categories", "Tags", "Wallets").map { TabItem(it) { Text(it) } },
+                state = state,
+                size = TabsSize.Segmented,
+                variant = TabsVariant.Segmented,
+                fillWidth = true,
+            )
         }
     }
 
@@ -189,6 +227,11 @@ fun TabsShowcase() = ShowcaseScaffold(
         }
     }
 }
+
+/** The metrics a strip of this variant is drawn at: [TabsSize.Segmented] for the segmented one. */
+private val TabsVariant.size: TabsSize
+    @Composable
+    get() = if (this == TabsVariant.Segmented) TabsSize.Segmented else TabsSize.Default
 
 /** The `Disabled` entry is rendered disabled wherever it appears. */
 private fun exampleTabs(values: List<ExampleTab>): List<TabItem<ExampleTab>> =

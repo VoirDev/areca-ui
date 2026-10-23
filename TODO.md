@@ -1,14 +1,14 @@
 # TODO
 
-Open work before the first release. Paths are relative to
-`ui/foundation/src/commonMain/kotlin/dev/voir/areca/` unless they start at the repository root.
+Open work. Paths are relative to `ui/foundation/src/commonMain/kotlin/dev/voir/areca/` unless they
+start at the repository root.
 
 ## Release
 
-- [ ] GitHub setup for releasing (see README "Releasing"): `RELEASE_BOT_TOKEN` secret,
-      `RELEASE_BOT_NAME` / `RELEASE_BOT_EMAIL` variables, a `release` environment with reviewers, and
-      a `main` ruleset requiring "Build and check whole repository" and "Build release artifacts".
-      After the first release, set each published package's visibility in its package settings.
+- [ ] GitHub setup (see README "Releasing"): give the `release` environment required reviewers (it
+      has none), and add a `main` ruleset requiring "Build and check whole repository" and "Build
+      release artifacts" (`main` has only classic protection with no required checks). Set each
+      published package's visibility in its package settings.
 
 ## Foundation: components
 
@@ -19,15 +19,22 @@ Open work before the first release. Paths are relative to
       `LimitedContentListState.refreshing` has no visual effect.
 - [ ] `FlowModal` on iOS/desktop: CMP's `animateTransition` also scales the full-window content in;
       the Android dim is cleared one frame after the window opens.
+- [ ] Segmented `Tabs` are 36dp tall, under the 48dp touch target, like the other `Tabs` variants.
+      `variant = TabsVariant.Segmented` does not pick `TabsSize.Segmented` by itself.
+- [ ] `CollapsingHeaderState` is not saved across configuration change.
 
 ## Charts
 
 - [ ] `BarChartStyle.of(color, …)` builds styles where every other style uses `default(...)`.
+- [ ] `ColumnChart` and `LineChart` draw no negative values (net cash flow, a balance below zero).
+- [ ] `ColumnChart` does not keep its scroll position when older columns are prepended.
+- [ ] `LineChart` has no point selection (scrubbing) and no horizontal reference line beside its grid.
+- [ ] `MeterBar` clamps at the end of its track; an amount past it (an overspend) has no own style.
 
 ## Date and time
 
-- [ ] Spoken text in `MonthHeader`, `DateTimeField` and `DateRangeDay` is joined with a hard-coded
-      `", "`; `TimePicker` hour and minute digits can't be localised through labels.
+- [ ] Spoken text in `MonthHeader`, `DateTimeField`, `DateRangeDay` and `CalendarHeatDay` is joined
+      with a hard-coded `", "`; `TimePicker` hour and minute digits can't be localised through labels.
 - [ ] `flow/profile`'s `BirthdayRow` passes `MONDAY` explicitly; let it follow `DateTimeLocale`.
 - [ ] `DateTimeField` sets its placeholders two ways (`labels` and the `datePlaceholder` /
       `timePlaceholder` parameters); `CalendarScope` lacks the `expandMonthPicker` that
@@ -75,10 +82,11 @@ Open work before the first release. Paths are relative to
       `Stockmarket`, `FlagWave`, `Tv`.
 - [ ] Check the `SocialApple` and `SocialFacebook` geometry against the providers' official assets.
 - [ ] Naming: the zero-padded names apps use (`Attachment02`, `Flag01`, `ShoppingBag03`, `Menu01`,
-      `MagicWand01`) and the unused `Home01` / `MagicWand02` still break the suffix scheme.
+      `MagicWand01`) and the unused `Home01` / `MagicWand02` break the suffix scheme.
 
 ## Documentation
 
-- [ ] Playground pages for `PasswordField`, `SearchField`, `StepIndicator`, `Spinner`, `SwipePager` /
-      `PageIndicator` / `PagerControls`, `DropdownPopup`, `BadgeSelect`, `SwatchPicker`, `Heading`,
-      and the typography, spacing, radius, elevation and motion tokens.
+- [ ] Playground pages for `PasswordField` and `SearchField` (they appear only as variants on the
+      Text field page), `StepIndicator`, `SwipePager` / `PageIndicator` / `PagerControls`,
+      `DropdownPopup`, `BadgeSelect`, and Foundations pages for the typography, spacing, radius,
+      elevation and motion tokens.

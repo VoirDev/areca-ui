@@ -121,6 +121,7 @@ fun ColorsShowcase() = ShowcaseScaffold(
         canvasState = canvas,
     ) {
         token("bgCanvas", colors.bgCanvas, "The page itself. Nothing sits behind it.")
+        token("bgSoft", colors.bgSoft, "The softest ground: an expanded group, a highlighted row.")
         token("bgSubtle", colors.bgSubtle, "Set off from the canvas without a border.")
         token("bgMuted", colors.bgMuted, "Further back than bgSubtle: an inset well, a disabled track.")
         token("bgSurface", colors.bgSurface, "A raised container: cards, sheets, popovers.")
@@ -333,5 +334,8 @@ fun ColorsShowcase() = ShowcaseScaffold(
         token("accentBase", colors.accentBase, "Default accent: a checked control, a focus ring, an active tab.")
         token("accentStrong", colors.accentStrong, "Accent under press or hover.")
         token("accentIntense", colors.accentIntense, "Strongest accent, for a held or dragged state.")
+        colors.accentScale.forEachIndexed { index, color ->
+            token("accentScale[$index]", color, "Sequential data shade ${index + 1} of ${colors.accentScale.size}.")
+        }
     }
 }

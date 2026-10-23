@@ -1,40 +1,103 @@
 # `flow-attachments`
 
-Parts for letting people attach files to something — a strip of files on a form, the files on a
-record's details, the sheets that add one, and a viewer that swipes through them — and recipes for
-putting them together.
+Parts for screens that attach files to something: a strip of files on a form or a record, rows,
+the sheets that add and act on a file, and a full-screen viewer. They draw and report what was
+pressed; picking, copying, uploading, downloading and sharing are the application's.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../../docs/images/flow-attachments-dark.png">
+  <img alt="An attachment strip of file squares with an add square, and the sheet that adds a file" src="../../docs/images/flow-attachments-light.png" width="720">
+</picture>
+
+There is no `AttachmentsScreen`. Copy a [recipe](#recipes) and edit it.
+
+## Install
 
 ```kotlin
 implementation("dev.voir.areca:flow-attachments:<version>")
 ```
 
-Areca is published to GitHub Packages, so the build needs its repository first; see
-[Installing](../../README.md#installing).
+It brings `dev.voir.areca:foundation`, so the recipes' `ConfirmSheet`, `Settings` rows and `Button`
+need nothing more. The `ArecaIcons` glyphs in them (`Trash`, `Paperclip`, `Plus`) need
+`dev.voir.areca:icons`. Repository and credentials:
+[Getting started](../../docs/getting-started.md).
 
-Every recipe below is also a compiled page in the playground, under **Attachments flow → Screens**,
-driven by a sample application that picks, copies, uploads and downloads offline.
+## Quick start
 
-The module passes `foundation` on, so the recipes' `ConfirmSheet`, `Settings` rows and `Button` need
-nothing more. The `ArecaIcons.*` icons in them (`Trash`, `Paperclip`, `Plus`) come from
-`dev.voir.areca:icons`, which nothing here depends on; add it only to use them.
+A record's files as a strip that adds and removes, opening into the viewer:
 
-## What this is not
+```kotlin
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import dev.voir.areca.flow.attachments.AttachmentItem
+import dev.voir.areca.flow.attachments.part.AttachmentStrip
+import dev.voir.areca.flow.attachments.viewer.AttachmentViewer
 
-It is not an `AttachmentsScreen`, and it is not a file manager.
+@Composable
+fun Attachments(
+    files: List<AttachmentItem>,
+    onAdd: () -> Unit,
+    onRemove: (AttachmentItem) -> Unit,
+) {
+    var viewing by remember { mutableStateOf<Any?>(null) }
 
-Every application that attaches files decides the same things differently: what a file is called
-under its square — its name, or a word its owner chose — how many there may be and how large, whether
-a removal asks first, whether uploads show, where a file can come from on this device. The module
-ships the pieces, each carrying what applications reliably get wrong, and this file ships the
-assemblies. **Copy a recipe and edit it.**
+    AttachmentStrip(
+        items = files,
+        onOpen = { item -> viewing = item.key },
+        onAdd = onAdd,
+        onRemove = onRemove,
+        title = "Attachments",
+        addCaption = "Add",
+    )
 
-Picking, capturing, copying, uploading, downloading, sharing and saving are all the application's.
-A part reports an intent — `onAdd`, `onOpen(item)`, `onRemove(item)` — and draws the state it is
-given. It has no connection to `flow-auth` or `flow-profile`. See [`../FLOWS.md`](../FLOWS.md).
+    if (viewing != null) {
+        AttachmentViewer(items = files, initialKey = viewing, onDismiss = { viewing = null })
+    }
+}
+```
 
-## One file, as the module sees it
+Pictures need an image loader provided once; see [Pictures](#pictures).
 
-Every part draws an `AttachmentItem`: what the application already knows about a file, worded.
+## Parts
+
+| Part | Use it for | Package |
+| --- | --- | --- |
+| `AttachmentThumbnail` | The square a file is recognised by: its picture, or its glyph and extension, and a mark for where its bytes are | `dev.voir.areca.flow.attachments.part` |
+| `AttachmentTile` | One file in a strip: its square, a caption, an optional second line and remove mark | `dev.voir.areca.flow.attachments.part` |
+| `AttachmentAddTile` | The square that adds a file, shaped like the files beside it | `dev.voir.areca.flow.attachments.part` |
+| `AttachmentStrip` | A record's files as a sideways-scrolling row of squares, from none to many | `dev.voir.areca.flow.attachments.part` |
+| `AttachmentIndicator` | A paperclip, and optionally a count, on something that has files | `dev.voir.areca.flow.attachments.part` |
+| `AttachmentRow` | One file as a foundation `SettingsRow`, for lists read by name | `dev.voir.areca.flow.attachments.row` |
+| `AttachmentSourceSheet` | Where a new file comes from: camera, library, files, or your own choices | `dev.voir.areca.flow.attachments.sheet` |
+| `PendingAttachmentSheet` | Asked once a file is picked: the file, a question, and why it cannot be attached when it cannot | `dev.voir.areca.flow.attachments.sheet` |
+| `AttachmentTagChips` | What a file is, chosen in one tap from the product's tags | `dev.voir.areca.flow.attachments.sheet` |
+| `AttachmentOptionsSheet` | What can be done to one file: rename, share, save, open elsewhere, remove, retag | `dev.voir.areca.flow.attachments.sheet` |
+| `AttachmentRenameSheet` | A new name, editing only the part before the extension | `dev.voir.areca.flow.attachments.sheet` |
+| `AttachmentViewer` | A record's files one at a time, full screen and always dark: a pager, a heading, a filmstrip, a notice line | `dev.voir.areca.flow.attachments.viewer` |
+| `AttachmentViewerPage` | One file in the viewer: a zoomable picture, zoomable PDF pages, or the file stated when it cannot be drawn | `dev.voir.areca.flow.attachments.viewer` |
+
+The types the parts take:
+
+| Type | Holds | Package |
+| --- | --- | --- |
+| `AttachmentItem` | One file, already worded; see [One file](#one-file) | `dev.voir.areca.flow.attachments` |
+| `AttachmentState` | Where the file's bytes are | `dev.voir.areca.flow.attachments` |
+| `AttachmentFormat` | How the file is drawn: a picture, a PDF, or a document; `AttachmentFormat.of(contentType, fileName)` | `dev.voir.areca.flow.attachments` |
+| `AttachmentImageLoader`, `AttachmentImageState`, `LocalAttachmentImageLoader` | How pictures are loaded; see [Pictures](#pictures) | `dev.voir.areca.flow.attachments` |
+| `AttachmentPdfRenderer`, `AttachmentPdfDocument`, `LocalAttachmentPdfRenderer` | How PDFs are drawn; see [PDFs](#pdfs) | `dev.voir.areca.flow.attachments` |
+| `AttachmentTileStyle`, `LocalAttachmentTileStyle` | Colours and shape of every square | `dev.voir.areca.flow.attachments.part` |
+| `AttachmentChoice`, `AttachmentSourceOptions`, `AttachmentOptions` | One choice on the source or options sheet; the ready-made ones | `dev.voir.areca.flow.attachments.sheet` |
+| `PendingAttachment` | The file a pick handed back, before it is attached | `dev.voir.areca.flow.attachments.sheet` |
+| `AttachmentViewerStyle`, `LocalAttachmentViewerStyle` | The viewer's ground and surfaces, dark whatever the theme | `dev.voir.areca.flow.attachments.viewer` |
+
+To remove a file where removing is final, ask first with foundation's `ConfirmSheet`.
+
+## One file
+
+Every part draws an `AttachmentItem`: what the application knows about a file, worded.
 
 ```kotlin
 AttachmentItem(
@@ -48,100 +111,30 @@ AttachmentItem(
 )
 ```
 
-`AttachmentFormat` decides how a file is drawn: a picture zoomable, a PDF page by page, anything
-else named and handed to another application. `AttachmentFormat.of` reads it from the media type,
-and from the extension when the type is missing or the generic one a picker falls back to.
+`AttachmentFormat.of` reads the format from the media type, and from the extension when the type is
+missing or generic. A picture is drawn zoomable, a PDF page by page, anything else named and handed
+to another application.
 
-`AttachmentState` says where the bytes are:
-
-| | |
+| `AttachmentState` | Means |
 | --- | --- |
-| `Adding` | Being saved. A veil and a spinner over the square; it cannot be opened yet |
-| `Uploading(progress)` | Here, on its way to the server. Opens like `Ready` |
+| `Adding` | Being saved: a veil and spinner over the square; it cannot be opened yet |
+| `Uploading(progress)` | Here, on its way to the server; opens like `Ready` |
 | `Ready` | Here |
-| `Remote` | On the server only. Opening it is asking for it |
+| `Remote` | On the server only; opening it asks for it |
 | `Downloading(progress)` | Arriving |
-| `Waiting` | Wanted, but the server cannot be reached. Ordinary, not an error |
+| `Waiting` | Wanted, but the server cannot be reached |
 | `Unavailable` | Gone for good |
 
-Report only the states your application has. One whose files never leave the device uses `Ready`
-alone; one that does not want uploads on screen never reports `Uploading`.
+Report only the states your application has: one whose files never leave the device uses `Ready`
+alone.
 
-## The pieces
+## Recipes
 
-### Squares and the strip
+### The sheets and the viewer
 
-| | |
-| --- | --- |
-| `AttachmentThumbnail` | The square a file is recognised by: the picture where there is one, its glyph and extension where not, and a mark for where its bytes are |
-| `AttachmentTile` | One file in a strip: its square, a caption, an optional second line and an optional remove mark |
-| `AttachmentAddTile` | The square that adds a file, shaped like the files beside it |
-| `AttachmentStrip` | A record's files as a row of squares that scrolls sideways, from nothing to many |
-| `AttachmentTileStyle` | Colours and shape of every square, neutral by default |
-
-### Rows and marks
-
-| | |
-| --- | --- |
-| `AttachmentRow` | One file as a foundation `SettingsRow`, for lists read by name |
-| `AttachmentIndicator` | A paperclip, and optionally how many, on something with files |
-
-### Sheets
-
-| | |
-| --- | --- |
-| `AttachmentSourceSheet` | Where a new file comes from, with `AttachmentSourceOptions.camera`, `library` and `files` |
-| `PendingAttachmentSheet` | Asked once a file is picked: the file, a question slot, and why it cannot be attached when it cannot |
-| `AttachmentTagChips` | What a file is, chosen in one tap from the product's own tags |
-| `AttachmentOptionsSheet` | What can be done to one file, with `AttachmentOptions.rename`, `share`, `save`, `openElsewhere` and `remove` |
-| `AttachmentRenameSheet` | A new name, editing only the part before the extension |
-| `AttachmentChoice` | One choice on the source or options sheet, for a choice the product adds — scan a document, import from a drive |
-
-Removing a file where removing is final asks first through foundation's `ConfirmSheet`; the module
-does not ship a second one.
-
-### The viewer
-
-Always dark, edge to edge; see [The viewer](#the-viewer-1).
-
-| | |
-| --- | --- |
-| `AttachmentViewer` | A record's files one at a time, full screen: a pager, a heading, a filmstrip, and a line over the file |
-| `AttachmentViewerPage` | One file: a zoomable picture, a column of zoomable PDF pages, or the file stated when it cannot be drawn |
-| `AttachmentViewerStyle` | The viewer's ground and the surfaces laid on it; dark whatever the theme |
-
-## Styling
-
-Each style has a `Default`, which reads the theme in scope, and a `default(…)` factory that replaces
-any colour of it. A part given no style reads the style in scope from a nullable composition local
-and falls back to `Default`:
-
-| Style | Local | Read by |
-| --- | --- | --- |
-| `AttachmentTileStyle` | `LocalAttachmentTileStyle` | `AttachmentThumbnail`, `AttachmentTile`, `AttachmentAddTile`, `AttachmentStrip`, `AttachmentRow` and the square of `PendingAttachmentSheet` |
-| `AttachmentViewerStyle` | `LocalAttachmentViewerStyle` | `AttachmentViewer` and `AttachmentViewerPage` |
-
-These locals are not seeded by foundation's `ArecaThemeProvider`: that provider lives in
-`:foundation`, which does not depend on this module. Provide them yourself around the part of the
-application that wants a different default:
-
-```kotlin
-CompositionLocalProvider(
-    LocalAttachmentTileStyle provides AttachmentTileStyle.default(bg = ArecaTheme.colors.bgSurface),
-) {
-    // every square in here sits on white
-}
-```
-
-`AttachmentRow` falls back to its own square — the settings list's tile shape on the inset fill —
-rather than to `Default`, so a row reads against a section's card; a provided style replaces that
-too.
-
-## Recipe: the sheets and the viewer
-
-Every screen that shows files draws this once, beside whatever holds them — a strip, a list, a
-button. The adding sheets come first, then the viewer with the sheets that act on a file inside it.
-One owner, usually the screen's ViewModel, answers everything.
+The adding sheets, then the viewer with the sheets that act on a file inside it. Every screen that
+shows files draws this once, beside whatever holds them; one owner, usually the screen's view
+model, answers everything.
 
 ```kotlin
 @Composable
@@ -174,7 +167,7 @@ fun AttachmentSheets(state: AttachmentsState, viewModel: AttachmentsViewModel, c
 
     if (state.viewing != null) {
         AttachmentViewer(
-            items = state.files,
+            items = state.items,
             initialKey = state.viewing,
             onDismiss = viewModel::closeViewer,
             onRequest = viewModel::download,
@@ -225,16 +218,13 @@ fun AttachmentSheets(state: AttachmentsState, viewModel: AttachmentsViewModel, c
 }
 ```
 
-`confirmRemoval` is the one thing that differs between screens: a saved record removes a file at
-once and so asks first; a form saves nothing until it is saved, so taking a file off is as
-reversible as typing and asks nothing.
+`confirmRemoval` differs by screen: a saved record removes a file at once, so it asks first; a form
+saves nothing until it is saved, so it does not. Where the device offers one source only — a
+desktop picks files — start that pick from the add square instead of raising a sheet.
 
-Where the device offers only one source — a desktop picks files and nothing else — start that pick
-from the add square directly instead of raising a sheet with one choice.
+### A form
 
-## Recipe: a form
-
-The files of a record being written, in a strip under its fields, saved with the form.
+The files of a record being written, in a strip under its fields, saved with the form:
 
 ```kotlin
 Column(
@@ -257,6 +247,7 @@ Column(
 
     // Full width, not inset: the strip scrolls under both screen edges while its first square
     // keeps to the gutter.
+    val adding = stringResource(Res.string.adding)
     AttachmentStrip(
         items = files.items,
         onOpen = viewModel::open,
@@ -267,7 +258,7 @@ Column(
         emptyTitle = stringResource(Res.string.attachments_empty_title),
         emptyDescription = stringResource(Res.string.attachments_empty_description, files.maxSize),
         failure = files.failure,
-        caption = { item -> if (item.state == AttachmentState.Adding) stringResource(Res.string.adding) else item.label },
+        caption = { item -> if (item.state == AttachmentState.Adding) adding else item.label },
         addCaption = stringResource(Res.string.add),
     )
 
@@ -279,13 +270,13 @@ Column(
 AttachmentSheets(files, viewModel, confirmRemoval = false)
 ```
 
-Nothing a form does to its files is final until the form is saved, so the ViewModel holds them as a
-draft and saves them with the record. A file refused on the way in — too large, unreadable — says
-why on the pending sheet; a file that failed to save says why under the strip, in `failure`.
+The view model holds the files as a draft and saves them with the record. A file refused on the
+way in says why on the pending sheet; a file that failed to save says why under the strip, in
+`failure`.
 
-## Recipe: a record's details
+### A record's details
 
-The files of a saved record, larger and stating their sizes, with every change saved at once.
+The files of a saved record, larger and with their sizes, every change saved at once:
 
 ```kotlin
 AttachmentStrip(
@@ -311,14 +302,13 @@ Settings {
 AttachmentSheets(files, viewModel, confirmRemoval = true)
 ```
 
-The strip adds and removes nothing here, and draws nothing at all while there are no files: adding
-is a row of the screen's own, removing is in the viewer's options, behind a question. The sizes are
-stated because a file not yet on this device costs its size to open — the viewer fetches it when it
-lands on it. Inside a sheet already padded by the gutter, pass `bleed = true`.
+The strip adds and removes nothing here and draws nothing while there are no files: adding is a
+row of the screen's own, removing is in the viewer's options. Inside a sheet already padded by the
+gutter, pass `bleed = true`.
 
-## Recipe: documents
+### Documents
 
-A record that carries many files, read by name and grouped by what they are.
+A record with many files, read by name and grouped by tag:
 
 ```kotlin
 Settings {
@@ -345,14 +335,13 @@ Settings {
 AttachmentSheets(files, viewModel, confirmRemoval = true)
 ```
 
-Retagging a file in the viewer's options moves it to its new section. Where its bytes are is said at
-each row's end.
+Retagging a file in the viewer's options moves it to its new section.
 
-## Recipe: cropping a photo before it's attached
+### Cropping a photo before it's attached
 
-The pending sheet offers Edit for the files the application crops; the application's own crop
-screen from `:ui:crop` (see its README) does the cropping, and the crop comes back as the file. The
-module never depends on the cropper — a product that crops nothing never passes `onEdit`.
+The pending sheet offers Edit for the files the application crops; the crop is the application's
+own `CropScreen`, built from `dev.voir.areca:crop` as in the [crop README](../../ui/crop/README.md),
+and comes back as the file. A product that crops nothing never passes `onEdit`.
 
 ```kotlin
 // The application's, once: what cropping an attachment means in this product.
@@ -387,17 +376,15 @@ state.editing?.let { file ->
 }
 ```
 
-The rule for what may be edited is as narrow as the product wants: by format, by the chosen tag, by
-where the screen is. A product with several kinds of picture opens the same crop screen with a
-different `CropSpec` for each.
+What may be edited is the application's rule — by format, tag or screen — and each kind of picture
+can open the crop screen with its own `CropSpec`.
 
 ## The strip
 
-One part covers a record's files wherever they appear. What it offers is decided by what you pass:
-`onAdd` draws the add square, `onRemove` draws the remove marks, and leaving either out takes it
-away — at a limit, or where the files are only shown. Every word is yours.
+`AttachmentStrip` covers a record's files wherever they appear. `onAdd` draws the add square,
+`onRemove` draws the remove marks; leave either out at a limit or where files are only shown.
 
-On the form that writes the record, where nothing is saved until the form is:
+On a form, where nothing is saved until the form is:
 
 ```kotlin
 AttachmentStrip(
@@ -414,8 +401,8 @@ AttachmentStrip(
 )
 ```
 
-On the record's details, where the files are what was opened to be looked at — larger squares with
-their sizes, nothing to add or remove here, and `bleed` because the sheet is already padded:
+On a record's details — larger squares with sizes, nothing to add or remove, `bleed` inside an
+already padded sheet:
 
 ```kotlin
 AttachmentStrip(
@@ -428,25 +415,22 @@ AttachmentStrip(
 )
 ```
 
-With no files, nothing to add and no failure, the strip draws nothing at all, title included. A
-failure is stated under the squares and announced; it is also drawn with no files, because that is
-where the file that failed would have been.
-
-The squares are the subtle page grey, which reads on white. On a grey sheet, pass
-`style = AttachmentTileStyle.default(bg = ArecaTheme.colors.bgSurface)`, or provide that style once
-through `LocalAttachmentTileStyle` — see [Styling](#styling).
-
-**Squares are captioned with `label`**, the word to scan a strip for, and read out with the file's
-name — or with what `description` words. Pass `caption = { item -> if (item.state == AttachmentState.Adding) adding else item.label }`
-to say a file is still being added.
+- With no files, nothing to add and no failure, the strip draws nothing, title included. A
+  `failure` is drawn under the squares, even with no files, and announced.
+- Squares are captioned with `item.label` and read out with the file name, or with what
+  `description` returns. To say a file is still being added, pass
+  `caption = { item -> if (item.state == AttachmentState.Adding) adding else item.label }`.
+- The squares are the subtle page grey. On a grey sheet, pass
+  `style = AttachmentTileStyle.default(bg = ArecaTheme.colors.bgSurface)`, or provide it once; see
+  [Styles](#styles).
+- For a strip of your own, `AttachmentTile` and `AttachmentAddTile` are its squares, and
+  `AttachmentThumbnail` the bare square; `marks = false` hides the state marks.
 
 ## Rows
 
-Where files are read by name — a dozen documents on a record, the files on a ticket — a strip asks
-someone to open each one to find the one they want. `AttachmentRow` is a `SettingsRow`, so it goes
-in a `Section` beside the application's own rows. That suits a record's files, which a limit keeps
-to a handful; a library that grows without one belongs in a `LazyList` or a `PagedContentList` of
-`ListItem` rows instead, since a section composes every row at once and never pages:
+`AttachmentRow` is a `SettingsRow`, so it goes in a `Section` beside the application's own rows —
+for files read by name. A collection that grows without a limit belongs in a `LazyColumn` or a
+`PagedContentList` of `ListItem` rows instead, since a section composes every row at once.
 
 ```kotlin
 Settings {
@@ -464,17 +448,16 @@ Settings {
 }
 ```
 
-The row's square carries no marks. Where the bytes are is said at the row's end instead, and a file
-still being added shows the list's spinner there and cannot be pressed.
+The row's square carries no marks; where the bytes are is said at the row's end, and a file still
+being added shows the list's spinner there and cannot be pressed.
 
-`AttachmentIndicator` marks something that has files — an activity row, a message — with a
-paperclip and an optional count. It takes the colour and text style of the line it sits in; put it
-on the line the list is not read by.
+`AttachmentIndicator(count = "3")` marks a line — an activity row, a message — that has files. It
+takes the colour and text style of the line it sits in.
 
 ## Adding a file
 
-Three steps, each the application's to move on from: where the file comes from, the pick itself,
-and what the file is.
+Three steps, each the application's to move on from: where the file comes from, the pick, and what
+the file is.
 
 ```kotlin
 AttachmentSourceSheet(
@@ -489,12 +472,11 @@ AttachmentSourceSheet(
 )
 ```
 
-List only the sources the platform can complete. Where only one is left — a desktop with no camera
-and no library — skip the sheet and open that one from the add square: a sheet with one choice is a
-tap for nothing.
+List only the sources the platform can complete; with one left, skip the sheet. A choice of your
+own — scan a document, import from a drive — is an `AttachmentChoice(label, icon, onClick)`.
 
-The pick copies the file in and hands back a `PendingAttachment`. It is up while the copy runs, so
-its owner can answer before it finishes; Attach shows its spinner and waits.
+The pick copies the file in and hands back a `PendingAttachment`. The sheet is up while the copy
+runs (`isCopying`), and Attach shows its spinner and waits.
 
 ```kotlin
 var tag by remember(pending?.fileName) { mutableStateOf<ReceiptKind?>(null) }
@@ -517,24 +499,19 @@ PendingAttachmentSheet(
 )
 ```
 
-**The kind is asked, never guessed.** Nothing about where a file came from says what it is, and a
-wrong guess filed silently is worse than one tap — so nothing is chosen when the sheet opens. A
-product that tags nothing leaves `question` out, and the sheet only confirms.
-
-**Editing is optional, and per file.** Pass `onEdit` and the file's row offers Edit once the copy
-exists; pass `null` — the default — and it does not. The module edits nothing: what Edit opens, and
-for which files, is the application's. See [Recipe: cropping a photo before it's
-attached](#recipe-cropping-a-photo-before-its-attached).
-
-A file that cannot be attached — too large, unreadable, not allowed — carries the reason, worded
-by the application, in `PendingAttachment.problem`. The sheet states it in place of the question,
-announces it, and offers only Close. The module never decides a file is too large.
+- Start with nothing chosen, so the kind is asked rather than guessed. A product that tags nothing
+  leaves `question` out.
+- Pass `onEdit` to offer Edit once the copy exists; see
+  [Cropping a photo before it's attached](#cropping-a-photo-before-its-attached).
+- A file that cannot be attached carries the reason, worded by the application, in
+  `PendingAttachment.problem`. The sheet states it in place of the question, announces it, and
+  offers only Close.
 
 ## Acting on a file
 
-`AttachmentOptionsSheet` is headed by the file and lists only what applies to it — there is nothing
-to share or save while a file's bytes are elsewhere. Where the product tags files, the tag leads the
-sheet and changes in one tap, with the sheet staying up:
+`AttachmentOptionsSheet` is headed by the file and lists the choices you pass — offer share and
+save only while the bytes are here. Where the product tags files, the tags lead the sheet and
+change in one tap with the sheet staying up:
 
 ```kotlin
 AttachmentOptionsSheet(
@@ -553,47 +530,20 @@ AttachmentOptionsSheet(
 )
 ```
 
-`AttachmentRenameSheet` edits the name without its extension — a rename that dropped `.pdf` would
-leave a file nothing can open — and puts it back on save. It opens focused, with the name selected.
-Whether a name is acceptable is yours: `canSave = { it.isNotBlank() }` refuses an empty one, and
-`error` states what was wrong with the last attempt.
-
-Every sheet is driven by state — a `visible` flag, or the file it is about — reports `onDismiss`,
-and does not close itself when a choice is made. What it drew stays on screen while it slides away.
-
-Every sheet is headed by the foundation's `TopBar` in its modal style, so its controls sit where
-every other sheet and screen in the application puts them. A list of choices — where a file comes
-from, what to do with one — closes from the × at the end of its heading. The pending and rename
-sheets are small forms: Cancel and Attach, or Cancel and Save, sit in the sheet's foot — the
-foundation's `FlowModalActionBar`, as on every other sheet that commits a draft — and their heading
-only names the question. The sheet keeps clear of the keyboard, so the foot rides above the one the
-rename box opens with.
+- `AttachmentRenameSheet` edits the name without its extension and puts the extension back on
+  save. It opens focused with the name selected. `canSave = { it.isNotBlank() }` refuses an empty
+  name; `error` states what was wrong with the last attempt; `saving` shows the spinner.
+- Every sheet is driven by state — a `visible` flag or the file it is about — reports `onDismiss`,
+  and does not close itself when a choice is made.
+- The source and options sheets close from the × in their heading. The pending and rename sheets
+  have Cancel and Attach, or Cancel and Save, in the sheet's foot, which stays above the keyboard.
 
 ## The viewer
 
-**Always dark, edge to edge.** Like the application's crop screen, the viewer is dark whatever the
-application's theme: the file sits on black, and its bar, its pages, its notices and the sheets
-opened in `sheets` are drawn in foundation's `ArecaDarkTheme`, which keeps the application's
-palette, type and shapes. Its window runs behind the status and navigation bars and paints them
-black with foundation's `SystemBars`; on Android that also asks for light bar icons, turns off the
-contrast scrim and dims nothing, so the bars never read as lighter bands. On iOS the status bar's
-text keeps the style the application's view controller gives it. `AttachmentViewerPage` is dark on
-its own too, for a viewer of the product's own.
-
-Its heading is the foundation's plain top bar on the viewer's ground: close, the file's name and
-its position centred on the screen, then share and more — bare glyphs, the same size, spacing and
-edge as any screen's own bar. It sits above the pager rather than over the file, so it is not a
-floating bar and has nothing to raise its controls off. `AttachmentViewerStyle.topBar()` is that bar
-in the viewer's colours.
-
-The viewer opens on the pressed file and swipes to the rest; a receipt and its invoice are read
-together. A picture pinches and double-taps closer around the fingers — one finger swipes to the
-next file until the picture is zoomed, and panning stops at the picture's edges — and a PDF scrolls
-down its pages while files go across. A PDF's pages pinch and double-tap closer the same way; once
-zoomed, one finger moves around the page and, past what is in view, scrolls on through the pages.
-Zooming does not need gestures: a screen reader offers zoom in, zoom out and reset as actions on a
-picture or a PDF (`zoomInLabel`, `zoomOutLabel`, `resetZoomLabel` on `AttachmentViewerPage`), the
-keyboard's `+`, `−` and `0` do the same, and Ctrl with the mouse wheel zooms around the pointer.
+`AttachmentViewer` opens on the pressed file and swipes to the rest. It is always dark and edge to
+edge: the file sits on black, and its bar, pages, notices and the sheets in `sheets` are drawn in
+foundation's `ArecaDarkTheme`. It paints the system bars black with foundation's `SystemBars`.
+`AttachmentViewerPage` is dark on its own too, for a viewer of your own.
 
 ```kotlin
 AttachmentViewer(
@@ -623,26 +573,28 @@ AttachmentViewer(
 )
 ```
 
-**Opening a file is asking for it.** When a file whose bytes are only on the server
-(`AttachmentState.Remote`) settles on screen, the viewer calls `onRequest` — once per landing, and
-never for a file merely swiped past. Report `Downloading(progress)` while it arrives, `Waiting` when
-the server cannot be reached, and `Ready` with a `model` once it is here.
-
-**The sheets go inside the viewer**, in `sheets`, so they open above the file rather than under the
-viewer's window. Sharing is offered only for a file whose bytes are here. What came of handing a file
-on — no application opens it, the save failed — is `notice`: a line over the file, announced, and
-cleared through `onNoticeDismiss` after three seconds, or after longer where the platform's
-accessibility settings ask for more time. When the last file is removed, the viewer closes itself.
-
-A file the page cannot draw — a document, a picture that will not decode, a PDF with no renderer —
-is stated with its glyph, name and size, and offers `onOpenElsewhere` and `onSave` when you pass
-them. Opening, sharing and saving are the platform's work and stay in the application.
+- **Opening a file asks for it.** When a `Remote` file settles on screen the viewer calls
+  `onRequest`, once per landing and never for a file swiped past. Report `Downloading(progress)`
+  while it arrives, `Waiting` when the server cannot be reached, and `Ready` with a `model` once it
+  is here.
+- **Sheets go in `sheets`**, so they open above the viewer rather than under its window.
+- **`notice`** is a line over the file — "No app can open this file" — announced and cleared
+  through `onNoticeDismiss` after `noticeDuration` (three seconds), or longer where the platform's
+  accessibility settings ask.
+- **Sharing** is offered only for a file whose bytes are here. When the last file is removed, the
+  viewer closes itself.
+- **Zoom.** A picture pinches and double-taps closer; a PDF scrolls down its pages and zooms the
+  same way. A screen reader gets zoom in, zoom out and reset as actions (`zoomInLabel`,
+  `zoomOutLabel`, `resetZoomLabel` on `AttachmentViewerPage`); the keyboard uses `+`, `−` and `0`;
+  Ctrl with the mouse wheel zooms around the pointer.
+- **A file the page cannot draw** — a document, an undecodable picture, a PDF with no renderer — is
+  stated with its glyph, name and size, with `onOpenElsewhere` and `onSave` when you pass them.
+- `style.topBar()` (on an `AttachmentViewerStyle`, for example `AttachmentViewerStyle.Default.topBar()`) is the viewer's heading bar style, for a viewer of your own.
 
 ## Pictures
 
-The module has no image loader and never will: an application that uses Coil should not have to
-take a second one. Every part that draws a picture reads one from `LocalAttachmentImageLoader`, and
-the application provides it once, above everything:
+Every part that draws a picture reads it from `LocalAttachmentImageLoader`. Provide a loader once,
+above everything — here, one built on Coil:
 
 ```kotlin
 object CoilAttachmentImageLoader : AttachmentImageLoader {
@@ -669,39 +621,29 @@ object CoilAttachmentImageLoader : AttachmentImageLoader {
 }
 ```
 
-A picture is asked for in one of two ways, by how it is drawn. `load(model, maxSize)` is for a
-picture drawn whole — the viewer's, at the size of the page it fills — and `maxSize` is the longest
-edge it is drawn at. `loadSquare(model, side)` is for a picture
-cropped into a square, and the picture must **cover** the square: its shorter edge reaches `side`,
-so a 4:3 photograph comes back a third longer than `side`. Decode no larger than either asks: a
-strip holds many photographs, and each is thousands of pixels on its long edge. Left out,
-`loadSquare` asks `load` for twice the side, which covers any picture up to 2:1.
-
-A picture that is loading or fails draws the file's kind — a glyph and its extension — never an
-empty square. With no loader provided, `AttachmentImageLoader.None` fails everything, so every file
-draws as its kind.
+- `load(model, maxSize)` is for a picture drawn whole, such as the viewer's; `maxSize` is the
+  longest edge it is drawn at.
+- `loadSquare(model, side)` is for a picture cropped into a square; return one that covers the
+  square, its shorter edge at least `side`. Left out, it asks `load` for twice the side.
+- Decode no larger than either asks: a strip holds many photographs.
+- A picture that is loading or fails draws the file's glyph and extension. With no loader,
+  `AttachmentImageLoader.None` fails everything, so every file draws as its kind.
 
 ## PDFs
 
-The module draws no PDF itself; the viewer reads one from `LocalAttachmentPdfRenderer`. Each
-platform has a renderer, and each needs work a flow module does not do — Android's reads a seekable
-file, so the bytes go to storage first. With no renderer provided, or on a platform without one, a
-PDF is offered to another application like any other document.
+The viewer draws a PDF through `LocalAttachmentPdfRenderer`. With no renderer provided, a PDF is
+offered to another application like any document — the right choice on the desktop.
 
-`AttachmentPdfDocument.render` is called per page as it scrolls into view, at the column's width —
-twice that while the pages are zoomed, so small print stays sharp — so a long statement is never
-drawn whole. Draw on white — a page is paper — and return `null` for a
-page that cannot be drawn.
+- `AttachmentPdfRenderer.open(model)` returns an `AttachmentPdfDocument`, or `null` when it cannot.
+- `AttachmentPdfDocument.render(index, width)` is called per page as it scrolls into view, at the
+  column's width (twice that while zoomed). Draw on white, and return `null` for a page that cannot
+  be drawn.
+- `close()` is called on the main thread as the page leaves the screen, even while a page is being
+  drawn; and an unfinished `open` is cancelled when the page is swiped past. Handle both.
 
-Two things arrive at awkward moments, and a renderer has to be ready for both. The viewer closes a
-document as its page leaves the screen, on the main thread, even while a page of it is still being
-drawn; and it cancels an open that has not finished when the page is swiped past, after which
-nothing else will ever hold what that open made.
-
-On Android, `PdfRenderer` reads a seekable file, opens one page at a time, and throws if it is
-closed while a page is open. Drawing and closing share one lock, so closing waits for the page being
-drawn; a cancelled open closes what it opened; and a PDF locked with a password, which `PdfRenderer`
-refuses with a `SecurityException`, is reported as one that cannot be drawn here:
+On Android, `PdfRenderer` reads a seekable file and throws if closed while a page is open: drawing
+and closing share one lock, a cancelled open closes what it opened, and a password-locked PDF is
+reported as one that cannot be drawn.
 
 ```kotlin
 class AndroidAttachmentPdfRenderer(
@@ -826,62 +768,91 @@ CompositionLocalProvider(
 }
 ```
 
-On the desktop, provide none: a PDF is then offered elsewhere, like any document.
+## Styles
+
+Each style has a `Default`, which reads the theme in scope, and a `default(…)` factory that
+replaces any colour. A part given no `style` reads the style in scope from a composition local,
+then falls back to `Default`:
+
+| Style | Local | Read by |
+| --- | --- | --- |
+| `AttachmentTileStyle` | `LocalAttachmentTileStyle` | `AttachmentThumbnail`, `AttachmentTile`, `AttachmentAddTile`, `AttachmentStrip`, `AttachmentRow`, `PendingAttachmentSheet`'s square |
+| `AttachmentViewerStyle` | `LocalAttachmentViewerStyle` | `AttachmentViewer`, `AttachmentViewerPage` |
+
+`ArecaThemeProvider` does not provide these locals; provide them around the part of the
+application that wants a different default:
+
+```kotlin
+CompositionLocalProvider(
+    LocalAttachmentTileStyle provides AttachmentTileStyle.default(bg = ArecaTheme.colors.bgSurface),
+) {
+    // every square in here sits on white
+}
+```
+
+With no style provided, `AttachmentRow` uses the settings list's tile shape on the inset fill
+rather than `Default`, so a row reads against a section's card.
 
 ## Words
 
-Every word a part draws is a parameter of that part, and the application passes its own. A word
-the part cannot do without — a sheet's title, a button's caption, the accessibility label of an
-icon-only control — has a plain English default. An optional word — a subtitle, a hint, a counter —
-is `null` by default and draws nothing. Anything that names or formats a value, such as a file's
-size, arrives already worded.
+Every word a part draws is a parameter, and the application passes its own from its
+`composeResources`.
+
+- **Required words** — a sheet's title, a button's caption, the label of an icon-only control
+  (`addLabel`, `removeLabel`, `closeLabel`, `shareLabel`, `moreLabel`) — default to plain English.
+  Override every one in a localised application.
+- **Optional words** — a subtitle, a hint, a counter, `copyingText`, `waitingText` — default to
+  `null`, which draws nothing.
+- **Words around a value** are functions: `removeLabel`, `description` and `stateDescription` on
+  the strip, the viewer's `title`, `position`, `caption` and `filmstripLabel`, the page's
+  `downloadingText`, `pageLabel` and `pageDescription`.
+- A file's name, size and label arrive already worded, in `AttachmentItem`.
+
+Every module's words in one place: [Localisation](../../docs/localisation.md).
 
 ## Accessibility
 
-The parts carry what applications usually miss:
+What the parts already do, and what to pass. General guidance:
+[Accessibility](../../docs/accessibility.md).
 
-- A file's square and the lines under it read as one button, named by its label and its file name —
-  "Receipt, IMG_2041.jpg" — then its second line, so a strip captioned with tags still says which
-  file is which. Pass `description` to word it yourself. The add square and its caption are one
-  button too.
-- Where a file's bytes are — adding, uploading and how far, not downloaded, downloading, waiting,
-  unavailable — is the square's and the row's state for assistive technology, not only a drawn
-  mark, and is said once: the ring and the spinner that draw it are silent. Pass `stateDescription`
-  to word it; the English default says nothing for a file that is simply here. A download in the
-  viewer is read once too, by its progress bar.
-- The remove mark is a small disc with the whole corner around it as its target, at the platform's
-  48-point minimum, and a label of its own (`removeLabel`); the add square and every icon-only
-  control in the viewer take one too. The filmstrip's squares and the sheets' choices are at least
-  48 points as well, however small a square is drawn.
-- Focus rings are drawn whole, around the shape of what is focused, never cut off by a clip. A
-  zoomable picture or PDF takes keyboard focus and draws its ring inside its frame.
-- A zoomable picture or PDF offers zoom in, zoom out and reset as actions to a screen reader, and to
-  the keyboard as `+`, `−` and `0`.
-- A failure under the strip, a refusal on the pending sheet, a notice over the viewer and a download
-  that stopped are announced when they appear, not only drawn. The viewer's notice stays longer
-  where the platform's accessibility settings ask for more time.
-- The sheets' and the viewer's headings carry the heading role; the filmstrip is a group of tabs,
-  the one on screen selected. A share control with nothing to share is out of the tree, not merely
-  invisible.
-- The rename box opens focused with the editable part selected, does not capitalise or correct a
-  file name, and Done on the keyboard saves.
-- A picture in the viewer is described by `pictureDescription` — the file's label by default — and
-  each PDF page by `pageDescription`.
-- A square that is not pressable takes no `onClick` rather than a press that does nothing, and a
-  file still being added cannot be opened until there is something to show.
+- A file's square and the lines under it read as one button, named by label and file name —
+  "Receipt, IMG_2041.jpg" — then its second line. Pass `description` to word it yourself. The add
+  square and its caption are one button too.
+- Where a file's bytes are is the square's and the row's state for assistive technology, said once;
+  pass `stateDescription` to word it. The English default says nothing for a file that is simply
+  here.
+- The remove mark's target is the whole corner, at least 48 points, with its own `removeLabel`. The
+  add square, the viewer's icon-only controls, the filmstrip's squares and the sheets' choices are
+  at least 48 points too.
+- Focus rings are drawn whole around what is focused. A zoomable picture or PDF takes keyboard
+  focus and draws its ring inside its frame.
+- A failure under the strip, a refusal on the pending sheet, the viewer's notice and a download
+  that stopped are announced when they appear.
+- The sheets' and the viewer's headings carry the heading role; the filmstrip is a group of tabs.
+- The rename box opens focused with the editable part selected, does not capitalise or correct,
+  and Done saves.
+- A picture in the viewer is described by `pictureDescription` (the label by default), each PDF
+  page by `pageDescription`.
+- A square that is not pressable takes no `onClick`; a file still being added cannot be opened.
 
 ## Where to look
 
-The playground renders all of this live. Under **Attachments flow → Screens**, the recipe screens —
-[`AttachmentFormShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/attachments/AttachmentFormShowcase.kt),
-[`AttachmentCroppingShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/attachments/AttachmentCroppingShowcase.kt),
-[`AttachmentDetailsShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/attachments/AttachmentDetailsShowcase.kt)
-and
-[`AttachmentDocumentsShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/attachments/AttachmentDocumentsShowcase.kt),
-with the sheets and the viewer they share in
-[`AttachmentSheetsRecipe`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/attachments/AttachmentSheetsRecipe.kt)
-— hold the same assemblies as compiled code, driven by a sample application in
-[`SampleAttachments`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/attachments/SampleAttachments.kt)
-that picks, copies, uploads and downloads offline. The group's other sections give every public
-part a page of its own, in
-[`playground/flow/attachments`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/attachments).
+- **Playground:** under **Attachments flow → Screens**, the recipes as compiled code —
+  [`AttachmentFormShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/attachments/AttachmentFormShowcase.kt),
+  [`AttachmentCroppingShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/attachments/AttachmentCroppingShowcase.kt),
+  [`AttachmentDetailsShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/attachments/AttachmentDetailsShowcase.kt),
+  [`AttachmentDocumentsShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/attachments/AttachmentDocumentsShowcase.kt),
+  with the shared sheets and viewer in
+  [`AttachmentSheetsRecipe`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/attachments/AttachmentSheetsRecipe.kt),
+  driven by a sample application in
+  [`SampleAttachments`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/attachments/SampleAttachments.kt)
+  that picks, copies, uploads and downloads offline. Every part has a page of its own in
+  [`playground/flow/attachments`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/attachments).
+- **KDoc:** every part's parameters, in the sources under
+  [`src/commonMain`](src/commonMain/kotlin/dev/voir/areca/flow/attachments).
+- **For agents:** the `areca-ui-v1` skill's
+  [`reference/flow-attachments.md`](../../skills/areca-ui-v1/reference/flow-attachments.md).
+- **Related:** [`ui/crop`](../../ui/crop/README.md) for cropping a photo before it is attached;
+  foundation's `ConfirmSheet` and settings list.
+
+For contributors: [`../FLOWS.md`](../FLOWS.md) is the contract every flow module follows.
