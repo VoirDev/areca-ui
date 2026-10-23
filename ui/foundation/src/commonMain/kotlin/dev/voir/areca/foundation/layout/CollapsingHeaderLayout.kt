@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -18,19 +20,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.zIndex
 import dev.voir.areca.theme.ArecaTheme
 import dev.voir.areca.theme.tween
+import kotlin.math.roundToInt
 import kotlin.time.Duration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlin.math.roundToInt
 
 /**
  * A header that scrolls away, a strip that stays, and scrolling content under both.
@@ -50,6 +54,13 @@ import kotlin.math.roundToInt
  * @param header The band that collapses. Measured once; its height is how far it can collapse.
  * @param pinned The band that stays, between the header and the content.
  * @param modifier Modifier applied to the whole layout.
+ * @param state How far the header has collapsed. Hoist it to read
+ *   [CollapsingHeaderState.collapsedFraction] — to fade a title into a bar, say.
+ * @param collapsed A compact band the header collapses into rather than out of sight: the header
+ *   stops collapsing at the band's height, and the band fades in over it as it goes, carrying what
+ *   must stay readable — a title and a figure. Give it an opaque ground. Once the header has
+ *   collapsed fully, assistive technology reads the band instead of the header, never both. `null`
+ *   lets the header collapse away entirely.
  * @param expandOnlyWhenScrolledToTop Whether scrolling back up leaves the header collapsed until the
  *   inner content reaches its own top. `true` is the familiar behaviour — the header returns as part
  *   of arriving back at the start, rather than reappearing the instant a drag reverses.
@@ -61,13 +72,28 @@ public fun CollapsingHeaderLayout(
     header: @Composable () -> Unit,
     pinned: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+    state: CollapsingHeaderState = rememberCollapsingHeaderState(),
+    collapsed: (@Composable () -> Unit)? = null,
     expandOnlyWhenScrolledToTop: Boolean = true,
     expandDuration: Duration = ArecaTheme.motion.medium,
     content: @Composable (Modifier) -> Unit,
 ) {
     val expandEasing = ArecaTheme.motion.standard
     val coroutineScope = rememberCoroutineScope()
-    val collapse = remember { CollapseOffset() }
+    val collapse = state.offset
+    var headerFullPx by remember { mutableIntStateOf(0) }
+    var collapsedPx by remember { mutableIntStateOf(0) }
+    // Derived, so a scroll frame recomposes the layout only when the band takes over or hands back,
+    // not on every pixel of the collapse.
+    val bandTakesOver by remember(state) { derivedStateOf { state.collapsedFraction >= 1f } }
+    val hasBand = collapsed != null
+    if (!hasBand && collapsedPx != 0) {
+        // A band removed at run time no longer holds the header open at its height.
+        SideEffect {
+            collapsedPx = 0
+            collapse.onHeaderMeasured(headerFullPx)
+        }
+    }
     val currentExpandDuration by rememberUpdatedState(expandDuration)
     val currentExpandEasing by rememberUpdatedState(expandEasing)
 
@@ -125,7 +151,8 @@ public fun CollapsingHeaderLayout(
                 .clipToBounds()
                 .layout { measurable, constraints ->
                     val placeable = measurable.measure(constraints)
-                    val visibleHeight = (collapse.headerHeightPx + collapse.offsetPx)
+                    // The header collapses down to the compact band's height, not past it.
+                    val visibleHeight = (collapsedPx + collapse.headerHeightPx + collapse.offsetPx)
                         .roundToInt()
                         .coerceAtLeast(0)
 
@@ -135,11 +162,29 @@ public fun CollapsingHeaderLayout(
                 }
         ) {
             Box(
-                modifier = Modifier.onSizeChanged { size ->
-                    collapse.onHeaderMeasured(size.height)
-                }
+                modifier = Modifier
+                    .onSizeChanged { size ->
+                        headerFullPx = size.height
+                        collapse.onHeaderMeasured((size.height - collapsedPx).coerceAtLeast(0))
+                    }
+                    // Once the band has taken over, the header under it is not read a second time.
+                    .then(if (hasBand && bandTakesOver) Modifier.clearAndSetSemantics {} else Modifier),
             ) {
                 header()
+            }
+            if (collapsed != null) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .onSizeChanged { size ->
+                            collapsedPx = size.height
+                            collapse.onHeaderMeasured((headerFullPx - size.height).coerceAtLeast(0))
+                        }
+                        .graphicsLayer { alpha = state.collapsedFraction }
+                        .then(if (bandTakesOver) Modifier else Modifier.clearAndSetSemantics {}),
+                ) {
+                    collapsed()
+                }
             }
         }
 
@@ -162,6 +207,35 @@ public fun CollapsingHeaderLayout(
 }
 
 /**
+ * How far a [CollapsingHeaderLayout]'s header has collapsed.
+ *
+ * Read [collapsedFraction] to drive something of your own from the collapse; the layout writes it.
+ */
+@Stable
+public class CollapsingHeaderState internal constructor() {
+    /** The collapse itself, written by the layout's nested scrolling. */
+    internal val offset: CollapseOffset = CollapseOffset()
+
+    /**
+     * How far the header has collapsed: `0f` fully shown, `1f` collapsed as far as it goes — out of
+     * sight, or down to the compact band when the layout has one.
+     */
+    public val collapsedFraction: Float
+        get() {
+            val distance = offset.headerHeightPx
+            return if (distance <= 0) 0f else (-offset.offsetPx / distance).coerceIn(0f, 1f)
+        }
+}
+
+/**
+ * Remembers a [CollapsingHeaderLayout]'s collapse, starting fully expanded.
+ *
+ * @return A state for one layout.
+ */
+@Composable
+public fun rememberCollapsingHeaderState(): CollapsingHeaderState = remember { CollapsingHeaderState() }
+
+/**
  * How far a [CollapsingHeaderLayout]'s header has collapsed, and the animation returning it.
  *
  * The offset is plain snapshot state written synchronously from the nested scroll callbacks, so the
@@ -169,8 +243,8 @@ public fun CollapsingHeaderLayout(
  * spring back to fully expanded runs as a coroutine, and any new scroll cancels it.
  */
 @Stable
-private class CollapseOffset {
-    /** Measured height of the header, in pixels; how far it can collapse. */
+internal class CollapseOffset {
+    /** How far the header can collapse, in pixels: its height, less any compact band it stops at. */
     var headerHeightPx by mutableIntStateOf(0)
         private set
 

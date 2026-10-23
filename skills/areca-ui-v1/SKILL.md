@@ -6,8 +6,9 @@ description: Areca UI 1.x conventions for building Compose Multiplatform screens
 # Areca UI Guidelines
 
 > **Audience:** Compose Multiplatform UI developers and coding agents
-> **Validated library version:** `dev.voir.areca:foundation` 1.0.0, with `charts`, `crop`,
-> `datetime`, `keyboard`, `icons`, `flow-auth`, `flow-profile` and `flow-attachments` 1.0.0
+> **Library version:** the latest `dev.voir.areca` release of `foundation`, `charts`, `crop`,
+> `datetime`, `keyboard`, `icons`, `flow-auth`, `flow-profile` and `flow-attachments`, every module
+> at the same version
 
 Areca is Voir's Compose Multiplatform design system for Android, iOS and the JVM: theme tokens and
 the components built on them (`foundation`), plus feature modules for charts, cropping, dates,
@@ -47,8 +48,8 @@ GitHub Packages asks for credentials even for public packages: the Gradle proper
 
 ```kotlin
 commonMain.dependencies {
-    implementation("dev.voir.areca:foundation:1.0.0")
-    implementation("dev.voir.areca:icons:1.0.0") // only if the app draws ArecaIcons.*
+    implementation("dev.voir.areca:foundation:<version>")
+    implementation("dev.voir.areca:icons:<version>") // only if the app draws ArecaIcons.*
 }
 ```
 
@@ -63,18 +64,15 @@ fun App() {
 }
 ```
 
-- Mount exactly one `ArecaThemeProvider`, at the root. Every component and every Areca module reads
-  tokens and component defaults from it; without it they fall back to the light library defaults.
-- Pass `darkTheme` from `isSystemInDarkTheme()` or the user's setting; nothing follows the system on
-  its own. The provider paints nothing, so give the root its `bgCanvas` ground.
+- Mount exactly one `ArecaThemeProvider`, at the root; every component and module reads tokens and
+  component defaults from it (without it, the light library defaults — fine for previews). Pass
+  `darkTheme` from `isSystemInDarkTheme()` or the user's setting; give the root `bgCanvas`.
 - Re-theme only through the provider's parameters, at the highest level that says what you mean:
-  `baseColors` (re-themes both directions), `radius`, `spacing`, `elevation`, `motion`, `fonts`
-  (`ArecaFonts(primary = brandSans)`); `colors`, `shapes` and `typography` derive from them.
+  `baseColors` (both directions), `radius`, `spacing`, `elevation`, `motion`, `fonts`; `colors`,
+  `shapes` and `typography` derive from them ([reference/theme.md](reference/theme.md)).
 - Change an app-wide component default by providing its local just inside the provider
   (`LocalButtonStyle provides …`). A nested `ArecaThemeProvider` or `ArecaDarkTheme` reseeds every
   local, so overrides above it do not reach inside.
-- Previews and tests compose without a provider (light defaults); wrap them when the dark theme or
-  an app token matters.
 
 ## Rules
 
@@ -103,20 +101,22 @@ Column(
 }
 ```
 
+Every token, what it is for and how to change it: [reference/theme.md](reference/theme.md).
+
 | Accessor | Members |
 | --- | --- |
-| `ArecaTheme.colors` | Grounds `bgCanvas` (page), `bgSurface` (cards), `bgSubtle` (settings sections, grouped regions), `bgMuted` (tracks and wells), `bgContrast`, `bgDisabled`, overlays; per tone `bg{Brand,Danger,Success,Warn,Info,Neutral}{Muted,Base,Intense}`. Foregrounds `fgBase`, `fgSubtle`, `fgMuted`, `fgDisabled`, `fgOnContrast`, `fgOnFill`, marks `fg{Brand,Danger,Success,Info,Warn}` and text `fg{…}Text`. Borders `borderBase`, `borderStrong`, `borderSubtle`, `borderOnSubtle` (hairlines on `bgSubtle`), `border{Danger,Success,Info,Warn}`. Accent `accentBase` … `accentMuted` |
+| `ArecaTheme.colors` | Grounds `bgCanvas` (page), `bgSoft` (softest ground: an expanded group, a note), `bgSurface` (cards), `bgSubtle` (settings sections, grouped regions), `bgMuted` (tracks and wells), `bgContrast`, `bgContrastMuted`, `bgOverlayDark`, `bgOverlayLight`, `bgDisabled`; per tone `bg{Brand,Danger,Success,Warn,Info,Neutral}{Muted,Base,Intense}`. Foregrounds `fgBase`, `fgSubtle`, `fgMuted`, `fgDisabled`, `fgOnContrast`, `fgOnFill`, `fgOnWarn`, `fgNeutral`, marks `fg{Brand,Danger,Success,Info,Warn}` and text `fg{…}Text`. Borders `borderBase`, `borderStrong`, `borderIntense`, `borderSubtle`, `borderOnSubtle` (hairlines on `bgSubtle`), `borderDisabled`, `border{Danger,Success,Info,Warn}`. Accent `accentBase`, `accentStrong`, `accentIntense`, `accentSubtle`, `accentMuted`; `accentScale`, eight shades for data, index `0` faintest in both themes |
 | `ArecaTheme.spacing` | `none` 0, `xs2` 2, `xs` 4, `sm` 6, `md` 8, `lg` 12, `xl` 16, `xl2` 20, `xl3` 24, `xl4` 32, `xl5` 40, `xl6` 48, `xl7` 64, `xl8` 80, `xl9` 96; `horizontalContentInsets` 16, `verticalContentInsets` 24 |
 | `ArecaTheme.shapes` / `radius` | `none`, `xs`, `sm`, `md`, `lg`, `xl`, `xl2`, plus shapes `full`, `tile`, `button`; prefer `shapes` |
 | `ArecaTheme.typography` | `display`, `heading{ExtraSmall…ExtraLarge}`, `body{ExtraSmall…ExtraLarge}`, `label{Small,Medium,Large}`, `caption` |
 | `ArecaTheme.elevation` | `none`, `xs`, `sm`, `md`, `lg`, `xl` |
 | `ArecaTheme.motion` | Durations `instant`, `fast`, `medium`, `slow`, `deliberate`; easings `standard`, `enter`, `exit`, `pressIn`, `fade`; `motion.medium.tween(motion.standard)` |
-| `ArecaTheme.isDark` | Only for a decision no token carries |
+| `ArecaTheme.isDark`, `darkColors` | Direction, only for a decision no token carries; the theme's dark colours before an `ArecaDarkTheme` scope |
 
-- Set type with `Text(text, variant = TextVariant.X, color = TextColor.Y)`. `TextColor` is `Base`,
+- Set type with `Text(text, variant = TextVariant.X, color = TextColor.Y)` (`TextColor` `Base`,
   `Subtle`, `Muted`, `Disabled`, `OnContrast`, `OnFill`, `Brand`, `Danger`, `Success`, `Info`,
-  `Warning`. Inside a component's slot, plain `Text("…")` inherits the slot's style and colour.
-- Icon sizes are `IconSize.ExtraSmall` 12 to `ExtraLarge` 32.
+  `Warning`). In a component's slot, plain `Text("…")` inherits the slot's style and colour. Icon
+  sizes are `IconSize.ExtraSmall` 12 to `ExtraLarge` 32.
 - Exception: a component dimension no token names (a chart height, a fixed table column width) may
   be a literal `Dp`. Padding, gaps, colours, type and motion never are.
 
@@ -164,13 +164,17 @@ CompositionLocalProvider(
   `.outlined`, `.plain`, and `FeaturedIconStyle` `.solid`, `.soft`, `.outlined`.
 - Other styles have named presets (`CardStyle.Outlined`, `BadgeStyle.Danger`, `TopBarStyle.Tonal`)
   and a `default(…)` factory whose parameters are the tokens it reads. Sizes are named steps
-  (`ButtonSize.ExtraSmall…ExtraLarge`, `IconButtonSize.Tiny…ExtraLarge`) or, where the companion
-  offers one, `XSize.default(…)` (`CardSize.default(padding = …)`).
+  (`ButtonSize.ExtraSmall…ExtraLarge`, `IconButtonSize.Tiny…ExtraLarge`, `AvatarSize`,
+  `HeadingSize`, `FieldSize`) or, where the companion offers one, `XSize.default(…)`
+  (`CardSize.default(padding = …)`).
 - Change one property with `.copy(…)`. `ButtonStyle.copy(shape = …)` moves the press and focus
   feedback with the shape.
-- Restyle a subtree with `LocalXStyle` / `LocalXSize`. Fields read `LocalFieldStyle` /
-  `LocalFieldSize` through `FieldDefaults`; provide one look for a whole form. Settings lists take
-  `styles = SettingsDefaults.styles(…)` and `sizes = SettingsDefaults.sizes(…)`.
+- Restyle a subtree with `LocalXStyle` / `LocalXSize` (nullable, seeded by the provider). Fields
+  read `LocalFieldStyle` / `LocalFieldSize` through `FieldDefaults`; provide one look for a whole
+  form. Settings lists take `styles = SettingsDefaults.styles(…)` and
+  `sizes = SettingsDefaults.sizes(…)`. `LocalNoticeStyle`, `LocalConfirmSheetStyle` and
+  `LocalConfirmSheetSize` stay `null` unless provided: a notice follows its tone, and a confirm
+  sheet builds on the `LocalFlowModalStyle` / `LocalFlowModalSize` in scope.
 - Never write a wrapper composable whose only job is to restyle a component.
 - Build presets and `default(…)` inside composition: they read the theme where called, so a style
   built inside `ArecaDarkTheme` is dark.
@@ -270,6 +274,9 @@ without opting in.
 
 ## Choose a component
 
+Every foundation family, by intent. Signatures, overloads and packages:
+[reference/signatures.md](reference/signatures.md).
+
 | Intent | Use |
 | --- | --- |
 | Primary action; secondary; cancel or skip | `Button(text, onClick)`; `ButtonStyle.soft()` / `outlined()`; `ButtonStyle.plain(ActionColor.Neutral)` |
@@ -277,34 +284,43 @@ without opting in.
 | Icon-only action | `IconButton(imageVector, contentDescription, onClick)` |
 | Link; prompt plus link | `TextLink`; `TextLinkPrompt` ("No account? Sign up") |
 | Text; title with supporting line; masked value | `Text(…, variant, color)`; `Heading(title, supportive)`; `SensitiveText` |
-| Icon; icon on a tinted tile; disclosure arrow | `Icon`; `FeaturedIcon`; `Chevron` |
+| Icon; icon on a tinted tile; disclosure arrow | `Icon`; `FeaturedIcon`; `Chevron` (`ListItemChevron` in a row) |
 | Labelled input with hint or error | `FieldGroup(label, assistive, error) { field -> TextField(…, field = field) }` |
 | Password and its rules; search; amount with unit | `PasswordField` + `RequirementList`; `SearchField`; `AffixTextField` |
 | One-time code; compound input | `OtpField`; `FieldRow { SelectSegment(…); TextSegment(…) }` |
+| A custom control drawn as a field; label and message around it without wiring | `Field(onClick = …) { … }`; `FieldGroupLayout` (prefer `FieldGroup`) |
 | Pick from a short list; a long or searchable one | `SelectField`; `SelectFlowModal` |
-| Filter chips; colour; small integer | `BadgeSelect` / `FlowBadgeSelect` / `LazyBadgeSelect`; `SwatchPicker`; `NumberStepper` |
-| On/off setting; tick in a form; one of many | `Toggle`; `Checkbox`; `Radio`, each inside its list or settings row |
-| Settings screen; a short, bounded group of rows | `Settings { Section { SettingsToggleRow / SettingsSelectRow / SettingsRow / SettingsTextFieldRow / SettingsOptionRow } }`; loading row `SettingsRowSkeleton`; free content `SettingsBlock` |
+| Filter chips; colour; small integer | `BadgeSelect` / `FlowBadgeSelect` / `LazyBadgeSelect` with `BadgeStyle.Chip` (`FilledChip` to fill the unchosen ones) + `BadgeSize.Chip`; `SwatchPicker` (one chip `Swatch`); `NumberStepper` |
+| On/off setting; tick in a form; one of many | `Toggle`; `Checkbox`; `Radio`, each inside its row: `ToggleListItem`, `CheckboxListItem`, `RadioListItem`, `CheckmarkListItem` (a tick, `ListItemCheckmark` by hand), or the settings rows |
+| Settings screen; a short, bounded group of rows | `Settings { Section { SettingsToggleRow / SettingsSelectRow / SettingsRow / SettingsTextFieldRow / SettingsOptionRow } }`; leading `SettingsRowIcon` / `SettingsRowTile`; loading row `SettingsRowSkeleton`; free content `SettingsBlock` |
 | Second action in a pressable row; line of detail under a subtitle | `trailing = { SettingsRowLink("Verify", onVerify) }`; the row's `caption` slot |
-| Grouped rows on one surface | `List { item(…) }` (eager), `LazyList` (lazy), `ListItemColumn` (hand-composed) |
-| Row that navigates; row that expands | `NavigationListItem`; `ExpandableListItem` |
-| Remote list with loading, empty and error faces | `ContentList` (one load), `PagedContentList` (pages, pull-to-refresh), `Grouped…` variants |
+| Grouped rows on one surface | `List { item(…) }` (eager), `LazyList` (lazy), `ListItemColumn` (hand-composed `ListItem`s) |
+| Row that navigates; row that expands | `NavigationListItem`; `ExpandableListItem` (`container = ExpandableListItemContainer.Soft` for one soft ground with what it reveals) |
+| Remote list with loading, empty and error faces | `ContentList` (one load), `PagedContentList` (pages, pull-to-refresh); with group headers `GroupedContentList`, `GroupedPagedContentList` |
 | Grid with group headers; tabular data | `LazyVerticalGroupedGrid` / `LazyHorizontalGroupedGrid`; `Table` / `LazyTable` |
 | Grouping surface; with status and actions along its bottom | `Card` (expandable overload); `Card(footer = { … }, footerStyle = CardFooterStyle.soft(ActionColor.Brand))` |
 | Show and hide a region; separator | `Expandable`; `HorizontalDivider` / `VerticalDivider` |
-| Screen frame; title bar; large collapsing title | `BaseLayout`; `TopBar` with `BackAction` and the named `…Action` controls; `LargeTopBar` + `rememberTopBarScrollState(TopBarScrollBehavior.ExitUntilCollapsed)` |
-| Progress under the bar; collapsing hero | `TopBarProgress` in the bar's `bottom`; `CollapsingHeaderLayout` |
-| App destinations; views within a screen; sidebar | `TabBar` / `FloatingTabBar`; `Tabs` (`TabsVariant.Underline` or `Button`); `NavList` |
-| Onboarding pages; steps of a flow | `SwipePager` + `PagerControls` + `PageIndicator`; `StepIndicator` |
-| Bottom sheet; any other dialog; menu | `FlowModal` + `rememberFlowModal()` + `FlowModalActionBar`; `Dialog` + `ModalDefaults.Actions`; `DropdownPopup` + `rememberDropdownPopup()` + `Modifier.anchored(state.anchorState)` |
-| Transient message; persistent inline message | `ToastHost` + `rememberToastState().show(label = …)`; `Notice` + `NoticeText` (`AnimatedNotice` to appear and leave) |
+| Screen frame; title bar; large collapsing title | `BaseLayout`; `TopBar` with `BackAction` and the named controls (`CloseAction`, `OverflowAction`, `DoneAction`, `IconAction`, `TextAction`, `AvatarAction`, … or `Action` for custom content); `LargeTopBar` + `rememberTopBarScrollState(TopBarScrollBehavior.ExitUntilCollapsed)` |
+| Progress under the bar; collapsing hero | `TopBarProgress` in the bar's `bottom`; `CollapsingHeaderLayout` (`collapsed = { … }` for a compact band that stays) |
+| App destinations; views within a screen; sidebar | `TabBar` / `FloatingTabBar` (items drawn with `FloatingTabBarItemContent`); `Tabs` (`TabsVariant.Underline`); `NavList` (one custom row `NavItem`) |
+| Segmented setting switch | `Tabs(variant = TabsVariant.Segmented, size = TabsSize.Segmented)` — always both, since the size does not follow the variant — `fillWidth = true` to share the width; or `TabsVariant.Button` |
+| Onboarding pages; steps of a flow | `SwipePager` + `PagerControls` + `PageIndicator` with `rememberPagerController`; `StepIndicator` |
+| Pull to refresh | `PagedContentList(onRefresh = …)`; around any scroller `PullToRefreshLayout` + `PullToRefreshIndicator` (experimental) |
+| Bottom sheet; any other dialog; menu | `FlowModal` + `rememberFlowModal()` + `FlowModalActionBar` (`layout = FlowModalActionBarLayout.Split()` for a full-width pair, `FlowModalSecondaryAction` beside it); `Dialog` + `ModalDefaults.Actions`; `DropdownPopup` + `rememberDropdownPopup()` + `Modifier.anchored(state.anchorState)` |
+| Transient message; persistent inline message | `ToastHost` + `rememberToastState().show(label = …)` (draws `Toast`); `Notice` + `NoticeText` (`AnimatedNotice` to appear and leave) |
 | Empty or failed region; whole-screen progress or result | `Fallback(top, heading, body, content)`; `StatusScene` + `StatusMark` + `StatusSceneActions` |
 | Loading placeholder; waiting; known progress | `Skeleton`, `ListItemSkeleton`, `SettingsRowSkeleton`; `Spinner`; `ProgressBar` |
 | Status label; count; dot; person | `Badge(style = BadgeStyle.Success)`; `NotificationBadge`; `IndicatorDot`; `Avatar(letters, contentDescription)` |
-| Custom start-centre-end row; content beside content | `SlotRow`; `RelativePositionLayout`, `BoxScope.Overlay` |
-| Scroll wheel; dates and times | `WheelPicker { WheelPickerColumn(…) }`; `dev.voir.areca:datetime` |
-
-Exact signatures, overloads and packages: [reference/signatures.md](reference/signatures.md).
+| A figure; a grid of figures | `Stat(label, value, note)` (`StatSize.Large` for the figure a section is about); `StatGrid(columns) { Stat(…) }` |
+| Custom start-centre-end row; label beside content; tint over a box | `SlotRow`; `RelativePositionLayout`; `BoxScope.Overlay` |
+| Scroll wheel | `WheelPicker { WheelPickerColumn(…) }`, rows `WheelPickerItem`, decorations `WheelPickerHighlight` / `WheelPickerEdgeFade` |
+| Tell a screen reader something changed | `AnnounceOnChange(text)` |
+| Region that is always dark; system bar colour | `ArecaDarkTheme`; `SystemBars` |
+| Custom pressable surface | `Modifier.clickable(indication = TouchIndication(shape))` + `clickCursor()` (see the clipping rule) |
+| Period chart that picks a period; running total through a period | `ColumnChart(columns, selectedKey, onSelect)` (`dev.voir.areca:charts`); `LineChart(series)` |
+| Amount against a usual or a target; key to a chart's colours | `MeterBar(fraction, marker = …)`; `ChartLegend(items)` with a `ChartSwatch` per series |
+| Dates and times | `dev.voir.areca:datetime`: calendars, ranges, pickers, date-time field |
+| Heat-map month; pick a month from tiles; date as a row's leading tile | `CalendarHeatDay` in a `Calendar`'s `day` slot + `calendarHeatLevel` (`steps` = the ramp's size, `CalendarHeatStyle.ramp.size`) + `CalendarHeatLegend`; `MonthGrid`; `DateTile` (all `dev.voir.areca:datetime`; the grid and the tile take `labels: CalendarLabels`) |
 
 ## Rows, sections and cards
 
@@ -427,47 +443,37 @@ row. One band per section, holding one row.
 
 ### Card footers
 
-A card's status and actions go in its `footer`, not in a divider and a row drawn by hand:
-
-```kotlin
-Card(
-    modifier = Modifier.fillMaxWidth(),
-    style = CardStyle.Outlined,
-    footerStyle = CardFooterStyle.soft(ActionColor.Brand),
-    footer = {
-        Text(renewalLine, modifier = Modifier.weight(1f))
-        Button(onClick = onManage) { Text(manageLabel) }
-    },
-) { padding -> PlanSummary(plan, Modifier.padding(padding)) }
-```
-
-`plain()` for supporting detail, `soft(color)` for a state worth noticing (`Warning` for a trial
-ending, `Danger` for a failed payment), `solid(color)` for the card's call to action — one per
-screen — and `of(bg, content)` for a colour outside the families. The footer hands its ink and a
-matching borderless button style to what is inside it, so do not style the copy or the buttons.
+A card's status and actions go in its `footer` (`Card(footer = { … }, footerStyle = …)`), not in a
+divider and a row drawn by hand; the subscription-card recipe shows one. `plain()` for supporting
+detail, `soft(color)` for a state worth noticing (`Warning` for a trial ending, `Danger` for a
+failed payment), `solid(color)` for the card's call to action — one per screen — and `of(bg,
+content)` for a colour outside the families. The footer hands its ink and a matching borderless
+button style to what is inside it, so do not style the copy or the buttons.
 
 ### Surfaces
 
 The page is `bgCanvas`. Settings sections and other grouped regions are `bgSubtle` — the section
 card's default — with `borderOnSubtle` hairlines; tracks and wells inside them are `bgMuted`;
-raised cards are `bgSurface` or a `CardStyle` preset. Do not put a `bgSubtle` region on another.
+raised cards are `bgSurface` or a `CardStyle` preset. Do not put a `bgSubtle` region on another. A
+block that should barely separate from the page, or that holds `bgSubtle` controls — an expanded
+group, a note — is `bgSoft`.
 
 ## Add a module for
 
 | Need | Artifact |
 | --- | --- |
-| Bar or stacked-bar charts | `dev.voir.areca:charts` |
+| Bar, stacked-bar, column and line charts, meter bars and chart legends | `dev.voir.areca:charts` |
 | Cropping a photo before saving or uploading it | `dev.voir.areca:crop` (add `foundation` too) |
-| Calendar, date range, time picker, date-time field | `dev.voir.areca:datetime` (brings `kotlinx-datetime` 0.8.x) |
+| Calendar, heat-map calendar, date range, month grid, date tile, time picker, date-time field | `dev.voir.areca:datetime` (brings `kotlinx-datetime` 0.8.x) |
 | On-screen numeric or custom keyboard | `dev.voir.areca:keyboard` |
 | The shared icon set | `dev.voir.areca:icons` |
 | Sign-in, sign-up, code verification, SSO buttons | `dev.voir.areca:flow-auth` |
 | Profile, account menu, devices, account deletion | `dev.voir.areca:flow-profile` |
 | Attaching, listing and viewing files | `dev.voir.areca:flow-attachments` |
 
-Flow modules ship parts and README recipes, not screens: copy the recipe, pass the app's words and
-complaints, and keep validation, networking and navigation in the app. Usage rules for each module:
-[reference/modules.md](reference/modules.md).
+Flow modules ship parts and recipes, not screens: copy the recipe, pass the app's words and
+complaints, and keep validation, networking and navigation in the app. Which module, its package
+and its reference: [reference/modules.md](reference/modules.md).
 
 ## Feed screens from presentation state
 
@@ -504,25 +510,8 @@ fun LibraryPreviewSection(
 }
 ```
 
-Map Areca ViewModel list state to the foundation list state in the UI module:
-
-```kotlin
-fun <T> UiState<ListState<T, *, *>>.toPagedContentListState(
-    loadMoreErrorText: String,
-): PagedContentListState<T> = when (this) {
-    UiState.Initial, UiState.Loading ->
-        PagedContentListState(items = emptyList(), hasNextPage = false, loadingInitial = true)
-    is UiState.Error ->
-        PagedContentListState(items = emptyList(), hasNextPage = false, initialError = message)
-    is UiState.Display -> PagedContentListState(
-        items = data.items,
-        hasNextPage = data.pagingMeta.hasNextPage,
-        loadingNextPage = data.isLoadingNextPage,
-        loadMoreError = loadMoreErrorText.takeIf { data.nextPageError != null },
-        refreshing = data.isRefreshing,
-    )
-}
-```
+Map Areca ViewModel list state (`UiState<ListState<…>>`) to `PagedContentListState` in the UI
+module; the mapping is in the list-screen recipe.
 
 - Wire `onRefresh`, `onLoadNextPage`, `onRetryInitial` and `onRetryLoadMore` to the ViewModel's
   public methods.
@@ -538,23 +527,46 @@ fun <T> UiState<ListState<T, *, *>>.toPagedContentListState(
   and its `XSize` before overriding anything. Never guess a parameter: if the KDoc or
   [reference/signatures.md](reference/signatures.md) does not list it, it does not exist.
 - **Playground.** The playground in `VoirDev/areca-ui`, the repository this skill ships from, has a
-  page per component family with live controls, variants and edge cases, and every flow recipe as
-  a compiled page. Run it from a checkout with `./gradlew :playground:run`; the pages are under
-  `playground/src/commonMain/kotlin/dev/voir/areca/playground/`.
-- **Guides.** In the same repository, `ui/foundation/AGENTS.md` is the agent guide to foundation,
-  `ui/foundation/README.md` the concepts, and each module has its own `README.md`.
+  page per component family with live controls, variants and edge cases
+  (`playground/src/commonMain/kotlin/dev/voir/areca/playground/foundation/<family>/`, such as
+  `ButtonShowcase.kt`), and every flow recipe as a compiled page. Run it from a checkout with
+  `./gradlew :playground:run`.
+- **Guides.** In the same repository, `docs/components.md` catalogues every foundation component,
+  `docs/theme.md` the tokens, and each module has its own `README.md` (`ui/foundation/README.md`,
+  `ui/charts/README.md`, …). This skill does not depend on them.
 - **Compile.** Build the app's UI module for every target it ships; check both themes and a
   right-to-left locale in previews.
 
 ## References
 
-- Read [reference/signatures.md](reference/signatures.md) when calling a foundation component whose
-  parameters, overloads, defaults or package you are not sure of.
-- Read [reference/recipes.md](reference/recipes.md) when building a settings screen, a validated
-  form, a remote list, a confirmation, a tabbed shell, a bottom sheet, a menu, a dark region or a
-  custom pressable surface, or when reviewing UI against the anti-pattern table.
-- Read [reference/modules.md](reference/modules.md) when a screen needs charts, cropping, dates and
-  times, the on-screen keyboard, the icon set, or a flow module.
+Foundation:
+
+- [reference/theme.md](reference/theme.md) — setting up `ArecaThemeProvider`, picking a colour,
+  type role, gap, corner, elevation or duration, re-theming for a brand, or building a dark region.
+- [reference/signatures.md](reference/signatures.md) — calling a foundation component whose
+  parameters, overloads, defaults or package you are not sure of, or fixing an import.
+- [reference/recipes.md](reference/recipes.md) — building a settings screen, a validated form, a
+  remote list, a confirmation, a tabbed shell, a bottom sheet, a menu, a dark region, a card with
+  a footer, a custom pressable surface or an analytics overview; reviewing UI against the
+  anti-pattern table; finding the flow recipes.
+
+Other modules — start at [reference/modules.md](reference/modules.md), the index of artifacts,
+packages and dependencies, then open the module's file:
+
+- [reference/charts.md](reference/charts.md) — bar, stacked-bar, column and line charts, meter bars,
+  chart legends.
+- [reference/datetime.md](reference/datetime.md) — calendars, heat-map months, date ranges, month
+  grids, date tiles, time and date-time pickers and fields.
+- [reference/crop.md](reference/crop.md) — cropping a photo before saving or uploading it.
+- [reference/keyboard.md](reference/keyboard.md) — an on-screen numeric or custom keyboard.
+- [reference/icons.md](reference/icons.md) — drawing `ArecaIcons.*` and adding the `icons`
+  dependency.
+- [reference/flow-auth.md](reference/flow-auth.md) — sign-in, sign-up, email-first, code
+  verification and SSO screens.
+- [reference/flow-profile.md](reference/flow-profile.md) — profile, account menu and switcher,
+  devices, photo and account deletion.
+- [reference/flow-attachments.md](reference/flow-attachments.md) — attaching, listing and viewing
+  files.
 
 ## Checklist
 

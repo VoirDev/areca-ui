@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,26 +18,32 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import dev.voir.areca.foundation.badge.BadgeOption
+import dev.voir.areca.foundation.badge.BadgeSelectionMode
+import dev.voir.areca.foundation.badge.BadgeSize
+import dev.voir.areca.foundation.badge.BadgeStyle
+import dev.voir.areca.foundation.badge.FlowBadgeSelect
 import dev.voir.areca.foundation.badge.IndicatorDot
-import dev.voir.areca.foundation.text.Text
-import dev.voir.areca.foundation.text.TextColor
-import dev.voir.areca.foundation.text.TextVariant
-import dev.voir.areca.foundation.selection.ToggleState
 import dev.voir.areca.foundation.list.CheckboxListItem
 import dev.voir.areca.foundation.list.CheckmarkListItem
 import dev.voir.areca.foundation.list.ExpandableListItem
+import dev.voir.areca.foundation.list.ExpandableListItemContainer
 import dev.voir.areca.foundation.list.ListItem
 import dev.voir.areca.foundation.list.ListItemChevron
 import dev.voir.areca.foundation.list.ListItemColor
 import dev.voir.areca.foundation.list.ListItemColumn
 import dev.voir.areca.foundation.list.ListItemSize
+import dev.voir.areca.foundation.list.ListItemSkeleton
 import dev.voir.areca.foundation.list.ListItemStyle
 import dev.voir.areca.foundation.list.ListSize
 import dev.voir.areca.foundation.list.ListStyle
-import dev.voir.areca.foundation.list.ListItemSkeleton
 import dev.voir.areca.foundation.list.NavigationListItem
 import dev.voir.areca.foundation.list.RadioListItem
 import dev.voir.areca.foundation.list.ToggleListItem
+import dev.voir.areca.foundation.selection.ToggleState
+import dev.voir.areca.foundation.text.Text
+import dev.voir.areca.foundation.text.TextColor
+import dev.voir.areca.foundation.text.TextVariant
 import dev.voir.areca.playground.showcase.ShowcaseScaffold
 import dev.voir.areca.playground.showcase.section.Anatomy
 import dev.voir.areca.playground.showcase.section.EdgeCases
@@ -331,6 +338,20 @@ fun ListItemShowcase() = ShowcaseScaffold(
                 ListItem(title = { Text("Reset caches") }, nestingLevel = 1, onClick = {})
             }
         }
+        variant("ExpandableListItem + Soft", detail = "no chevron; the open group shares one soft block") {
+            var expanded by remember { mutableStateOf(true) }
+            ExpandableListItem(
+                expanded = expanded,
+                onExpandedChange = { expanded = it },
+                title = { Text("Food and dining") },
+                subtitle = { Text("€612 · 26% of spending") },
+                showChevron = false,
+                container = ExpandableListItemContainer.Soft,
+            ) {
+                ListItem(title = { Text("Groceries") }, value = { Text("€318") }, nestingLevel = 1)
+                ListItem(title = { Text("Restaurants") }, value = { Text("€190") }, nestingLevel = 1)
+            }
+        }
         variant("ListItemSkeleton", detail = "the same row, still loading") {
             Column {
                 ListItemSkeleton(showLeading = true, titleWidthFraction = 0.5f)
@@ -429,6 +450,41 @@ fun ListItemShowcase() = ShowcaseScaffold(
                         subtitle = { Text("${team.length} members") },
                     )
                 }
+            }
+        }
+        recipe(
+            name = "Category with subcategories",
+            description = "A tri-state row: ticked when every subcategory is in, a dash when some " +
+                "are. The subcategories toggle as chips in the row's bottom slot.",
+        ) {
+            val subcategories = listOf("Groceries", "Restaurants", "Coffee", "Delivery")
+            var chosen by remember { mutableStateOf(listOf("Groceries", "Coffee")) }
+
+            ListItemColumn {
+                CheckboxListItem(
+                    // Indeterminate is a checked box showing a dash, so some-but-not-all is checked.
+                    checked = chosen.isNotEmpty(),
+                    indeterminate = chosen.isNotEmpty() && chosen.size < subcategories.size,
+                    onCheckedChange = {
+                        chosen = if (chosen.size == subcategories.size) emptyList() else subcategories
+                    },
+                    title = { Text("Food and dining") },
+                    subtitle = { Text("€612 in October") },
+                    bottom = {
+                        FlowBadgeSelect(
+                            options = subcategories.map { BadgeOption(label = { Text(it) }, value = it) },
+                            onSelect = { option ->
+                                chosen = if (option.value in chosen) chosen - option.value else chosen + option.value
+                            },
+                            selected = chosen,
+                            selectionMode = BadgeSelectionMode.Multiple,
+                            horizontalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.sm),
+                            verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.sm),
+                            style = BadgeStyle.FilledChip,
+                            size = BadgeSize.Chip,
+                        )
+                    },
+                )
             }
         }
         recipe(

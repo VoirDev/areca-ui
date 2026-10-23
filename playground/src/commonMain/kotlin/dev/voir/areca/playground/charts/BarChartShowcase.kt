@@ -27,6 +27,9 @@ import dev.voir.areca.charts.BarChartShape
 import dev.voir.areca.charts.BarChartSize
 import dev.voir.areca.charts.BarChartStyle
 import dev.voir.areca.charts.BarChartYAxisLabel
+import dev.voir.areca.charts.ChartLegend
+import dev.voir.areca.charts.ChartLegendItem
+import dev.voir.areca.charts.ChartSwatch
 import dev.voir.areca.charts.StackedBarChart
 import dev.voir.areca.charts.StackedBarChartSize
 import dev.voir.areca.charts.StackedBarSegment
@@ -173,6 +176,26 @@ fun BarChartShowcase() = ShowcaseScaffold(
                 modifier = Modifier.fillMaxWidth(),
             )
         }
+        variant("Tiny", detail = "StackedBarChartSize.Tiny: 4dp capsule with a hairline gap") {
+            StackedBarChart(
+                segments = listOf(
+                    StackedBarSegment(fraction = 0.55f, color = ArecaTheme.colors.bgDangerBase),
+                    StackedBarSegment(fraction = 0.45f, color = ArecaTheme.colors.bgBrandBase),
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                size = StackedBarChartSize.Tiny,
+            )
+        }
+        variant("Extra small", detail = "StackedBarChartSize.ExtraSmall: 8dp capsule with a hairline gap") {
+            StackedBarChart(
+                segments = listOf(
+                    StackedBarSegment(fraction = 0.7f, color = ArecaTheme.colors.fgBase),
+                    StackedBarSegment(fraction = 0.3f, color = ArecaTheme.colors.bgNeutralIntense),
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                size = StackedBarChartSize.ExtraSmall,
+            )
+        }
         variant("Large", detail = "StackedBarChartSize.Large") {
             StackedBarChart(
                 segments = listOf(
@@ -201,14 +224,23 @@ fun BarChartShowcase() = ShowcaseScaffold(
             name = "Storage breakdown",
             description = "Stacked bar as a part-of-whole summary above a legend.",
         ) {
-            StackedBarChart(
-                segments = listOf(
-                    StackedBarSegment(fraction = 0.42f, color = ArecaTheme.colors.bgBrandBase),
-                    StackedBarSegment(fraction = 0.28f, color = ArecaTheme.colors.bgInfoBase),
-                    StackedBarSegment(fraction = 0.12f, color = ArecaTheme.colors.bgWarnBase),
-                ),
-                modifier = Modifier.fillMaxWidth(),
-            )
+            Column(verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md)) {
+                StackedBarChart(
+                    segments = listOf(
+                        StackedBarSegment(fraction = 0.42f, color = ArecaTheme.colors.bgBrandBase, label = "Photos"),
+                        StackedBarSegment(fraction = 0.28f, color = ArecaTheme.colors.bgInfoBase, label = "Documents"),
+                        StackedBarSegment(fraction = 0.12f, color = ArecaTheme.colors.bgWarnBase, label = "Mail"),
+                    ),
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                ChartLegend(
+                    items = listOf(
+                        ChartLegendItem("Photos", ChartSwatch.Square(ArecaTheme.colors.bgBrandBase)),
+                        ChartLegendItem("Documents", ChartSwatch.Square(ArecaTheme.colors.bgInfoBase)),
+                        ChartLegendItem("Mail", ChartSwatch.Square(ArecaTheme.colors.bgWarnBase)),
+                    ),
+                )
+            }
         }
     }
 

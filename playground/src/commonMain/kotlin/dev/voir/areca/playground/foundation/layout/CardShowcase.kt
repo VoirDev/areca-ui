@@ -13,10 +13,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import dev.voir.areca.foundation.button.ActionColor
 import dev.voir.areca.foundation.button.Button
+import dev.voir.areca.foundation.icon.Chevron
+import dev.voir.areca.foundation.icon.ChevronDirection
+import dev.voir.areca.foundation.icon.Icon
+import dev.voir.areca.foundation.icon.IconSize
 import dev.voir.areca.foundation.layout.Card
 import dev.voir.areca.foundation.layout.CardFooterStyle
 import dev.voir.areca.foundation.layout.CardSize
@@ -24,6 +29,8 @@ import dev.voir.areca.foundation.layout.CardStyle
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.foundation.text.TextColor
 import dev.voir.areca.foundation.text.TextVariant
+import dev.voir.areca.icons.ArecaIcons
+import dev.voir.areca.icons.ArrowLeftRight
 import dev.voir.areca.playground.showcase.ShowcaseScaffold
 import dev.voir.areca.playground.showcase.section.EdgeCases
 import dev.voir.areca.playground.showcase.section.Playground
@@ -284,6 +291,32 @@ fun CardShowcase() = ShowcaseScaffold(
                 },
             ) { padding ->
                 CardBody(padding, title = "Free plan", subtitle = "3 of 3 projects used")
+            }
+        }
+        recipe(
+            name = "Comparison banner",
+            description = "A soft card that is one sentence and a way in: icon, the comparison, chevron.",
+        ) {
+            Card(
+                style = CardStyle.softNeutral(),
+                size = CardSize.default(padding = PaddingValues(ArecaTheme.spacing.lg)),
+                onClick = {},
+                onClickLabel = "Compare periods",
+                modifier = Modifier.fillMaxWidth(),
+            ) { padding ->
+                Row(
+                    modifier = Modifier.padding(padding),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md),
+                ) {
+                    Icon(ArecaIcons.ArrowLeftRight, contentDescription = null, size = IconSize.Small)
+                    Text(
+                        "€218 less than September by the 23rd",
+                        variant = TextVariant.BodySmall,
+                        modifier = Modifier.weight(1f),
+                    )
+                    Chevron(direction = ChevronDirection.Right, color = ArecaTheme.colors.fgSubtle)
+                }
             }
         }
         recipe(

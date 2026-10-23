@@ -126,6 +126,44 @@ public data class FlowModalActionBarSize(
 }
 
 /**
+ * How a [FlowModalActionBar] shares its width between its two ends.
+ */
+@Immutable
+public sealed interface FlowModalActionBarLayout {
+    /**
+     * The commit at its own width against the end edge, the left-hand slot taking the room left
+     * over. The default.
+     */
+    public data object Trailing : FlowModalActionBarLayout
+
+    /**
+     * Both ends stretched across the bar, in proportion to their weights — a full-width pair such as
+     * "Cancel" beside "Compare with September", where the commit carries a sentence rather than a
+     * word. The [FlowModalSecondaryAction] in the left-hand slot stretches with its share.
+     *
+     * @property secondaryWeight Share of the width given to the left-hand slot. Positive.
+     * @property confirmWeight Share of the width given to the commit. Positive.
+     * @throws IllegalArgumentException When either weight is not positive.
+     */
+    public data class Split(
+        public val secondaryWeight: Float = 1f,
+        public val confirmWeight: Float = 2f,
+    ) : FlowModalActionBarLayout {
+        init {
+            require(secondaryWeight > 0f && confirmWeight > 0f) {
+                "Split weights must be positive, were $secondaryWeight and $confirmWeight."
+            }
+        }
+    }
+}
+
+/**
+ * Whether a [FlowModalSecondaryAction] stretches across its slot, set by a
+ * [FlowModalActionBarLayout.Split] bar.
+ */
+private val LocalFlowModalActionFill = compositionLocalOf { false }
+
+/**
  * The foot a [FlowModal] commits from: a hairline, then the lighter action on the left and the
  * commit on the right.
  *
@@ -148,6 +186,9 @@ public data class FlowModalActionBarSize(
  * @param loading Shows the commit's spinner and refuses presses while the committed work runs.
  * @param style Colors of the bar and its buttons.
  * @param size Metrics of the bar and its buttons.
+ * @param layout How the two ends share the bar's width.
+ * @param showDivider Whether the hairline above the buttons is drawn. Turn it off on a sheet whose
+ *   design separates by space rather than by rules.
  * @param leading What is drawn at the left end — usually one [FlowModalSecondaryAction], which picks
  *   up [style] and [size] from the bar.
  */
@@ -160,10 +201,13 @@ public fun FlowModalActionBar(
     loading: Boolean = false,
     style: FlowModalActionBarStyle = LocalFlowModalActionBarStyle.current ?: FlowModalActionBarStyle.Default,
     size: FlowModalActionBarSize = LocalFlowModalActionBarSize.current ?: FlowModalActionBarSize.Default,
+    layout: FlowModalActionBarLayout = FlowModalActionBarLayout.Trailing,
+    showDivider: Boolean = true,
     leading: (@Composable () -> Unit)? = null,
 ) {
+    val split = layout as? FlowModalActionBarLayout.Split
     Column(modifier = modifier.fillMaxWidth()) {
-        HorizontalDivider()
+        if (showDivider) HorizontalDivider()
 
         Row(
             modifier = Modifier
@@ -177,7 +221,7 @@ public fun FlowModalActionBar(
             // stretch a chip across the bar, and the commit stays pinned to the right edge whether or
             // not anything is drawn on the left.
             Box(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(split?.secondaryWeight ?: 1f),
                 contentAlignment = Alignment.CenterStart,
             ) {
                 if (leading != null) {
@@ -186,12 +230,14 @@ public fun FlowModalActionBar(
                     CompositionLocalProvider(
                         LocalFlowModalActionBarStyle provides style,
                         LocalFlowModalActionBarSize provides size,
+                        LocalFlowModalActionFill provides (split != null),
                         content = leading,
                     )
                 }
             }
 
             Button(
+                modifier = if (split != null) Modifier.weight(split.confirmWeight) else Modifier,
                 text = confirmText,
                 style = style.confirm,
                 size = size.button,
@@ -206,7 +252,8 @@ public fun FlowModalActionBar(
 /**
  * The lighter action at the left end of a [FlowModalActionBar]: a shortcut, a reset, or a way out.
  *
- * Drawn in the bar's secondary style and at the commit's height, read from the bar it sits in.
+ * Drawn in the bar's secondary style and at the commit's height, read from the bar it sits in. On a
+ * [FlowModalActionBarLayout.Split] bar it stretches across its share of the width.
  *
  * @param text What it does. One or two words.
  * @param onClick Called when it is pressed.
@@ -226,7 +273,7 @@ public fun FlowModalSecondaryAction(
 ) {
     Button(
         text = text,
-        modifier = modifier,
+        modifier = if (LocalFlowModalActionFill.current) modifier.fillMaxWidth() else modifier,
         style = style.secondary,
         size = size.button,
         enabled = enabled,

@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dev.voir.areca.foundation.layout.CollapsingHeaderLayout
+import dev.voir.areca.foundation.layout.rememberCollapsingHeaderState
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.foundation.text.TextColor
 import dev.voir.areca.foundation.text.TextVariant
@@ -24,6 +25,7 @@ import dev.voir.areca.playground.showcase.ShowcaseScaffold
 import dev.voir.areca.playground.showcase.section.Anatomy
 import dev.voir.areca.playground.showcase.section.EdgeCases
 import dev.voir.areca.playground.showcase.section.Playground
+import dev.voir.areca.playground.showcase.section.Recipes
 import dev.voir.areca.theme.ArecaTheme
 
 private val FrameHeight = 360.dp
@@ -97,6 +99,35 @@ fun CollapsingHeaderLayoutShowcase() = ShowcaseScaffold(
                     modifier = Modifier.fillMaxSize(),
                     header = { SampleHeader(80.dp) },
                     pinned = { SamplePinned() },
+                ) { contentModifier -> SampleList(contentModifier) }
+            }
+        }
+    }
+
+    Recipes {
+        recipe(
+            name = "Summary that leaves a strip",
+            description = "The header collapses into a compact band that fades in and stays, " +
+                "keeping the period and its figure readable.",
+        ) {
+            Frame {
+                val state = rememberCollapsingHeaderState()
+                CollapsingHeaderLayout(
+                    modifier = Modifier.fillMaxSize(),
+                    header = { SampleHeader(160.dp) },
+                    pinned = { SamplePinned() },
+                    state = state,
+                    collapsed = {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(ArecaTheme.colors.bgCanvas)
+                                .padding(horizontal = ArecaTheme.spacing.xl, vertical = ArecaTheme.spacing.md),
+                        ) {
+                            Text("October 2026", variant = TextVariant.HeadingExtraSmall)
+                            Text("€4,250 in · €2,340 out", variant = TextVariant.BodyExtraSmall, color = TextColor.Subtle)
+                        }
+                    },
                 ) { contentModifier -> SampleList(contentModifier) }
             }
         }

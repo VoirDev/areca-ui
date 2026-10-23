@@ -2,8 +2,10 @@
 
 ## Before changing code
 
-- Read the root [README.md](README.md) for the repository layout, namespaces, verification and
-  releasing. Its Conventions section lists the contract each part of the tree follows.
+- Read [CONTRIBUTING.md](CONTRIBUTING.md) for building, verification, API dumps, docs coverage and
+  the contract each part of the tree follows, and
+  [docs/maintainers/architecture.md](docs/maintainers/architecture.md) for the repository layout and
+  namespaces. Releasing is [docs/maintainers/releasing.md](docs/maintainers/releasing.md).
 - Run `./ci/verify` before proposing a change; CI runs exactly it.
 - A change to a published module's public API rewrites its dumps with `./gradlew updateLegacyAbi`
   (on macOS) and commits them with the change.
@@ -20,9 +22,16 @@ Load them as `areca:areca-ui-v1` and `areca:areca-viewmodel-v1`, or read `skills
 
 ## Keeping the Areca skills current
 
-- The skills in `skills/`, `ui/foundation/AGENTS.md` and the module READMEs describe the same public
-  API and behaviour. A change to a published module's public API or behaviour updates the affected
-  files in `skills/`, `ui/foundation/AGENTS.md` and the module's README in the same change.
+- A published module's public API and behaviour are described in two places: the skills in
+  `skills/` (the agent-facing source of truth, self-contained because they ship to other
+  repositories) and the module's README — plus, for foundation, the catalogue
+  `docs/components.md`. A change to a published module's public API or behaviour updates the
+  affected files in `skills/`, the module's README and, for a foundation component,
+  `docs/components.md` in the same change.
+- `ui/foundation/AGENTS.md` is only a pointer to the `areca-ui-v1` skill; never add API detail to
+  it.
+- `./ci/check-docs-coverage`, run by `./ci/verify`, fails when a public composable is not named in
+  its module's README, in `skills/areca-ui-v1/` or, for foundation, in `docs/components.md`.
 - `.claude-plugin/plugin.json` has its own `version`, separate from `VERSION`. Every library release
   raises it (Prepare Release); a skills-only release raises it alone (Prepare Skills Release). Only
   those two workflows change it, and installs update only when it changes.

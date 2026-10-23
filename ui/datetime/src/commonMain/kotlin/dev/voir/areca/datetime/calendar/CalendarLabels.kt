@@ -43,7 +43,10 @@ import kotlinx.datetime.YearMonth
  * @property weekdayName What assistive technology reads for a column heading: the day's full name,
  *   since the drawn [weekday] abbreviation reads aloud as a syllable rather than a day.
  * @property dayNumber The number drawn in a day cell, from `1` to `31`.
- * @property year A year as drawn on the year wheel of the [MonthYearPicker].
+ * @property year A year as drawn on the year wheel of the [MonthYearPicker], and as a year's
+ *   heading in a [MonthGrid].
+ * @property shortMonth A month's short name, as drawn on a [MonthGrid] tile and a
+ *   [dev.voir.areca.datetime.DateTile]: `Sep`.
  */
 @Immutable
 public data class CalendarLabels(
@@ -62,6 +65,7 @@ public data class CalendarLabels(
     public val weekdayName: (DayOfWeek) -> String = { it.englishName },
     public val dayNumber: (Int) -> String = { it.toString() },
     public val year: (Int) -> String = { it.toString() },
+    public val shortMonth: (Month) -> String = { it.englishName.take(3) },
 ) {
     /** Ready-made label sets. */
     public companion object {
@@ -89,6 +93,7 @@ public data class CalendarLabels(
             weekdayName = { it.englishName },
             dayNumber = { it.toString() },
             year = { it.toString() },
+            shortMonth = { it.englishName.take(3) },
         )
 
         /**
@@ -108,7 +113,7 @@ private val DayOfWeek.englishName: String
     get() = name.titleCase()
 
 /** Title-cased English name of a month, such as `September`. */
-private val Month.englishName: String
+internal val Month.englishName: String
     get() = name.titleCase()
 
 /**

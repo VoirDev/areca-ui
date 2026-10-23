@@ -1,13 +1,22 @@
 # Areca
 
-A Compose Multiplatform design system for Android, iOS and the JVM, published as
-`dev.voir.areca:*`.
+A design system for Compose Multiplatform: a theme, 110+ components, charts, date and time pickers,
+an image cropper, an on-screen keyboard, ready-made parts for sign-in, profile and attachment
+screens, and 1,000+ icons — for Android, iOS and desktop JVM from one Kotlin codebase.
 
-## Installing
+![Kotlin](https://img.shields.io/badge/Kotlin-2.3-7F52FF?logo=kotlin&logoColor=white)
+![Compose Multiplatform](https://img.shields.io/badge/Compose_Multiplatform-1.11-4285F4)
+![Platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS%20%7C%20JVM-555)
+![License](https://img.shields.io/badge/license-Apache_2.0-blue)
 
-Areca is published to GitHub Packages, not Maven Central. Add its repository to the consuming
-build's `settings.gradle.kts`, limited to the `dev.voir.areca` group so no other dependency is
-looked up there:
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/overview-dark.png">
+  <img alt="A settings list, buttons, a text field, a chart and a tab bar drawn with Areca" src="docs/images/overview-light.png" width="720">
+</picture>
+
+## Quick start
+
+**1. Add the repository.** Areca is published to GitHub Packages. In `settings.gradle.kts`:
 
 ```kotlin
 dependencyResolutionManagement {
@@ -27,29 +36,17 @@ dependencyResolutionManagement {
 }
 ```
 
-GitHub Packages asks for credentials even to read a public package.
-`credentials(PasswordCredentials::class)` reads them from the Gradle properties `ArecaUsername` and
-`ArecaPassword` (the repository's `name` plus `Username` and `Password`): a GitHub user name and a
-personal access token (classic) with the `read:packages` scope. Keep them out of the project, in
-`~/.gradle/gradle.properties`:
+GitHub Packages asks for a token even to read public packages. Put a GitHub user name and a classic
+personal access token with `read:packages` in `~/.gradle/gradle.properties`:
 
 ```properties
 ArecaUsername=<your GitHub user name>
 ArecaPassword=<a classic token with read:packages>
 ```
 
-In GitHub Actions, pass them as environment variables instead. A workflow's own `GITHUB_TOKEN` reads
-the packages when they are public, or when the package settings grant the consuming repository
-access:
-
-```yaml
-env:
-  ORG_GRADLE_PROJECT_ArecaUsername: ${{ github.actor }}
-  ORG_GRADLE_PROJECT_ArecaPassword: ${{ secrets.GITHUB_TOKEN }}
-```
-
-Then depend on the modules you need, all at the same version (the tables below list every
-artifact):
+**2. Add the dependency.** The latest version is on the
+[Releases](https://github.com/VoirDev/areca-ui/releases) page; keep every Areca artifact on the
+same version.
 
 ```kotlin
 kotlin {
@@ -62,181 +59,107 @@ kotlin {
 }
 ```
 
-The released versions are the repository's
-[GitHub Releases](https://github.com/VoirDev/areca-ui/releases). Every module needs Java 17 or later
-on the desktop JVM (see [Releasing](#releasing)).
+**3. Wrap the app in the theme and build a screen.**
 
-## Repository layout
+```kotlin
+@Composable
+fun App() {
+    ArecaThemeProvider(darkTheme = isSystemInDarkTheme()) {
+        Box(Modifier.fillMaxSize().background(ArecaTheme.colors.bgCanvas)) {
+            NewsletterScreen()
+        }
+    }
+}
 
-The top level answers one question: what does this code need in order to be useful?
-
-```text
-ui/            The design system. Theme-bound — every module here reads ArecaTheme tokens and
-               expects an ArecaThemeProvider above it.
-flow/          Whole screens and screen sequences, assembled from `ui`. Theme-bound and opinionated
-               about composition, but free of business logic.
-standalone/    Independently usable. No theme, no dependency on anything else in this repository.
-playground/    The showcase application. Not published.
-skills/        Agent Skills for code built on Areca, shipped as the `areca` Claude Code plugin.
+@Composable
+fun NewsletterScreen() {
+    var email by rememberSaveable { mutableStateOf("") }
+    BaseLayout(topBar = { TopBar(title = "Newsletter") }) { padding ->
+        Column(
+            modifier = Modifier.padding(padding).padding(ArecaTheme.spacing.xl),
+            verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.xl),
+        ) {
+            FieldGroup(label = "Email") { field ->
+                TextField(value = email, onValueChange = { email = it }, field = field, singleLine = true)
+            }
+            Button("Subscribe", onClick = { /* … */ }, modifier = Modifier.fillMaxWidth())
+        }
+    }
+}
 ```
 
-### `ui/`
+The full walkthrough, CI credentials included, is [Getting started](docs/getting-started.md).
 
-| Module | Artifact | What it is |
-| --- | --- | --- |
-| `ui/foundation` | `dev.voir.areca:foundation` | The design system itself: tokens, components, fields, lists, layouts, table, navigation, settings, notices and status scenes. Every other `ui` module depends on it. See [ui/foundation/README.md](ui/foundation/README.md) |
-| `ui/charts` | `dev.voir.areca:charts` | Bar and stacked-bar charts. See [ui/charts/README.md](ui/charts/README.md) |
-| `ui/crop` | `dev.voir.areca:crop` | Image cropper: the stage, its toolbar and dial, masks, aspect ratios, straightening, zoom, rotation and mirroring, and rendering the result |
-| `ui/datetime` | `dev.voir.areca:datetime` | Calendar, date range, time picker and the composed date-time field. Puts `kotlinx-datetime` on your API surface, which is why it is separate. See [ui/datetime/README.md](ui/datetime/README.md) |
-| `ui/keyboard` | `dev.voir.areca:keyboard` | On-screen keyboard: host, layouts, key grids |
+## What's inside
 
-### `flow/`
+Areca is a set of modules you add as you need them. Everything except `icons` and `viewmodel` draws
+with the theme from `foundation`.
 
-| Module | Artifact | What it is |
-| --- | --- | --- |
-| `flow/auth` | `dev.voir.areca:flow-auth` | Parts for authentication screens — scaffold, credential and code fields, provider buttons — and recipes for assembling them, email-first sign-in and emailed-link pages included |
-| `flow/profile` | `dev.voir.areca:flow-profile` | Parts for account screens — profile cards, settings-list rows for a profile, the account switcher, devices, confirmation sheets — and recipes for assembling them |
-| `flow/attachments` | `dev.voir.areca:flow-attachments` | Parts for attaching files — the strip of files, the sheets that add one, the viewer — and recipes for assembling them |
+### Theme
 
-A flow module owns composition, not behaviour: it draws the pieces of a sign-in screen and reports
-that a button was pressed. It does not know what signing in means, never reaches the network, and
-carries no navigation or dependency-injection library.
+Colours, typography, spacing, radius, elevation and motion tokens, light and dark, set up once with
+`ArecaThemeProvider` and read through `ArecaTheme`. Change the brand colour, fonts or corner radius
+in one place and every component follows. → [Theme](docs/theme.md) ·
+[Customising components](docs/customising.md)
 
-It also does not ship whole screens. A screen is a handful of product decisions, and a composable
-taking all of them is worse than the assembly it replaces — so the module ships parts and the
-README ships recipes to copy. What a flow module may and may not do is
-[flow/FLOWS.md](flow/FLOWS.md); how to use each is in its own README —
-[flow/auth/README.md](flow/auth/README.md), [flow/profile/README.md](flow/profile/README.md),
-[flow/attachments/README.md](flow/attachments/README.md).
+### Foundation components — `dev.voir.areca:foundation`
 
-Flow modules never depend on one another. `flow-auth`, `flow-profile` and `flow-attachments` are
-separate flows, and an application can take any of them without the others.
-
-These are the only modules whose artifact id carries its group. `:flow:auth` would otherwise
-publish as `dev.voir.areca:auth`, which reads as an authentication library rather than a set of
-screens, and `:flow:profile` as `dev.voir.areca:profile`. See FLOWS.md §8.
-
-### `standalone/`
-
-| Module | Artifact | What it is |
-| --- | --- | --- |
-| `standalone/icons` | `dev.voir.areca:icons` | 1,062 vector icons: 1,059 converted from Lucide and Tabler Icons, plus three sign-in marks (see `standalone/icons/README.md` and `NOTICE.md`). Nothing else in this repository depends on it — see below |
-| `standalone/viewmodel` | `dev.voir.areca:viewmodel` | Multiplatform ViewModel, UI state and paged-list helpers. Knows nothing about Areca or Compose UI |
-
-Gradle project paths carry the group (`:ui:foundation`, `:standalone:icons`); published
-coordinates do not (`dev.voir.areca:foundation`), apart from the `flow` modules noted above.
-Moving a module between groups does not rename its artifact.
-
-## Namespaces
-
-Within `foundation`, one rule decides where a declaration lives:
-
-- `dev.voir.areca.foundation.*` — things you place on screen. Every component lives in the package
-  of the family it belongs to; the root holds only what every family uses: `LocalContentColor`,
-  `LocalTextStyle` and `AnnounceOnChange`.
-- `dev.voir.areca.*` — the machinery underneath them: `theme`, `modifier`, `indication`, `shape`,
-  `platform`, and `ExperimentalArecaApi` at the root. A region that is dark whatever the theme — a
-  photo editor, a media viewer — is `ArecaDarkTheme` in `theme`, with `ArecaTheme.darkColors` for
-  style defaults resolved outside it, and paints the bars around it with `SystemBars` in `platform`.
-
-How to use each family is [ui/foundation/README.md](ui/foundation/README.md).
-
-| Package | What it holds |
+| Family | Components |
 | --- | --- |
-| `button` | `Button`, `IconButton`, and the `ActionColor` family both resolve |
-| `text` | `Text`, `Heading`, `TextLink`, `TextLinkPrompt`, `SensitiveText` |
-| `icon` | `Icon`, `FeaturedIcon`, `Chevron` |
-| `badge` | `Badge`, `NotificationBadge`, `IndicatorDot`; `BadgeSelect`, `LazyBadgeSelect`, `FlowBadgeSelect` |
-| `avatar` | `Avatar` |
-| `selection` | `Checkbox` and `Radio` and their shared `SelectionStyle`; `Toggle`; `Swatch`, `SwatchPicker`, `NumberStepper` |
-| `field` | Text, password, search and affix fields; `OtpField` for one-time codes; `FieldRow`, `FieldGroup`, `Field`. `SelectField` and `SelectFlowModal` are in `field.select` |
-| `feedback` | `Spinner`, `ProgressBar`, `StepIndicator`, `Skeleton`, `RequirementList`, `Fallback`, `Toast` and `ToastHost` |
-| `notice`, `status` | `Notice`; `StatusMark` and `StatusScene` |
-| `overlay` | `Dialog`, `ConfirmationDialog`, `FlowModal` and its `FlowModalActionBar`, `ConfirmSheet`, `DropdownPopup` and the modal and anchoring metrics behind them; `edgeToEdgeDialogProperties` for a window that draws behind the system bars |
-| `layout` | Screen layouts (`BaseLayout`, `CollapsingHeaderLayout`, `PullToRefreshLayout`), `Card`, `HorizontalDivider` and `VerticalDivider`, `Expandable`, `Overlay`, `RelativePositionLayout` |
-| `slot` | `SlotRow` and its `SlotRowLayout`, which most rows are built on |
-| `list`, `settings` | Grouped lists and their items; the settings list built on them |
-| `collection` | `ContentList` and the lazy, paged `PagedContentList`, with their grouped forms; `LazyVerticalGroupedGrid` and `LazyHorizontalGroupedGrid` |
-| `table` | `Table` and `LazyTable` |
-| `navigation`, `tabs`, `tabbar`, `topbar` | `NavList`; `SwipePager`, its `PagerControls` and `PagerController`, and `PageIndicator`; `Tabs`; `TabBar` and `FloatingTabBar`; `TopBar` and `LargeTopBar`, their named controls (`BackAction`, `ShareAction`, `DoneAction`, …) and the four control appearances (`TopBarActionStyle`) |
-| `wheel` | `WheelPicker` |
+| Buttons and text | `Button`, `IconButton`, `Text`, `Heading`, `TextLink`, `SensitiveText` |
+| Fields | `TextField`, `PasswordField`, `SearchField`, `AffixTextField`, `OtpField`, `SelectField`, `FieldGroup` |
+| Selection | `Checkbox`, `Radio`, `Toggle`, `Swatch`, `SwatchPicker`, `NumberStepper`, `BadgeSelect` |
+| Display | `Icon`, `FeaturedIcon`, `Badge`, `Avatar`, `Stat`, `StatGrid` |
+| Lists and settings | Grouped lists, settings rows (toggle, navigation, value), `ContentList`, `PagedContentList`, `Table`, `LazyTable` |
+| Layout | `BaseLayout`, `CollapsingHeaderLayout`, `PullToRefreshLayout`, `Card`, `Expandable`, dividers |
+| Navigation | `TopBar`, `LargeTopBar`, `Tabs`, `TabBar`, `FloatingTabBar`, `NavList`, `SwipePager`, `PageIndicator` |
+| Overlays | `Dialog`, `ConfirmationDialog`, `FlowModal`, `ConfirmSheet`, `DropdownPopup` |
+| Feedback | `Notice`, `Toast`, `Spinner`, `ProgressBar`, `Skeleton`, `StepIndicator`, `StatusScene`, `WheelPicker` |
 
-A new component joins the family it belongs to. It gets a package of its own only when it starts a
-family nothing else fits.
+→ [Component catalogue](docs/components.md) (every component, with pictures) ·
+[Foundation README](ui/foundation/README.md)
 
-Every other module owns its own namespace: `dev.voir.areca.charts`, `dev.voir.areca.crop`,
-`dev.voir.areca.datetime`, `dev.voir.areca.keyboard`, `dev.voir.areca.icons`, `dev.voir.areca.viewmodel`,
-`dev.voir.areca.flow.auth`, `dev.voir.areca.flow.profile`, `dev.voir.areca.flow.attachments`.
+### Specialised UI
 
-Within a flow module, the package says what a declaration is: configuration at the root, composable
-pieces in `part`, and — in `flow/auth` — the provider buttons in `sso`, which live there rather
-than in `foundation` because their fixed brand colours are not theme tokens and nothing but an
-authentication screen draws them. `flow/profile` adds `row` for its
-settings-list rows, `session` for the device list and `sheet` for its bottom sheets.
+| Module | Artifact | What you get |
+| --- | --- | --- |
+| [Charts](ui/charts/README.md) | `dev.voir.areca:charts` | Bar, stacked-bar, column and line charts, a meter bar and a legend |
+| [Date and time](ui/datetime/README.md) | `dev.voir.areca:datetime` | Calendar, date range, month and year picker, time picker, date-time field, heat-map days |
+| [Crop](ui/crop/README.md) | `dev.voir.areca:crop` | An image cropper with aspect ratios, straightening, zoom, rotation and mirroring |
+| [Keyboard](ui/keyboard/README.md) | `dev.voir.areca:keyboard` | An on-screen keyboard: host, layouts and key grids |
 
-## Icons are opt-in
+### Flows — parts for whole screens
 
-`:standalone:icons` ships 1,062 icons (1,059 converted from Lucide and Tabler Icons, plus three
-sign-in marks), and no library module depends on it. A module that draws an icon vendors its own
-`internal` copy instead, so a consumer that wants two icons does not inherit 1,062 of them.
+Flow modules draw the pieces of common screens and report what the user did; your app decides what
+it means. Each README has recipes to copy.
 
-The copies are ordinary committed sources under `dev.voir.areca.icon` (or `<module>.icon`),
-rendered from `:standalone:icons` by `syncBundledIcons` and checked by `verifyBundledIcons`, which
-runs as part of `check`. The package belongs to the task: a file there that is not a declared icon is
-deleted by the sync. The task also writes `src/commonMain/resources/META-INF/<package>/ICONS-NOTICE.md`,
-the Lucide and Tabler licence notices the copies carry into the module's jar, AAR and sources jars.
-To change what a module draws, edit `bundledIcons` in its build script and re-run the task:
+| Module | Artifact | Screens |
+| --- | --- | --- |
+| [Auth](flow/auth/README.md) | `dev.voir.areca:flow-auth` | Sign in, email first, verify a code, sign-in providers, pages an emailed link opens |
+| [Profile](flow/profile/README.md) | `dev.voir.areca:flow-profile` | Profile cards, account rows, account switcher, devices, sign out, delete account |
+| [Attachments](flow/attachments/README.md) | `dev.voir.areca:flow-attachments` | The strip of attached files, sheets that add one, the viewer |
 
-```bash
-./gradlew :ui:foundation:syncBundledIcons
-```
+### Standalone
 
-Applications that want the full set depend on `dev.voir.areca:icons` themselves — it is not
-inherited from `foundation`.
+No theme needed, no dependency on the rest of Areca.
 
-## Verifying
+| Module | Artifact | What you get |
+| --- | --- | --- |
+| [Icons](standalone/icons/README.md) | `dev.voir.areca:icons` | 1,062 vector icons from Lucide and Tabler Icons, as `ArecaIcons.*` |
+| [ViewModel](standalone/viewmodel/README.md) | `dev.voir.areca:viewmodel` | Multiplatform ViewModel, UI state, effects and paged lists |
 
-`ci/verify` is the single entry point, and CI runs exactly it:
+### Playground
+
+A desktop app with an interactive page for every component and flow:
 
 ```bash
-./ci/verify
+./gradlew :playground:run
 ```
 
-It builds and checks every module for every target, then confirms the libraries still publish.
+### For AI coding agents
 
-### Public API
-
-Every published module commits its public API as a dump under its `api/` directory:
-`api/jvm/<module>.api` for the desktop JVM target and `api/<module>.klib.api` for the iOS klibs.
-The Android target has no dump of its own; it shares the same common API. `check`, and therefore
-`./gradlew build` and `ci/verify`, runs `checkLegacyAbi`, which compiles the module and fails when
-its public API differs from the dump — a public declaration added, removed or changed, including
-one made public by accident.
-
-When an API change is intended, rewrite the dumps and commit them with the change:
-
-```bash
-./gradlew updateLegacyAbi
-```
-
-Run it on macOS, where the iOS targets compile; elsewhere the klib dump keeps the iOS declarations
-it already has instead of recomputing them. The dump diff is what a reviewer reads to see a pull
-request's API changes: anything it adds is a commitment to support, and anything it removes or
-changes breaks consumers.
-
-## Agent skills
-
-Two Agent Skills teach coding agents to build on Areca in other repositories:
-
-| Skill | Use it for |
-| --- | --- |
-| `areca-ui-v1` | Compose Multiplatform screens with `foundation` and the other `ui`, `flow` and `icons` modules: theme, tokens, component choice, customisation, accessibility, localisation and recipes |
-| `areca-viewmodel-v1` | Presentation code on `dev.voir.areca:viewmodel`: state, actions, effects, lists, concurrency and tests |
-
-They live in [`skills/`](skills), with symlinks under `.agents/skills/` for agents that read that
-path. The repository root is the `areca` Claude Code plugin (`.claude-plugin/plugin.json`) and
-the `areca-ui` marketplace that lists it (`.claude-plugin/marketplace.json`), so the skills load as
-`areca:areca-ui-v1` and `areca:areca-viewmodel-v1`:
+Areca ships Agent Skills that teach coding agents to build with it — which component answers which
+need, exact signatures, rules and screen recipes. In Claude Code:
 
 ```text
 /plugin marketplace add VoirDev/areca-ui
@@ -246,82 +169,32 @@ the `areca-ui` marketplace that lists it (`.claude-plugin/marketplace.json`), so
 /plugin install areca@areca-ui
 ```
 
-The plugin has its own version, separate from `VERSION`, because installs update only when it
-changes:
+| Skill | Covers |
+| --- | --- |
+| `areca:areca-ui-v1` | Screens with the theme, foundation, charts, date and time, crop, keyboard, flows and icons |
+| `areca:areca-viewmodel-v1` | Presentation code on `dev.voir.areca:viewmodel` |
 
-- every library release raises it by the same kind as `VERSION` — a `minor` library release raises
-  the plugin's minor number — so new library behaviour always reaches the skills;
-- **Prepare Skills Release** (manual, from `main`, a `patch`, `minor` or `major` bump) raises it
-  alone and opens the `Release skills vX.Y.Z` pull request from `skills-release/vX.Y.Z`
-  (`ci/skills-release/prepare-version`, `ci/skills-release/validate-changes`,
-  `ci/skills-release/create-pull-request`). Merging it is the release; no library is built or
-  published.
+Other agents can read [`skills/`](skills) directly.
 
-After either release merges, update an install with:
+## Documentation
 
-```bash
-claude plugin marketplace update areca-ui
-```
+| | |
+| --- | --- |
+| [Getting started](docs/getting-started.md) | Install, theme, first screen, adding modules |
+| [Component catalogue](docs/components.md) | Every foundation component: what it is for and where it lives |
+| [Theme](docs/theme.md) | Tokens, changing the theme, always-dark regions |
+| [Customising](docs/customising.md) | Styles, sizes and app-wide defaults |
+| [Accessibility](docs/accessibility.md) | What components do for you and what you supply |
+| [Localisation](docs/localisation.md) | Every built-in string and how to replace it |
+| [Recipes](docs/recipes/README.md) | Whole screens to copy |
+| [All docs](docs/README.md) | The full index |
 
-```bash
-claude plugin update areca@areca-ui --scope user
-```
+## Contributing
 
-The skills describe the public API and behaviour, so a change to either updates `skills/`,
-[ui/foundation/AGENTS.md](ui/foundation/AGENTS.md) and the module's README in the same pull
-request.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for building, verifying and the conventions each part of the
+repository follows. Coding agents working in this repository start from [AGENTS.md](AGENTS.md).
 
-## Releasing
+## License
 
-Every library is built with the JDK 21 toolchain and published as Java 17 bytecode, for JVM and
-Android alike, so desktop consumers need Java 17 or later.
-
-`VERSION` holds the version every module builds as; `-PreleaseVersion=X.Y.Z` overrides it for one
-build. It holds either the last release, `X.Y.Z`, or, before the first release, the development
-version `1.0.0-SNAPSHOT`, which local builds (`publishToMavenLocal` included) publish as; an app
-consuming a local build pins `1.0.0-SNAPSHOT`. Only releases change `VERSION`; it keeps the released version until the
-next release, never moving on to a further `-SNAPSHOT`. The `version` of
-`.claude-plugin/plugin.json` is the skills' own and moves on its own between library releases (see
-[Agent skills](#agent-skills)); `check` fails when it is not `MAJOR.MINOR.PATCH`:
-
-1. **Prepare Release** (manual, from `main`) sets `VERSION` to the next release, raises the plugin
-   version by the same kind (`ci/release/bump-plugin-version`), and opens the `Release vX.Y.Z` pull request from `release/vX.Y.Z`
-   (`ci/release/prepare-version`, `ci/release/validate-changes`, `ci/release/create-pull-request`).
-   The `patch`, `minor` or `major` bump gives the lowest release of that kind above `VERSION`: from `1.2.3` they give `1.2.4`, `1.3.0` and `2.0.0`; from
-   `1.2.3-SNAPSHOT`, `1.2.3`, `1.3.0` and `2.0.0`. Its optional `version` input sets an exact
-   `X.Y.Z` instead, which must be greater than `VERSION`, a release counting as greater than its own
-   `-SNAPSHOT`. A version already tagged `vX.Y.Z` is rejected.
-2. On that pull request, Verify runs `ci/verify` (never skipped there), and **Build release
-   artifacts** runs `ci/release/build-artifacts` on macOS: it stages every publication in
-   `build/release-staging`, checks coordinates and files, resolves the result as a Java 17 consumer
-   (`ci/release/consumer`), and keeps it as the run's `release-artifacts`.
-3. Merging starts **Publish Release**. After approval in the `release` environment it uploads the
-   kept files unchanged to this repository's GitHub Packages Maven registry
-   (`ci/release/publish-github-packages`), then tags `vX.Y.Z` and creates the GitHub Release. A
-   failed run is re-run; it never rebuilds, and a rerun uploads only the files the registry does not
-   yet serve.
-
-The first release is 1.0.0: run Prepare Release with `version` set to `1.0.0`, or with any bump,
-since from `1.0.0-SNAPSHOT` all three give `1.0.0`. Its pull request changes `VERSION` from
-`1.0.0-SNAPSHOT` to `1.0.0` and raises the plugin version, and nothing else, and merging it publishes as
-above. Only a release is ever built for
-publication: `build-artifacts`, `check-staging` and `detect` reject a `-SNAPSHOT`.
-
-`main` requires the `Build and check whole repository` and `Build release artifacts` checks on an
-up-to-date branch. Prepare Release uses the `RELEASE_BOT_TOKEN` secret and the `RELEASE_BOT_NAME`
-and `RELEASE_BOT_EMAIL` variables. Publication needs no secret: the publishing job's own
-`GITHUB_TOKEN` holds `packages: write`, and the `release` environment only gates the job on its
-reviewers' approval.
-
-## Conventions
-
-- Coding agents working in this repository start from [AGENTS.md](AGENTS.md).
-- Showcase pages follow the authoring contract in [playground/SHOWCASES.md](playground/SHOWCASES.md).
-  Screen pages follow its §13.
-- Flow modules follow the contract in [flow/FLOWS.md](flow/FLOWS.md).
-- Foundation components follow the model in
-  [ui/foundation/README.md](ui/foundation/README.md#how-every-component-works): a style and a size
-  with `Default`, presets and `default(...)`, nullable locals seeded by `ArecaThemeProvider`, and
-  one parameter order.
-- Agents building screens on `foundation` follow [ui/foundation/AGENTS.md](ui/foundation/AGENTS.md):
-  which component answers which intent, exact signatures, and screen recipes.
+Apache License 2.0 — see [LICENSE](LICENSE). The icons carry the Lucide and Tabler licences; see
+[standalone/icons/NOTICE.md](standalone/icons/NOTICE.md).

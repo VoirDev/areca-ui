@@ -27,6 +27,7 @@ import dev.voir.areca.icons.Mail
 import dev.voir.areca.playground.showcase.ShowcaseScaffold
 import dev.voir.areca.playground.showcase.section.EdgeCases
 import dev.voir.areca.playground.showcase.section.Playground
+import dev.voir.areca.playground.showcase.section.Recipes
 import dev.voir.areca.playground.showcase.section.Sizes
 import dev.voir.areca.playground.showcase.section.States
 import dev.voir.areca.playground.showcase.section.VariantLayout
@@ -243,6 +244,23 @@ fun TextFieldShowcase() = ShowcaseScaffold(
                 prefix = { Text(text = "$", variant = TextVariant.BodyMedium, color = TextColor.Muted) },
                 suffix = { Text(text = "USD", variant = TextVariant.BodyMedium, color = TextColor.Muted) },
                 placeholder = { Text("Affixes visible while empty") },
+            )
+        }
+    }
+
+    Recipes {
+        recipe(
+            name = "Search pill",
+            description = "SearchField on a soft capsule: a fill rather than an outline, the clear " +
+                "button showing once there is text. Provide the style once with LocalFieldStyle.",
+        ) {
+            var value by remember { mutableStateOf("gro") }
+            SearchField(
+                value = value,
+                onValueChange = { value = it },
+                modifier = Modifier.fillMaxWidth(),
+                style = FieldStyle.soft(shape = ArecaTheme.shapes.full),
+                placeholder = { Text("Search 24 categories and subcategories") },
             )
         }
     }

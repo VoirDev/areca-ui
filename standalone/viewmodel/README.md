@@ -1,47 +1,11 @@
 # Areca ViewModel
 
-`viewmodel` is a Kotlin Multiplatform state-management module for screen-level presentation
-logic. It provides:
+Kotlin Multiplatform base classes for screen-level presentation logic: one immutable state stream,
+serialized actions, best-effort effects, and paginated lists with refresh, filtering and sorting.
+It builds on AndroidX Lifecycle `ViewModel` and Kotlin Coroutines, and does not depend on Compose or
+the Areca theme.
 
-- `BaseViewModel` for unidirectional action, state, and best-effort effect handling.
-- `UiState` for the top-level screen lifecycle.
-- `RefreshGate` for dropping concurrent refresh requests and rapid repeats.
-- `BaseListViewModel` for paginated, filterable, and sortable lists.
-- `BaseSimpleListViewModel` for paginated lists without filtering or sorting.
-
-The module is intentionally UI-agnostic. It depends on AndroidX Lifecycle ViewModel and Kotlin
-Coroutines, but it does not depend on Compose. UI modules decide how to collect and render its
-flows.
-
-Supported targets are Android, JVM, iOS ARM64, and iOS Simulator ARM64.
-
-## When to use it
-
-Use `BaseViewModel` when a screen needs:
-
-- one immutable state stream;
-- serialized handling of UI actions;
-- best-effort, one-off UI impulses such as a focus request or a non-critical message;
-- consistent full-screen loading and error transitions.
-
-Use `BaseListViewModel` when the main screen content is a paginated list and you want standard
-handling for initial loading, refresh, next-page loading, filtering, and sorting.
-
-Use `BaseSimpleListViewModel` when the list is paginated but has no filters or sorting.
-
-Use `RefreshGate` when a user can trigger refresh repeatedly before the UI has rendered its
-loading state, or when refreshes need a short cooldown after completion.
-
-This module does not provide dependency injection, navigation, persistence, logging,
-localization, or UI components. ViewModels depend on domain use cases and presentation mappers,
-never on repositories, data sources, or DTOs.
-
-## Add the dependency
-
-The canonical published Maven coordinate is `dev.voir.areca:viewmodel`.
-
-Add it to the consuming Kotlin Multiplatform module, replacing `<version>` with the required Areca
-version:
+## Install
 
 ```kotlin
 kotlin {
@@ -53,134 +17,79 @@ kotlin {
 }
 ```
 
-Areca is published to GitHub Packages, so the build needs its repository first; see
-[Installing](../../README.md#installing).
+Use `api(…)` instead when your module exposes Areca ViewModel types in its own public API.
+`viewmodel` passes on `org.jetbrains.androidx.lifecycle:lifecycle-viewmodel` and
+`org.jetbrains.kotlinx:kotlinx-coroutines-core` as API dependencies. Targets: Android, JVM, iOS
+ARM64 and iOS Simulator ARM64. For the repository and credentials, see
+[Getting started](../../docs/getting-started.md).
 
-Use `api("dev.voir.areca:viewmodel:<version>")` instead when the consuming module exposes Areca
-ViewModel types in its own public API.
-
-Only modules inside this Areca repository's Gradle build use the type-safe project accessor of the
-`:standalone:viewmodel` project:
+## Quick start
 
 ```kotlin
-kotlin {
-    sourceSets {
-        commonMain.dependencies {
-            implementation(projects.standalone.viewmodel)
+data class GreetingState(val text: String = "")
+
+sealed interface GreetingAction {
+    data object Load : GreetingAction
+}
+
+class GreetingViewModel(
+    private val getGreeting: GetGreetingUseCase,
+) : BaseViewModel<GreetingAction, Nothing, GreetingState>(initial = GreetingState()) {
+
+    init {
+        dispatch(GreetingAction.Load)
+    }
+
+    override suspend fun reduce(action: GreetingAction) {
+        when (action) {
+            GreetingAction.Load -> runAction(
+                block = { getGreeting() },
+                onSuccess = { text -> setDisplay(GreetingState(text)) },
+            )
         }
     }
 }
 ```
 
-Do not copy `projects.standalone.viewmodel` into an external project: that accessor exists only
-inside this repository's build.
+## Types
 
-## Core model
+| Type | Use it for | Package |
+| --- | --- | --- |
+| `BaseViewModel<A, E, S>` | A screen with one state stream, serialized actions and best-effort effects | `dev.voir.areca.viewmodel` |
+| `UiState<S>` | The top-level screen lifecycle: `Initial`, `Loading`, `Display(data)`, `Error(message, cause)` | `dev.voir.areca.viewmodel` |
+| `RefreshGate` | Dropping concurrent refresh requests and rapid repeats | `dev.voir.areca.viewmodel` |
+| `BaseListViewModel<A, E, T, F, S>` | A paginated list with filtering and sorting | `dev.voir.areca.viewmodel.list` |
+| `BaseSimpleListViewModel<A, E, T>` | A paginated list without filtering or sorting | `dev.voir.areca.viewmodel.list` |
+| `ListState`, `PageResult`, `PagingMeta`, `ReloadStrategy` | A list's state, one fetched page, paging metadata, how a filter or sort change reloads | `dev.voir.areca.viewmodel.list` |
 
-The three generic parameters of `BaseViewModel<A, E, S>` have distinct responsibilities:
+The module provides no dependency injection, navigation, persistence, logging or UI. ViewModels
+depend on domain use cases and presentation mappers, not on repositories, data sources or DTOs.
 
-| Type | Meaning | Examples |
+---
+
+## BaseViewModel
+
+| Type parameter | Meaning | Examples |
 | --- | --- | --- |
 | `A` | An action sent to the reducer | Load, retry, save, item clicked |
-| `E` | A best-effort, one-off UI impulse | Focus a field, show a non-critical message |
-| `S` | Durable screen data used for rendering | Form fields, content, selection |
-
-Actions enter through `dispatch`. A single coroutine processes them through `reduce` in dispatch
-order, one at a time. State is exposed as `StateFlow<UiState<S>>`, while effects are exposed as
-`Flow<E>`.
-
-`dispatch` is non-suspending and never drops an action. Actions dispatched from a constructor or an
-`init` block are kept until the reducer starts. The queue is unbounded, so do not dispatch in an
-unbounded loop or use actions as a background job queue. Actions still pending when the ViewModel
-is cleared are discarded.
+| `E` | A best-effort, one-off UI impulse | Navigate, show a toast, focus a field |
+| `S` | Durable screen data for rendering | Form fields, content, selection |
 
 ```text
 UI intent -> dispatch(action) -> reduce(action) -> state and/or effect -> UI
 ```
 
-If `reduce` throws, the failure goes to `onReduceFailure(action, throwable)`, whose default
-publishes it as a full-screen `UiState.Error`. Later actions keep being processed. The cancellation
-of the ViewModel itself is never reported as a failure.
-
-### `UiState`
-
-`UiState` represents only the top-level screen lifecycle:
-
-- `UiState.Initial`: work has not started.
-- `UiState.Loading`: full-screen loading.
-- `UiState.Display(data)`: renderable screen data is available.
-- `UiState.Error(message, cause)`: full-screen failure.
-
-Fine-grained states belong inside the screen-specific `S` type. Examples include saving a form,
-refreshing a list, per-item loading, validation errors, selection, and empty content.
-
-The initial state of `BaseViewModel` is `UiState.Display(initial)`, not `UiState.Initial`. Call
-`setInitial()` from a subclass only when the screen explicitly needs an untouched initial phase.
-
-### State and effects are different
-
-State describes something that remains true and must survive UI recreation. Effects are
-best-effort impulses whose loss or late arrival is acceptable.
-
-Use state for:
-
-- loaded content;
-- form values and validation;
-- loading flags and inline errors;
-- the selected item or tab;
-- outcomes the screen must keep showing, such as a completed payment or an acknowledgement the
-  user must confirm. Put them in state and let the UI acknowledge them once handled.
-
-Use effects for:
-
-- navigation requests, such as leaving a form after it saves;
-- toasts, snackbars and other transient messages;
-- permission prompts and focus requests;
-- animations and haptics.
-
-Collect effects with exactly one lifecycle-aware collector per screen. Because the queue keeps every
-effect until a collector takes it, a navigation request sent while the screen is in the background
-is delivered when it returns.
-
-Effects are queued without limit and never dropped, and sending one never suspends the reducer.
-An effect sent while no collector is active waits in the queue and is delivered, in order, when a
-collector starts, so it can arrive late, after the UI that caused it is gone. Several collectors
-compete for effects rather than each receiving a copy, so keep exactly one lifecycle-aware
-collector per screen.
-
-Inside a ViewModel, send effects with `emitEffect`. It is `protected`: UI code cannot push effects
-into a ViewModel.
-
-## Ownership and threading
-
-- Obtain ViewModels through a `ViewModelStoreOwner`, for example `viewModel { … }` in Compose, an
-  Android activity or fragment, or a navigation back-stack entry. Clearing the store cancels the
-  ViewModel's `viewModelScope`, its reducer, and its jobs. A ViewModel held without a store, such
-  as one created in plain `remember { … }` or directly from Swift, is never cleared and leaks its
-  coroutines.
-- `viewModelScope` runs on `Dispatchers.Main.immediate`. On a JVM without a Main dispatcher
-  module, it falls back to a single-parallelism view of `Dispatchers.Default`, so constructing a
-  ViewModel never throws there; desktop UIs should still add `kotlinx-coroutines-swing` (or
-  `-javafx`) so state is published on the UI thread.
-- Reducers and work launched in `viewModelScope` never run in parallel with each other. Call the
-  state helpers (`display`, `setDisplay`, `mutateDisplay`, `setLoading`, `setError`, `runAction`,
-  and so on) only from `reduce` or from a coroutine launched in `viewModelScope` that has not
-  switched dispatcher. Move blocking or CPU-heavy work behind the use case rather than into the
-  reducer.
-- The state helpers are confined, not atomic. `mutateDisplay` reads the latest display data and
-  writes the result back without a compare-and-set; it stays consistent because nothing else writes
-  in that context, and the same confinement covers a reducer's read-then-write across suspension
-  points, which no atomic helper could. A call from another thread, or after `withContext` to
-  another dispatcher, can lose an update.
-- When an action is dispatched on the main thread, `Main.immediate` may run its reducer before
-  `dispatch` returns.
-
-## Basic ViewModel example
+- `dispatch` never suspends and never drops an action. One coroutine runs `reduce` for each action
+  in dispatch order, one at a time. Actions dispatched from `init` wait until the reducer starts;
+  actions pending when the ViewModel is cleared are discarded. The queue is unbounded, so do not use
+  actions as a job queue.
+- `state` is a `StateFlow<UiState<S>>` starting at `UiState.Display(initial)`; call `setInitial()`
+  only when the screen needs an untouched initial phase.
+- `effects` is a `Flow<E>`, sent with the protected `emitEffect`.
+- If `reduce` throws, `onReduceFailure(action, throwable)` publishes a full-screen `UiState.Error`
+  by default, and later actions keep being processed.
 
 ```kotlin
-import dev.voir.areca.viewmodel.BaseViewModel
-import kotlinx.coroutines.CancellationException
-
 data class ProfileState(
     val profile: Profile? = null,
     val isSaving: Boolean = false,
@@ -245,69 +154,73 @@ class ProfileViewModel(
 }
 ```
 
-The public methods form the screen-facing API. They dispatch actions rather than directly mutating
-state. The reducer owns the action-to-behavior mapping.
+Public methods dispatch actions; `reduce` maps each action to behaviour.
 
-### Updating display data
+### State helpers
 
-Subclasses can use:
+All protected, for the subclass:
 
-- `display` to read the latest known display data, even while top-level state is loading or error;
-- `setDisplay(value)` to replace it;
-- `mutateDisplay { ... }` to transform it and publish `UiState.Display` (it always publishes
-  `Display`, even from an error screen, so check `currentDisplayOrNull()` first when that matters);
-- `currentDisplayOrNull()` when work should proceed only if the current top-level state is
-  `Display`, for example `currentDisplayOrNull()?.let { … }`, which may also call suspend
-  functions.
+| Helper | |
+| --- | --- |
+| `display` | The latest display data, even while the top-level state is loading or an error |
+| `setDisplay(value)` | Replace it and publish `UiState.Display` |
+| `mutateDisplay { … }` | Transform it and publish `UiState.Display` — even from an error screen |
+| `currentDisplayOrNull()` | The data only while the top-level state is `Display` |
+| `setLoading()`, `setInitial()`, `setError(…)` | Change the top-level state, keeping the cached `display` |
+| `runAction(block, onSuccess, onFailure)` | Publish `Loading`, run `block` inline, then call `onSuccess` or `onFailure` (by default `setError`) |
+| `emitEffect(effect)` | Queue an effect |
 
-`setLoading()`, `setInitial()`, and `setError(...)` change the visible top-level state but do not
-erase the cached `display` value.
+Use `runAction` for work that replaces the whole screen with loading or error UI. For inline work,
+keep a loading flag in `S` and update it with `mutateDisplay`. Cancellation is never treated as a
+failure.
 
-### Running work inline
+### UiState, state and effects
 
-`runAction` is a suspend helper that runs in the caller; it launches nothing. Its sequence:
+`UiState` is only the top-level lifecycle. Saving, refreshing, per-item loading, validation errors,
+selection and empty content belong in `S`. `UiState.displayOrNull()` returns the data of a `Display`.
 
-1. publish `UiState.Loading`;
-2. run `block` inline, suspending the caller;
-3. invoke `onSuccess` with the result, or `onFailure` when the block throws (by default
-   `setError`).
+| Put in state | Send as an effect |
+| --- | --- |
+| Loaded content, form values and validation | Navigation requests, such as leaving a form after it saves |
+| Loading flags and inline errors | Toasts, snackbars and other transient messages |
+| The selected item or tab | Permission prompts and focus requests |
+| Outcomes the screen must keep showing — a completed payment, an acknowledgement — until the UI acknowledges them | Animations and haptics |
 
-Cancellation is never treated as a failure: when the calling coroutine is cancelled, `onFailure`
-is not called and the cancellation propagates. Use `runAction` for operations that should
-replace the whole screen with loading or error UI. For inline operations, manage a loading flag
-inside `S` with `mutateDisplay` instead.
+Effects are queued without limit and never dropped. One sent while nothing collects waits and is
+delivered in order when a collector starts, so it can arrive late. Several collectors compete for
+effects rather than each getting a copy: keep exactly one lifecycle-aware collector per screen.
 
-Reducers are processed serially. If a reducer performs a long request, later actions wait until it
-finishes; requests are not automatically cancelled or replaced. For latest-wins work, cancel the
-previous `Job` and launch the new one in `viewModelScope`; for independent work, launch separately
-owned jobs. Every owned job must rethrow `CancellationException` from broad failure handling.
+### Ownership and threading
 
-## Gating user-requested refreshes
+- Obtain ViewModels through a `ViewModelStoreOwner` — `viewModel { … }` in Compose, an activity or
+  fragment, a navigation back-stack entry — so they are cleared. One held in plain `remember { … }`
+  or created directly from Swift is never cleared and leaks its coroutines.
+- `viewModelScope` runs on `Dispatchers.Main.immediate`. On a JVM without a Main dispatcher it falls
+  back to a single-parallelism view of `Dispatchers.Default`; desktop UIs should add
+  `kotlinx-coroutines-swing` (or `-javafx`) so state is published on the UI thread.
+- Call the state helpers only from `reduce` or from a coroutine launched in `viewModelScope` that has
+  not switched dispatcher. They are confined, not atomic: a call from another thread can lose an
+  update. Keep blocking or CPU-heavy work behind the use case.
+- Reducers run one at a time, so a long request delays later actions; nothing is cancelled or
+  replaced automatically. For latest-wins work, cancel the previous `Job` and launch the new one in
+  `viewModelScope`. Rethrow `CancellationException` from every broad failure handler in owned jobs.
 
-`RefreshGate` admits one refresh immediately, rejects requests while it is running, and rejects
-rapid repeats for one second after it completes by default. Rejected requests are dropped; they are
-not queued for later execution. Create one gate per ViewModel or other refresh owner so unrelated
-screens remain independent.
+---
 
-The API has two phases:
+## RefreshGate
 
-1. Call `tryReserve` synchronously at the user-entry point. Its callback dispatches or starts the
-   accepted work.
-2. Wrap that accepted suspend operation in `runReserved`. It releases the reservation in `finally`
-   and starts the cooldown whether the operation succeeds, fails, or is cancelled. It throws
-   `IllegalStateException`, without running the operation, when no reservation is held.
+`RefreshGate` admits one refresh, rejects requests while it runs, and rejects repeats for a cooldown
+after it completes (one second by default). Rejected requests are dropped, not queued. Use one gate
+per refresh owner.
 
-This split reserves the work before an asynchronously processed action can update screen state.
-Every successful `tryReserve` must therefore lead to exactly one `runReserved` call. `dispatch`
-never drops an action, so reserving in front of `dispatch` is safe.
+1. Call `tryReserve { … }` synchronously at the user-entry point; its callback dispatches or starts
+   the accepted work.
+2. Wrap that work in `runReserved { … }`, which releases the reservation and starts the cooldown
+   however the work ends. It throws `IllegalStateException` when no reservation is held.
 
-### With `BaseViewModel`
+Every successful `tryReserve` must lead to exactly one `runReserved`.
 
 ```kotlin
-import dev.voir.areca.viewmodel.BaseViewModel
-import dev.voir.areca.viewmodel.RefreshGate
-import kotlinx.coroutines.CancellationException
-
 data class FeedState(
     val items: List<FeedItem> = emptyList(),
     val isRefreshing: Boolean = false,
@@ -347,11 +260,7 @@ class FeedViewModel(
 }
 ```
 
-The failure is recorded in state, so the UI shows it whether or not anything collects effects.
-
-### Starting a coroutine directly
-
-When the refresh should not hold the reducer, launch it in `viewModelScope` instead of dispatching:
+When the refresh should not hold the reducer, launch it instead of dispatching:
 
 ```kotlin
 private val refreshGate = RefreshGate(cooldown = 2.seconds)
@@ -365,14 +274,15 @@ fun refresh() {
 }
 ```
 
-Use `Duration.ZERO` when only concurrent refresh suppression is required. A custom `TimeSource`
-can be supplied for deterministic tests.
+`cooldown = Duration.ZERO` only suppresses concurrent refreshes; `timeSource` takes a
+`TestTimeSource` in tests.
 
-## Collecting from Compose UI
+---
 
-The ViewModel module itself is independent of Compose. A Compose consumer collects it with the
-lifecycle-aware APIs of `org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose`, which is
-available for every Compose Multiplatform target, so a screen in the background stops collecting:
+## Collecting from Compose
+
+Collect with `org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose`, so a screen in the
+background stops collecting:
 
 ```kotlin
 import androidx.compose.runtime.Composable
@@ -416,24 +326,15 @@ fun ProfileScreen(
 }
 ```
 
+---
+
 ## Paginated lists
 
-`BaseListViewModel` owns a `ListState` containing:
-
-- all currently loaded `items`;
-- `PagingMeta`;
-- active `filters` and `sorting`;
-- refresh, reload, and next-page loading flags;
-- an inline `nextPageError` and an inline `refreshError`.
-
-The concrete ViewModel supplies `fetchPage`, which maps one page from a domain use case, and maps
-its actions to the protected `handle*` functions.
+`BaseListViewModel` holds a `ListState`: the loaded `items`, `PagingMeta`, the active `filters` and
+`sorting`, refresh, reload and next-page flags, and inline `nextPageError` and `refreshError`. The
+subclass implements `fetchPage` and maps its actions to the protected `handle*` functions.
 
 ```kotlin
-import dev.voir.areca.viewmodel.list.BaseListViewModel
-import dev.voir.areca.viewmodel.list.PageResult
-import dev.voir.areca.viewmodel.list.ReloadStrategy
-
 data class ProductFilter(val query: String)
 
 enum class ProductSort {
@@ -528,47 +429,36 @@ class ProductsViewModel(
 }
 ```
 
-`fetchPage` should only fetch and map one page. Do not append items, update state, or swallow errors
-inside it; the base class owns those behaviors.
+`fetchPage` only fetches and maps one page: no appending, no state updates, no swallowed errors.
 
-### List operation behavior
-
-| Operation | Loading representation | Success | Failure |
+| Operation | While loading | Success | Failure |
 | --- | --- | --- | --- |
-| Initial load / retry | Top-level `UiState.Loading` | Replace with page 1 | Top-level `UiState.Error` |
-| Pull-to-refresh | `isRefreshing = true`, items kept | Replace with page 1 | Keep items, set `refreshError`, call `onRefreshError` |
-| Pull-to-refresh from an error or loading screen | Top-level `UiState.Loading` | Replace with page 1 | Top-level `UiState.Error` |
-| Load next page | `isLoadingNextPage = true` | Append the page | Set `nextPageError` and keep loaded pages |
-| Filter/sort, full-screen | Top-level `UiState.Loading` | Replace with page 1 | Top-level `UiState.Error`; retry uses the new query |
-| Filter/sort, inline | `isReloading = true`, items kept | Replace with page 1 | Restore the previous query, keep items, set `refreshError`, call `onRefreshError` |
+| Initial load / retry | `UiState.Loading` | Page 1 | `UiState.Error` |
+| Refresh | `isRefreshing`, items kept | Page 1 | Items kept, `refreshError` set, `onRefreshError` called |
+| Refresh from a loading or error screen | `UiState.Loading` | Page 1 | `UiState.Error` |
+| Next page | `isLoadingNextPage` | Page appended | `nextPageError` set, loaded pages kept |
+| Filter or sort, `ReloadStrategy.FullScreen` | `UiState.Loading` | Page 1 | `UiState.Error`; retry uses the new query |
+| Filter or sort, `ReloadStrategy.Inline` | `isReloading`, items kept | Page 1 | Previous query restored, items kept, `refreshError` set, `onRefreshError` called |
 
-`refreshError` is cleared when the next refresh or reload starts and when the list is replaced.
-`onRefreshError` is an optional extra, such as a snackbar effect; the failure is already in state.
-Inline reload applies only while the screen shows content; from a loading or error screen it is
-full-screen.
+- `refreshError` clears when the next refresh or reload starts and when the list is replaced.
+  `onRefreshError` is an optional extra, such as a snackbar effect. An inline reload from a loading
+  or error screen runs full-screen.
+- Next-page loads run in a job of their own, so the reducer stays free. A next-page request is
+  ignored while one is in flight, while a refresh or inline reload runs, and while no content shows,
+  so repeated scroll callbacks load one page. Any replacement cancels an in-flight next-page load.
+- Cancellation never sets an error or calls `onRefreshError`.
 
-Load, retry, refresh, and filter or sort changes run inline in the reducer. A next-page load runs in
-a job owned by the ViewModel, so the reducer stays free: while one is in flight, further next-page
-requests are ignored, so repeated scroll callbacks load one page. A next-page request is also
-ignored while a refresh or inline reload runs and while no content is shown. Starting any
-replacement cancels an in-flight next-page load, and a response that belongs to a replaced list is
-discarded. The `handle*` functions can therefore also run in jobs launched in `viewModelScope`, for
-example to make filter changes latest-wins. Cancellation never sets an error and never calls
-`onRefreshError`.
+**`PageResult`.** `items` holds only the requested page. `currentPage` is the one-based page
+requested; a result for another page counts as a failure. `hasNextPage` decides whether another
+request may be made. `totalPages` and `totalItems` may be `null`. `pageSize` must be at least 1.
 
-### `PageResult` contract
-
-- `items` contains only the requested page, never previously loaded pages.
-- `currentPage` is the one-based page that was requested. A result for another page is treated as
-  a failure of that request.
-- `hasNextPage` is authoritative for whether another request may be made.
-- `totalPages` and `totalItems` may be `null` when the source does not provide them.
-- The base class copies the configured `pageSize` into `PagingMeta`. `pageSize` must be at least
-  1; the constructor throws `IllegalArgumentException` otherwise.
+**Rendering helpers.** `ListState.isEmpty` is true only after page 1 loaded with no items;
+`ListState.hasContent` when items exist and no inline reload is active;
+`ListState.isAnyOperationInProgress` combines refresh, inline reload and next-page loading.
 
 ### Lists without filters or sorting
 
-Extend `BaseSimpleListViewModel` and implement only `fetchPage(page)`:
+Extend `BaseSimpleListViewModel` and implement `fetchPage(page)`:
 
 ```kotlin
 class NotificationsViewModel(
@@ -588,36 +478,31 @@ class NotificationsViewModel(
 }
 ```
 
-`NoFilter` and `NoSort` are aliases for `Unit` if a custom list base needs those generic types
-explicitly.
+`NoFilter` and `NoSort` are aliases for `Unit`, for a custom list base that needs the type
+parameters.
 
-### List rendering helpers
+---
 
-- `ListState.isEmpty` is true only after page 1 has loaded successfully with no items.
-- `ListState.hasContent` is true when items exist and no inline reload is active.
-- `ListState.isAnyOperationInProgress` combines refresh, inline reload, and next-page loading.
+## Words
 
-## Error handling
+The library owns no wording and never shows exception text. `UiState.Error.message` is what the
+ViewModel supplies:
 
-The library owns no wording and never shows exception text. `UiState.Error.message` is whatever
-the ViewModel supplies:
+- `setError(message, cause)` publishes a localised, presentation-safe message.
+- `setError(throwable)`, the default `runAction` failure, full-screen list failures and the default
+  `onReduceFailure` take the message from `errorMessage(throwable)`, which returns `""` unless
+  overridden, and keep the throwable as the cause.
 
-- `setError(message, cause)` publishes a localized, presentation-safe message the ViewModel
-  already has, with an optional cause.
-- `setError(throwable)`, the default `runAction` failure, the full-screen list failures, and the
-  default `onReduceFailure` take the message from `errorMessage(throwable)` and keep the throwable
-  as the cause. `errorMessage` returns an empty string unless the ViewModel overrides it.
+When the message is empty, the UI words the failure from `cause` or with a generic localised message.
+Map failures to presentation-safe text in a presentation mapper; never display raw server or
+diagnostic messages. `ListState.nextPageError` and `refreshError` are throwables for the UI to map
+the same way. See [Localisation](../../docs/localisation.md).
 
-When the message is empty, the UI words the failure itself, either from `cause` or with a generic
-localized message. Map domain and transport failures to presentation-safe text in a presentation
-mapper; never display raw server or diagnostic messages. `ListState.nextPageError` and
-`ListState.refreshError` hold throwables for the UI to map the same way.
-
-## Testing guidance
+## Testing
 
 Install a `StandardTestDispatcher` as Main before constructing the ViewModel, call its public
-methods, and advance virtual time. Actions dispatched from `init` are kept until the scheduler runs,
-so `runCurrent()` and `advanceUntilIdle()` see them:
+methods, and advance virtual time. Actions dispatched from `init` wait for the scheduler, so
+`runCurrent()` and `advanceUntilIdle()` see them:
 
 ```kotlin
 import dev.voir.areca.viewmodel.UiState
@@ -660,54 +545,36 @@ class ProfileViewModelTest {
 }
 ```
 
-Use fake use cases and `TestTimeSource` for `RefreshGate`. At minimum, test:
+Use fake use cases, and `RefreshGate(timeSource = TestTimeSource())` for gates. Test at least:
 
-- the initial `UiState.Display(initial)` value;
+- the initial `UiState.Display(initial)`;
 - successful and failed full-screen actions, and that cancellation publishes no error;
 - action ordering when several actions are dispatched;
-- critical outcomes in state and best-effort effect delivery with one collector;
-- refresh success and retained-content failure;
-- next-page append, duplicate-request guard, end-of-list guard, failure, and retry;
+- critical outcomes in state, and effect delivery with one collector;
+- refresh success and failure with content kept;
+- next-page append, the duplicate-request and end-of-list guards, failure and retry;
 - filter and sort reloads for both strategies;
-- accurate `PageResult` mapping.
+- `PageResult` mapping.
 
-Build and run this module's tests with:
+## Checklist
 
-```shell
-./gradlew :standalone:viewmodel:build
-```
-
-`commonTest` runs on the JVM, as Android host tests (`testAndroidHostTest`), and on the iOS
-simulator.
-
-## Rules for developers and AI agents
-
-When creating or modifying a consumer of this module:
-
-1. Use the published `dev.voir.areca:viewmodel:<version>` dependency by default. Use
-   `projects.standalone.viewmodel` only for a module inside this exact Areca Gradle build.
-2. Choose `BaseViewModel`, `BaseListViewModel`, or `BaseSimpleListViewModel` based on screen shape.
-3. Model UI intent as an action and keep action handling centralized in `reduce`.
-4. Prefer small public methods that dispatch actions; do not let UI code invoke protected handlers.
-5. Keep state immutable and update it through `setDisplay` or `mutateDisplay`, only from the
+1. Choose `BaseViewModel`, `BaseListViewModel` or `BaseSimpleListViewModel` by the screen's shape.
+2. Model UI intent as actions, handled in `reduce`; expose small public methods that dispatch them.
+3. Keep state immutable and update it with `setDisplay` or `mutateDisplay`, only from the
    ViewModel's own context.
-6. Keep persistent information and critical outcomes in state; use effects only for best-effort
-   impulses.
-7. Collect state and effects with lifecycle-aware collectors, with exactly one effect collector.
-8. Keep fine-grained loading and error flags inside the screen state; reserve `UiState.Loading` and
-   `UiState.Error` for full-screen transitions.
-9. Supply presentation-safe error text through `setError(message, cause)` or `errorMessage`, or
-   word the error in the UI from its cause; never display exception text.
-10. In list implementations, return exactly the requested page from `fetchPage` and let the base
-    class manage appending, replacement, and error transitions.
-11. Render `ListState.refreshError` and `ListState.nextPageError`; override `onRefreshError` only
-    for best-effort extras.
-12. Rethrow `CancellationException` from every broad failure handler in owned jobs.
-13. Obtain ViewModels through a `ViewModelStoreOwner` so they are cleared.
-14. Do not add Compose APIs or dependencies to this module solely for a consuming UI.
-15. Do not assume actions cancel earlier actions; reducers are serialized.
-16. Update this README, KDoc, and tests together when changing any state-transition behavior.
+4. Keep durable information and critical outcomes in state; use effects only for best-effort
+   impulses, with exactly one lifecycle-aware collector.
+5. Keep fine-grained loading and error flags in `S`; reserve `UiState.Loading` and `UiState.Error`
+   for full-screen transitions.
+6. Never display exception text; supply it through `setError(message, cause)` or `errorMessage`.
+7. Return exactly the requested page from `fetchPage`; render `refreshError` and `nextPageError`.
+8. Rethrow `CancellationException` from broad failure handlers in owned jobs.
+9. Obtain ViewModels through a `ViewModelStoreOwner`.
+10. Do not assume a new action cancels an earlier one.
 
-When inspecting unfamiliar consumer code, start by locating its action type, effect type, state
-type, `reduce` implementation, and `fetchPage` implementation if present. Those define the screen's
-complete state-management contract.
+## Where to look
+
+- **KDoc** on `BaseViewModel`, `BaseListViewModel`, `RefreshGate` and `UiState`.
+- **Related**: the [foundation README](../../ui/foundation/README.md) for the components that render
+  loading, empty and error states.
+- **Skill**: [`skills/areca-viewmodel-v1/SKILL.md`](../../skills/areca-viewmodel-v1/SKILL.md).

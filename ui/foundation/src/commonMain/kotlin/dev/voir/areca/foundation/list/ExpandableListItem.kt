@@ -1,10 +1,13 @@
 package dev.voir.areca.foundation.list
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.collapse
@@ -14,6 +17,8 @@ import dev.voir.areca.foundation.icon.ChevronDirection
 import dev.voir.areca.foundation.layout.Expandable
 import dev.voir.areca.foundation.layout.ExpandableTransition
 import dev.voir.areca.foundation.slot.SlotRowLayout
+import dev.voir.areca.theme.ArecaTheme
+import dev.voir.areca.theme.tween
 
 /**
  * A row that reveals content underneath it, with a chevron that turns to point at the state it is
@@ -47,6 +52,11 @@ import dev.voir.areca.foundation.slot.SlotRowLayout
  * @param onClickLabel Accessibility description of what the click does.
  * @param transition How the content opens and closes.
  * @param leading Slot before the text block, tinted with the `extra` colors.
+ * @param bottom Content below the row's text, inside the row and its hit area — a meter under a
+ *   category's name — as opposed to [content], which is revealed under the row.
+ * @param showChevron Whether the chevron is drawn at the row's end. Leave it on unless the row
+ *   carries its own sign that it opens — a soft [container], a figure that is plainly a summary.
+ * @param container Ground the row and its revealed content share while expanded.
  * @param content Content revealed below the row.
  */
 @Composable
@@ -68,11 +78,24 @@ public fun ExpandableListItem(
     onClickLabel: String? = null,
     transition: ExpandableTransition = ExpandableTransition.Default,
     leading: (@Composable BoxScope.() -> Unit)? = null,
+    bottom: (@Composable ColumnScope.() -> Unit)? = null,
+    showChevron: Boolean = true,
+    container: ExpandableListItemContainer = ExpandableListItemContainer.None,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val rowEnabled = enabled && LocalListEnabled.current
+    val containerShape = ArecaTheme.shapes.lg
+    val containerColor by animateColorAsState(
+        targetValue = if (expanded && container == ExpandableListItemContainer.Soft) {
+            ArecaTheme.colors.bgSoft
+        } else {
+            ArecaTheme.colors.bgSoft.copy(alpha = 0f)
+        },
+        animationSpec = ArecaTheme.motion.medium.tween(ArecaTheme.motion.standard),
+        label = "ExpandableListItemContainer",
+    )
 
-    Column(modifier = modifier) {
+    Column(modifier = modifier.background(containerColor, containerShape)) {
         ListItem(
             // The expand or collapse action is what assistive technology reads the state from:
             // a row offering "collapse" is expanded, one offering "expand" is collapsed.
@@ -97,7 +120,9 @@ public fun ExpandableListItem(
             enabled = enabled,
             selected = selected,
             nestingLevel = nestingLevel,
-            style = style,
+            // On a soft block the row's own press and focus feedback takes the block's rounded shape,
+            // rather than drawing square corners over it.
+            style = if (container == ExpandableListItemContainer.Soft) style.copy(shape = containerShape) else style,
             size = size,
             layout = layout,
             interactionSource = interactionSource,
@@ -106,10 +131,15 @@ public fun ExpandableListItem(
             // The row governs whether its content is shown rather than navigating anywhere.
             role = Role.Button,
             leading = leading,
-            trailing = {
-                ListItemChevron(
-                    direction = if (expanded) ChevronDirection.Up else ChevronDirection.Down,
-                )
+            bottom = bottom,
+            trailing = if (showChevron) {
+                {
+                    ListItemChevron(
+                        direction = if (expanded) ChevronDirection.Up else ChevronDirection.Down,
+                    )
+                }
+            } else {
+                null
             },
         )
 
@@ -117,4 +147,17 @@ public fun ExpandableListItem(
             Column(content = content)
         }
     }
+}
+
+/** The ground an [ExpandableListItem] and its revealed content share while expanded. */
+public enum class ExpandableListItemContainer {
+    /** None: the revealed content sits on whatever the row sits on. */
+    None,
+
+    /**
+     * A [bgSoft][dev.voir.areca.theme.ArecaColors.bgSoft] block of the `lg` shape behind the row and
+     * its content, fading in as it opens, so the open group reads as one object. Give the row a
+     * transparent style, such as the default plain one, or its own fill covers the block.
+     */
+    Soft,
 }

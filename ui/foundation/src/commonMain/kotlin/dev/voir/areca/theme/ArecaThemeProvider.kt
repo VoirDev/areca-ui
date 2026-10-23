@@ -180,6 +180,10 @@ import dev.voir.areca.foundation.table.LocalTableSize
 import dev.voir.areca.foundation.table.LocalTableStyle
 import dev.voir.areca.foundation.table.TableSize
 import dev.voir.areca.foundation.table.TableStyle
+import dev.voir.areca.foundation.stat.LocalStatSize
+import dev.voir.areca.foundation.stat.LocalStatStyle
+import dev.voir.areca.foundation.stat.StatSize
+import dev.voir.areca.foundation.stat.StatStyle
 import dev.voir.areca.foundation.tabs.LocalTabsSize
 import dev.voir.areca.foundation.tabs.LocalTabsStyle
 import dev.voir.areca.foundation.tabs.TabsSize
@@ -338,6 +342,8 @@ public fun ArecaThemeProvider(
             LocalFloatingTabBarStyle provides FloatingTabBarStyle.Default,
             LocalTabBarSize provides TabBarSize.Default,
             LocalTabBarStyle provides TabBarStyle.Default,
+            LocalStatSize provides StatSize.Default,
+            LocalStatStyle provides StatStyle.Default,
             LocalTabsSize provides TabsSize.Default,
             LocalTabsStyle provides TabsStyle.Default,
             LocalToastStyle provides ToastStyle.Default,

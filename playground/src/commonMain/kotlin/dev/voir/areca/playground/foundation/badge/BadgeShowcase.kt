@@ -1,15 +1,24 @@
 package dev.voir.areca.playground.foundation.badge
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import dev.voir.areca.foundation.badge.Badge
+import dev.voir.areca.foundation.badge.BadgeOption
+import dev.voir.areca.foundation.badge.BadgeSelectionMode
 import dev.voir.areca.foundation.badge.BadgeSize
 import dev.voir.areca.foundation.badge.BadgeStyle
+import dev.voir.areca.foundation.badge.FlowBadgeSelect
+import dev.voir.areca.foundation.badge.IndicatorDot
 import dev.voir.areca.foundation.badge.NotificationBadge
 import dev.voir.areca.foundation.icon.Icon
 import dev.voir.areca.foundation.text.Text
@@ -18,6 +27,7 @@ import dev.voir.areca.icons.ArrowDown
 import dev.voir.areca.icons.Check
 import dev.voir.areca.icons.Cross
 import dev.voir.areca.icons.WarningSeal
+import dev.voir.areca.icons.X
 import dev.voir.areca.playground.showcase.ShowcaseScaffold
 import dev.voir.areca.playground.showcase.section.EdgeCases
 import dev.voir.areca.playground.showcase.section.Playground
@@ -212,6 +222,64 @@ fun BadgeShowcase() = ShowcaseScaffold(
     }
 
     Recipes {
+        recipe(
+            name = "Removable choices",
+            description = "What a filter has chosen, as solid chips with a swatch; pressing one " +
+                "removes it, and its close mark reads as Remove.",
+        ) {
+            var chosen by remember { mutableStateOf(listOf("Groceries", "Restaurants", "Lisbon trip")) }
+
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.sm),
+                verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.sm),
+            ) {
+                chosen.forEach { name ->
+                    Badge(
+                        style = BadgeStyle.Chip,
+                        size = BadgeSize.Chip,
+                        onClick = { chosen = chosen - name },
+                        leading = {
+                            Box(
+                                Modifier
+                                    .size(ArecaTheme.spacing.lg)
+                                    .background(ArecaTheme.colors.bgInfoBase, ArecaTheme.shapes.xs),
+                            )
+                        },
+                        trailing = { Icon(ArecaIcons.X, contentDescription = "Remove") },
+                    ) {
+                        Text(name)
+                    }
+                }
+            }
+        }
+        recipe(
+            name = "Toggle chips with a key",
+            description = "FlowBadgeSelect in multiple mode on BadgeStyle.FilledChip, each chip led " +
+                "by its colour dot and ending in how often it is used.",
+        ) {
+            val tags = listOf("Lisbon trip" to 9, "Work lunches" to 11, "Shared with Alex" to 5, "Gifts" to 2)
+            var selected by remember { mutableStateOf(listOf("Lisbon trip")) }
+
+            FlowBadgeSelect(
+                options = tags.map { (name, count) ->
+                    BadgeOption(
+                        label = { Text(name) },
+                        value = name,
+                        leading = { IndicatorDot(color = ArecaTheme.colors.bgBrandBase, contentDescription = null) },
+                        trailing = { Text("$count") },
+                    )
+                },
+                onSelect = { option ->
+                    selected = if (option.value in selected) selected - option.value else selected + option.value
+                },
+                selected = selected,
+                selectionMode = BadgeSelectionMode.Multiple,
+                horizontalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.sm),
+                verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.sm),
+                style = BadgeStyle.FilledChip,
+                size = BadgeSize.Chip,
+            )
+        }
         recipe(
             name = "Filter chips",
             description = "BadgeStyle.Chip with BadgeSize.Chip; the chosen chip is the one not soft.",

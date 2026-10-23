@@ -14,6 +14,8 @@ import dev.voir.areca.foundation.button.ButtonSize
 import dev.voir.areca.foundation.button.ButtonStyle
 import dev.voir.areca.foundation.overlay.FlowModal
 import dev.voir.areca.foundation.overlay.FlowModalActionBar
+import dev.voir.areca.foundation.overlay.FlowModalActionBarLayout
+import dev.voir.areca.foundation.overlay.FlowModalActionBarStyle
 import dev.voir.areca.foundation.overlay.FlowModalController
 import dev.voir.areca.foundation.overlay.FlowModalSecondaryAction
 import dev.voir.areca.foundation.overlay.rememberFlowModal
@@ -26,6 +28,8 @@ import dev.voir.areca.foundation.topbar.TopBarStyle
 import dev.voir.areca.playground.showcase.ShowcaseScaffold
 import dev.voir.areca.playground.showcase.section.Playground
 import dev.voir.areca.playground.showcase.section.Recipes
+import dev.voir.areca.playground.showcase.section.VariantLayout
+import dev.voir.areca.playground.showcase.section.Variants
 import dev.voir.areca.theme.ArecaTheme
 
 /** Showcase for [FlowModal]. */
@@ -102,6 +106,32 @@ fun FlowModalShowcase() = ShowcaseScaffold(
             ) {
                 ModalBody(lines = 14)
             }
+        }
+    }
+
+    Variants(
+        title = "Action bar layouts",
+        description = "Trailing keeps the commit at its own width; Split stretches both ends by weight.",
+        layout = VariantLayout.Vertical,
+    ) {
+        variant("Trailing", detail = "FlowModalActionBarLayout.Trailing, with its hairline") {
+            FlowModalActionBar(
+                confirmText = "Apply",
+                onConfirm = {},
+                leading = { FlowModalSecondaryAction(text = "Clear", onClick = {}) },
+            )
+        }
+        variant("Split 1 : 2, no divider", detail = "FlowModalActionBarLayout.Split(), showDivider = false") {
+            FlowModalActionBar(
+                confirmText = "Compare with September",
+                onConfirm = {},
+                leading = { FlowModalSecondaryAction(text = "Cancel", onClick = {}) },
+                style = FlowModalActionBarStyle.default(
+                    secondary = ButtonStyle.soft(ActionColor.Neutral, shape = ArecaTheme.shapes.full),
+                ),
+                layout = FlowModalActionBarLayout.Split(),
+                showDivider = false,
+            )
         }
     }
 
