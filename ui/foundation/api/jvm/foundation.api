@@ -3389,6 +3389,7 @@ public final class dev/voir/areca/foundation/overlay/FlowModalDialogPropertiesKt
 
 public final class dev/voir/areca/foundation/overlay/FlowModalKt {
 	public static final fun FlowModal (Ldev/voir/areca/foundation/overlay/FlowModalController;Landroidx/compose/ui/Modifier;Ldev/voir/areca/foundation/overlay/FlowModalStyle;Ldev/voir/areca/foundation/overlay/FlowModalSize;Lkotlin/jvm/functions/Function0;Ljava/lang/String;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+	public static final fun getFlowModalHeaderInsets (Landroidx/compose/runtime/Composer;I)Landroidx/compose/foundation/layout/WindowInsets;
 	public static final fun getLocalFlowModalSize ()Landroidx/compose/runtime/ProvidableCompositionLocal;
 	public static final fun getLocalFlowModalStyle ()Landroidx/compose/runtime/ProvidableCompositionLocal;
 	public static final fun rememberFlowModal (ZZZFFZLandroidx/compose/ui/window/DialogProperties;Landroidx/compose/animation/core/AnimationSpec;Landroidx/compose/runtime/Composer;II)Ldev/voir/areca/foundation/overlay/FlowModalController;

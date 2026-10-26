@@ -250,6 +250,9 @@ is an extension property needing two imports: `dev.voir.areca.icons.ArecaIcons` 
 - Call `FlowModal` unconditionally and drive it with `show()` / `hide()`; pass `ConfirmSheet` its
   `visible` flag. Never wrap either in `if`, or it cannot animate out. A `ConfirmSheet` takes its
   sheet from the `LocalFlowModalStyle` in scope, so restyle sheets there, not per confirmation.
+- A `FlowModal` header starts at the sheet's top edge under the floating drag handle; pass its
+  `TopBar` `windowInsets = FlowModalHeaderInsets` so the fill runs under the handle and the title
+  clears it.
 
 ### Frame screens with `BaseLayout`
 

@@ -34,6 +34,7 @@ import dev.voir.areca.foundation.icon.Icon
 import dev.voir.areca.foundation.layout.DividerStyle
 import dev.voir.areca.foundation.layout.HorizontalDivider
 import dev.voir.areca.foundation.overlay.FlowModal
+import dev.voir.areca.foundation.overlay.FlowModalHeaderInsets
 import dev.voir.areca.foundation.overlay.rememberFlowModal
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.foundation.topbar.CloseAction
@@ -147,6 +148,7 @@ public fun AvatarSourceSheet(
                     ),
                 ),
                 style = TopBarStyle.Modal,
+                windowInsets = FlowModalHeaderInsets,
                 trailing = { CloseAction(onClick = onDismiss, contentDescription = closeLabel) },
             )
         },

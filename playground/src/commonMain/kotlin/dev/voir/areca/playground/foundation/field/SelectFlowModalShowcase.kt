@@ -18,6 +18,7 @@ import dev.voir.areca.foundation.field.select.SelectFlowModal
 import dev.voir.areca.foundation.field.select.SelectOption
 import dev.voir.areca.foundation.field.select.SelectSelectionMode
 import dev.voir.areca.foundation.overlay.FlowModalController
+import dev.voir.areca.foundation.overlay.FlowModalHeaderInsets
 import dev.voir.areca.foundation.overlay.rememberFlowModal
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.foundation.text.TextColor
@@ -180,6 +181,7 @@ private fun PickerHeader(title: String, controller: FlowModalController) {
         modifier = Modifier.fillMaxWidth(),
         size = TopBarSize.Modal,
         style = TopBarStyle.Modal,
+        windowInsets = FlowModalHeaderInsets,
         trailing = { CloseAction(onClick = controller::hide) },
     )
 }

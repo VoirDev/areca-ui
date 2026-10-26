@@ -26,7 +26,7 @@ import dev.voir.areca.theme.ArecaTheme
  * @property companionWidth Width of a companion bar.
  * @property barGap Space between the bars of one column.
  * @property stackGap Space between the segments of a stacked bar.
- * @property barCornerRadius Rounding of a bar's top corners. A bar stands square on the baseline.
+ * @property barCornerRadius Rounding of a bar's top corners.
  * @property minBarHeight Least height of a bar with a positive value, so small values stay visible.
  * @property placeholderStroke Width of the dashed outline of a placeholder column's bars.
  * @property haloShape Shape of the ground behind the selected column.
@@ -40,6 +40,9 @@ import dev.voir.areca.theme.ArecaTheme
  * @property sublabelTextStyle Type of the line under a label.
  * @property valueLabelTextStyle Type of a value label.
  * @property referenceLabelTextStyle Type of a reference line label.
+ * @property barBaseCornerRadius Rounding of a bar's bottom corners. `0.dp` — the default — stands
+ *   the bar square on the baseline; the same value as [barCornerRadius] draws a free-standing
+ *   rounded bar.
  */
 @Immutable
 public data class ColumnChartSize(
@@ -65,6 +68,7 @@ public data class ColumnChartSize(
     public val sublabelTextStyle: TextStyle,
     public val valueLabelTextStyle: TextStyle,
     public val referenceLabelTextStyle: TextStyle,
+    public val barBaseCornerRadius: Dp = 0.dp,
 ) {
     /** The size steps of a [ColumnChart]. */
     public companion object {

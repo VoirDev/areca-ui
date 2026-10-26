@@ -473,7 +473,13 @@ fun FilterSheet(onApply: (unpaidOnly: Boolean) -> Unit) {
 
     FlowModal(
         controller = modal,
-        header = { TopBar("Filters", trailing = { CloseAction(onClick = { modal.hide() }) }) },
+        header = {
+            TopBar(
+                "Filters",
+                windowInsets = FlowModalHeaderInsets,
+                trailing = { CloseAction(onClick = { modal.hide() }) },
+            )
+        },
         footer = {
             FlowModalActionBar(
                 confirmText = "Apply",

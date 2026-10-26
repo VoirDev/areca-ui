@@ -967,6 +967,10 @@ fun FlowModal(controller: FlowModalController, modifier: Modifier = Modifier,
     footer: (@Composable () -> Unit)? = null, content: @Composable () -> Unit)
 // FlowModalController: show(partial: Boolean = true), expand(), collapse(), hide(), isVisible.
 // FlowModal composes nothing while hidden, so call it unconditionally.
+// The drag handle floats over the top of the sheet: `header` starts at the sheet's top edge, so its
+// fill runs under the handle, and clears it with `FlowModalHeaderInsets` (a WindowInsets, zero when
+// the sheet cannot be dragged): `TopBar(…, windowInsets = FlowModalHeaderInsets)`. Without a header
+// the body starts below the handle.
 
 fun FlowModalActionBar(confirmText: String, onConfirm: () -> Unit, modifier: Modifier = Modifier,
     enabled: Boolean = true, loading: Boolean = false, style: FlowModalActionBarStyle = …,
