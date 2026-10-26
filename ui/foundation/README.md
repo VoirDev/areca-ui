@@ -524,7 +524,10 @@ A `ConfirmSheet` is a `FlowModal` underneath, so the sheet defaults in scope —
 an `ArecaDarkTheme` — reach it.
 
 A `FlowModal` is driven by a `FlowModalController` from `rememberFlowModal`. Give it a `TopBar` as
-`header` and a `FlowModalActionBar` as `footer`:
+`header` and a `FlowModalActionBar` as `footer`. The drag handle floats over the top of the sheet
+and the header starts at the sheet's top edge, so a header's fill runs under the handle; pass the
+`TopBar` `windowInsets = FlowModalHeaderInsets` to keep its title clear of the handle. Without a
+header, the body starts below the handle:
 
 ```kotlin
 val filters = rememberFlowModal(autoHeight = true)
@@ -533,7 +536,13 @@ Button("Filters", onClick = { filters.show() })
 
 FlowModal(
     filters,
-    header = { TopBar("Filters", trailing = { CloseAction(onClick = { filters.hide() }) }) },
+    header = {
+        TopBar(
+            "Filters",
+            windowInsets = FlowModalHeaderInsets,
+            trailing = { CloseAction(onClick = { filters.hide() }) },
+        )
+    },
     footer = { FlowModalActionBar("Apply", onConfirm = { filters.hide() }) },
 ) {
     FilterOptions()

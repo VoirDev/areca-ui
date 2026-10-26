@@ -10,10 +10,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
@@ -22,6 +24,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ProvidableCompositionLocal
@@ -117,7 +120,8 @@ public data class FlowModalStyle(
  *
  * The sheet's own heights are behaviour rather than geometry, and live on [FlowModalController].
  *
- * @property dragPadding Space around the drag handle, inside the top of the sheet.
+ * @property dragPadding Space around the drag handle, inside the top of the sheet. The handle floats
+ *   over the header, which clears this space with [FlowModalHeaderInsets].
  * @property dragWidth Width of the drag handle.
  * @property dragHeight Thickness of the drag handle.
  */
@@ -437,9 +441,10 @@ public fun rememberFlowModal(
  *   drag down past the dismiss threshold. The modal hides only if this hides [controller]; a drag
  *   that is refused settles the sheet back to where it rested.
  * @param overlayContentDescription What pressing the scrim does, read by assistive technology.
- * @param header Content above the body, below the drag handle.
+ * @param header Content above the body. It starts at the sheet's top edge, under the drag handle,
+ *   so its background runs behind the handle; it clears the handle with [FlowModalHeaderInsets].
  * @param footer Content below the body.
- * @param content Body of the sheet.
+ * @param content Body of the sheet, below the drag handle when there is no header.
  */
 @Composable
 public fun FlowModal(
@@ -749,39 +754,71 @@ private fun SheetContent(
     footer: (@Composable () -> Unit)?,
     content: @Composable () -> Unit,
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+    val dragAreaHeight = if (controller.allowDrag) size.dragAreaHeight else 0.dp
+    val headerInsets = WindowInsets(top = dragAreaHeight)
+
+    Box(modifier = Modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.fillMaxWidth()) {
+            // A header runs up to the sheet's top edge so its fill shows under the drag handle, and
+            // clears the handle itself with [FlowModalHeaderInsets]. A body has no fill to show,
+            // so it starts below the handle.
+            if (header != null) {
+                CompositionLocalProvider(LocalFlowModalHeaderInsets provides headerInsets) {
+                    header()
+                }
+            } else {
+                Spacer(Modifier.height(dragAreaHeight))
+            }
+
+            Column(
+                modifier = Modifier
+                    .weight(1f, fill = !controller.autoHeight)
+                    .fillMaxWidth()
+            ) {
+                content()
+            }
+
+            footer?.invoke()
+        }
+
+        // Drawn after the content, so it floats over whatever the top of the sheet shows.
         if (controller.allowDrag) {
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(size.dragPadding),
-                contentAlignment = Alignment.Center,
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(width = size.dragWidth, height = size.dragHeight)
-                        .clip(ArecaTheme.shapes.full)
-                        .background(style.drag)
-                        // The grabber says "drag me" by being there; a screen reader user drags the
-                        // sheet with the dismiss action on the scrim instead.
-                        .clearAndSetSemantics { },
-                )
-            }
+                    .align(Alignment.TopCenter)
+                    .padding(size.dragPadding)
+                    .size(width = size.dragWidth, height = size.dragHeight)
+                    .clip(ArecaTheme.shapes.full)
+                    .background(style.drag)
+                    // The grabber says "drag me" by being there; a screen reader user drags the
+                    // sheet with the dismiss action on the scrim instead.
+                    .clearAndSetSemantics { },
+            )
         }
-
-        header?.invoke()
-
-        Column(
-            modifier = Modifier
-                .weight(1f, fill = !controller.autoHeight)
-                .fillMaxWidth()
-        ) {
-            content()
-        }
-
-        footer?.invoke()
     }
 }
+
+/**
+ * Space a [FlowModal]'s drag handle takes at the top of the sheet: the handle and the padding
+ * around it.
+ */
+private val FlowModalSize.dragAreaHeight: Dp
+    get() = dragPadding.calculateTopPadding() + dragHeight + dragPadding.calculateBottomPadding()
+
+/** Insets that keep a [FlowModal] header clear of the drag handle; none outside a header. */
+private val LocalFlowModalHeaderInsets: ProvidableCompositionLocal<WindowInsets> =
+    compositionLocalOf { WindowInsets(0, 0, 0, 0) }
+
+/**
+ * Insets a [FlowModal] header pads its content by to clear the drag handle floating over it.
+ *
+ * The header runs up to the sheet's top edge, so its background shows behind the handle. A header
+ * with a fill passes these to it, as `TopBar(windowInsets = FlowModalHeaderInsets)`, so its fill
+ * runs under the handle while its title sits below it. They are zero when the sheet cannot be
+ * dragged and outside a [FlowModal] header.
+ */
+public val FlowModalHeaderInsets: WindowInsets
+    @Composable get() = LocalFlowModalHeaderInsets.current
 
 /**
  * Drag modifier for [FlowModal].

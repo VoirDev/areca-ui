@@ -416,6 +416,7 @@ private fun DrawScope.drawColumnBars(
     val companionWidth = size.companionWidth.toPx()
     val gap = size.barGap.toPx()
     val radius = size.barCornerRadius.toPx()
+    val baseRadius = size.barBaseCornerRadius.toPx()
     val minHeight = size.minBarHeight.toPx()
     val stackGap = size.stackGap.toPx()
     val alpha = if (dimmed) style.dimmedAlpha else 1f
@@ -442,6 +443,8 @@ private fun DrawScope.drawColumnBars(
                     else -> style.palette[regularIndex % style.palette.size]
                 }
                 val r = if (span.isTop) minOf(radius, w / 2f, span.height) else 0f
+                // Only the lowest segment stands on the baseline, so only it takes the base corners.
+                val b = if (span.bottom == 0f) minOf(baseRadius, w / 2f, (span.height - r).coerceAtLeast(0f)) else 0f
                 val path = Path().apply {
                     addRoundRect(
                         RoundRect(
@@ -451,6 +454,8 @@ private fun DrawScope.drawColumnBars(
                             bottom = height - span.bottom,
                             topLeftCornerRadius = CornerRadius(r, r),
                             topRightCornerRadius = CornerRadius(r, r),
+                            bottomLeftCornerRadius = CornerRadius(b, b),
+                            bottomRightCornerRadius = CornerRadius(b, b),
                         ),
                     )
                 }
@@ -464,6 +469,8 @@ private fun DrawScope.drawColumnBars(
                             pathEffect = PathEffect.dashPathEffect(floatArrayOf(stroke * 3f, stroke * 2f)),
                         ),
                     )
+                } else if (segment.brush != null) {
+                    drawPath(path = path, brush = segment.brush, alpha = alpha)
                 } else {
                     drawPath(path = path, color = color, alpha = alpha)
                 }

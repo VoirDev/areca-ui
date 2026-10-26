@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import dev.voir.areca.foundation.overlay.FlowModalHeaderInsets
 import kotlin.time.Clock
 import dev.voir.areca.datetime.calendar.Calendar
 import dev.voir.areca.datetime.calendar.CalendarBounds
@@ -206,6 +207,7 @@ private fun BirthdaySheet(
                 modifier = Modifier.fillMaxWidth(),
                 size = TopBarSize.Modal,
                 style = TopBarStyle.Modal,
+                windowInsets = FlowModalHeaderInsets,
                 titleAlignment = TopBarTitleAlignment.Center,
             )
         },

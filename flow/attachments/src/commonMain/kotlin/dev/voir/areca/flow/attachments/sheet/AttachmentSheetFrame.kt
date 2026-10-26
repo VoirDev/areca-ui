@@ -12,6 +12,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import dev.voir.areca.foundation.overlay.FlowModal
+import dev.voir.areca.foundation.overlay.FlowModalHeaderInsets
 import dev.voir.areca.foundation.overlay.rememberFlowModal
 import dev.voir.areca.foundation.topbar.TopBar
 import dev.voir.areca.foundation.topbar.TopBarActionScope
@@ -78,6 +79,7 @@ internal fun AttachmentSheetFrame(
                     ),
                 ),
                 style = TopBarStyle.Modal,
+                windowInsets = FlowModalHeaderInsets,
                 titleAlignment = titleAlignment,
                 leading = leading,
                 trailing = trailing,

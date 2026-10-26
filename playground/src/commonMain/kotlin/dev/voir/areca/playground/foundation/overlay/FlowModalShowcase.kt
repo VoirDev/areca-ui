@@ -17,6 +17,7 @@ import dev.voir.areca.foundation.overlay.FlowModalActionBar
 import dev.voir.areca.foundation.overlay.FlowModalActionBarLayout
 import dev.voir.areca.foundation.overlay.FlowModalActionBarStyle
 import dev.voir.areca.foundation.overlay.FlowModalController
+import dev.voir.areca.foundation.overlay.FlowModalHeaderInsets
 import dev.voir.areca.foundation.overlay.FlowModalSecondaryAction
 import dev.voir.areca.foundation.overlay.rememberFlowModal
 import dev.voir.areca.foundation.text.Text
@@ -193,6 +194,19 @@ fun FlowModalShowcase() = ShowcaseScaffold(
             )
         }
         recipe(
+            name = "Filled header",
+            description = "A header with its own fill runs under the drag handle, up to the sheet's edge.",
+        ) {
+            ModalRecipe(
+                openLabel = "Open partial",
+                controller = rememberFlowModal(maxHeightFraction = 0.92f),
+                title = "Trip to Lisbon",
+                subtitle = "TopBar(windowInsets = FlowModalHeaderInsets)",
+                partial = true,
+                headerStyle = TopBarStyle.Modal.copy(bg = ArecaTheme.colors.bgBrandMuted),
+            )
+        }
+        recipe(
             name = "Drag disabled",
             description = "Controller-driven only — for flows that must not be dismissed by gesture.",
         ) {
@@ -215,6 +229,7 @@ private fun ModalRecipe(
     subtitle: String,
     partial: Boolean,
     bodyLines: Int = 12,
+    headerStyle: TopBarStyle = TopBarStyle.Modal,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md)) {
         Row(horizontalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md)) {
@@ -239,7 +254,7 @@ private fun ModalRecipe(
 
     FlowModal(
         controller = controller,
-        header = { ModalHeader(title, subtitle) },
+        header = { ModalHeader(title, subtitle, headerStyle) },
         footer = {
             ModalFooter(
                 primaryLabel = "Done",
@@ -267,15 +282,17 @@ private fun ControllerReadout(controller: FlowModalController) {
  *
  * @param title What the sheet is.
  * @param subtitle A line of detail under it.
+ * @param style Colors of the bar; a fill runs under the sheet's drag handle.
  */
 @Composable
-private fun ModalHeader(title: String, subtitle: String) {
+private fun ModalHeader(title: String, subtitle: String, style: TopBarStyle = TopBarStyle.Modal) {
     TopBar(
         title = title,
         subtitle = subtitle,
         modifier = Modifier.fillMaxWidth(),
         size = TopBarSize.Modal,
-        style = TopBarStyle.Modal,
+        style = style,
+        windowInsets = FlowModalHeaderInsets,
     )
 }
 

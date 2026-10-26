@@ -1,6 +1,7 @@
 package dev.voir.areca.charts
 
 import androidx.compose.runtime.Immutable
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 /**
@@ -10,11 +11,15 @@ import androidx.compose.ui.graphics.Color
  *   non-finite values draw nothing and are left out of the scale.
  * @property color Fill of the part, or `null` for the style's palette colour — see
  *   [ColumnChartStyle.palette].
+ * @property brush Fill of the part as a brush — a gradient — drawn in place of [color]. A brush is
+ *   laid over the whole plot rather than the bar, so a vertical gradient shades every bar alike by
+ *   height: a short bar shows only the gradient's lower end. `null` fills with [color].
  */
 @Immutable
 public data class ColumnChartSegment(
     public val value: Float,
     public val color: Color? = null,
+    public val brush: Brush? = null,
 )
 
 /**
@@ -44,6 +49,16 @@ public data class ColumnChartBar(
          */
         public fun of(value: Float, color: Color? = null): ColumnChartBar =
             ColumnChartBar(segments = listOf(ColumnChartSegment(value, color)))
+
+        /**
+         * A plain bar of one value, filled with a brush.
+         *
+         * @param value Amount the bar stands for.
+         * @param brush Fill — a gradient, usually vertical.
+         * @return A bar of one segment.
+         */
+        public fun of(value: Float, brush: Brush): ColumnChartBar =
+            ColumnChartBar(segments = listOf(ColumnChartSegment(value, brush = brush)))
 
         /**
          * A slim companion bar of one value, such as the same period a year earlier.
