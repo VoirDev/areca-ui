@@ -24,7 +24,7 @@ Every foundation symbol is imported from its family's package. Extension composa
 | `….foundation.icon` | `Icon`, `IconSize`, `LocalIconSize`, `FeaturedIcon`, `FeaturedIconStyle`, `FeaturedIconSize`, `Chevron`, `ChevronDirection` |
 | `….foundation.field` | `TextField`, `PasswordField`, `SearchField`, `AffixTextField`, `OtpField`, `FieldGroup`, `FieldGroupLayout`, `FieldRow`, `TextSegment`, `Field`, `FieldScope`, `FieldStatus`, `FieldStyle`, `FieldSize`, `FieldDefaults`, `LocalFieldStyle`, `LocalFieldSize`, `FieldLabelPlacement` |
 | `….foundation.field.select` | `SelectField`, `SelectOption`, `SelectSelectionMode`, `SelectFieldLabels`, `SelectFlowModal`, `rememberSelectFlowModalState`, `SelectFlowModalDefaults`, `SelectSegment` |
-| `….foundation.selection` | `Checkbox`, `Radio`, `Toggle`, `ToggleState`, `BinaryToggleCycle`, `TriStateToggleCycle`, `NumberStepper`, `NumberStepperLabels`, `Swatch`, `SwatchPicker`, `ColorShade`, `ColorItem` |
+| `….foundation.selection` | `Checkbox`, `Radio`, `Toggle`, `ToggleState`, `BinaryToggleCycle`, `TriStateToggleCycle`, `NumberStepper`, `NumberStepperLabels`, `SlidingSelector`, `SelectorItem`, `SelectorItemScope`, `SelectorMode`, `SelectorLayout`, `SelectorOrientation`, `SelectorThumbKind`, `SelectorEdge`, `SlidingSelectorStyle`, `SlidingSelectorSize`, `Swatch`, `SwatchPicker`, `ColorShade`, `ColorItem` |
 | `….foundation.list` | `List`, `LazyList`, `ListItem`, `NavigationListItem`, `CheckboxListItem`, `RadioListItem`, `ToggleListItem`, `CheckmarkListItem`, `ExpandableListItem`, `ExpandableListItemContainer`, `ListItemColumn`, `ListItemSkeleton`, `ListItemChevron`, `ListItemCheckmark`, `ListItemStyle`, `ListItemSize` |
 | `….foundation.settings` | `Settings`, `Section`, `SettingsRow`, `SettingsToggleRow`, `SettingsSelectRow`, `SettingsTextFieldRow`, `SettingsOptionRow`, `SettingsBlock`, `SettingsRowIcon`, `SettingsRowTile`, `SettingsRowLink`, `SettingsRowStatus`, `SettingsRowTone`, `SettingsRowSkeleton`, `SettingsDefaults` |
 | `….foundation.layout` | `BaseLayout`, `Card`, `CardStyle`, `CardSize`, `CardFooterStyle`, `HorizontalDivider`, `VerticalDivider`, `Expandable`, `rememberExpandableState`, `PullToRefreshLayout`, `PullToRefreshIndicator`, `rememberPullToRefreshState`, `CollapsingHeaderLayout`, `CollapsingHeaderState`, `rememberCollapsingHeaderState`, `Overlay`, `RelativePositionLayout`, `RelativePosition` |
@@ -50,6 +50,7 @@ fun ArecaDarkTheme(content: @Composable () -> Unit)
 
 fun Modifier.horizontalContentInsets(): Modifier   // also verticalContentInsets(), contentInsets()
 fun <T> Duration.tween(easing: Easing = FastOutSlowInEasing): TweenSpec<T>
+fun <T> ArecaMotion.slide(): SpringSpec<T> // critically damped, stiffness = motion.springStiffness
 fun AnnounceOnChange(text: String?)
 fun SystemBars(color: Color, lightIcons: Boolean = color.luminance() < 0.5f) // Android only acts
 fun Modifier.minimumTouchTarget(minimum: Dp = MinimumTouchTarget): Modifier
@@ -352,6 +353,38 @@ fun SwatchPicker(items: List<ColorShade>, selected: ColorItem?, onChange: (color
 // ColorShade(id: String, name: String, items: List<ColorItem>)
 // ColorItem(id: String, name: String, border: Color, bg: Color); `name` is the swatch's label.
 // SwatchPickerLayout.GroupedColumns (a column per shade, scrolling sideways) | FlatRow.
+```
+
+A row of options with one thumb sliding to the chosen one — segments, a pill under words,
+underlines, a three-state toggle. `Tabs` and `FloatingTabBar` are built on it.
+
+```kotlin
+fun <T> SlidingSelector(items: List<SelectorItem<T>>, selected: T?, onSelect: (T?) -> Unit,
+    modifier: Modifier = Modifier, mode: SelectorMode = SelectorMode.Required,
+    style: SlidingSelectorStyle = LocalSlidingSelectorStyle.current ?: SlidingSelectorStyle.Segmented,
+    size: SlidingSelectorSize = LocalSlidingSelectorSize.current ?: SlidingSelectorSize.Default,
+    layout: SelectorLayout = SelectorLayout.Fill,
+    orientation: SelectorOrientation = SelectorOrientation.Horizontal)
+// SelectorItem(value: T, enabled: Boolean = true, thumb: Color = Color.Unspecified,
+//     contentSelected: Color = Color.Unspecified, contentDescription: String? = null,
+//     content: @Composable SelectorItemScope.() -> Unit); SelectorItemScope has `selected`, `enabled`.
+// `thumb` / `contentSelected` override the style's while that option is chosen; the thumb
+// cross-fades between colours as it moves. `contentDescription` for an icon, or "Has iris".
+// SelectorMode.Required (radio buttons; tapping the chosen option does nothing; onSelect never gets
+// null) | Optional (switches; tapping the chosen option calls onSelect(null)).
+// SelectorLayout.Fill (equal shares, fills the width) | Hug (each option its content) | Scroll
+// (overflows and keeps the chosen option in view). SelectorOrientation.Horizontal | Vertical.
+// SlidingSelectorStyle presets: Segmented (Default: track + raised capsule), Pill (no track, a
+// capsule under the words, fgOnFill on it), Underline (divider + sliding bar), Button (flat fill,
+// no track); default(content, contentSelected, contentDisabled, track, trackBorder, trackShape,
+// trackBorderWidth, trackPadding, thumb, thumbKind, thumbShape, thumbElevation, thumbThickness,
+// thumbLength, thumbPadding, thumbEdge, divider, dividerThickness, itemShape, indication, motion).
+// SelectorThumbKind.Fill | Underline | None; SelectorEdge.Start | End (underline and divider edge).
+// `motion: FiniteAnimationSpec<Float>` defaults to ArecaTheme.motion.slide().
+// SlidingSelectorSize.Small | Default | Large; default(gap, itemPadding, itemMinWidth,
+// itemMinHeight, iconSize, textStyle).
+// Opens with the thumb in place; grows in on a first choice, shrinks away when cleared; fades
+// between places when ArecaMotion.reduceMotion is set.
 ```
 
 Filter chips: a group of `Badge` choices.
@@ -751,8 +784,9 @@ fun <T : Any> FloatingTabBar(items: List<TabBarItem<T>>, selectedValue: T?,
     indicatorStyle: FloatingTabBarIndicatorStyle = FloatingTabBarIndicatorStyle.underline(),
     windowInsets: WindowInsets =
         WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom),
-    animationSpec: FiniteAnimationSpec<Dp> =
-        ArecaTheme.motion.medium.tween(ArecaTheme.motion.standard))
+    animationSpec: FiniteAnimationSpec<Dp> = ArecaTheme.motion.slide())
+// Built on SlidingSelector: the indicator grows in when a value is selected after none and shrinks
+// away when the selection is cleared. Selecting the selected tab again is reported.
 
 fun FloatingTabBarItemContent(modifier: Modifier = Modifier, label: String? = null,
     icon: @Composable () -> Unit)
@@ -775,8 +809,11 @@ fun <T> Tabs(tabs: List<TabItem<T>>, selectedValue: T, onValueSelected: (T) -> U
 // `state.selectedValue`) in place of `selectedValue` / `onValueSelected`; it takes `fillWidth` too.
 // TabsVariant.Underline (views within a screen) | Button | Segmented (a setting). Segmented: tabs
 // in a `TabsStyle.track` capsule with a raised `thumb` sliding to the selection; pair it with
-// `size = TabsSize.Segmented` — the size does not follow the variant. `fillWidth = true`: equal
-// shares of the width, no scrolling.
+// `size = TabsSize.Segmented` — the size does not follow the variant. Button: a flat
+// `bgSelected` fill that slides. `fillWidth = true`: equal shares of the width, no scrolling.
+// Built on SlidingSelector; the indicator moves on ArecaTheme.motion.slide() unless
+// `TabsSize.indicatorDuration` differs from `motion.medium` (then a tween of that length). For a
+// setting rather than a view, or one that may be unset, prefer SlidingSelector.
 // TabItem(value: T, enabled: Boolean = true, content: @Composable TabItemScope.() -> Unit)
 ```
 

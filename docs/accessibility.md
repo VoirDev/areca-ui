@@ -18,7 +18,10 @@ modifiers:
 - **Headings.** `Heading`, a `TopBar` title, a labelled divider and a settings section header are
   headings, so a screen reader can jump between them.
 - **Groups.** `Tabs`, `TabBar` and `FloatingTabBar` are tab groups; a single-choice badge group and a
-  `SwatchPicker` are selectable groups.
+  `SwatchPicker` are selectable groups. A `SlidingSelector` is a selectable group of radio buttons,
+  or of switches in `SelectorMode.Optional`; the arrow keys move focus between its enabled options
+  and stop at the ends, and a `SelectorItem`'s `contentDescription` names an option whose content
+  does not (an icon, or "Has iris").
 - **Progress and values.** `ProgressBar`, `StepIndicator` and `Spinner` are progress indicators;
   `NumberStepper` is one adjustable value that the platform's adjust gestures move.
 - **Tables.** A `Table` is a collection of rows and columns whose header cells are headings.

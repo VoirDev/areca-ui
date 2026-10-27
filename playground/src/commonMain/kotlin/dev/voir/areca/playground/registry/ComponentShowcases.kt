@@ -36,6 +36,7 @@ import dev.voir.areca.playground.foundation.overlay.FlowModalShowcase
 import dev.voir.areca.playground.foundation.selection.CheckboxShowcase
 import dev.voir.areca.playground.foundation.selection.NumberStepperShowcase
 import dev.voir.areca.playground.foundation.selection.RadioShowcase
+import dev.voir.areca.playground.foundation.selection.SlidingSelectorShowcase
 import dev.voir.areca.playground.foundation.selection.SwatchShowcase
 import dev.voir.areca.playground.foundation.selection.ToggleShowcase
 import dev.voir.areca.playground.foundation.settings.SettingsShowcase
@@ -176,6 +177,18 @@ internal val ComponentShowcases: List<ShowcaseEntry> = listOf(
         summary = "Single-select control: choosing one option clears the others in its group.",
         keywords = listOf("option", "choice", "select", "form"),
         content = { RadioShowcase() },
+    ),
+    ShowcaseEntry(
+        id = "foundation/sliding-selector",
+        group = ShowcaseGroup.Components,
+        section = ShowcaseSection.Selection,
+        title = "Sliding selector",
+        summary = "A row of options with one thumb that slides to the chosen one.",
+        keywords = listOf(
+            "segmented", "segmented control", "pill", "picker", "three-state", "tri-state",
+            "toggle group", "chips", "SlidingSelectorStyle",
+        ),
+        content = { SlidingSelectorShowcase() },
     ),
     ShowcaseEntry(
         id = "foundation/swatch",

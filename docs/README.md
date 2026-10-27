@@ -30,7 +30,7 @@ Everything about using Areca, by what you want to do. New here? Start with
 
 | Page | What it covers |
 | --- | --- |
-| [Recipes](recipes/README.md) | Settings, form with validation, list with refresh and empty states, confirmation, tabs, analytics overview |
+| [Recipes](recipes/README.md) | Settings, form with validation, list with refresh and empty states, confirmation, tabs, pickers, analytics overview |
 | [Auth flow](../flow/auth/README.md) | `dev.voir.areca:flow-auth` — sign-in screens and their recipes |
 | [Profile flow](../flow/profile/README.md) | `dev.voir.areca:flow-profile` — account screens and their recipes |
 | [Attachments flow](../flow/attachments/README.md) | `dev.voir.areca:flow-attachments` — attaching and viewing files |

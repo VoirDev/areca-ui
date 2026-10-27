@@ -261,7 +261,7 @@ is behind it.
 | Duration | Ms | Use it for |
 | --- | --- | --- |
 | `instant` | 100 | A change under the finger: a press tint, a focus ring, a checkbox mark |
-| `fast` | 150 | A small element changing in place: a chevron turning, a tab indicator sliding |
+| `fast` | 150 | A small element changing in place: a chevron turning, a colour swapping |
 | `medium` | 200 | The default: a container resizing, a popover appearing, a crossfade |
 | `slow` | 300 | A surface travelling far: a sheet, a drawer, a full-screen transition |
 | `deliberate` | 450 | A one-off moment the user is meant to watch, such as a success confirmation |
@@ -282,6 +282,19 @@ val background by animateColorAsState(
     if (selected) ArecaTheme.colors.accentMuted else ArecaTheme.colors.bgCanvas,
     animationSpec = ArecaTheme.motion.medium.tween(ArecaTheme.motion.standard),
 )
+```
+
+A mark that travels between places — a `SlidingSelector`'s thumb, a tab indicator — moves on a
+spring rather than a tween, so a new choice mid-move turns it round without a jump in speed.
+`ArecaTheme.motion.slide()` is that spring: critically damped, so it never overshoots, at
+`springStiffness` (`Spring.StiffnessMediumLow` by default; higher arrives sooner).
+
+`reduceMotion` (`false` by default) is the user's request for less motion: those marks fade out and
+back in at their new place instead of travelling. Areca does not read the platform setting; pass it
+in where the platform offers one:
+
+```kotlin
+ArecaThemeProvider(motion = ArecaMotion(reduceMotion = platformReducesMotion)) { App() }
 ```
 
 ## Changing the theme

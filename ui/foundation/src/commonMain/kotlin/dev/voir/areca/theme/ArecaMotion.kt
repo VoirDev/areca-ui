@@ -5,7 +5,10 @@ import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.SpringSpec
 import androidx.compose.animation.core.TweenSpec
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -66,6 +69,22 @@ public data class ArecaMotion(
      * Settles rather than snaps, which is what keeps a released press from reading as a flicker.
      */
     public val fade: Easing = CubicBezierEasing(0.32f, 0.72f, 0.00f, 1f),
+    /**
+     * Stiffness of the spring that carries a mark between places: the thumb of a
+     * [dev.voir.areca.foundation.selection.SlidingSelector], the indicator of tabs and tab bars.
+     *
+     * The spring is critically damped, so it never overshoots; a higher stiffness arrives sooner.
+     * A spring rather than a tween because a new selection mid-move turns the mark around without
+     * a jump in speed.
+     */
+    public val springStiffness: Float = Spring.StiffnessMediumLow,
+    /**
+     * Whether the user asked for less motion.
+     *
+     * Components that move a mark between places fade it out and back in at its new place instead.
+     * Areca does not read the platform's setting; set it from there where the platform offers one.
+     */
+    public val reduceMotion: Boolean = false,
 )
 
 /**
@@ -78,6 +97,17 @@ public data class ArecaMotion(
 public fun <T> Duration.tween(easing: Easing = FastOutSlowInEasing): TweenSpec<T> = tween(
     durationMillis = millis,
     easing = easing,
+)
+
+/**
+ * The spring that carries a mark between places, from [ArecaMotion.springStiffness].
+ *
+ * @param T Type of the value the spec animates.
+ * @return Critically damped spring, which settles without overshooting.
+ */
+public fun <T> ArecaMotion.slide(): SpringSpec<T> = spring(
+    dampingRatio = Spring.DampingRatioNoBouncy,
+    stiffness = springStiffness,
 )
 
 /**
