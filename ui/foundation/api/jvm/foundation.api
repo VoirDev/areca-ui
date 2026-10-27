@@ -3792,6 +3792,189 @@ public abstract interface class dev/voir/areca/foundation/selection/SelectionSty
 	public abstract fun getUnchecked ()Ldev/voir/areca/foundation/selection/SelectionColors;
 }
 
+public final class dev/voir/areca/foundation/selection/SelectorEdge : java/lang/Enum {
+	public static final field End Ldev/voir/areca/foundation/selection/SelectorEdge;
+	public static final field Start Ldev/voir/areca/foundation/selection/SelectorEdge;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/foundation/selection/SelectorEdge;
+	public static fun values ()[Ldev/voir/areca/foundation/selection/SelectorEdge;
+}
+
+public final class dev/voir/areca/foundation/selection/SelectorItem {
+	public static final field $stable I
+	public synthetic fun <init> (Ljava/lang/Object;ZJJLjava/lang/String;Lkotlin/jvm/functions/Function3;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/Object;ZJJLjava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/Object;
+	public final fun component2 ()Z
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-0d7_KjU ()J
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Lkotlin/jvm/functions/Function3;
+	public final fun copy-9z6LAg8 (Ljava/lang/Object;ZJJLjava/lang/String;Lkotlin/jvm/functions/Function3;)Ldev/voir/areca/foundation/selection/SelectorItem;
+	public static synthetic fun copy-9z6LAg8$default (Ldev/voir/areca/foundation/selection/SelectorItem;Ljava/lang/Object;ZJJLjava/lang/String;Lkotlin/jvm/functions/Function3;ILjava/lang/Object;)Ldev/voir/areca/foundation/selection/SelectorItem;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContent ()Lkotlin/jvm/functions/Function3;
+	public final fun getContentDescription ()Ljava/lang/String;
+	public final fun getContentSelected-0d7_KjU ()J
+	public final fun getEnabled ()Z
+	public final fun getThumb-0d7_KjU ()J
+	public final fun getValue ()Ljava/lang/Object;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/foundation/selection/SelectorItemScope {
+	public static final field $stable I
+	public fun <init> (ZZ)V
+	public final fun component1 ()Z
+	public final fun component2 ()Z
+	public final fun copy (ZZ)Ldev/voir/areca/foundation/selection/SelectorItemScope;
+	public static synthetic fun copy$default (Ldev/voir/areca/foundation/selection/SelectorItemScope;ZZILjava/lang/Object;)Ldev/voir/areca/foundation/selection/SelectorItemScope;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEnabled ()Z
+	public final fun getSelected ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/foundation/selection/SelectorLayout : java/lang/Enum {
+	public static final field Fill Ldev/voir/areca/foundation/selection/SelectorLayout;
+	public static final field Hug Ldev/voir/areca/foundation/selection/SelectorLayout;
+	public static final field Scroll Ldev/voir/areca/foundation/selection/SelectorLayout;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/foundation/selection/SelectorLayout;
+	public static fun values ()[Ldev/voir/areca/foundation/selection/SelectorLayout;
+}
+
+public final class dev/voir/areca/foundation/selection/SelectorMode : java/lang/Enum {
+	public static final field Optional Ldev/voir/areca/foundation/selection/SelectorMode;
+	public static final field Required Ldev/voir/areca/foundation/selection/SelectorMode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/foundation/selection/SelectorMode;
+	public static fun values ()[Ldev/voir/areca/foundation/selection/SelectorMode;
+}
+
+public final class dev/voir/areca/foundation/selection/SelectorOrientation : java/lang/Enum {
+	public static final field Horizontal Ldev/voir/areca/foundation/selection/SelectorOrientation;
+	public static final field Vertical Ldev/voir/areca/foundation/selection/SelectorOrientation;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/foundation/selection/SelectorOrientation;
+	public static fun values ()[Ldev/voir/areca/foundation/selection/SelectorOrientation;
+}
+
+public final class dev/voir/areca/foundation/selection/SelectorThumbKind : java/lang/Enum {
+	public static final field Fill Ldev/voir/areca/foundation/selection/SelectorThumbKind;
+	public static final field None Ldev/voir/areca/foundation/selection/SelectorThumbKind;
+	public static final field Underline Ldev/voir/areca/foundation/selection/SelectorThumbKind;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/foundation/selection/SelectorThumbKind;
+	public static fun values ()[Ldev/voir/areca/foundation/selection/SelectorThumbKind;
+}
+
+public final class dev/voir/areca/foundation/selection/SlidingSelectorKt {
+	public static final fun SlidingSelector (Ljava/util/List;Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Ldev/voir/areca/foundation/selection/SelectorMode;Ldev/voir/areca/foundation/selection/SlidingSelectorStyle;Ldev/voir/areca/foundation/selection/SlidingSelectorSize;Ldev/voir/areca/foundation/selection/SelectorLayout;Ldev/voir/areca/foundation/selection/SelectorOrientation;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class dev/voir/areca/foundation/selection/SlidingSelectorSize {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/foundation/selection/SlidingSelectorSize$Companion;
+	public synthetic fun <init> (FLandroidx/compose/foundation/layout/PaddingValues;FFFLandroidx/compose/ui/text/TextStyle;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-D9Ej5fM ()F
+	public final fun component2 ()Landroidx/compose/foundation/layout/PaddingValues;
+	public final fun component3-D9Ej5fM ()F
+	public final fun component4-D9Ej5fM ()F
+	public final fun component5-D9Ej5fM ()F
+	public final fun component6 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun copy-z5x-4XQ (FLandroidx/compose/foundation/layout/PaddingValues;FFFLandroidx/compose/ui/text/TextStyle;)Ldev/voir/areca/foundation/selection/SlidingSelectorSize;
+	public static synthetic fun copy-z5x-4XQ$default (Ldev/voir/areca/foundation/selection/SlidingSelectorSize;FLandroidx/compose/foundation/layout/PaddingValues;FFFLandroidx/compose/ui/text/TextStyle;ILjava/lang/Object;)Ldev/voir/areca/foundation/selection/SlidingSelectorSize;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getGap-D9Ej5fM ()F
+	public final fun getIconSize-D9Ej5fM ()F
+	public final fun getItemMinHeight-D9Ej5fM ()F
+	public final fun getItemMinWidth-D9Ej5fM ()F
+	public final fun getItemPadding ()Landroidx/compose/foundation/layout/PaddingValues;
+	public final fun getTextStyle ()Landroidx/compose/ui/text/TextStyle;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/foundation/selection/SlidingSelectorSize$Companion {
+	public final fun default-qvStD0s (FLandroidx/compose/foundation/layout/PaddingValues;FFFLandroidx/compose/ui/text/TextStyle;Landroidx/compose/runtime/Composer;II)Ldev/voir/areca/foundation/selection/SlidingSelectorSize;
+	public final fun getDefault (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/foundation/selection/SlidingSelectorSize;
+	public final fun getLarge (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/foundation/selection/SlidingSelectorSize;
+	public final fun getSmall (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/foundation/selection/SlidingSelectorSize;
+}
+
+public final class dev/voir/areca/foundation/selection/SlidingSelectorSizeKt {
+	public static final fun getLocalSlidingSelectorSize ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
+public final class dev/voir/areca/foundation/selection/SlidingSelectorStyle {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/foundation/selection/SlidingSelectorStyle$Companion;
+	public synthetic fun <init> (JJJJJLandroidx/compose/ui/graphics/Shape;FFJLdev/voir/areca/foundation/selection/SelectorThumbKind;Landroidx/compose/ui/graphics/Shape;FFFLandroidx/compose/foundation/layout/PaddingValues;Ldev/voir/areca/foundation/selection/SelectorEdge;JFLandroidx/compose/ui/graphics/Shape;Landroidx/compose/foundation/Indication;Landroidx/compose/animation/core/FiniteAnimationSpec;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component10 ()Ldev/voir/areca/foundation/selection/SelectorThumbKind;
+	public final fun component11 ()Landroidx/compose/ui/graphics/Shape;
+	public final fun component12-D9Ej5fM ()F
+	public final fun component13-D9Ej5fM ()F
+	public final fun component14-D9Ej5fM ()F
+	public final fun component15 ()Landroidx/compose/foundation/layout/PaddingValues;
+	public final fun component16 ()Ldev/voir/areca/foundation/selection/SelectorEdge;
+	public final fun component17-0d7_KjU ()J
+	public final fun component18-D9Ej5fM ()F
+	public final fun component19 ()Landroidx/compose/ui/graphics/Shape;
+	public final fun component2-0d7_KjU ()J
+	public final fun component20 ()Landroidx/compose/foundation/Indication;
+	public final fun component21 ()Landroidx/compose/animation/core/FiniteAnimationSpec;
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-0d7_KjU ()J
+	public final fun component5-0d7_KjU ()J
+	public final fun component6 ()Landroidx/compose/ui/graphics/Shape;
+	public final fun component7-D9Ej5fM ()F
+	public final fun component8-D9Ej5fM ()F
+	public final fun component9-0d7_KjU ()J
+	public final fun copy-Ju06OlY (JJJJJLandroidx/compose/ui/graphics/Shape;FFJLdev/voir/areca/foundation/selection/SelectorThumbKind;Landroidx/compose/ui/graphics/Shape;FFFLandroidx/compose/foundation/layout/PaddingValues;Ldev/voir/areca/foundation/selection/SelectorEdge;JFLandroidx/compose/ui/graphics/Shape;Landroidx/compose/foundation/Indication;Landroidx/compose/animation/core/FiniteAnimationSpec;)Ldev/voir/areca/foundation/selection/SlidingSelectorStyle;
+	public static synthetic fun copy-Ju06OlY$default (Ldev/voir/areca/foundation/selection/SlidingSelectorStyle;JJJJJLandroidx/compose/ui/graphics/Shape;FFJLdev/voir/areca/foundation/selection/SelectorThumbKind;Landroidx/compose/ui/graphics/Shape;FFFLandroidx/compose/foundation/layout/PaddingValues;Ldev/voir/areca/foundation/selection/SelectorEdge;JFLandroidx/compose/ui/graphics/Shape;Landroidx/compose/foundation/Indication;Landroidx/compose/animation/core/FiniteAnimationSpec;ILjava/lang/Object;)Ldev/voir/areca/foundation/selection/SlidingSelectorStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContent-0d7_KjU ()J
+	public final fun getContentDisabled-0d7_KjU ()J
+	public final fun getContentSelected-0d7_KjU ()J
+	public final fun getDivider-0d7_KjU ()J
+	public final fun getDividerThickness-D9Ej5fM ()F
+	public final fun getIndication ()Landroidx/compose/foundation/Indication;
+	public final fun getItemShape ()Landroidx/compose/ui/graphics/Shape;
+	public final fun getMotion ()Landroidx/compose/animation/core/FiniteAnimationSpec;
+	public final fun getThumb-0d7_KjU ()J
+	public final fun getThumbEdge ()Ldev/voir/areca/foundation/selection/SelectorEdge;
+	public final fun getThumbElevation-D9Ej5fM ()F
+	public final fun getThumbKind ()Ldev/voir/areca/foundation/selection/SelectorThumbKind;
+	public final fun getThumbLength-D9Ej5fM ()F
+	public final fun getThumbPadding ()Landroidx/compose/foundation/layout/PaddingValues;
+	public final fun getThumbShape ()Landroidx/compose/ui/graphics/Shape;
+	public final fun getThumbThickness-D9Ej5fM ()F
+	public final fun getTrack-0d7_KjU ()J
+	public final fun getTrackBorder-0d7_KjU ()J
+	public final fun getTrackBorderWidth-D9Ej5fM ()F
+	public final fun getTrackPadding-D9Ej5fM ()F
+	public final fun getTrackShape ()Landroidx/compose/ui/graphics/Shape;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/foundation/selection/SlidingSelectorStyle$Companion {
+	public final fun default-LiWCu6o (JJJJJLandroidx/compose/ui/graphics/Shape;FFJLdev/voir/areca/foundation/selection/SelectorThumbKind;Landroidx/compose/ui/graphics/Shape;FFFLandroidx/compose/foundation/layout/PaddingValues;Ldev/voir/areca/foundation/selection/SelectorEdge;JFLandroidx/compose/ui/graphics/Shape;Landroidx/compose/foundation/Indication;Landroidx/compose/animation/core/FiniteAnimationSpec;Landroidx/compose/runtime/Composer;IIII)Ldev/voir/areca/foundation/selection/SlidingSelectorStyle;
+	public final fun getButton (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/foundation/selection/SlidingSelectorStyle;
+	public final fun getDefault (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/foundation/selection/SlidingSelectorStyle;
+	public final fun getPill (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/foundation/selection/SlidingSelectorStyle;
+	public final fun getSegmented (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/foundation/selection/SlidingSelectorStyle;
+	public final fun getUnderline (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/foundation/selection/SlidingSelectorStyle;
+}
+
+public final class dev/voir/areca/foundation/selection/SlidingSelectorStyleKt {
+	public static final fun getLocalSlidingSelectorStyle ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
 public final class dev/voir/areca/foundation/selection/SwatchKt {
 	public static final fun Swatch (Landroidx/compose/ui/Modifier;Ldev/voir/areca/foundation/selection/SwatchStyle;Ldev/voir/areca/foundation/selection/SwatchSize;Landroidx/compose/ui/graphics/Shape;Ljava/lang/Boolean;Ljava/lang/String;ZLandroidx/compose/foundation/interaction/MutableInteractionSource;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
 	public static final fun getLocalSwatchSize ()Landroidx/compose/runtime/ProvidableCompositionLocal;
@@ -6304,10 +6487,12 @@ public final class dev/voir/areca/theme/ArecaFonts {
 
 public final class dev/voir/areca/theme/ArecaMotion {
 	public static final field $stable I
-	public synthetic fun <init> (JJJJJLandroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (JJJJJLandroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (JJJJJLandroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;FZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (JJJJJLandroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;FZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1-UwyO8pc ()J
 	public final fun component10 ()Landroidx/compose/animation/core/Easing;
+	public final fun component11 ()F
+	public final fun component12 ()Z
 	public final fun component2-UwyO8pc ()J
 	public final fun component3-UwyO8pc ()J
 	public final fun component4-UwyO8pc ()J
@@ -6316,8 +6501,8 @@ public final class dev/voir/areca/theme/ArecaMotion {
 	public final fun component7 ()Landroidx/compose/animation/core/Easing;
 	public final fun component8 ()Landroidx/compose/animation/core/Easing;
 	public final fun component9 ()Landroidx/compose/animation/core/Easing;
-	public final fun copy-Zma6FFo (JJJJJLandroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;)Ldev/voir/areca/theme/ArecaMotion;
-	public static synthetic fun copy-Zma6FFo$default (Ldev/voir/areca/theme/ArecaMotion;JJJJJLandroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;ILjava/lang/Object;)Ldev/voir/areca/theme/ArecaMotion;
+	public final fun copy-DeC5XGU (JJJJJLandroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;FZ)Ldev/voir/areca/theme/ArecaMotion;
+	public static synthetic fun copy-DeC5XGU$default (Ldev/voir/areca/theme/ArecaMotion;JJJJJLandroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;Landroidx/compose/animation/core/Easing;FZILjava/lang/Object;)Ldev/voir/areca/theme/ArecaMotion;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getDeliberate-UwyO8pc ()J
 	public final fun getEnter ()Landroidx/compose/animation/core/Easing;
@@ -6327,13 +6512,16 @@ public final class dev/voir/areca/theme/ArecaMotion {
 	public final fun getInstant-UwyO8pc ()J
 	public final fun getMedium-UwyO8pc ()J
 	public final fun getPressIn ()Landroidx/compose/animation/core/Easing;
+	public final fun getReduceMotion ()Z
 	public final fun getSlow-UwyO8pc ()J
+	public final fun getSpringStiffness ()F
 	public final fun getStandard ()Landroidx/compose/animation/core/Easing;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
 
 public final class dev/voir/areca/theme/ArecaMotionKt {
+	public static final fun slide (Ldev/voir/areca/theme/ArecaMotion;)Landroidx/compose/animation/core/SpringSpec;
 	public static final fun tween-VtjQ1oo (JLandroidx/compose/animation/core/Easing;)Landroidx/compose/animation/core/TweenSpec;
 	public static synthetic fun tween-VtjQ1oo$default (JLandroidx/compose/animation/core/Easing;ILjava/lang/Object;)Landroidx/compose/animation/core/TweenSpec;
 }

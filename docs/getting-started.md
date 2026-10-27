@@ -224,7 +224,7 @@ BaseLayout(
 ```
 
 [Recipes](recipes/README.md) build whole screens this way: settings, forms, lists with loading and
-error states, confirmations, tabs.
+error states, confirmations, tabs, pickers.
 
 ## Add more modules
 

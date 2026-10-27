@@ -60,6 +60,11 @@ import dev.voir.areca.foundation.overlay.ConfirmationDialogStyle
 import dev.voir.areca.foundation.selection.ColorItem
 import dev.voir.areca.foundation.selection.ColorShade
 import dev.voir.areca.foundation.selection.NumberStepper
+import dev.voir.areca.foundation.selection.SelectorItem
+import dev.voir.areca.foundation.selection.SelectorLayout
+import dev.voir.areca.foundation.selection.SelectorMode
+import dev.voir.areca.foundation.selection.SlidingSelector
+import dev.voir.areca.foundation.selection.SlidingSelectorStyle
 import dev.voir.areca.foundation.selection.SwatchPicker
 import dev.voir.areca.foundation.selection.SwatchPickerLayout
 import dev.voir.areca.foundation.selection.ToggleState
@@ -396,7 +401,10 @@ private fun labelShades(): kotlin.collections.List<ColorShade> {
 /** Categories the chips filter by. */
 private val Categories = listOf("Groceries", "Transport", "Dining", "Bills", "Travel")
 
-/** `foundation-selection`: checkbox, radio and toggle rows, swatches, a stepper and chips. */
+/**
+ * `foundation-selection`: checkbox, radio and toggle rows, sliding selectors, swatches, a stepper
+ * and chips.
+ */
 internal val FoundationSelectionShot = DocShot(name = "foundation-selection", width = 720.dp) {
     DocColumns(
         {
@@ -420,6 +428,25 @@ internal val FoundationSelectionShot = DocShot(name = "foundation-selection", wi
                     subtitle = { Text("Two months free") },
                 )
                 ToggleListItem(state = ToggleState.On, onToggle = {}, title = { Text("Unlock with Face ID") })
+            }
+            DocGroup("Sliding selector") {
+                SlidingSelector(
+                    items = listOf("Any level", "Top", "Heart", "Base").map { SelectorItem(it) { Text(it) } },
+                    selected = "Heart",
+                    onSelect = {},
+                    layout = SelectorLayout.Hug,
+                )
+                SlidingSelector(
+                    items = listOf(
+                        SelectorItem("Has", thumb = ArecaTheme.colors.fgBase) { Text("Has") },
+                        SelectorItem("Avoid", thumb = ArecaTheme.colors.bgDangerBase) { Text("Avoid") },
+                    ),
+                    selected = "Avoid",
+                    onSelect = {},
+                    mode = SelectorMode.Optional,
+                    style = SlidingSelectorStyle.Pill,
+                    layout = SelectorLayout.Hug,
+                )
             }
         },
         {

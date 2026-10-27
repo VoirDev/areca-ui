@@ -49,7 +49,8 @@ region that is always dark in `ArecaDarkTheme`, both in `dev.voir.areca.theme` â
 | Title a screen | `TopBar` with `BackAction`; a large title that collapses `LargeTopBar` |
 | Collapse a hero above content that stays | `CollapsingHeaderLayout` |
 | Show the application's destinations | `TabBar` (docked) or `FloatingTabBar` (floating) |
-| Switch views within a screen; a segmented setting | `Tabs`; `Tabs` with `TabsVariant.Segmented` |
+| Switch views within a screen | `Tabs` |
+| Choose one of a few values; words with a moving pill; a three-state toggle | `SlidingSelector` (`SlidingSelectorStyle.Segmented`, `Pill`, `Underline`, `Button`; `SelectorMode.Optional` to allow none) |
 | Navigate a sidebar or a tree | `NavList` |
 | Page through an onboarding tour | `SwipePager` with `PagerControls` and `PageIndicator` |
 | Show the steps of a flow | `StepIndicator` |
@@ -150,7 +151,7 @@ artifact.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/foundation-selection-dark.png">
-  <img alt="Checkboxes, radios, toggles, swatches, a number stepper and a badge select" src="images/foundation-selection-light.png" width="720">
+  <img alt="Checkboxes, radios, toggles, sliding selectors, swatches, a number stepper and a badge select" src="images/foundation-selection-light.png" width="720">
 </picture>
 
 | Component | Use it for | Package | Playground |
@@ -159,6 +160,7 @@ artifact.
 | [`Radio`](../ui/foundation/README.md#selection-controls) | One option of several | `selection` | `RadioShowcase` |
 | [`Toggle`](../ui/foundation/README.md#selection-controls) | A setting that applies the moment it is flipped | `selection` | `ToggleShowcase` |
 | [`NumberStepper`](../ui/foundation/README.md#selection-controls) | A whole number nudged by one between bounds | `selection` | `NumberStepperShowcase` |
+| [`SlidingSelector`](../ui/foundation/README.md#selection-controls) | A row of options with one thumb sliding to the chosen one: segments, a pill under words, underlines, a three-state toggle. `Tabs` and `FloatingTabBar` are built on it | `selection` | `SlidingSelectorShowcase` |
 | [`Swatch`](../ui/foundation/README.md#selection-controls) | One colour sample | `selection` | `SwatchShowcase` |
 | [`SwatchPicker`](../ui/foundation/README.md#selection-controls) | A scrolling set of swatches with one selection | `selection` | `SwatchShowcase` |
 
@@ -322,7 +324,7 @@ With a title and a row-wide tap target, use the list rows under
 | [`TopBar`](../ui/foundation/README.md#navigation-tabs-tab-bar-and-top-bar) | A screen's heading bar | `topbar` | `TopBarShowcase` |
 | [`LargeTopBar`](../ui/foundation/README.md#navigation-tabs-tab-bar-and-top-bar) | A large title that collapses into a `TopBar` | `topbar` | `LargeTopBarShowcase` |
 | [`TopBarProgress`](../ui/foundation/README.md#navigation-tabs-tab-bar-and-top-bar) | A hairline of progress along the bar's bottom edge | `topbar` | `TopBarShowcase` |
-| [`Tabs`](../ui/foundation/README.md#navigation-tabs-tab-bar-and-top-bar) | Tabs switching the content below: underlined, buttons or segmented | `tabs` | `TabsShowcase` |
+| [`Tabs`](../ui/foundation/README.md#navigation-tabs-tab-bar-and-top-bar) | Tabs switching the content below: underlined, buttons or segmented. Built on `SlidingSelector` | `tabs` | `TabsShowcase` |
 | [`TabBar`](../ui/foundation/README.md#navigation-tabs-tab-bar-and-top-bar) | The application's destinations, docked to the bottom | `tabbar` | `TabBarShowcase` |
 | [`FloatingTabBar`](../ui/foundation/README.md#navigation-tabs-tab-bar-and-top-bar) | The same, floating above the bottom edge | `tabbar` | `FloatingTabBarShowcase` |
 | [`FloatingTabBarItemContent`](../ui/foundation/README.md#navigation-tabs-tab-bar-and-top-bar) | A floating tab's icon and optional label | `tabbar` | `FloatingTabBarShowcase` |

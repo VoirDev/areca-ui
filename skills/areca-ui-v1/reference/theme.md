@@ -250,7 +250,7 @@ what it overlaps.
 | Token | Value | For |
 | --- | --- | --- |
 | `instant` | 100 ms | A state change under the finger: press tint, focus ring, checkbox mark |
-| `fast` | 150 ms | A small element changing in place: a chevron turning, a tab indicator sliding |
+| `fast` | 150 ms | A small element changing in place: a chevron turning, a colour swapping |
 | `medium` | 200 ms | The default: a container resizing, a popover appearing, a crossfade |
 | `slow` | 300 ms | A surface travelling far: a sheet, a drawer, a full-screen transition |
 | `deliberate` | 450 ms | A one-off moment meant to be watched: a success confirmation |
@@ -259,10 +259,15 @@ what it overlaps.
 | `exit` | `FastOutLinearInEasing` | Content leaving |
 | `pressIn` | `CubicBezierEasing(0.2, 0.7, 0.4, 1)` | Something expanding from the touch point |
 | `fade` | `CubicBezierEasing(0.32, 0.72, 0, 1)` | Fades and crossfades: hover tints, focus rings, colour swaps |
+| `springStiffness` | `Spring.StiffnessMediumLow` | Stiffness of `slide()`, the spring a mark travels between places on |
+| `reduceMotion` | `false` | The user asked for less motion: sliding marks fade between places instead. Not read from the platform; pass it in |
 
 Pick a duration by how far things move, not by component. Build a spec with
 `fun <T> Duration.tween(easing: Easing = FastOutSlowInEasing): TweenSpec<T>`:
 `ArecaTheme.motion.medium.tween(ArecaTheme.motion.standard)`.
+A thumb or indicator travelling between places uses `ArecaTheme.motion.slide()` instead: a
+critically damped spring, interruptible without a jump in speed. `SlidingSelector`, `Tabs` and
+`FloatingTabBar` already do.
 
 ## Icon sizes
 

@@ -306,7 +306,7 @@ Every foundation family, by intent. Signatures, overloads and packages:
 | Screen frame; title bar; large collapsing title | `BaseLayout`; `TopBar` with `BackAction` and the named controls (`CloseAction`, `OverflowAction`, `DoneAction`, `IconAction`, `TextAction`, `AvatarAction`, … or `Action` for custom content); `LargeTopBar` + `rememberTopBarScrollState(TopBarScrollBehavior.ExitUntilCollapsed)` |
 | Progress under the bar; collapsing hero | `TopBarProgress` in the bar's `bottom`; `CollapsingHeaderLayout` (`collapsed = { … }` for a compact band that stays) |
 | App destinations; views within a screen; sidebar | `TabBar` / `FloatingTabBar` (items drawn with `FloatingTabBarItemContent`); `Tabs` (`TabsVariant.Underline`); `NavList` (one custom row `NavItem`) |
-| Segmented setting switch | `Tabs(variant = TabsVariant.Segmented, size = TabsSize.Segmented)` — always both, since the size does not follow the variant — `fillWidth = true` to share the width; or `TabsVariant.Button` |
+| Segmented choice of a setting; words with a moving pill; three-state toggle (has / avoid / either) | `SlidingSelector(items = listOf(SelectorItem(value) { Text(…) }), selected, onSelect)` — `style = SlidingSelectorStyle.Segmented` (default) / `Pill` / `Underline` / `Button`, `layout = SelectorLayout.Fill` (default) / `Hug` / `Scroll`; three-state: `mode = SelectorMode.Optional` (tapping the chosen option calls `onSelect(null)`) with a `thumb` colour per `SelectorItem`. Not `Tabs` for a setting: `Tabs` switch views |
 | Onboarding pages; steps of a flow | `SwipePager` + `PagerControls` + `PageIndicator` with `rememberPagerController`; `StepIndicator` |
 | Pull to refresh | `PagedContentList(onRefresh = …)`; around any scroller `PullToRefreshLayout` + `PullToRefreshIndicator` (experimental) |
 | Bottom sheet; any other dialog; menu | `FlowModal` + `rememberFlowModal()` + `FlowModalActionBar` (`layout = FlowModalActionBarLayout.Split()` for a full-width pair, `FlowModalSecondaryAction` beside it); `Dialog` + `ModalDefaults.Actions`; `DropdownPopup` + `rememberDropdownPopup()` + `Modifier.anchored(state.anchorState)` |
@@ -549,8 +549,9 @@ Foundation:
 - [reference/signatures.md](reference/signatures.md) — calling a foundation component whose
   parameters, overloads, defaults or package you are not sure of, or fixing an import.
 - [reference/recipes.md](reference/recipes.md) — building a settings screen, a validated form, a
-  remote list, a confirmation, a tabbed shell, a bottom sheet, a menu, a dark region, a card with
-  a footer, a custom pressable surface or an analytics overview; reviewing UI against the
+  remote list, a confirmation, a tabbed shell, pickers (segmented, pill, three-state), a bottom
+  sheet, a menu, a dark region, a card with a footer, a custom pressable surface or an analytics
+  overview; reviewing UI against the
   anti-pattern table; finding the flow recipes.
 
 Other modules — start at [reference/modules.md](reference/modules.md), the index of artifacts,

@@ -13,7 +13,7 @@ start at the repository root.
 ## Foundation: components
 
 - [ ] `LargeTopBar` announces the title as a heading twice while expanded (the hidden compact title
-      stays in the semantics tree). `Tabs` keeps stale `tabBounds` entries when the list shrinks.
+      stays in the semantics tree).
 - [ ] `Table` column measurements only grow; a column never narrows until the table leaves
       composition. `ContentListDefaults.LoadMoreErrorState` applies `fillMaxSize` inside a lazy item;
       `LimitedContentListState.refreshing` has no visual effect.

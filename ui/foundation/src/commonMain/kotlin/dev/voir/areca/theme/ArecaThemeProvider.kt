@@ -140,6 +140,8 @@ import dev.voir.areca.foundation.selection.LocalNumberStepperSize
 import dev.voir.areca.foundation.selection.LocalNumberStepperStyle
 import dev.voir.areca.foundation.selection.LocalRadioSize
 import dev.voir.areca.foundation.selection.LocalRadioStyle
+import dev.voir.areca.foundation.selection.LocalSlidingSelectorSize
+import dev.voir.areca.foundation.selection.LocalSlidingSelectorStyle
 import dev.voir.areca.foundation.selection.LocalSwatchPickerSize
 import dev.voir.areca.foundation.selection.LocalSwatchPickerStyle
 import dev.voir.areca.foundation.selection.LocalSwatchSize
@@ -150,12 +152,18 @@ import dev.voir.areca.foundation.selection.NumberStepperSize
 import dev.voir.areca.foundation.selection.NumberStepperStyle
 import dev.voir.areca.foundation.selection.RadioSize
 import dev.voir.areca.foundation.selection.RadioStyle
+import dev.voir.areca.foundation.selection.SlidingSelectorSize
+import dev.voir.areca.foundation.selection.SlidingSelectorStyle
 import dev.voir.areca.foundation.selection.SwatchPickerSize
 import dev.voir.areca.foundation.selection.SwatchPickerStyle
 import dev.voir.areca.foundation.selection.SwatchSize
 import dev.voir.areca.foundation.selection.SwatchStyle
 import dev.voir.areca.foundation.selection.ToggleSize
 import dev.voir.areca.foundation.selection.ToggleStyle
+import dev.voir.areca.foundation.stat.LocalStatSize
+import dev.voir.areca.foundation.stat.LocalStatStyle
+import dev.voir.areca.foundation.stat.StatSize
+import dev.voir.areca.foundation.stat.StatStyle
 import dev.voir.areca.foundation.status.LocalStatusMarkSize
 import dev.voir.areca.foundation.status.LocalStatusMarkStyle
 import dev.voir.areca.foundation.status.LocalStatusSceneActionsSize
@@ -180,10 +188,6 @@ import dev.voir.areca.foundation.table.LocalTableSize
 import dev.voir.areca.foundation.table.LocalTableStyle
 import dev.voir.areca.foundation.table.TableSize
 import dev.voir.areca.foundation.table.TableStyle
-import dev.voir.areca.foundation.stat.LocalStatSize
-import dev.voir.areca.foundation.stat.LocalStatStyle
-import dev.voir.areca.foundation.stat.StatSize
-import dev.voir.areca.foundation.stat.StatStyle
 import dev.voir.areca.foundation.tabs.LocalTabsSize
 import dev.voir.areca.foundation.tabs.LocalTabsStyle
 import dev.voir.areca.foundation.tabs.TabsSize
@@ -336,6 +340,8 @@ public fun ArecaThemeProvider(
             LocalStatusSceneActionsStyle provides StatusSceneActionsStyle.Default,
             LocalSensitiveTextSize provides SensitiveTextSize.Default,
             LocalSensitiveTextStyle provides SensitiveTextStyle.Default,
+            LocalSlidingSelectorSize provides SlidingSelectorSize.Default,
+            LocalSlidingSelectorStyle provides SlidingSelectorStyle.Default,
             LocalSwatchSize provides SwatchSize.Default,
             LocalSwatchStyle provides SwatchStyle.Default,
             LocalFloatingTabBarSize provides FloatingTabBarSize.Default,

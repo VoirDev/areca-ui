@@ -283,7 +283,7 @@ every cell an equal width and every cell of a row the row's height; pass the sta
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../../docs/images/foundation-selection-dark.png">
-  <img alt="Checkboxes, radios, toggles, swatches, a number stepper and a badge select" src="../../docs/images/foundation-selection-light.png" width="720">
+  <img alt="Checkboxes, radios, toggles, sliding selectors, swatches, a number stepper and a badge select" src="../../docs/images/foundation-selection-light.png" width="720">
 </picture>
 
 | Component | Use it for |
@@ -292,6 +292,7 @@ every cell an equal width and every cell of a row the row's height; pass the sta
 | `Radio` | One option of several. Put `Modifier.selectableGroup()` on the group |
 | `Toggle` | A setting that applies the moment it is flipped. `ToggleState` with `BinaryToggleCycle` or `TriStateToggleCycle` |
 | `NumberStepper` | A whole number nudged by one between bounds |
+| `SlidingSelector` | A row of options with one thumb sliding to the chosen one: a segmented choice, words with a moving pill, a three-state toggle |
 | `Swatch` / `SwatchPicker` | One colour sample; a scrolling set of them with a single selection |
 
 These are the bare controls. With a label and a row-wide tap target, use the list rows
@@ -314,6 +315,50 @@ NumberStepper(
 `enabled = false` greys a control out as unavailable; `readOnly = true` keeps its colours and
 refuses changes, for a value that is real but not the user's to change. `Checkbox` and `Radio` share
 `SelectionStyle`; `Toggle` draws from the same `SelectionColors` through its `ToggleStyle`.
+
+`SlidingSelector` takes `SelectorItem`s, each any content, and moves one thumb between their
+measured bounds, so options may differ in width. The look is a `SlidingSelectorStyle` preset —
+`Segmented` (the default: a track and a raised capsule), `Pill` (no track, a capsule under the chosen
+words), `Underline` or `Button` — and the metrics a `SlidingSelectorSize` (`Small`, `Default`,
+`Large`). `layout` is `SelectorLayout.Fill` (equal shares, the default), `Hug` or `Scroll` (keeps the
+chosen option in view); `orientation` is `Horizontal` or `Vertical`.
+
+```kotlin
+SlidingSelector(
+    items = listOf("Any level", "Top", "Heart", "Base").map { SelectorItem(it) { Text(it) } },
+    selected = level,
+    // Never null in the default SelectorMode.Required.
+    onSelect = { if (it != null) level = it },
+)
+```
+
+`mode = SelectorMode.Optional` allows nothing chosen: tapping the chosen option calls `onSelect(null)`,
+and the options are announced as switches rather than radio buttons. A `SelectorItem` can give its
+own `thumb` and `contentSelected` colours, which the thumb cross-fades between as it moves, and a
+`contentDescription` for content that does not name it alone:
+
+```kotlin
+SlidingSelector(
+    items = listOf(
+        SelectorItem(Note.Has, thumb = ArecaTheme.colors.fgBase, contentDescription = "Has iris") {
+            Text("Has")
+        },
+        SelectorItem(Note.Avoid, thumb = ArecaTheme.colors.bgDangerBase, contentDescription = "Avoid iris") {
+            Text("Avoid")
+        },
+    ),
+    selected = iris,
+    onSelect = { iris = it },
+    mode = SelectorMode.Optional,
+    style = SlidingSelectorStyle.Pill,
+    layout = SelectorLayout.Hug,
+)
+```
+
+The thumb opens in place, slides on the theme's `motion.slide()` spring (`SlidingSelectorStyle.motion`
+changes it), grows in at a first choice and shrinks away when cleared. With
+`ArecaMotion.reduceMotion` it fades between places instead. `Tabs` and `FloatingTabBar` are built on
+it, so every one of them moves the same way. See the [pickers recipe](../../docs/recipes/pickers.md).
 
 ### Fields
 
@@ -863,7 +908,11 @@ Tabs(
 
 `TabsVariant.Underline`, the default, switches views within a screen. `Button` and `Segmented`
 switch a setting: `Segmented` sets the tabs in a track (`TabsStyle.track`) and slides a raised thumb
-(`TabsStyle.thumb`) to the selected one. Pair it with `size = TabsSize.Segmented`.
+(`TabsStyle.thumb`) to the selected one; `Button` slides a flat fill (`TabsStyle.bgSelected`). Pair
+`Segmented` with `size = TabsSize.Segmented`. Tabs are built on `SlidingSelector`: the indicator
+moves on the theme's `motion.slide()` spring unless `TabsSize.indicatorDuration` is changed from the
+theme's `motion.medium`, which makes it a tween of that length. For a setting that is not a view —
+or one that can be left unset — reach for `SlidingSelector` itself.
 `fillWidth = true` shares the width equally between the tabs; the strip then does not scroll, so
 every tab must fit:
 

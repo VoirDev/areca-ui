@@ -1,8 +1,8 @@
 # Screen recipes
 
 Open this when building a whole screen or a common interaction from foundation: a settings
-screen, a validated form, a remote list, a confirmation, a tabbed shell, a sheet, a menu, a dark
-region, a subscription card with a footer, a custom pressable surface, or an analytics overview
+screen, a validated form, a remote list, a confirmation, a tabbed shell, pickers, a sheet, a menu,
+a dark region, a subscription card with a footer, a custom pressable surface, or an analytics overview
 built on the charts module, at the latest `dev.voir.areca:foundation` and `dev.voir.areca:icons`
 release. Also open it to review UI against the [anti-pattern table](#anti-patterns).
 
@@ -461,6 +461,62 @@ private fun HomeTab(modifier: Modifier = Modifier) {
 When the app uses a navigation library, the selected destination is its back stack, not
 `rememberSaveable`; pass it as `selectedValue` and navigate in `onValueSelected`.
 
+## Pickers
+
+A setting with a few values is a `SlidingSelector`, not `Tabs`: `Tabs` switch views. The default
+`SelectorMode.Required` always has a value and never reports `null`; `SelectorMode.Optional` is a
+three-state toggle that reports `null` when the chosen option is tapped again. A `SelectorItem`'s
+`thumb` colour is the thumb's while that option is chosen, and its `contentDescription` names an
+option whose content alone does not ("Has iris", an icon).
+
+```kotlin
+enum class Preference { Has, Avoid }
+
+@Composable
+fun NoteFilters(
+    level: Level,
+    onLevelChange: (Level) -> Unit,
+    notes: List<NoteFilter>,
+    onPreferenceChange: (note: String, Preference?) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.xl)) {
+        // Segmented (the default style), equal shares (the default layout).
+        SlidingSelector(
+            items = Level.entries.map { SelectorItem(it) { Text(it.label) } },
+            selected = level,
+            onSelect = { if (it != null) onLevelChange(it) },
+        )
+        for (filter in notes) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(filter.note, variant = TextVariant.BodyMedium, modifier = Modifier.weight(1f))
+                SlidingSelector(
+                    items = listOf(
+                        SelectorItem(Preference.Has, thumb = ArecaTheme.colors.fgBase, contentDescription = "Has ${filter.note}") {
+                            Text("Has")
+                        },
+                        SelectorItem(Preference.Avoid, thumb = ArecaTheme.colors.bgDangerBase, contentDescription = "Avoid ${filter.note}") {
+                            Text("Avoid")
+                        },
+                    ),
+                    selected = filter.preference,
+                    onSelect = { onPreferenceChange(filter.note, it) },
+                    mode = SelectorMode.Optional,
+                    style = SlidingSelectorStyle.Pill,
+                    size = SlidingSelectorSize.Small,
+                    layout = SelectorLayout.Hug,
+                )
+            }
+        }
+    }
+}
+```
+
+`SlidingSelectorStyle.Pill` is words with a capsule under the chosen one and no ground — a choice
+inside a sentence ("Match: All of them | Any one"). `Underline` and `Button` are the other presets;
+`layout = SelectorLayout.Scroll` for options that overflow. Never rebuild a moving thumb by hand
+with `animateDpAsState`: every selector, tab strip and floating tab bar shares this one.
+
 ## Bottom sheet with its own action bar
 
 ```kotlin
@@ -709,12 +765,11 @@ fun AnalyticsOverview(
             modifier = Modifier.padding(horizontal = ArecaTheme.spacing.horizontalContentInsets),
             verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg),
         ) {
-            Tabs(
-                tabs = listOf("Week", "Month", "Year").map { TabItem(it) { Text(it) } },
-                selectedValue = step,
-                onValueSelected = { step = it },
-                size = TabsSize.Segmented,
-                variant = TabsVariant.Segmented,
+            SlidingSelector(
+                items = listOf("Week", "Month", "Year").map { SelectorItem(it) { Text(it) } },
+                selected = step,
+                onSelect = { if (it != null) step = it },
+                layout = SelectorLayout.Hug,
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(period.title, variant = TextVariant.HeadingSmall, modifier = Modifier.weight(1f))
@@ -813,6 +868,8 @@ fun AnalyticsOverview(
 | `Color(0xFF…)`, `MaterialTheme.colorScheme.*` | `ArecaTheme.colors.*`, `TextColor.*`, `ActionColor.*` |
 | `Modifier.padding(16.dp)` around a screen | `Modifier.horizontalContentInsets()`, `contentInsets()`, `ArecaTheme.spacing.*` |
 | `tween(300)` | `ArecaTheme.motion.slow.tween(ArecaTheme.motion.standard)` |
+| A hand-built segmented control or pill row: `Row` of options with an `animateDpAsState` offset | `SlidingSelector(style = SlidingSelectorStyle.Segmented / Pill, …)` |
+| `Tabs(variant = TabsVariant.Segmented)` for a setting, or a three-state toggle built from two `Toggle`s | `SlidingSelector`; `mode = SelectorMode.Optional` for has / avoid / either |
 | `Modifier.clickable { }` on a `Box` | `Card(onClick = …)`, `ListItem(onClick = …)`, or the custom surface above |
 | `Modifier.clip(shape).clickable(…)` | `Modifier.background(color, shape).clickable(indication = TouchIndication(shape = shape), …)` |
 | Two `ButtonStyle.solid()` buttons on one screen | One solid; the rest `soft`, `outlined` or `plain` |

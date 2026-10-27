@@ -127,25 +127,21 @@ private fun HomeTab(modifier: Modifier = Modifier) {
 
 ## Variations
 
-**A setting, not a view.** `TabsVariant.Segmented` sets the tabs in a capsule track with a sliding
-thumb — a period switch. Pair it with `TabsSize.Segmented`; `fillWidth = true` shares the width
-equally:
+**A setting, not a view.** A period switch or any other setting is a `SlidingSelector`, not tabs:
+it has the same track and sliding thumb, and can also leave nothing chosen. See the
+[pickers recipe](pickers.md).
 
 ```kotlin
-Tabs(
-    listOf(
-        TabItem(value = Period.Month) { Text("Month") },
-        TabItem(value = Period.Year) { Text("Year") },
-    ),
-    selectedValue = period,
-    onValueSelected = onPeriodChange,
-    size = TabsSize.Segmented,
-    variant = TabsVariant.Segmented,
-    fillWidth = true,
+SlidingSelector(
+    items = Period.entries.map { SelectorItem(it) { Text(it.label) } },
+    selected = period,
+    onSelect = { if (it != null) onPeriodChange(it) },
 )
 ```
 
-`TabsVariant.Button` gives the selected tab a fill of its own.
+`TabsVariant.Segmented` (with `TabsSize.Segmented`) and `TabsVariant.Button` draw tabs with the same
+looks, for views that should read as a setting. Every `Tabs` indicator, segmented thumb and
+`FloatingTabBar` indicator is a `SlidingSelector` thumb, so they all move the same way.
 
 **A floating bar.** `FloatingTabBar` floats above the content instead of docking. Like `TabBar`, it
 takes `selectedValue` and `onValueSelected`, or a state that holds the selection:

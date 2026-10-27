@@ -108,7 +108,7 @@ in one place and every component follows. → [Theme](docs/theme.md) ·
 | --- | --- |
 | Buttons and text | `Button`, `IconButton`, `Text`, `Heading`, `TextLink`, `SensitiveText` |
 | Fields | `TextField`, `PasswordField`, `SearchField`, `AffixTextField`, `OtpField`, `SelectField`, `FieldGroup` |
-| Selection | `Checkbox`, `Radio`, `Toggle`, `Swatch`, `SwatchPicker`, `NumberStepper`, `BadgeSelect` |
+| Selection | `Checkbox`, `Radio`, `Toggle`, `SlidingSelector`, `Swatch`, `SwatchPicker`, `NumberStepper`, `BadgeSelect` |
 | Display | `Icon`, `FeaturedIcon`, `Badge`, `Avatar`, `Stat`, `StatGrid` |
 | Lists and settings | Grouped lists, settings rows (toggle, navigation, value), `ContentList`, `PagedContentList`, `Table`, `LazyTable` |
 | Layout | `BaseLayout`, `CollapsingHeaderLayout`, `PullToRefreshLayout`, `Card`, `Expandable`, dividers |

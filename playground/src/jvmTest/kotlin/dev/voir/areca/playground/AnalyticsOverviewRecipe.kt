@@ -30,12 +30,11 @@ import dev.voir.areca.foundation.button.IconButtonStyle
 import dev.voir.areca.foundation.list.ExpandableListItem
 import dev.voir.areca.foundation.list.ExpandableListItemContainer
 import dev.voir.areca.foundation.list.ListItem
+import dev.voir.areca.foundation.selection.SelectorItem
+import dev.voir.areca.foundation.selection.SelectorLayout
+import dev.voir.areca.foundation.selection.SlidingSelector
 import dev.voir.areca.foundation.stat.Stat
 import dev.voir.areca.foundation.stat.StatGrid
-import dev.voir.areca.foundation.tabs.TabItem
-import dev.voir.areca.foundation.tabs.Tabs
-import dev.voir.areca.foundation.tabs.TabsSize
-import dev.voir.areca.foundation.tabs.TabsVariant
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.foundation.text.TextColor
 import dev.voir.areca.foundation.text.TextVariant
@@ -97,12 +96,11 @@ fun AnalyticsOverview(
             modifier = Modifier.padding(horizontal = ArecaTheme.spacing.horizontalContentInsets),
             verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg),
         ) {
-            Tabs(
-                tabs = listOf("Week", "Month", "Year").map { TabItem(it) { Text(it) } },
-                selectedValue = step,
-                onValueSelected = { step = it },
-                size = TabsSize.Segmented,
-                variant = TabsVariant.Segmented,
+            SlidingSelector(
+                items = listOf("Week", "Month", "Year").map { SelectorItem(it) { Text(it) } },
+                selected = step,
+                onSelect = { if (it != null) step = it },
+                layout = SelectorLayout.Hug,
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(period.title, variant = TextVariant.HeadingSmall, modifier = Modifier.weight(1f))

@@ -1,66 +1,40 @@
 package dev.voir.areca.foundation.tabs
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.layout.layout
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.layout.positionInParent
-import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import dev.voir.areca.foundation.LocalContentColor
-import dev.voir.areca.foundation.LocalTextStyle
-import dev.voir.areca.foundation.button.Button
 import dev.voir.areca.foundation.icon.Icon
 import dev.voir.areca.foundation.icon.IconSize
-import dev.voir.areca.foundation.icon.LocalIconSize
+import dev.voir.areca.foundation.selection.SelectorCore
+import dev.voir.areca.foundation.selection.SelectorEdge
+import dev.voir.areca.foundation.selection.SelectorLayout
+import dev.voir.areca.foundation.selection.SelectorOrientation
+import dev.voir.areca.foundation.selection.SelectorRole
+import dev.voir.areca.foundation.selection.SelectorThumbKind
+import dev.voir.areca.foundation.selection.SlidingSelector
+import dev.voir.areca.foundation.selection.SlidingSelectorSize
+import dev.voir.areca.foundation.selection.SlidingSelectorStyle
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.indication.FadeIndication
 import dev.voir.areca.indication.TouchIndication
-import dev.voir.areca.modifier.clickCursor
 import dev.voir.areca.theme.ArecaTheme
+import dev.voir.areca.theme.slide
 import dev.voir.areca.theme.tween
-import kotlin.math.roundToInt
 import kotlin.time.Duration
 
 /**
@@ -106,7 +80,10 @@ public enum class TabsVerticalPosition {
  * switch a setting.
  */
 public enum class TabsVariant {
-    /** The selected tab wears a filled background; no divider or indicator is drawn. */
+    /**
+     * The selected tab wears a flat fill, which slides to the newly selected tab. No track, divider
+     * or underline is drawn.
+     */
     Button,
 
     /**
@@ -253,7 +230,10 @@ public data class TabsStyle(
  * @property iconSize Size given to icons inside a tab.
  * @property textStyle Style given to a tab's label.
  * @property indicatorDuration Time the indicator, or the segmented thumb, takes to travel between
- *   tabs.
+ *   tabs. Left at the theme's `motion.medium`, the indicator moves on the theme's
+ *   [slide][dev.voir.areca.theme.slide] spring instead, like every
+ *   [SlidingSelector][dev.voir.areca.foundation.selection.SlidingSelector]; any other duration is
+ *   a tween of that length.
  * @property trackPadding Space between the track's edge and the tabs, in [TabsVariant.Segmented].
  * @property thumbElevation Shadow under the thumb, in [TabsVariant.Segmented].
  */
@@ -429,11 +409,12 @@ public val LocalTabsSize: ProvidableCompositionLocal<TabsSize?> = compositionLoc
  * lets the strip be driven by navigation or a view model rather than owning state a screen also
  * needs. For a strip whose selection belongs to nothing else, use the [TabsState] overload.
  *
- * The indicator animates between the tabs' *measured* bounds rather than assuming equal widths, so
- * it stays correct when labels differ in length or the strip overflows. The indicator starts under
- * the selected tab rather than travelling there from the strip's edge on the first frame. A strip
- * that overflows scrolls the selected tab into view, in either reading direction, including when
- * the selection changes from code.
+ * Built on [SlidingSelector]: each variant is one of its looks, and the indicator is its thumb. The
+ * indicator animates between the tabs' *measured* bounds rather than assuming equal widths, so it
+ * stays correct when labels differ in length or the strip overflows. It starts under the selected
+ * tab rather than travelling there from the strip's edge on the first frame. A strip that overflows
+ * scrolls the selected tab into view, in either reading direction, including when the selection
+ * changes from code.
  *
  * Announced as a group of tabs: a screen reader reports each tab's selected state, and each enabled
  * tab is its own focus stop, reached with the Tab key and selected with Enter or Space.
@@ -468,175 +449,116 @@ public fun <T> Tabs(
     fillWidth: Boolean = false,
 ) {
     val horizontal = orientation == TabsOrientation.Horizontal
-    val fill = fillWidth && horizontal
-    val segmented = variant == TabsVariant.Segmented
-    val scrollState = rememberScrollState()
     val selectedIndex = tabs.indexOfFirst { it.value == selectedValue }
-    // A horizontal scroll counts from the start edge, which is the right edge in a right-to-left
-    // layout, while measured bounds count from the left.
-    val reversed = horizontal && LocalLayoutDirection.current == LayoutDirection.Rtl
-
-    // Measured rather than derived: tabs have different widths, and equal-width maths puts the
-    // indicator under the wrong label as soon as one label is longer than the others.
-    val tabBounds = remember { mutableStateMapOf<Int, TabBounds>() }
-    var viewportExtent by remember { mutableIntStateOf(0) }
-    var contentExtent by remember { mutableIntStateOf(0) }
-    val selectedBounds = tabBounds[selectedIndex]
-
-    val indicator = remember { TabsIndicator() }
-    val indicatorSpec = size.indicatorDuration.tween<Float>(ArecaTheme.motion.standard)
-    LaunchedEffect(selectedBounds) {
-        indicator.moveTo(bounds = selectedBounds, animationSpec = indicatorSpec)
-    }
-
-    // Keeps the selected tab visible, including when the selection changes from code rather than
-    // from a press.
-    LaunchedEffect(selectedBounds, viewportExtent, contentExtent, reversed) {
-        val bounds = selectedBounds ?: return@LaunchedEffect
-
-        val target = TabsScrollMath.scrollToReveal(
-            tabStart = bounds.start,
-            tabEnd = bounds.end,
-            viewportExtent = viewportExtent,
-            contentExtent = contentExtent,
-            scroll = scrollState.value,
-            reversed = reversed,
-        )
-        if (target != null) {
-            scrollState.animateScrollTo(target)
-        }
-    }
-
-    val stripModifier = modifier
-        .onSizeChanged { viewportExtent = if (horizontal) it.width else it.height }
-        .then(
-            when {
-                fill -> Modifier.fillMaxWidth()
-                horizontal -> Modifier.horizontalScroll(scrollState)
-                else -> Modifier.verticalScroll(scrollState)
-            }
-        )
-        // After the scroll, so this is the content's full length rather than the visible window.
-        .onSizeChanged { contentExtent = if (horizontal) it.width else it.height }
-        .then(
-            if (variant == TabsVariant.Underline) {
-                Modifier.drawTabsLine(
-                    style = style,
-                    size = size,
-                    selectedBounds = indicator::bounds,
-                    horizontal = horizontal,
-                    atStartEdge = if (horizontal) {
-                        horizontalPosition == TabsHorizontalPosition.Top
-                    } else {
-                        verticalPosition == TabsVerticalPosition.Start
-                    },
-                )
-            } else {
-                Modifier
-            }
-        )
-        .selectableGroup()
-
-    val content: @Composable (tabModifier: Modifier) -> Unit = { tabModifier ->
-        tabs.forEachIndexed { index, tab ->
-            Tab(
-                tab = tab,
-                selected = tab.value == selectedValue,
-                onSelect = { onValueSelected(tab.value) },
-                style = style,
-                size = size,
-                variant = variant,
-                orientation = orientation,
-                modifier = tabModifier.onGloballyPositioned {
-                    val position = it.positionInParent()
-                    tabBounds[index] = if (horizontal) {
-                        TabBounds(position.x, position.x + it.size.width)
-                    } else {
-                        TabBounds(position.y, position.y + it.size.height)
-                    }
-                },
-            )
-        }
-    }
-
-    val line: @Composable (Modifier) -> Unit = { lineModifier ->
-        if (horizontal) {
-            Row(
-                modifier = lineModifier,
-                horizontalArrangement = Arrangement.spacedBy(size.gap),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                content(if (fill) Modifier.weight(1f) else Modifier)
-            }
+    val selectorStyle = selectorStyleOf(
+        style = style,
+        size = size,
+        variant = variant,
+        edge = if (horizontal) {
+            if (horizontalPosition == TabsHorizontalPosition.Top) SelectorEdge.Start else SelectorEdge.End
         } else {
-            Column(
-                modifier = lineModifier,
-                verticalArrangement = Arrangement.spacedBy(size.gap),
-                horizontalAlignment = Alignment.Start,
-            ) {
-                content(Modifier)
-            }
-        }
-    }
+            if (verticalPosition == TabsVerticalPosition.Start) SelectorEdge.Start else SelectorEdge.End
+        },
+    )
 
-    if (segmented) {
-        // The thumb is a sibling under the tabs rather than a fill on the selected tab, so it can
-        // slide between them. The tabs report their bounds relative to their own line, and the line
-        // sits at the box's padded origin, which is where the thumb is placed from.
-        Box(
-            modifier = stripModifier
-                .background(style.track, size.itemShape)
-                .padding(size.trackPadding),
-        ) {
-            Box(
-                modifier = Modifier
-                    .matchParentSize()
-                    .segmentedThumb(indicator::bounds, horizontal)
-                    .shadow(size.thumbElevation, size.itemShape)
-                    .background(style.thumb, size.itemShape),
-            )
-            line(if (fill) Modifier.fillMaxWidth() else Modifier)
-        }
-    } else {
-        line(stripModifier)
+    SelectorCore(
+        count = tabs.size,
+        selectedIndex = selectedIndex,
+        isEnabled = { tabs[it].enabled },
+        onTap = { index -> if (index != selectedIndex) onValueSelected(tabs[index].value) },
+        role = SelectorRole.Tab,
+        style = selectorStyle,
+        size = SlidingSelectorSize(
+            gap = size.gap,
+            itemPadding = PaddingValues(
+                horizontal = size.itemPaddingHorizontal,
+                vertical = size.itemPaddingVertical,
+            ),
+            itemMinWidth = size.itemMinWidth,
+            itemMinHeight = size.itemMinHeight,
+            iconSize = size.iconSize,
+            textStyle = size.textStyle,
+        ),
+        layout = if (fillWidth && horizontal) SelectorLayout.Fill else SelectorLayout.Scroll,
+        orientation = if (horizontal) SelectorOrientation.Horizontal else SelectorOrientation.Vertical,
+        modifier = modifier,
+        itemBackground = { _, selected, enabled ->
+            when {
+                // The selected fill is the thumb, which slides between tabs.
+                variant != TabsVariant.Button || selected -> Color.Transparent
+                !enabled -> style.bgDisabled
+                else -> style.bg
+            }
+        },
+    ) { index, selected ->
+        val tab = tabs[index]
+        tab.content(TabItemScope(selected = selected, enabled = tab.enabled, orientation = orientation))
     }
 }
 
 /**
- * Sizes and places a segmented strip's thumb over the selected tab.
+ * The [SlidingSelector] look a tab strip's variant draws with.
  *
- * Reads the animated bounds during layout, so a moving thumb relayouts itself alone rather than
- * recomposing the strip. Draws nothing while nothing is selected.
+ * [TabsSize.indicatorDuration] keeps its meaning: left at the theme's medium duration, the indicator
+ * moves on the theme's [slide] spring like every other selector; set to anything else, it travels on
+ * a tween of that length.
  *
- * @param bounds Reads where the thumb currently sits, along the strip, or `null` when nothing is
- *   selected.
- * @param horizontal Whether the strip runs across rather than down.
- * @return Modifier laying the thumb out.
+ * @param style Colours of the strip.
+ * @param size Metrics of the strip.
+ * @param variant How much surface the strip draws.
+ * @param edge Edge carrying the divider and the underline.
+ * @return Style for the selector under the strip.
  */
-private fun Modifier.segmentedThumb(bounds: () -> TabBounds?, horizontal: Boolean): Modifier =
-    layout { measurable, constraints ->
-        val current = bounds()
-        if (current == null) {
-            return@layout layout(0, 0) {}
-        }
-        val extent = (current.end - current.start).roundToInt().coerceAtLeast(0)
-        val placeable = measurable.measure(
-            if (horizontal) {
-                Constraints.fixed(extent, constraints.maxHeight)
-            } else {
-                Constraints.fixed(constraints.maxWidth, extent)
-            },
+@Composable
+private fun selectorStyleOf(
+    style: TabsStyle,
+    size: TabsSize,
+    variant: TabsVariant,
+    edge: SelectorEdge,
+): SlidingSelectorStyle {
+    val motion = ArecaTheme.motion
+    val base = SlidingSelectorStyle.default(
+        content = style.content,
+        contentSelected = style.contentSelected,
+        contentDisabled = style.contentDisabled,
+        track = Color.Transparent,
+        trackShape = size.itemShape,
+        trackPadding = 0.dp,
+        thumbShape = size.itemShape,
+        thumbElevation = 0.dp,
+        thumbThickness = size.indicatorThickness,
+        thumbEdge = edge,
+        dividerThickness = size.dividerThickness,
+        itemShape = size.itemShape,
+        // A button or segmented tab already has a fill to tint; an underline tab has none, so it
+        // fades instead.
+        indication = if (variant != TabsVariant.Underline) {
+            TouchIndication(shape = size.itemShape, color = style.contentSelected)
+        } else {
+            FadeIndication(shape = size.itemShape)
+        },
+        motion = if (size.indicatorDuration == motion.medium) {
+            motion.slide()
+        } else {
+            size.indicatorDuration.tween(motion.standard)
+        },
+    )
+    return when (variant) {
+        TabsVariant.Button -> base.copy(thumb = style.bgSelected)
+        TabsVariant.Segmented -> base.copy(
+            track = style.track,
+            trackPadding = size.trackPadding,
+            thumb = style.thumb,
+            thumbElevation = size.thumbElevation,
         )
-        layout(constraints.maxWidth, constraints.maxHeight) {
-            // Bounds are measured from the left, so the thumb is placed from the left too, in either
-            // reading direction.
-            if (horizontal) {
-                placeable.place(current.start.roundToInt(), 0)
-            } else {
-                placeable.place(0, current.start.roundToInt())
-            }
-        }
+        TabsVariant.Underline -> base.copy(
+            thumb = style.indicator,
+            thumbKind = SelectorThumbKind.Underline,
+            thumbShape = ArecaTheme.shapes.full,
+            divider = style.divider,
+        )
     }
+}
 
 /**
  * A strip of tabs whose selection belongs to the strip.
@@ -677,141 +599,5 @@ public fun <T> Tabs(
         horizontalPosition = horizontalPosition,
         verticalPosition = verticalPosition,
         fillWidth = fillWidth,
-    )
-}
-
-/**
- * One tab of a strip.
- *
- * Uses `selectable` rather than `clickable`, so the tab's selected state is announced as part of
- * the enclosing `selectableGroup`.
- *
- * @param tab The tab.
- * @param selected Whether it is the selected one.
- * @param onSelect Called when the user selects it.
- * @param style Colors to draw with.
- * @param size Metrics to draw with.
- * @param variant How much surface the strip draws.
- * @param orientation Which way the strip runs, handed to the tab's content.
- * @param modifier Modifier applied to the tab, carrying its bounds reporting.
- */
-@Composable
-private fun <T> Tab(
-    tab: TabItem<T>,
-    selected: Boolean,
-    onSelect: () -> Unit,
-    style: TabsStyle,
-    size: TabsSize,
-    variant: TabsVariant,
-    orientation: TabsOrientation,
-    modifier: Modifier = Modifier,
-) {
-    val contentColor = when {
-        !tab.enabled -> style.contentDisabled
-        selected -> style.contentSelected
-        else -> style.content
-    }
-    val backgroundColor = when {
-        variant != TabsVariant.Button -> Color.Transparent
-        !tab.enabled -> style.bgDisabled
-        selected -> style.bgSelected
-        else -> style.bg
-    }
-
-    val interactionSource = remember { MutableInteractionSource() }
-    // A button or segmented tab already has a fill to tint; an underline tab has none, so it fades instead.
-    val indication = if (variant != TabsVariant.Underline) {
-        TouchIndication(shape = size.itemShape, color = style.contentSelected)
-    } else {
-        FadeIndication(shape = size.itemShape)
-    }
-
-    CompositionLocalProvider(
-        LocalTextStyle provides size.textStyle,
-        LocalContentColor provides contentColor,
-        LocalIconSize provides size.iconSize,
-    ) {
-        Box(
-            modifier = modifier
-                .defaultMinSize(minWidth = size.itemMinWidth, minHeight = size.itemMinHeight)
-                // Shaped fill rather than a clip, which would crop the focus ring the indication
-                // draws outside the tab.
-                .background(backgroundColor, size.itemShape)
-                .selectable(
-                    selected = selected,
-                    enabled = tab.enabled,
-                    interactionSource = interactionSource,
-                    indication = indication,
-                    role = Role.Tab,
-                    onClick = { if (!selected) onSelect() },
-                )
-                .clickCursor(tab.enabled)
-                .padding(
-                    horizontal = size.itemPaddingHorizontal,
-                    vertical = size.itemPaddingVertical,
-                ),
-            contentAlignment = Alignment.Center,
-        ) {
-            tab.content(
-                TabItemScope(
-                    selected = selected,
-                    enabled = tab.enabled,
-                    orientation = orientation,
-                )
-            )
-        }
-    }
-}
-
-/**
- * Draws the strip's divider and the indicator sliding along it.
- *
- * One implementation for both orientations: the axis decides which coordinate is fixed and which
- * runs, and nothing else differs. The indicator is drawn over the divider on the same line, so the
- * two read as one rule with a lit segment.
- *
- * @param style Colors to draw with.
- * @param size Thicknesses to draw with.
- * @param selectedBounds Reads where the indicator currently sits, or `null` when nothing is
- *   selected. Called only while drawing, so a moving indicator redraws without recomposing.
- * @param horizontal Whether the strip runs across rather than down.
- * @param atStartEdge Whether the line sits at the top (horizontal) or at the start edge in reading
- *   order (vertical) rather than the opposite one.
- * @return Modifier drawing the line over the content.
- */
-private fun Modifier.drawTabsLine(
-    style: TabsStyle,
-    size: TabsSize,
-    selectedBounds: () -> TabBounds?,
-    horizontal: Boolean,
-    atStartEdge: Boolean,
-): Modifier = drawWithContent {
-    drawContent()
-
-    // The start edge of a vertical strip is its right edge in a right-to-left layout.
-    val atLeftOrTop = horizontal && atStartEdge ||
-        !horizontal && atStartEdge == (layoutDirection == LayoutDirection.Ltr)
-    val crossExtent = if (horizontal) this.size.height else this.size.width
-    val fixed = if (atLeftOrTop) 0f else crossExtent
-    val length = if (horizontal) this.size.width else this.size.height
-
-    fun offsetAt(along: Float): Offset =
-        if (horizontal) Offset(along, fixed) else Offset(fixed, along)
-
-    drawLine(
-        color = style.divider,
-        start = offsetAt(0f),
-        end = offsetAt(length),
-        strokeWidth = size.dividerThickness.toPx(),
-    )
-
-    val bounds = selectedBounds() ?: return@drawWithContent
-
-    drawLine(
-        color = style.indicator,
-        start = offsetAt(bounds.start),
-        end = offsetAt(bounds.end),
-        strokeWidth = size.indicatorThickness.toPx(),
-        cap = StrokeCap.Round,
     )
 }
