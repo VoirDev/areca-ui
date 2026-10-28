@@ -31,6 +31,9 @@ kotlin {
             // a consumer's screen; the recipes use foundation's `ConfirmSheet`, `Settings` and
             // `Button` directly.
             api(projects.ui.foundation)
+            // The viewer is a `MediaViewer`, its pictures zoom with media's zoom, and they load through
+            // `LocalMediaImageLoader`, the one loader an application provides for every picture.
+            api(projects.ui.media)
         }
 
         commonTest.dependencies {

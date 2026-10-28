@@ -1,22 +1,31 @@
 package dev.voir.areca.flow.attachments.viewer
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import dev.voir.areca.flow.attachments.AttachmentFormat
-import dev.voir.areca.flow.attachments.AttachmentImageState
 import dev.voir.areca.flow.attachments.AttachmentItem
 import dev.voir.areca.flow.attachments.AttachmentState
-import dev.voir.areca.flow.attachments.LocalAttachmentImageLoader
+import dev.voir.areca.flow.attachments.attachmentPictureLoader
 import dev.voir.areca.foundation.AnnounceOnChange
 import dev.voir.areca.foundation.feedback.Spinner
 import dev.voir.areca.foundation.feedback.SpinnerSize
 import dev.voir.areca.foundation.feedback.SpinnerStyle
+import dev.voir.areca.media.LocalMediaImageLoader
+import dev.voir.areca.media.image.MediaFit
+import dev.voir.areca.media.image.MediaFrameStyle
+import dev.voir.areca.media.image.MediaImage
+import dev.voir.areca.media.image.MediaPlaceholder
+import dev.voir.areca.media.zoom.ZoomBehavior
+import dev.voir.areca.media.zoom.ZoomLabels
+import dev.voir.areca.media.zoom.rememberZoomState
+import dev.voir.areca.media.zoom.zoomable
 import dev.voir.areca.theme.ArecaDarkTheme
 
 /**
@@ -232,25 +241,19 @@ private fun ViewerPicture(
     modifier: Modifier,
     fallback: @Composable () -> Unit,
 ) {
-    BoxWithConstraints(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        val edge = displayEdge(constraints.maxWidth, constraints.maxHeight, fallback = FALLBACK_PIXELS)
-
-        when (val picture = LocalAttachmentImageLoader.current.load(model = model, maxSize = edge)) {
-            is AttachmentImageState.Ready -> ZoomableImage(
-                painter = picture.painter,
-                contentDescription = description,
-                zoomInLabel = zoomInLabel,
-                zoomOutLabel = zoomOutLabel,
-                resetZoomLabel = resetZoomLabel,
-            )
-
-            AttachmentImageState.Failed -> fallback()
-
-            AttachmentImageState.Loading -> Spinner(
-                style = SpinnerStyle(color = style.controlContent),
-                size = SpinnerSize.Large,
-            )
-        }
+    CompositionLocalProvider(LocalMediaImageLoader provides attachmentPictureLoader()) {
+        MediaImage(
+            model = model,
+            contentDescription = description,
+            modifier = modifier.fillMaxSize(),
+            fit = MediaFit.Whole,
+            placeholder = MediaPlaceholder.None,
+            zoom = ZoomBehavior.Sticky,
+            zoomState = rememberZoomState(maxScale = PICTURE_MAX_SCALE),
+            zoomLabels = ZoomLabels(zoomIn = zoomInLabel, zoomOut = zoomOutLabel, reset = resetZoomLabel),
+            style = MediaFrameStyle.bare(content = style.controlContent),
+            failure = { fallback() },
+        )
     }
 }
 
@@ -303,8 +306,9 @@ internal fun stoppedArriving(previous: AttachmentState?, current: AttachmentStat
     return isStopped && (wasArriving || wasStopped)
 }
 
-/** The edge a picture is asked for at when the page's size is not bounded. */
-private const val FALLBACK_PIXELS = 2048
 
 /** Multiplier from a share to a percentage. */
 private const val PERCENT = 100
+
+/** How close a picture may be brought: far enough to read the small print on a receipt. */
+private const val PICTURE_MAX_SCALE = 5f

@@ -2785,24 +2785,85 @@ public final class dev/voir/areca/foundation/navigation/NavNode$Section : dev/vo
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class dev/voir/areca/foundation/navigation/PageCounterKt {
+	public static final fun PageCounter (IILandroidx/compose/ui/Modifier;Ljava/lang/String;Lkotlin/jvm/functions/Function2;Ldev/voir/areca/foundation/navigation/PageCounterStyle;Ldev/voir/areca/foundation/navigation/PageCounterSize;Landroidx/compose/runtime/Composer;II)V
+	public static final fun PageCounter (Landroidx/compose/foundation/pager/PagerState;Landroidx/compose/ui/Modifier;Ljava/lang/String;Lkotlin/jvm/functions/Function2;Ldev/voir/areca/foundation/navigation/PageCounterStyle;Ldev/voir/areca/foundation/navigation/PageCounterSize;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class dev/voir/areca/foundation/navigation/PageCounterSize {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/foundation/navigation/PageCounterSize$Companion;
+	public fun <init> (Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/graphics/Shape;)V
+	public final fun component1 ()Landroidx/compose/foundation/layout/PaddingValues;
+	public final fun component2 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component3 ()Landroidx/compose/ui/graphics/Shape;
+	public final fun copy (Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/graphics/Shape;)Ldev/voir/areca/foundation/navigation/PageCounterSize;
+	public static synthetic fun copy$default (Ldev/voir/areca/foundation/navigation/PageCounterSize;Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/graphics/Shape;ILjava/lang/Object;)Ldev/voir/areca/foundation/navigation/PageCounterSize;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPadding ()Landroidx/compose/foundation/layout/PaddingValues;
+	public final fun getShape ()Landroidx/compose/ui/graphics/Shape;
+	public final fun getTextStyle ()Landroidx/compose/ui/text/TextStyle;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/foundation/navigation/PageCounterSize$Companion {
+	public final fun default (Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/graphics/Shape;Landroidx/compose/runtime/Composer;II)Ldev/voir/areca/foundation/navigation/PageCounterSize;
+	public final fun getDefault (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/foundation/navigation/PageCounterSize;
+}
+
+public final class dev/voir/areca/foundation/navigation/PageCounterSizeKt {
+	public static final fun getLocalPageCounterSize ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
+public final class dev/voir/areca/foundation/navigation/PageCounterStyle {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/foundation/navigation/PageCounterStyle$Companion;
+	public synthetic fun <init> (JJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun copy--OWjLjI (JJ)Ldev/voir/areca/foundation/navigation/PageCounterStyle;
+	public static synthetic fun copy--OWjLjI$default (Ldev/voir/areca/foundation/navigation/PageCounterStyle;JJILjava/lang/Object;)Ldev/voir/areca/foundation/navigation/PageCounterStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBg-0d7_KjU ()J
+	public final fun getContent-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/foundation/navigation/PageCounterStyle$Companion {
+	public final fun default-dgg9oW8 (JJLandroidx/compose/runtime/Composer;II)Ldev/voir/areca/foundation/navigation/PageCounterStyle;
+	public final fun getDefault (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/foundation/navigation/PageCounterStyle;
+	public final fun onImage-dgg9oW8 (JJLandroidx/compose/runtime/Composer;II)Ldev/voir/areca/foundation/navigation/PageCounterStyle;
+}
+
+public final class dev/voir/areca/foundation/navigation/PageCounterStyleKt {
+	public static final fun getLocalPageCounterStyle ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
 public final class dev/voir/areca/foundation/navigation/PageIndicatorKt {
-	public static final fun PageIndicator (IILandroidx/compose/ui/Modifier;FLjava/lang/String;Ldev/voir/areca/foundation/navigation/PageIndicatorStyle;Ldev/voir/areca/foundation/navigation/PageIndicatorSize;Landroidx/compose/runtime/Composer;II)V
-	public static final fun PageIndicator (Landroidx/compose/foundation/pager/PagerState;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ldev/voir/areca/foundation/navigation/PageIndicatorStyle;Ldev/voir/areca/foundation/navigation/PageIndicatorSize;Landroidx/compose/runtime/Composer;II)V
+	public static final fun PageIndicator (IILandroidx/compose/ui/Modifier;FLjava/lang/String;Ldev/voir/areca/foundation/navigation/PageIndicatorVariant;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;Ldev/voir/areca/foundation/navigation/PageIndicatorStyle;Ldev/voir/areca/foundation/navigation/PageIndicatorSize;Landroidx/compose/runtime/Composer;II)V
+	public static final fun PageIndicator (Landroidx/compose/foundation/pager/PagerState;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ldev/voir/areca/foundation/navigation/PageIndicatorVariant;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;Ldev/voir/areca/foundation/navigation/PageIndicatorStyle;Ldev/voir/areca/foundation/navigation/PageIndicatorSize;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class dev/voir/areca/foundation/navigation/PageIndicatorSize {
 	public static final field $stable I
 	public static final field Companion Ldev/voir/areca/foundation/navigation/PageIndicatorSize$Companion;
-	public synthetic fun <init> (FFFLandroidx/compose/ui/graphics/Shape;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (FFFLandroidx/compose/ui/graphics/Shape;FFILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (FFFLandroidx/compose/ui/graphics/Shape;FFLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1-D9Ej5fM ()F
 	public final fun component2-D9Ej5fM ()F
 	public final fun component3-D9Ej5fM ()F
 	public final fun component4 ()Landroidx/compose/ui/graphics/Shape;
-	public final fun copy-DRUOcmI (FFFLandroidx/compose/ui/graphics/Shape;)Ldev/voir/areca/foundation/navigation/PageIndicatorSize;
-	public static synthetic fun copy-DRUOcmI$default (Ldev/voir/areca/foundation/navigation/PageIndicatorSize;FFFLandroidx/compose/ui/graphics/Shape;ILjava/lang/Object;)Ldev/voir/areca/foundation/navigation/PageIndicatorSize;
+	public final fun component5-D9Ej5fM ()F
+	public final fun component6-D9Ej5fM ()F
+	public final fun copy-TT2weM0 (FFFLandroidx/compose/ui/graphics/Shape;FF)Ldev/voir/areca/foundation/navigation/PageIndicatorSize;
+	public static synthetic fun copy-TT2weM0$default (Ldev/voir/areca/foundation/navigation/PageIndicatorSize;FFFLandroidx/compose/ui/graphics/Shape;FFILjava/lang/Object;)Ldev/voir/areca/foundation/navigation/PageIndicatorSize;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getCurrentLength-D9Ej5fM ()F
 	public final fun getDot-D9Ej5fM ()F
+	public final fun getLineLength-D9Ej5fM ()F
+	public final fun getLineThickness-D9Ej5fM ()F
 	public final fun getShape ()Landroidx/compose/ui/graphics/Shape;
 	public final fun getSpacing-D9Ej5fM ()F
 	public fun hashCode ()I
@@ -2810,7 +2871,7 @@ public final class dev/voir/areca/foundation/navigation/PageIndicatorSize {
 }
 
 public final class dev/voir/areca/foundation/navigation/PageIndicatorSize$Companion {
-	public final fun default-jTDHpeQ (FFFLandroidx/compose/ui/graphics/Shape;Landroidx/compose/runtime/Composer;II)Ldev/voir/areca/foundation/navigation/PageIndicatorSize;
+	public final fun default-sKYByYc (FFFLandroidx/compose/ui/graphics/Shape;FFLandroidx/compose/runtime/Composer;II)Ldev/voir/areca/foundation/navigation/PageIndicatorSize;
 	public final fun getDefault (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/foundation/navigation/PageIndicatorSize;
 }
 
@@ -2821,12 +2882,15 @@ public final class dev/voir/areca/foundation/navigation/PageIndicatorSizeKt {
 public final class dev/voir/areca/foundation/navigation/PageIndicatorStyle {
 	public static final field $stable I
 	public static final field Companion Ldev/voir/areca/foundation/navigation/PageIndicatorStyle$Companion;
-	public synthetic fun <init> (JJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (JJLandroidx/compose/ui/graphics/Color;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (JJLandroidx/compose/ui/graphics/Color;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1-0d7_KjU ()J
 	public final fun component2-0d7_KjU ()J
-	public final fun copy--OWjLjI (JJ)Ldev/voir/areca/foundation/navigation/PageIndicatorStyle;
-	public static synthetic fun copy--OWjLjI$default (Ldev/voir/areca/foundation/navigation/PageIndicatorStyle;JJILjava/lang/Object;)Ldev/voir/areca/foundation/navigation/PageIndicatorStyle;
+	public final fun component3-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
+	public final fun copy-yT9C2bc (JJLandroidx/compose/ui/graphics/Color;)Ldev/voir/areca/foundation/navigation/PageIndicatorStyle;
+	public static synthetic fun copy-yT9C2bc$default (Ldev/voir/areca/foundation/navigation/PageIndicatorStyle;JJLandroidx/compose/ui/graphics/Color;ILjava/lang/Object;)Ldev/voir/areca/foundation/navigation/PageIndicatorStyle;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCapsule-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
 	public final fun getCurrent-0d7_KjU ()J
 	public final fun getOther-0d7_KjU ()J
 	public fun hashCode ()I
@@ -2834,12 +2898,62 @@ public final class dev/voir/areca/foundation/navigation/PageIndicatorStyle {
 }
 
 public final class dev/voir/areca/foundation/navigation/PageIndicatorStyle$Companion {
-	public final fun default-dgg9oW8 (JJLandroidx/compose/runtime/Composer;II)Ldev/voir/areca/foundation/navigation/PageIndicatorStyle;
+	public final fun default-yFw0xO4 (JJLandroidx/compose/ui/graphics/Color;Landroidx/compose/runtime/Composer;II)Ldev/voir/areca/foundation/navigation/PageIndicatorStyle;
 	public final fun getDefault (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/foundation/navigation/PageIndicatorStyle;
+	public final fun onImage-yFw0xO4 (JJLandroidx/compose/ui/graphics/Color;Landroidx/compose/runtime/Composer;II)Ldev/voir/areca/foundation/navigation/PageIndicatorStyle;
 }
 
 public final class dev/voir/areca/foundation/navigation/PageIndicatorStyleKt {
 	public static final fun getLocalPageIndicatorStyle ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
+public abstract interface class dev/voir/areca/foundation/navigation/PageIndicatorVariant {
+}
+
+public final class dev/voir/areca/foundation/navigation/PageIndicatorVariant$Dots : dev/voir/areca/foundation/navigation/PageIndicatorVariant {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/voir/areca/foundation/navigation/PageIndicatorVariant$Dots;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/foundation/navigation/PageIndicatorVariant$Elongated : dev/voir/areca/foundation/navigation/PageIndicatorVariant {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/voir/areca/foundation/navigation/PageIndicatorVariant$Elongated;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/foundation/navigation/PageIndicatorVariant$Line : dev/voir/areca/foundation/navigation/PageIndicatorVariant {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/voir/areca/foundation/navigation/PageIndicatorVariant$Line;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/foundation/navigation/PageIndicatorVariant$Segments : dev/voir/areca/foundation/navigation/PageIndicatorVariant {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/voir/areca/foundation/navigation/PageIndicatorVariant$Segments;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/foundation/navigation/PageIndicatorVariant$Shrinking : dev/voir/areca/foundation/navigation/PageIndicatorVariant {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (I)V
+	public synthetic fun <init> (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun copy (I)Ldev/voir/areca/foundation/navigation/PageIndicatorVariant$Shrinking;
+	public static synthetic fun copy$default (Ldev/voir/areca/foundation/navigation/PageIndicatorVariant$Shrinking;IILjava/lang/Object;)Ldev/voir/areca/foundation/navigation/PageIndicatorVariant$Shrinking;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getWindow ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class dev/voir/areca/foundation/navigation/PagerController {

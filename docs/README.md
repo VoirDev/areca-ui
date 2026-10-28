@@ -22,6 +22,7 @@ Everything about using Areca, by what you want to do. New here? Start with
 | [Charts](../ui/charts/README.md) | `dev.voir.areca:charts` — bar, stacked-bar, column and line charts, meter bar, legend |
 | [Date and time](../ui/datetime/README.md) | `dev.voir.areca:datetime` — calendar, date range, month and year picker, time picker, date-time field |
 | [Crop](../ui/crop/README.md) | `dev.voir.areca:crop` — the image cropper |
+| [Media](../ui/media/README.md) | `dev.voir.areca:media` — picture frames, zoom, carousels, thumbnails, the viewer and comparisons |
 | [Keyboard](../ui/keyboard/README.md) | `dev.voir.areca:keyboard` — the on-screen keyboard |
 | [Icons](../standalone/icons/README.md) | `dev.voir.areca:icons` — 1,062 icons |
 | [ViewModel](../standalone/viewmodel/README.md) | `dev.voir.areca:viewmodel` — state, effects and paged lists |
@@ -34,6 +35,7 @@ Everything about using Areca, by what you want to do. New here? Start with
 | [Auth flow](../flow/auth/README.md) | `dev.voir.areca:flow-auth` — sign-in screens and their recipes |
 | [Profile flow](../flow/profile/README.md) | `dev.voir.areca:flow-profile` — account screens and their recipes |
 | [Attachments flow](../flow/attachments/README.md) | `dev.voir.areca:flow-attachments` — attaching and viewing files |
+| [Gallery flow](../flow/gallery/README.md) | `dev.voir.areca:flow-gallery` — product gallery captions, author lines and grid pages |
 
 ## Work with an AI coding agent
 
@@ -49,7 +51,7 @@ The `areca` Claude Code plugin teaches agents to build with Areca:
 
 | Skill | Covers |
 | --- | --- |
-| [`areca-ui-v1`](../skills/areca-ui-v1/SKILL.md) | Theme, foundation, charts, date and time, crop, keyboard, flows and icons: component choice, signatures, rules, recipes |
+| [`areca-ui-v1`](../skills/areca-ui-v1/SKILL.md) | Theme, foundation, charts, date and time, crop, media, keyboard, flows and icons: component choice, signatures, rules, recipes |
 | [`areca-viewmodel-v1`](../skills/areca-viewmodel-v1/SKILL.md) | Presentation code on `dev.voir.areca:viewmodel` |
 
 ## Contribute

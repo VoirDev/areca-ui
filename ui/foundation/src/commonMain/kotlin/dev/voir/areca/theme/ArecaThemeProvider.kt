@@ -100,11 +100,15 @@ import dev.voir.areca.foundation.list.LocalListStyle
 import dev.voir.areca.foundation.navigation.LocalNavItemSize
 import dev.voir.areca.foundation.navigation.LocalNavItemStyle
 import dev.voir.areca.foundation.navigation.LocalNavListSize
+import dev.voir.areca.foundation.navigation.LocalPageCounterSize
+import dev.voir.areca.foundation.navigation.LocalPageCounterStyle
 import dev.voir.areca.foundation.navigation.LocalPageIndicatorSize
 import dev.voir.areca.foundation.navigation.LocalPageIndicatorStyle
 import dev.voir.areca.foundation.navigation.NavItemSize
 import dev.voir.areca.foundation.navigation.NavItemStyle
 import dev.voir.areca.foundation.navigation.NavListSize
+import dev.voir.areca.foundation.navigation.PageCounterSize
+import dev.voir.areca.foundation.navigation.PageCounterStyle
 import dev.voir.areca.foundation.navigation.PageIndicatorSize
 import dev.voir.areca.foundation.navigation.PageIndicatorStyle
 import dev.voir.areca.foundation.notice.LocalNoticeSize
@@ -300,6 +304,8 @@ public fun ArecaThemeProvider(
             LocalStepIndicatorStyle provides StepIndicatorStyle.Default,
             LocalPageIndicatorSize provides PageIndicatorSize.Default,
             LocalPageIndicatorStyle provides PageIndicatorStyle.Default,
+            LocalPageCounterSize provides PageCounterSize.Default,
+            LocalPageCounterStyle provides PageCounterStyle.Default,
             LocalRadioSize provides RadioSize.Default,
             LocalRadioStyle provides RadioStyle.Default,
             LocalDividerSize provides DividerSize.Default,

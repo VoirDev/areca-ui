@@ -14,7 +14,7 @@ viewer that swipes through them.
 
 | Package | Holds |
 | --- | --- |
-| `dev.voir.areca.flow.attachments` | `AttachmentItem`, `AttachmentFormat`, `AttachmentState`, `AttachmentImageLoader`, `AttachmentImageState`, `LocalAttachmentImageLoader`, `AttachmentPdfRenderer`, `AttachmentPdfDocument`, `LocalAttachmentPdfRenderer` |
+| `dev.voir.areca.flow.attachments` | `AttachmentItem`, `AttachmentFormat`, `AttachmentState`, `AttachmentImageLoader` (deprecated), `AttachmentImageState`, `LocalAttachmentImageLoader`, `AttachmentPdfRenderer`, `AttachmentPdfDocument`, `LocalAttachmentPdfRenderer` |
 | `dev.voir.areca.flow.attachments.part` | `AttachmentThumbnail`, `AttachmentTile`, `AttachmentAddTile`, `AttachmentStrip`, `AttachmentIndicator`, `AttachmentTileStyle`, `LocalAttachmentTileStyle` |
 | `dev.voir.areca.flow.attachments.row` | `AttachmentRow` |
 | `dev.voir.areca.flow.attachments.sheet` | `AttachmentSourceSheet`, `AttachmentSourceOptions`, `PendingAttachmentSheet`, `PendingAttachment`, `AttachmentTagChips`, `AttachmentOptionsSheet`, `AttachmentOptions`, `AttachmentRenameSheet`, `AttachmentChoice` |
@@ -76,11 +76,10 @@ AttachmentSourceOptions.camera(label = "Take a photo") { } · library(label = "C
 AttachmentOptions.rename(label = "Rename") { } · share(label = "Share") { } · save(label = "Save to device") { }
     · openElsewhere(label = "Open in another app") { } · remove(label = "Remove attachment") { }
 
-AttachmentImageState.Loading | Ready(painter: Painter) | Failed
-interface AttachmentImageLoader {
-    @Composable fun load(model: Any, maxSize: Int): AttachmentImageState      // drawn whole; maxSize = longest edge
-    @Composable fun loadSquare(model: Any, side: Int): AttachmentImageState   // must COVER the square; default asks load(2 × side)
-}   // AttachmentImageLoader.None fails everything → glyphs
+// Pictures load through media's MediaImageLoader / LocalMediaImageLoader (see media.md):
+// load(model, maxSize) drawn whole; loadSquare(model, side) must COVER the square. Unprovided → glyphs.
+// AttachmentImageLoader, AttachmentImageState, LocalAttachmentImageLoader: deprecated; still read
+// while LocalMediaImageLoader is unprovided.
 interface AttachmentPdfRenderer { suspend fun open(model: Any): AttachmentPdfDocument? }   // AttachmentPdfRenderer.None
 interface AttachmentPdfDocument : AutoCloseable {
     val pageCount: Int
@@ -254,8 +253,9 @@ interface AttachmentPdfDocument : AutoCloseable {
   confirm sheets in its `sheets` slot so they open above the file. It calls `onRequest` once per
   landing on a `Remote` file; report `Downloading`, `Waiting`, then `Ready` with a `model`. It closes
   itself when the last file is removed. Clear `notice` through `onNoticeDismiss`.
-- **Pictures and PDFs:** implement `AttachmentImageLoader` once (decode no larger than asked;
-  `loadSquare` must cover the square) and provide `LocalAttachmentImageLoader`. Provide a platform
+- **Pictures and PDFs:** implement media's `MediaImageLoader` once (decode no larger than asked;
+  `loadSquare` must cover the square) and provide `LocalMediaImageLoader` — never the deprecated
+  `LocalAttachmentImageLoader`. Provide a platform
   `AttachmentPdfRenderer` via `LocalAttachmentPdfRenderer` (Android `PdfRenderer` needs a seekable
   file; iOS PDFKit; none on desktop — PDFs are then offered elsewhere). The viewer may close a
   document on the main thread while a page renders and cancels unfinished opens: lock drawing and
@@ -471,28 +471,9 @@ ListItem(title = { Text(activity.title) }, caption = { Row { AttachmentIndicator
 ### Loaders (once, at the root)
 
 ```kotlin
-object CoilAttachmentImageLoader : AttachmentImageLoader {
-    @Composable override fun load(model: Any, maxSize: Int) = coil(model, maxSize, Scale.FIT)
-    @Composable override fun loadSquare(model: Any, side: Int) = coil(model, side, Scale.FILL)
-
-    @Composable
-    private fun coil(model: Any, size: Int, scale: Scale): AttachmentImageState {
-        val context = LocalPlatformContext.current
-        val request = remember(model, size, scale) {
-            ImageRequest.Builder(context).data(model).size(size).scale(scale).precision(Precision.INEXACT).build()
-        }
-        val painter = rememberAsyncImagePainter(request)
-        val state by painter.state.collectAsState()
-        return when (state) {
-            is AsyncImagePainter.State.Success -> AttachmentImageState.Ready(painter)
-            is AsyncImagePainter.State.Error -> AttachmentImageState.Failed
-            else -> AttachmentImageState.Loading
-        }
-    }
-}
-
+// CoilMediaImageLoader: the MediaImageLoader in media.md / ui/media/README.md.
 CompositionLocalProvider(
-    LocalAttachmentImageLoader provides CoilAttachmentImageLoader,
+    LocalMediaImageLoader provides CoilMediaImageLoader,
     LocalAttachmentPdfRenderer provides platformPdfRenderer(read = attachments::read),   // omit on desktop
 ) { App() }
 ```

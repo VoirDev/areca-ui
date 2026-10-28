@@ -143,7 +143,8 @@ once over its own library, provided through a composition local (`LocalAvatarIma
 loading, ready or failed. Unprovided, the loader reports failure, so the fallback — initials, not
 an empty frame — is what an application with no pictures sees.
 
-`flow-attachments` follows the same rule for files (`LocalAttachmentImageLoader`), and passes the
+`flow-attachments` and `flow-gallery` follow the same rule through `ui/media`'s loader
+(`LocalMediaImageLoader`, one for every picture of the data), and pass the
 size a picture is drawn at so a strip of photographs is not decoded at full size: the longest edge
 for a fitted picture (`load`), and the side of the square a cropped one must cover (`loadSquare`).
 

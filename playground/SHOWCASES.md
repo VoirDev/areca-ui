@@ -34,7 +34,7 @@ invented per file.
 
 | Concern | Rule |
 | --- | --- |
-| Location | `playground/src/commonMain/kotlin/dev/voir/areca/playground/<module>/` where `<module>` mirrors the owning Gradle module: `foundation`, `charts`, `crop`, `datetime`, `keyboard`, `flow/auth`, `flow/profile`, `flow/attachments`. Within `foundation`, a page sits in the subpackage named after its component's package — `foundation/button/ButtonShowcase.kt` for `dev.voir.areca.foundation.button.Button`, `foundation/theme/ColorsShowcase.kt` for `dev.voir.areca.theme` |
+| Location | `playground/src/commonMain/kotlin/dev/voir/areca/playground/<module>/` where `<module>` mirrors the owning Gradle module: `foundation`, `charts`, `crop`, `datetime`, `keyboard`, `media`, `flow/auth`, `flow/profile`, `flow/attachments`, `flow/gallery`. Within `foundation`, a page sits in the subpackage named after its component's package — `foundation/button/ButtonShowcase.kt` for `dev.voir.areca.foundation.button.Button`, `foundation/theme/ColorsShowcase.kt` for `dev.voir.areca.theme` |
 | File name | `<Component>Showcase.kt` — always singular, always this suffix |
 | Entry point | `@Composable fun <Component>Showcase()` — no `Page`, no `Screen`, no `Example`, no `Gallery` suffix |
 | Parameters | The entry point takes no parameters. State belongs inside the page |
@@ -194,7 +194,7 @@ Chrome must **not** import `dev.voir.areca.foundation.*` or anything from
 
 `verifyShowcaseConventions` (see `showcase-conventions.gradle.kts`) enforces this as part of
 `check`, so `ci/verify` fails on a violation. It treats `dev.voir.areca.playground.shell` as chrome
-too, and also rejects imports from the other component modules: charts, crop, datetime, keyboard,
+too, and also rejects imports from the other component modules: charts, crop, datetime, keyboard, media,
 icons and the flows.
 
 The reason is practical: when `Card` regresses, you open the Card showcase to see it. If the section
@@ -270,13 +270,13 @@ ShowcaseEntry(
 ```
 
 - `id` is the route and the deep link, as `module/component`: the owning module (`foundation`,
-  `icons`, `charts`, `crop`, `datetime`, `keyboard`, `flow-auth`, `flow-profile`, `flow-attachments`) and the component in
+  `icons`, `charts`, `crop`, `datetime`, `keyboard`, `media`, `flow-auth`, `flow-profile`, `flow-attachments`, `flow-gallery`) and the component in
   kebab case. It never encodes the group, so a page's group or section can change without its id
   changing.
 - `group` is the collapsible top-level heading. There is one for token and asset pages
   (**Foundations**) and one per owning module after that: **Components** (`:ui:foundation`),
-  **Charts**, **Date & time**, **Keyboard**, **Crop**, **Auth flow**, **Profile flow**,
-  **Attachments flow**.
+  **Charts**, **Date & time**, **Keyboard**, **Crop**, **Media**, **Auth flow**, **Profile flow**,
+  **Attachments flow**, **Gallery flow**.
 - `section` divides a large group by what its pages do — **Components** into Actions, Inputs,
   Selection, Display, Lists & data, Feedback, Overlays, Navigation and Layout; each flow into
   Screens and the module's own part packages. A section belongs to exactly one group, and a group
@@ -414,7 +414,7 @@ fun SignInShowcase() = FlowShowcase(
 ```
 
 Pages live in `playground/flow/<module>/` and browse under their flow's group (**Auth flow**,
-**Profile flow**, **Attachments flow**), in its **Screens** section.
+**Profile flow**, **Attachments flow**, **Gallery flow**), in its **Screens** section.
 
 A flow module's public parts — a field, a card, a row, a provider button — are components, not
 screens. Each gets an ordinary component page (`ShowcaseScaffold`, §3) in

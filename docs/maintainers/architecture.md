@@ -9,8 +9,8 @@ The top level answers one question: what does this code need in order to be usef
 
 | Group | Needs | Modules |
 | --- | --- | --- |
-| `ui/` | The theme. Every module reads `ArecaTheme` tokens and expects an `ArecaThemeProvider` above it | `foundation`, `charts`, `crop`, `datetime`, `keyboard` |
-| `flow/` | The theme and `ui`. Whole screens assembled from `ui`, opinionated about composition, free of business logic | `auth`, `profile`, `attachments` |
+| `ui/` | The theme. Every module reads `ArecaTheme` tokens and expects an `ArecaThemeProvider` above it | `foundation`, `charts`, `crop`, `datetime`, `keyboard`, `media` |
+| `flow/` | The theme and `ui`. Whole screens assembled from `ui`, opinionated about composition, free of business logic | `auth`, `profile`, `attachments`, `gallery` |
 | `standalone/` | Nothing in this repository | `icons`, `viewmodel` |
 
 `foundation` is the only module every other `ui` and `flow` module depends on, so an application

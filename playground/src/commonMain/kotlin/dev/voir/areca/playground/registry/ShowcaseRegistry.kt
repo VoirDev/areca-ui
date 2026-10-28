@@ -13,6 +13,8 @@ val ShowcaseRegistry: List<ShowcaseEntry> =
         DateTimeShowcases +
         KeyboardShowcases +
         CropShowcases +
+        MediaShowcases +
         AuthFlowShowcases +
         ProfileFlowShowcases +
-        AttachmentsFlowShowcases
+        AttachmentsFlowShowcases +
+        GalleryFlowShowcases

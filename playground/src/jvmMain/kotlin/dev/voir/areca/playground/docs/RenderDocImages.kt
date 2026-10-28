@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dev.voir.areca.datetime.DateTimeLocale
 import dev.voir.areca.datetime.LocalDateTimeLocale
-import dev.voir.areca.flow.attachments.LocalAttachmentImageLoader
+import dev.voir.areca.media.LocalMediaImageLoader
 import dev.voir.areca.flow.attachments.LocalAttachmentPdfRenderer
 import dev.voir.areca.flow.profile.LocalAvatarImageLoader
 import dev.voir.areca.playground.flow.attachments.SampleAttachmentImageLoader
@@ -164,7 +164,7 @@ private fun DocFrame(dark: Boolean, content: @Composable () -> Unit) {
     ArecaThemeProvider(darkTheme = dark) {
         CompositionLocalProvider(
             LocalAvatarImageLoader provides SampleAvatarLoader,
-            LocalAttachmentImageLoader provides SampleAttachmentImageLoader,
+            LocalMediaImageLoader provides SampleAttachmentImageLoader,
             LocalAttachmentPdfRenderer provides SampleAttachmentPdfRenderer,
             LocalDateTimeLocale provides DateTimeLocale.Iso,
         ) {

@@ -34,11 +34,13 @@ include(":ui:crop")
 include(":ui:datetime")
 include(":ui:foundation")
 include(":ui:keyboard")
+include(":ui:media")
 
 // Whole screens and screen sequences, assembled from `ui`. Theme-bound and opinionated about
 // composition, but free of business logic. See `flow/FLOWS.md`.
 include(":flow:attachments")
 include(":flow:auth")
+include(":flow:gallery")
 include(":flow:profile")
 
 // Independently usable: no theme, no dependency on anything else in this repository.

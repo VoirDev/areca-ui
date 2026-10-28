@@ -9,7 +9,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.ImageComposeScene
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Density
-import dev.voir.areca.flow.attachments.LocalAttachmentImageLoader
+import dev.voir.areca.media.LocalMediaImageLoader
 import dev.voir.areca.flow.attachments.LocalAttachmentPdfRenderer
 import dev.voir.areca.playground.flow.attachments.AttachmentDetailsShowcase
 import dev.voir.areca.playground.flow.attachments.AttachmentDocumentsShowcase
@@ -48,7 +48,7 @@ private fun renderPage(name: String, page: @Composable () -> Unit) {
     val scene = ImageComposeScene(width = WIDTH, height = HEIGHT, density = Density(1f)) {
         ArecaThemeProvider(darkTheme = false) {
             CompositionLocalProvider(
-                LocalAttachmentImageLoader provides SampleAttachmentImageLoader,
+                LocalMediaImageLoader provides SampleAttachmentImageLoader,
                 LocalAttachmentPdfRenderer provides SampleAttachmentPdfRenderer,
             ) {
                 Box(Modifier.fillMaxSize().background(ArecaTheme.colors.bgCanvas)) { page() }

@@ -1,0 +1,588 @@
+public abstract interface class dev/voir/areca/media/MediaImageLoader {
+	public abstract fun load (Ljava/lang/Object;ILandroidx/compose/runtime/Composer;I)Ldev/voir/areca/media/MediaImageState;
+	public fun loadSquare (Ljava/lang/Object;ILandroidx/compose/runtime/Composer;I)Ldev/voir/areca/media/MediaImageState;
+}
+
+public final class dev/voir/areca/media/MediaImageLoader$DefaultImpls {
+	public static fun loadSquare (Ldev/voir/areca/media/MediaImageLoader;Ljava/lang/Object;ILandroidx/compose/runtime/Composer;I)Ldev/voir/areca/media/MediaImageState;
+}
+
+public final class dev/voir/areca/media/MediaImageLoader$None : dev/voir/areca/media/MediaImageLoader {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/voir/areca/media/MediaImageLoader$None;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun load (Ljava/lang/Object;ILandroidx/compose/runtime/Composer;I)Ldev/voir/areca/media/MediaImageState;
+	public fun loadSquare (Ljava/lang/Object;ILandroidx/compose/runtime/Composer;I)Ldev/voir/areca/media/MediaImageState;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/media/MediaImageLoaderKt {
+	public static final fun getLocalMediaImageLoader ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
+public abstract interface class dev/voir/areca/media/MediaImageState {
+}
+
+public final class dev/voir/areca/media/MediaImageState$Failed : dev/voir/areca/media/MediaImageState {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/voir/areca/media/MediaImageState$Failed;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/media/MediaImageState$Loading : dev/voir/areca/media/MediaImageState {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/voir/areca/media/MediaImageState$Loading;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/media/MediaImageState$Ready : dev/voir/areca/media/MediaImageState {
+	public static final field $stable I
+	public fun <init> (Landroidx/compose/ui/graphics/painter/Painter;)V
+	public final fun component1 ()Landroidx/compose/ui/graphics/painter/Painter;
+	public final fun copy (Landroidx/compose/ui/graphics/painter/Painter;)Ldev/voir/areca/media/MediaImageState$Ready;
+	public static synthetic fun copy$default (Ldev/voir/areca/media/MediaImageState$Ready;Landroidx/compose/ui/graphics/painter/Painter;ILjava/lang/Object;)Ldev/voir/areca/media/MediaImageState$Ready;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPainter ()Landroidx/compose/ui/graphics/painter/Painter;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/media/carousel/CarouselArrowsKt {
+	public static final fun CarouselArrows (Ldev/voir/areca/media/carousel/CarouselState;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;Ldev/voir/areca/foundation/button/IconButtonStyle;Ldev/voir/areca/foundation/button/IconButtonSize;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class dev/voir/areca/media/carousel/CarouselKt {
+	public static final fun Carousel-iss7Wkg (Ldev/voir/areca/media/carousel/CarouselState;Landroidx/compose/ui/Modifier;Ldev/voir/areca/media/carousel/CarouselPageSize;Ldev/voir/areca/media/carousel/CarouselSnap;FLandroidx/compose/foundation/layout/PaddingValues;Lkotlin/time/Duration;ZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;III)V
+}
+
+public abstract interface class dev/voir/areca/media/carousel/CarouselPageSize {
+}
+
+public final class dev/voir/areca/media/carousel/CarouselPageSize$Fill : dev/voir/areca/media/carousel/CarouselPageSize {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/voir/areca/media/carousel/CarouselPageSize$Fill;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/media/carousel/CarouselPageSize$Fixed : dev/voir/areca/media/carousel/CarouselPageSize {
+	public static final field $stable I
+	public synthetic fun <init> (FLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-D9Ej5fM ()F
+	public final fun copy-0680j_4 (F)Ldev/voir/areca/media/carousel/CarouselPageSize$Fixed;
+	public static synthetic fun copy-0680j_4$default (Ldev/voir/areca/media/carousel/CarouselPageSize$Fixed;FILjava/lang/Object;)Ldev/voir/areca/media/carousel/CarouselPageSize$Fixed;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getWidth-D9Ej5fM ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/media/carousel/CarouselPageSize$Fraction : dev/voir/areca/media/carousel/CarouselPageSize {
+	public static final field $stable I
+	public fun <init> (F)V
+	public final fun component1 ()F
+	public final fun copy (F)Ldev/voir/areca/media/carousel/CarouselPageSize$Fraction;
+	public static synthetic fun copy$default (Ldev/voir/areca/media/carousel/CarouselPageSize$Fraction;FILjava/lang/Object;)Ldev/voir/areca/media/carousel/CarouselPageSize$Fraction;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFraction ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/media/carousel/CarouselPageSize$PerPage : dev/voir/areca/media/carousel/CarouselPageSize {
+	public static final field $stable I
+	public fun <init> (I)V
+	public final fun component1 ()I
+	public final fun copy (I)Ldev/voir/areca/media/carousel/CarouselPageSize$PerPage;
+	public static synthetic fun copy$default (Ldev/voir/areca/media/carousel/CarouselPageSize$PerPage;IILjava/lang/Object;)Ldev/voir/areca/media/carousel/CarouselPageSize$PerPage;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCount ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/media/carousel/CarouselSnap : java/lang/Enum {
+	public static final field Item Ldev/voir/areca/media/carousel/CarouselSnap;
+	public static final field Page Ldev/voir/areca/media/carousel/CarouselSnap;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/media/carousel/CarouselSnap;
+	public static fun values ()[Ldev/voir/areca/media/carousel/CarouselSnap;
+}
+
+public final class dev/voir/areca/media/carousel/CarouselState {
+	public static final field $stable I
+	public final fun getAutoplayProgress ()F
+	public final fun getCurrentItem ()I
+	public final fun getCurrentPage ()I
+	public final fun getCurrentPageOffset ()F
+	public final fun getItemCount ()I
+	public final fun getLoop ()Z
+	public final fun getPageCount ()I
+	public final fun goToItem (IZ)V
+	public static synthetic fun goToItem$default (Ldev/voir/areca/media/carousel/CarouselState;IZILjava/lang/Object;)V
+	public final fun goToPage (IZ)V
+	public static synthetic fun goToPage$default (Ldev/voir/areca/media/carousel/CarouselState;IZILjava/lang/Object;)V
+	public final fun isScrollInProgress ()Z
+	public final fun next ()V
+	public final fun previous ()V
+}
+
+public final class dev/voir/areca/media/carousel/CarouselStateKt {
+	public static final fun rememberCarouselState (IIZLandroidx/compose/runtime/Composer;II)Ldev/voir/areca/media/carousel/CarouselState;
+}
+
+public final class dev/voir/areca/media/compare/CompareArrangement : java/lang/Enum {
+	public static final field Column Ldev/voir/areca/media/compare/CompareArrangement;
+	public static final field Row Ldev/voir/areca/media/compare/CompareArrangement;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/media/compare/CompareArrangement;
+	public static fun values ()[Ldev/voir/areca/media/compare/CompareArrangement;
+}
+
+public final class dev/voir/areca/media/compare/CompareLabels {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Ldev/voir/areca/media/compare/CompareLabels;
+	public static synthetic fun copy$default (Ldev/voir/areca/media/compare/CompareLabels;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ldev/voir/areca/media/compare/CompareLabels;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFirst ()Ljava/lang/String;
+	public final fun getSecond ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/media/compare/ComparePairKt {
+	public static final fun ComparePair (Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Landroidx/compose/ui/Modifier;Ldev/voir/areca/media/compare/CompareArrangement;FLdev/voir/areca/media/compare/CompareLabels;Ldev/voir/areca/media/compare/CompareLabels;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Ldev/voir/areca/media/compare/CompareStyle;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class dev/voir/areca/media/compare/CompareSideBySideKt {
+	public static final fun CompareHold (Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Landroidx/compose/ui/Modifier;FLdev/voir/areca/media/compare/CompareLabels;Ljava/lang/String;Ldev/voir/areca/media/compare/CompareStyle;Landroidx/compose/runtime/Composer;II)V
+	public static final fun CompareSideBySide (Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Landroidx/compose/ui/Modifier;Ldev/voir/areca/media/compare/CompareArrangement;FLdev/voir/areca/media/compare/CompareLabels;FLdev/voir/areca/media/zoom/ZoomLabels;Ldev/voir/areca/media/compare/CompareStyle;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class dev/voir/areca/media/compare/CompareSliderKt {
+	public static final fun CompareFade (Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Landroidx/compose/ui/Modifier;FFLdev/voir/areca/media/compare/CompareLabels;Ljava/lang/String;Ldev/voir/areca/media/compare/CompareStyle;Landroidx/compose/runtime/Composer;II)V
+	public static final fun CompareSlider (Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Landroidx/compose/ui/Modifier;FLandroidx/compose/foundation/gestures/Orientation;FLdev/voir/areca/media/compare/CompareLabels;Ljava/lang/String;Ldev/voir/areca/media/compare/CompareStyle;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class dev/voir/areca/media/compare/CompareStyle {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/media/compare/CompareStyle$Companion;
+	public synthetic fun <init> (Landroidx/compose/ui/graphics/Shape;JJJJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Landroidx/compose/ui/graphics/Shape;
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-0d7_KjU ()J
+	public final fun component5-0d7_KjU ()J
+	public final fun component6-0d7_KjU ()J
+	public final fun component7-0d7_KjU ()J
+	public final fun copy-40kPL-U (Landroidx/compose/ui/graphics/Shape;JJJJJJ)Ldev/voir/areca/media/compare/CompareStyle;
+	public static synthetic fun copy-40kPL-U$default (Ldev/voir/areca/media/compare/CompareStyle;Landroidx/compose/ui/graphics/Shape;JJJJJJILjava/lang/Object;)Ldev/voir/areca/media/compare/CompareStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBg-0d7_KjU ()J
+	public final fun getDivider-0d7_KjU ()J
+	public final fun getKnob-0d7_KjU ()J
+	public final fun getKnobContent-0d7_KjU ()J
+	public final fun getLabelBg-0d7_KjU ()J
+	public final fun getLabelContent-0d7_KjU ()J
+	public final fun getShape ()Landroidx/compose/ui/graphics/Shape;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/media/compare/CompareStyle$Companion {
+	public final fun default-iJQMabo (Landroidx/compose/ui/graphics/Shape;JLandroidx/compose/runtime/Composer;II)Ldev/voir/areca/media/compare/CompareStyle;
+}
+
+public final class dev/voir/areca/media/image/ComposableSingletons$MediaFrameKt {
+	public static final field INSTANCE Ldev/voir/areca/media/image/ComposableSingletons$MediaFrameKt;
+	public fun <init> ()V
+	public final fun getLambda$-1100856983$media ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$1051532636$media ()Lkotlin/jvm/functions/Function3;
+}
+
+public final class dev/voir/areca/media/image/ComposableSingletons$MediaImageKt {
+	public static final field INSTANCE Ldev/voir/areca/media/image/ComposableSingletons$MediaImageKt;
+	public fun <init> ()V
+	public final fun getLambda$-1087907036$media ()Lkotlin/jvm/functions/Function3;
+}
+
+public final class dev/voir/areca/media/image/HotspotKt {
+	public static final fun Hotspot (Lkotlin/jvm/functions/Function0;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;ZLdev/voir/areca/media/image/HotspotStyle;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class dev/voir/areca/media/image/HotspotStyle {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/media/image/HotspotStyle$Companion;
+	public synthetic fun <init> (JJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun copy-ysEtTa8 (JJJ)Ldev/voir/areca/media/image/HotspotStyle;
+	public static synthetic fun copy-ysEtTa8$default (Ldev/voir/areca/media/image/HotspotStyle;JJJILjava/lang/Object;)Ldev/voir/areca/media/image/HotspotStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBg-0d7_KjU ()J
+	public final fun getContent-0d7_KjU ()J
+	public final fun getRing-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/media/image/HotspotStyle$Companion {
+	public final fun default-RGew2ao (JJJLandroidx/compose/runtime/Composer;II)Ldev/voir/areca/media/image/HotspotStyle;
+}
+
+public final class dev/voir/areca/media/image/MediaFit : java/lang/Enum {
+	public static final field Fill Ldev/voir/areca/media/image/MediaFit;
+	public static final field Whole Ldev/voir/areca/media/image/MediaFit;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/media/image/MediaFit;
+	public static fun values ()[Ldev/voir/areca/media/image/MediaFit;
+}
+
+public final class dev/voir/areca/media/image/MediaFrameKt {
+	public static final fun MediaFrame (Landroidx/compose/ui/Modifier;Ljava/lang/Float;Ldev/voir/areca/media/image/MediaState;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Ljava/lang/String;Ldev/voir/areca/media/image/MediaScrim;Ljava/lang/String;Ljava/lang/String;Ldev/voir/areca/media/image/MediaFrameStyle;Ldev/voir/areca/media/image/MediaFrameSize;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;III)V
+	public static final fun MediaFrame (Ljava/lang/Object;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/Float;Ldev/voir/areca/media/image/MediaFit;Ldev/voir/areca/media/image/MediaPlaceholder;Ldev/voir/areca/media/zoom/ZoomBehavior;Lkotlin/jvm/functions/Function0;Ljava/lang/String;Ldev/voir/areca/media/image/MediaScrim;Ljava/lang/String;Ljava/lang/String;Ldev/voir/areca/media/zoom/ZoomLabels;Ldev/voir/areca/media/viewer/MediaTransitionState;Ljava/lang/Object;Ldev/voir/areca/media/image/MediaFrameStyle;Ldev/voir/areca/media/image/MediaFrameSize;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;III)V
+}
+
+public final class dev/voir/areca/media/image/MediaFrameSize {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/media/image/MediaFrameSize$Companion;
+	public synthetic fun <init> (FFFLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-D9Ej5fM ()F
+	public final fun component2-D9Ej5fM ()F
+	public final fun component3-D9Ej5fM ()F
+	public final fun copy-2z7ARbQ (FFF)Ldev/voir/areca/media/image/MediaFrameSize;
+	public static synthetic fun copy-2z7ARbQ$default (Ldev/voir/areca/media/image/MediaFrameSize;FFFILjava/lang/Object;)Ldev/voir/areca/media/image/MediaFrameSize;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCompactBelow-D9Ej5fM ()F
+	public final fun getFailureGlyph-D9Ej5fM ()F
+	public final fun getInset-D9Ej5fM ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/media/image/MediaFrameSize$Companion {
+	public final fun default-yajeYGU (FFFLandroidx/compose/runtime/Composer;II)Ldev/voir/areca/media/image/MediaFrameSize;
+	public final fun getDefault (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/media/image/MediaFrameSize;
+	public final fun getProduct (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/media/image/MediaFrameSize;
+}
+
+public final class dev/voir/areca/media/image/MediaFrameSizeKt {
+	public static final fun getLocalMediaFrameSize ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
+public final class dev/voir/areca/media/image/MediaFrameStyle {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/media/image/MediaFrameStyle$Companion;
+	public synthetic fun <init> (JLandroidx/compose/ui/graphics/Shape;JJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component2 ()Landroidx/compose/ui/graphics/Shape;
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-0d7_KjU ()J
+	public final fun copy-nb2GgbA (JLandroidx/compose/ui/graphics/Shape;JJ)Ldev/voir/areca/media/image/MediaFrameStyle;
+	public static synthetic fun copy-nb2GgbA$default (Ldev/voir/areca/media/image/MediaFrameStyle;JLandroidx/compose/ui/graphics/Shape;JJILjava/lang/Object;)Ldev/voir/areca/media/image/MediaFrameStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBg-0d7_KjU ()J
+	public final fun getContent-0d7_KjU ()J
+	public final fun getScrim-0d7_KjU ()J
+	public final fun getShape ()Landroidx/compose/ui/graphics/Shape;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/media/image/MediaFrameStyle$Companion {
+	public final fun bare-Iv8Zu3U (JLandroidx/compose/runtime/Composer;II)Ldev/voir/areca/media/image/MediaFrameStyle;
+	public final fun circle-Iv8Zu3U (JLandroidx/compose/runtime/Composer;II)Ldev/voir/areca/media/image/MediaFrameStyle;
+	public final fun default-jAmgAEg (JLandroidx/compose/ui/graphics/Shape;JJLandroidx/compose/runtime/Composer;II)Ldev/voir/areca/media/image/MediaFrameStyle;
+	public final fun getDefault (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/media/image/MediaFrameStyle;
+}
+
+public final class dev/voir/areca/media/image/MediaFrameStyleKt {
+	public static final fun getLocalMediaFrameStyle ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
+public final class dev/voir/areca/media/image/MediaImageKt {
+	public static final fun MediaImage (Ljava/lang/Object;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ldev/voir/areca/media/image/MediaFit;Ldev/voir/areca/media/image/MediaPlaceholder;Ldev/voir/areca/media/zoom/ZoomBehavior;Ldev/voir/areca/media/zoom/ZoomState;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Ljava/lang/String;Ldev/voir/areca/media/zoom/ZoomLabels;Ldev/voir/areca/media/image/MediaFrameStyle;Ldev/voir/areca/media/image/MediaFrameSize;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;III)V
+}
+
+public abstract interface class dev/voir/areca/media/image/MediaPictureScope {
+	public abstract fun pinned (Landroidx/compose/ui/Modifier;FF)Landroidx/compose/ui/Modifier;
+}
+
+public abstract interface class dev/voir/areca/media/image/MediaPlaceholder {
+}
+
+public final class dev/voir/areca/media/image/MediaPlaceholder$Blurred : dev/voir/areca/media/image/MediaPlaceholder {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/Object;)V
+	public final fun component1 ()Ljava/lang/Object;
+	public final fun copy (Ljava/lang/Object;)Ldev/voir/areca/media/image/MediaPlaceholder$Blurred;
+	public static synthetic fun copy$default (Ldev/voir/areca/media/image/MediaPlaceholder$Blurred;Ljava/lang/Object;ILjava/lang/Object;)Ldev/voir/areca/media/image/MediaPlaceholder$Blurred;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getModel ()Ljava/lang/Object;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/media/image/MediaPlaceholder$None : dev/voir/areca/media/image/MediaPlaceholder {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/voir/areca/media/image/MediaPlaceholder$None;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/media/image/MediaPlaceholder$Skeleton : dev/voir/areca/media/image/MediaPlaceholder {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/voir/areca/media/image/MediaPlaceholder$Skeleton;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/media/image/MediaScrim : java/lang/Enum {
+	public static final field Both Ldev/voir/areca/media/image/MediaScrim;
+	public static final field Bottom Ldev/voir/areca/media/image/MediaScrim;
+	public static final field None Ldev/voir/areca/media/image/MediaScrim;
+	public static final field Top Ldev/voir/areca/media/image/MediaScrim;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/media/image/MediaScrim;
+	public static fun values ()[Ldev/voir/areca/media/image/MediaScrim;
+}
+
+public final class dev/voir/areca/media/image/MediaState : java/lang/Enum {
+	public static final field Failed Ldev/voir/areca/media/image/MediaState;
+	public static final field Loading Ldev/voir/areca/media/image/MediaState;
+	public static final field Ready Ldev/voir/areca/media/image/MediaState;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/media/image/MediaState;
+	public static fun values ()[Ldev/voir/areca/media/image/MediaState;
+}
+
+public final class dev/voir/areca/media/thumbnail/ThumbnailStripKt {
+	public static final fun ThumbnailStrip (IILkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/gestures/Orientation;Landroidx/compose/foundation/layout/PaddingValues;Lkotlin/jvm/functions/Function2;Ldev/voir/areca/media/thumbnail/ThumbnailStripStyle;Ldev/voir/areca/media/thumbnail/ThumbnailStripSize;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class dev/voir/areca/media/thumbnail/ThumbnailStripSize {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/media/thumbnail/ThumbnailStripSize$Companion;
+	public synthetic fun <init> (FFFFLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-D9Ej5fM ()F
+	public final fun component2-D9Ej5fM ()F
+	public final fun component3-D9Ej5fM ()F
+	public final fun component4-D9Ej5fM ()F
+	public final fun copy-a9UjIt4 (FFFF)Ldev/voir/areca/media/thumbnail/ThumbnailStripSize;
+	public static synthetic fun copy-a9UjIt4$default (Ldev/voir/areca/media/thumbnail/ThumbnailStripSize;FFFFILjava/lang/Object;)Ldev/voir/areca/media/thumbnail/ThumbnailStripSize;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getRingGap-D9Ej5fM ()F
+	public final fun getRingWidth-D9Ej5fM ()F
+	public final fun getSide-D9Ej5fM ()F
+	public final fun getSpacing-D9Ej5fM ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/media/thumbnail/ThumbnailStripSize$Companion {
+	public final fun default-xZ9-QkE (FFFFLandroidx/compose/runtime/Composer;II)Ldev/voir/areca/media/thumbnail/ThumbnailStripSize;
+	public final fun getDefault (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/media/thumbnail/ThumbnailStripSize;
+}
+
+public final class dev/voir/areca/media/thumbnail/ThumbnailStripSizeKt {
+	public static final fun getLocalThumbnailStripSize ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
+public final class dev/voir/areca/media/thumbnail/ThumbnailStripStyle {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/media/thumbnail/ThumbnailStripStyle$Companion;
+	public synthetic fun <init> (JLandroidx/compose/ui/graphics/Shape;FLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component2 ()Landroidx/compose/ui/graphics/Shape;
+	public final fun component3 ()F
+	public final fun copy-ek8zF_U (JLandroidx/compose/ui/graphics/Shape;F)Ldev/voir/areca/media/thumbnail/ThumbnailStripStyle;
+	public static synthetic fun copy-ek8zF_U$default (Ldev/voir/areca/media/thumbnail/ThumbnailStripStyle;JLandroidx/compose/ui/graphics/Shape;FILjava/lang/Object;)Ldev/voir/areca/media/thumbnail/ThumbnailStripStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getOtherAlpha ()F
+	public final fun getRing-0d7_KjU ()J
+	public final fun getShape ()Landroidx/compose/ui/graphics/Shape;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/media/thumbnail/ThumbnailStripStyle$Companion {
+	public final fun default-KTwxG1Y (JLandroidx/compose/ui/graphics/Shape;FLandroidx/compose/runtime/Composer;II)Ldev/voir/areca/media/thumbnail/ThumbnailStripStyle;
+	public final fun getDefault (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/media/thumbnail/ThumbnailStripStyle;
+	public final fun onDark (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/media/thumbnail/ThumbnailStripStyle;
+	public final fun onLight (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/media/thumbnail/ThumbnailStripStyle;
+}
+
+public final class dev/voir/areca/media/thumbnail/ThumbnailStripStyleKt {
+	public static final fun getLocalThumbnailStripStyle ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
+public final class dev/voir/areca/media/viewer/ComposableSingletons$MediaViewerKt {
+	public static final field INSTANCE Ldev/voir/areca/media/viewer/ComposableSingletons$MediaViewerKt;
+	public fun <init> ()V
+	public final fun getLambda$-1726513834$media ()Lkotlin/jvm/functions/Function4;
+	public final fun getLambda$1189034778$media ()Lkotlin/jvm/functions/Function4;
+	public final fun getLambda$355117832$media ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class dev/voir/areca/media/viewer/MediaTransitionKt {
+	public static final fun mediaTransitionSource-Ug5Nnss (Landroidx/compose/ui/Modifier;Ldev/voir/areca/media/viewer/MediaTransitionState;Ljava/lang/Object;J)Landroidx/compose/ui/Modifier;
+	public static synthetic fun mediaTransitionSource-Ug5Nnss$default (Landroidx/compose/ui/Modifier;Ldev/voir/areca/media/viewer/MediaTransitionState;Ljava/lang/Object;JILjava/lang/Object;)Landroidx/compose/ui/Modifier;
+	public static final fun rememberMediaTransitionState (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/media/viewer/MediaTransitionState;
+}
+
+public final class dev/voir/areca/media/viewer/MediaTransitionState {
+	public static final field $stable I
+}
+
+public final class dev/voir/areca/media/viewer/MediaViewerBars : java/lang/Enum {
+	public static final field Docked Ldev/voir/areca/media/viewer/MediaViewerBars;
+	public static final field Overlay Ldev/voir/areca/media/viewer/MediaViewerBars;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/media/viewer/MediaViewerBars;
+	public static fun values ()[Ldev/voir/areca/media/viewer/MediaViewerBars;
+}
+
+public final class dev/voir/areca/media/viewer/MediaViewerChrome : java/lang/Enum {
+	public static final field Always Ldev/voir/areca/media/viewer/MediaViewerChrome;
+	public static final field TapToToggle Ldev/voir/areca/media/viewer/MediaViewerChrome;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/media/viewer/MediaViewerChrome;
+	public static fun values ()[Ldev/voir/areca/media/viewer/MediaViewerChrome;
+}
+
+public final class dev/voir/areca/media/viewer/MediaViewerImageKt {
+	public static final fun MediaViewerImage (Ldev/voir/areca/media/viewer/MediaViewerPageScope;Ljava/lang/Object;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ldev/voir/areca/media/image/MediaFit;Ldev/voir/areca/media/image/MediaPlaceholder;Ljava/lang/String;Ljava/lang/String;Ldev/voir/areca/media/zoom/ZoomLabels;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class dev/voir/areca/media/viewer/MediaViewerKt {
+	public static final fun MediaViewer-s2anlIw (ILkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;ILdev/voir/areca/media/viewer/MediaTransitionState;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Ldev/voir/areca/media/viewer/MediaViewerChrome;Ldev/voir/areca/media/viewer/MediaViewerBars;Ljava/lang/String;Lkotlin/jvm/functions/Function0;JLjava/lang/String;Ljava/lang/String;Ldev/voir/areca/media/viewer/MediaViewerStyle;Lkotlin/jvm/functions/Function4;Lkotlin/jvm/functions/Function4;Lkotlin/jvm/functions/Function4;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;IIII)V
+}
+
+public abstract interface class dev/voir/areca/media/viewer/MediaViewerPageScope {
+	public abstract fun getZoomState ()Ldev/voir/areca/media/zoom/ZoomState;
+	public abstract fun isCurrent ()Z
+	public abstract fun onEdgeSwipe (I)V
+	public abstract fun onTap ()V
+}
+
+public final class dev/voir/areca/media/viewer/MediaViewerState {
+	public static final field $stable I
+	public final fun dismiss ()V
+	public final fun getCurrentIndex ()I
+	public final fun getCurrentIndexOffset ()F
+	public final fun getItemCount ()I
+	public final fun goTo (IZ)V
+	public static synthetic fun goTo$default (Ldev/voir/areca/media/viewer/MediaViewerState;IZILjava/lang/Object;)V
+	public final fun isChromeVisible ()Z
+	public final fun isZoomed ()Z
+	public final fun showChrome ()V
+	public final fun toggleChrome ()V
+}
+
+public final class dev/voir/areca/media/viewer/MediaViewerStyle {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/media/viewer/MediaViewerStyle$Companion;
+	public synthetic fun <init> (JJJJJJZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-0d7_KjU ()J
+	public final fun component5-0d7_KjU ()J
+	public final fun component6-0d7_KjU ()J
+	public final fun component7 ()Z
+	public final fun copy-nl4AeYM (JJJJJJZ)Ldev/voir/areca/media/viewer/MediaViewerStyle;
+	public static synthetic fun copy-nl4AeYM$default (Ldev/voir/areca/media/viewer/MediaViewerStyle;JJJJJJZILjava/lang/Object;)Ldev/voir/areca/media/viewer/MediaViewerStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBg-0d7_KjU ()J
+	public final fun getBgChromeHidden-0d7_KjU ()J
+	public final fun getContent-0d7_KjU ()J
+	public final fun getDark ()Z
+	public final fun getNoticeBg-0d7_KjU ()J
+	public final fun getNoticeContent-0d7_KjU ()J
+	public final fun getScrim-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun topBar (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/foundation/topbar/TopBarStyle;
+}
+
+public final class dev/voir/areca/media/viewer/MediaViewerStyle$Companion {
+	public final fun dark-Iv8Zu3U (JLandroidx/compose/runtime/Composer;II)Ldev/voir/areca/media/viewer/MediaViewerStyle;
+	public final fun light-Iv8Zu3U (JLandroidx/compose/runtime/Composer;II)Ldev/voir/areca/media/viewer/MediaViewerStyle;
+}
+
+public final class dev/voir/areca/media/viewer/MediaViewerStyleKt {
+	public static final fun getLocalMediaViewerStyle ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
+public final class dev/voir/areca/media/zoom/ZoomBehavior : java/lang/Enum {
+	public static final field Hover Ldev/voir/areca/media/zoom/ZoomBehavior;
+	public static final field None Ldev/voir/areca/media/zoom/ZoomBehavior;
+	public static final field Peek Ldev/voir/areca/media/zoom/ZoomBehavior;
+	public static final field Sticky Ldev/voir/areca/media/zoom/ZoomBehavior;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/media/zoom/ZoomBehavior;
+	public static fun values ()[Ldev/voir/areca/media/zoom/ZoomBehavior;
+}
+
+public final class dev/voir/areca/media/zoom/ZoomLabels {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ldev/voir/areca/media/zoom/ZoomLabels;
+	public static synthetic fun copy$default (Ldev/voir/areca/media/zoom/ZoomLabels;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ldev/voir/areca/media/zoom/ZoomLabels;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getReset ()Ljava/lang/String;
+	public final fun getZoomIn ()Ljava/lang/String;
+	public final fun getZoomOut ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/media/zoom/ZoomState {
+	public static final field $stable I
+	public final fun animateReset (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun animateToggle-3MmeM6k (JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getCanZoomIn ()Z
+	public final fun getContent-NH-jbRc ()J
+	public final fun getFrame-NH-jbRc ()J
+	public final fun getMaxScale ()F
+	public final fun getOffset-F1C5BW0 ()J
+	public final fun getScale ()F
+	public final fun isZoomed ()Z
+	public final fun panBy-MK-Hz9U (J)J
+	public final fun reset ()V
+	public final fun setContent-uvyYCjk (J)V
+	public final fun settle ()V
+	public final fun zoom-2x9bVx0 (FJJ)V
+	public static synthetic fun zoom-2x9bVx0$default (Ldev/voir/areca/media/zoom/ZoomState;FJJILjava/lang/Object;)V
+	public final fun zoomIn ()V
+	public final fun zoomOut ()V
+}
+
+public final class dev/voir/areca/media/zoom/ZoomStateKt {
+	public static final fun rememberZoomState (FLandroidx/compose/runtime/Composer;II)Ldev/voir/areca/media/zoom/ZoomState;
+}
+
+public final class dev/voir/areca/media/zoom/ZoomableKt {
+	public static final fun zoomControls (Landroidx/compose/ui/Modifier;Ldev/voir/areca/media/zoom/ZoomState;Ldev/voir/areca/media/zoom/ZoomLabels;Landroidx/compose/runtime/Composer;II)Landroidx/compose/ui/Modifier;
+	public static final fun zoomable-dBrA5TM (Landroidx/compose/ui/Modifier;Ldev/voir/areca/media/zoom/ZoomState;JLdev/voir/areca/media/zoom/ZoomBehavior;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;Ldev/voir/areca/media/zoom/ZoomLabels;Landroidx/compose/runtime/Composer;II)Landroidx/compose/ui/Modifier;
+}
+

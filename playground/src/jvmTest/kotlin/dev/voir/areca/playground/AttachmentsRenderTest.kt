@@ -19,7 +19,7 @@ import androidx.compose.ui.ImageComposeScene
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.Density
-import dev.voir.areca.flow.attachments.LocalAttachmentImageLoader
+import dev.voir.areca.media.LocalMediaImageLoader
 import dev.voir.areca.flow.attachments.part.AttachmentIndicator
 import dev.voir.areca.flow.attachments.part.AttachmentStrip
 import dev.voir.areca.flow.attachments.part.AttachmentThumbnail
@@ -66,7 +66,7 @@ private fun render(name: String, dark: Boolean, content: @Composable () -> Unit)
         density = Density(DENSITY),
     ) {
         ArecaThemeProvider(darkTheme = dark) {
-            CompositionLocalProvider(LocalAttachmentImageLoader provides SampleAttachmentImageLoader) {
+            CompositionLocalProvider(LocalMediaImageLoader provides SampleAttachmentImageLoader) {
                 Column(
                     Modifier
                         .fillMaxSize()

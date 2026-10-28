@@ -238,10 +238,12 @@ Every module is `dev.voir.areca:<artifact>:<version>`, and every module except `
 | Bar, stacked bar, column and line charts, a meter bar, a legend | `charts` | [ui/charts](../ui/charts/README.md) |
 | A calendar, a date range, a time picker, a date-time field | `datetime` | [ui/datetime](../ui/datetime/README.md) |
 | An image cropper | `crop` | [ui/crop](../ui/crop/README.md) |
+| Pictures with loading and failed faces, zoom, carousels, thumbnails, a full-screen viewer, comparisons | `media` | [ui/media](../ui/media/README.md) |
 | An on-screen keyboard: keypads, calculators, custom layouts | `keyboard` | [ui/keyboard](../ui/keyboard/README.md) |
 | Sign-in, sign-up and verification screens | `flow-auth` | [flow/auth](../flow/auth/README.md) |
 | Profile, account and device screens | `flow-profile` | [flow/profile](../flow/profile/README.md) |
 | Attaching, viewing and managing files | `flow-attachments` | [flow/attachments](../flow/attachments/README.md) |
+| Product galleries: captions, author lines, grid pages and recipes | `flow-gallery` | [flow/gallery](../flow/gallery/README.md) |
 | A multiplatform ViewModel, UI state and paged lists | `viewmodel` | [standalone/viewmodel](../standalone/viewmodel/README.md) |
 
 `datetime`, and `flow-profile` through it, put `kotlinx-datetime` types on your API surface.

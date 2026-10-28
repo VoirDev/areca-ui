@@ -21,6 +21,7 @@ private val designSystemImports = listOf(
     "dev.voir.areca.crop.",
     "dev.voir.areca.datetime.",
     "dev.voir.areca.keyboard.",
+    "dev.voir.areca.media.",
     "dev.voir.areca.flow.",
     "dev.voir.areca.icons.",
 )

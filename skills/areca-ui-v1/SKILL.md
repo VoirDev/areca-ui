@@ -1,18 +1,19 @@
 ---
 name: areca-ui-v1
-description: Areca UI 1.x conventions for building Compose Multiplatform screens with dev.voir.areca:foundation and its charts, crop, datetime, keyboard, icons and flow modules — theme, tokens, component choice, customisation, accessibility and localisation. Use when writing, reviewing or prototyping Compose Multiplatform UI .kt code in an app that depends on dev.voir.areca:foundation or another Areca UI artifact.
+description: Areca UI 1.x conventions for building Compose Multiplatform screens with dev.voir.areca:foundation and its charts, crop, media, datetime, keyboard, icons and flow modules — theme, tokens, component choice, customisation, accessibility and localisation. Use when writing, reviewing or prototyping Compose Multiplatform UI .kt code in an app that depends on dev.voir.areca:foundation or another Areca UI artifact.
 ---
 
 # Areca UI Guidelines
 
 > **Audience:** Compose Multiplatform UI developers and coding agents
 > **Library version:** the latest `dev.voir.areca` release of `foundation`, `charts`, `crop`,
-> `datetime`, `keyboard`, `icons`, `flow-auth`, `flow-profile` and `flow-attachments`, every module
+> `media`, `datetime`, `keyboard`, `icons`, `flow-auth`, `flow-profile`, `flow-attachments` and `flow-gallery`, every module
 > at the same version
 
 Areca is Voir's Compose Multiplatform design system for Android, iOS and the JVM: theme tokens and
-the components built on them (`foundation`), plus feature modules for charts, cropping, dates,
-an on-screen keyboard, icons, and authentication, profile and attachment screens. It draws and
+the components built on them (`foundation`), plus feature modules for charts, cropping, pictures
+and carousels, dates, an on-screen keyboard, icons, and authentication, profile, attachment and
+gallery screens. It draws and
 reports intents; apps own state, validation, wording, networking, navigation and image loading.
 
 Apply `areca:areca-viewmodel-v1` for the presentation state a screen renders. This skill covers
@@ -308,6 +309,8 @@ Every foundation family, by intent. Signatures, overloads and packages:
 | App destinations; views within a screen; sidebar | `TabBar` / `FloatingTabBar` (items drawn with `FloatingTabBarItemContent`); `Tabs` (`TabsVariant.Underline`); `NavList` (one custom row `NavItem`) |
 | Segmented choice of a setting; words with a moving pill; three-state toggle (has / avoid / either) | `SlidingSelector(items = listOf(SelectorItem(value) { Text(…) }), selected, onSelect)` — `style = SlidingSelectorStyle.Segmented` (default) / `Pill` / `Underline` / `Button`, `layout = SelectorLayout.Fill` (default) / `Hug` / `Scroll`; three-state: `mode = SelectorMode.Optional` (tapping the chosen option calls `onSelect(null)`) with a `thumb` colour per `SelectorItem`. Not `Tabs` for a setting: `Tabs` switch views |
 | Onboarding pages; steps of a flow | `SwipePager` + `PagerControls` + `PageIndicator` with `rememberPagerController`; `StepIndicator` |
+| A product's pictures, a gallery, a picture to zoom | `media`: `Carousel` of `MediaFrame`s opening a `MediaViewer`; whole screens are `flow-gallery`'s recipes |
+| Which picture or page is on screen | `PageIndicator(pagerState, variant = PageIndicatorVariant.Dots / Shrinking() / Line / Segments)` — `Elongated` is the default; over a picture `style = PageIndicatorStyle.onImage()`; as a count `PageCounter(pagerState)` (`PageCounterStyle.onImage()`) |
 | Pull to refresh | `PagedContentList(onRefresh = …)`; around any scroller `PullToRefreshLayout` + `PullToRefreshIndicator` (experimental) |
 | Bottom sheet; any other dialog; menu | `FlowModal` + `rememberFlowModal()` + `FlowModalActionBar` (`layout = FlowModalActionBarLayout.Split()` for a full-width pair, `FlowModalSecondaryAction` beside it); `Dialog` + `ModalDefaults.Actions`; `DropdownPopup` + `rememberDropdownPopup()` + `Modifier.anchored(state.anchorState)` |
 | Transient message; persistent inline message | `ToastHost` + `rememberToastState().show(label = …)` (draws `Toast`); `Notice` + `NoticeText` (`AnimatedNotice` to appear and leave) |
@@ -467,11 +470,13 @@ group, a note — is `bgSoft`.
 | --- | --- |
 | Bar, stacked-bar, column and line charts, meter bars and chart legends | `dev.voir.areca:charts` |
 | Cropping a photo before saving or uploading it | `dev.voir.areca:crop` (add `foundation` too) |
+| Pictures from data: framed with loading and failed faces, zoom, carousels, thumbnails, a full-screen viewer, hotspots, before/after | `dev.voir.areca:media` |
 | Calendar, heat-map calendar, date range, month grid, date tile, time picker, date-time field | `dev.voir.areca:datetime` (brings `kotlinx-datetime` 0.8.x) |
 | On-screen numeric or custom keyboard | `dev.voir.areca:keyboard` |
 | The shared icon set | `dev.voir.areca:icons` |
 | Sign-in, sign-up, code verification, SSO buttons | `dev.voir.areca:flow-auth` |
 | Profile, account menu, devices, account deletion | `dev.voir.areca:flow-profile` |
+| A product gallery: captions, author lines, the primary action, grid pages and screen recipes | `dev.voir.areca:flow-gallery` (brings `media`) |
 | Attaching, listing and viewing files | `dev.voir.areca:flow-attachments` |
 
 Flow modules ship parts and recipes, not screens: copy the recipe, pass the app's words and
@@ -562,9 +567,13 @@ packages and dependencies, then open the module's file:
 - [reference/datetime.md](reference/datetime.md) — calendars, heat-map months, date ranges, month
   grids, date tiles, time and date-time pickers and fields.
 - [reference/crop.md](reference/crop.md) — cropping a photo before saving or uploading it.
+- [reference/media.md](reference/media.md) — framed pictures with loading and failed faces,
+  hotspots, zoom, carousels, thumbnail strips, the full-screen viewer and comparisons.
 - [reference/keyboard.md](reference/keyboard.md) — an on-screen numeric or custom keyboard.
 - [reference/icons.md](reference/icons.md) — drawing `ArecaIcons.*` and adding the `icons`
   dependency.
+- [reference/flow-gallery.md](reference/flow-gallery.md) — product gallery captions, author
+  lines, the primary action and grid pages, on media.
 - [reference/flow-auth.md](reference/flow-auth.md) — sign-in, sign-up, email-first, code
   verification and SSO screens.
 - [reference/flow-profile.md](reference/flow-profile.md) — profile, account menu and switcher,
