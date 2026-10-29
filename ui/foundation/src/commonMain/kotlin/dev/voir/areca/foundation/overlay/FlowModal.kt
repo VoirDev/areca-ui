@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -52,6 +53,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.constrainHeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.isSpecified
 import androidx.compose.ui.window.DialogProperties
 import dev.voir.areca.modifier.thenIf
 import dev.voir.areca.theme.ArecaTheme
@@ -116,7 +118,7 @@ public data class FlowModalStyle(
 }
 
 /**
- * Geometry of a [FlowModal]'s drag handle.
+ * Geometry of a [FlowModal]: how wide the sheet may grow, and its drag handle.
  *
  * The sheet's own heights are behaviour rather than geometry, and live on [FlowModalController].
  *
@@ -124,12 +126,17 @@ public data class FlowModalStyle(
  *   over the header, which clears this space with [FlowModalHeaderInsets].
  * @property dragWidth Width of the drag handle.
  * @property dragHeight Thickness of the drag handle.
+ * @property maxWidth Widest the sheet grows, centred along the bottom edge on a wider window, or
+ *   [Dp.Unspecified] to span the window. An app that keeps a phone layout on a tablet caps its
+ *   sheets here: a sheet opens in its own window, so a width limit on the screens behind it does
+ *   not reach it. The scrim still covers the whole window.
  */
 @Immutable
 public data class FlowModalSize(
     public val dragPadding: PaddingValues,
     public val dragWidth: Dp,
-    public val dragHeight: Dp
+    public val dragHeight: Dp,
+    public val maxWidth: Dp = Dp.Unspecified,
 ) {
     /** The theme's default [FlowModalSize], and [default] for building a variation on it. */
     public companion object {
@@ -144,6 +151,7 @@ public data class FlowModalSize(
          * @param dragPadding Space around the drag handle.
          * @param dragWidth Width of the drag handle.
          * @param dragHeight Thickness of the drag handle.
+         * @param maxWidth Widest the sheet grows, or [Dp.Unspecified] to span the window.
          * @return Size built from the supplied metrics.
          */
         @Composable
@@ -153,11 +161,13 @@ public data class FlowModalSize(
                 bottom = ArecaTheme.spacing.xs
             ),
             dragWidth: Dp = 44.dp,
-            dragHeight: Dp = 4.dp
+            dragHeight: Dp = 4.dp,
+            maxWidth: Dp = Dp.Unspecified,
         ): FlowModalSize = FlowModalSize(
             dragPadding = dragPadding,
             dragWidth = dragWidth,
-            dragHeight = dragHeight
+            dragHeight = dragHeight,
+            maxWidth = maxWidth
         )
     }
 }
@@ -652,7 +662,17 @@ public fun FlowModal(
                 }
 
                 Box(
-                    modifier = modifier
+                    // The cap comes first so that nothing the caller passes can widen the sheet
+                    // past it; the bottom-centre alignment above centres a capped sheet.
+                    modifier = Modifier
+                        .then(
+                            if (size.maxWidth.isSpecified) {
+                                Modifier.widthIn(max = size.maxWidth)
+                            } else {
+                                Modifier
+                            },
+                        )
+                        .then(modifier)
                         .fillMaxWidth()
                         .then(sizingModifier)
                         .clip(style.shape)

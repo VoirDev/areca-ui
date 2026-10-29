@@ -1022,6 +1022,11 @@ fun FlowModal(controller: FlowModalController, modifier: Modifier = Modifier,
 // fill runs under the handle, and clears it with `FlowModalHeaderInsets` (a WindowInsets, zero when
 // the sheet cannot be dragged): `TopBar(…, windowInsets = FlowModalHeaderInsets)`. Without a header
 // the body starts below the handle.
+// FlowModalSize.default(dragPadding, dragWidth = 44.dp, dragHeight = 4.dp,
+//     maxWidth: Dp = Dp.Unspecified): `maxWidth` caps the sheet, centred along the bottom edge; the
+// scrim still covers the window. A sheet opens in its own window, so an app that keeps a phone
+// layout on a tablet caps its sheets here — `LocalFlowModalSize provides
+// FlowModalSize.default(maxWidth = …)` — as well as its screens.
 
 fun FlowModalActionBar(confirmText: String, onConfirm: () -> Unit, modifier: Modifier = Modifier,
     enabled: Boolean = true, loading: Boolean = false, style: FlowModalActionBarStyle = …,

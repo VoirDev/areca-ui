@@ -566,7 +566,20 @@ ConfirmSheet(
 ```
 
 A `ConfirmSheet` is a `FlowModal` underneath, so the sheet defaults in scope — `LocalFlowModalStyle`,
-an `ArecaDarkTheme` — reach it.
+`LocalFlowModalSize`, an `ArecaDarkTheme` — reach it.
+
+A sheet spans the window unless `FlowModalSize.maxWidth` caps it; a capped sheet is centred along
+the bottom edge and its scrim still covers the window. The sheet opens in its own window, so an app
+that draws a phone-wide column on a tablet caps its sheets the same way, once, where it provides its
+theme:
+
+```kotlin
+CompositionLocalProvider(
+    LocalFlowModalSize provides FlowModalSize.default(maxWidth = 480.dp),
+) {
+    AppContent()
+}
+```
 
 A `FlowModal` is driven by a `FlowModalController` from `rememberFlowModal`. Give it a `TopBar` as
 `header` and a `FlowModalActionBar` as `footer`. The drag handle floats over the top of the sheet
