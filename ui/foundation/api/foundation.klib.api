@@ -4220,7 +4220,7 @@ final class dev.voir.areca.foundation.overlay/FlowModalController { // dev.voir.
 }
 
 final class dev.voir.areca.foundation.overlay/FlowModalSize { // dev.voir.areca.foundation.overlay/FlowModalSize|null[0]
-    constructor <init>(androidx.compose.foundation.layout/PaddingValues, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp) // dev.voir.areca.foundation.overlay/FlowModalSize.<init>|<init>(androidx.compose.foundation.layout.PaddingValues;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp){}[0]
+    constructor <init>(androidx.compose.foundation.layout/PaddingValues, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp = ...) // dev.voir.areca.foundation.overlay/FlowModalSize.<init>|<init>(androidx.compose.foundation.layout.PaddingValues;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp){}[0]
 
     final val dragHeight // dev.voir.areca.foundation.overlay/FlowModalSize.dragHeight|{}dragHeight[0]
         final fun <get-dragHeight>(): androidx.compose.ui.unit/Dp // dev.voir.areca.foundation.overlay/FlowModalSize.dragHeight.<get-dragHeight>|<get-dragHeight>(){}[0]
@@ -4228,11 +4228,14 @@ final class dev.voir.areca.foundation.overlay/FlowModalSize { // dev.voir.areca.
         final fun <get-dragPadding>(): androidx.compose.foundation.layout/PaddingValues // dev.voir.areca.foundation.overlay/FlowModalSize.dragPadding.<get-dragPadding>|<get-dragPadding>(){}[0]
     final val dragWidth // dev.voir.areca.foundation.overlay/FlowModalSize.dragWidth|{}dragWidth[0]
         final fun <get-dragWidth>(): androidx.compose.ui.unit/Dp // dev.voir.areca.foundation.overlay/FlowModalSize.dragWidth.<get-dragWidth>|<get-dragWidth>(){}[0]
+    final val maxWidth // dev.voir.areca.foundation.overlay/FlowModalSize.maxWidth|{}maxWidth[0]
+        final fun <get-maxWidth>(): androidx.compose.ui.unit/Dp // dev.voir.areca.foundation.overlay/FlowModalSize.maxWidth.<get-maxWidth>|<get-maxWidth>(){}[0]
 
     final fun component1(): androidx.compose.foundation.layout/PaddingValues // dev.voir.areca.foundation.overlay/FlowModalSize.component1|component1(){}[0]
     final fun component2(): androidx.compose.ui.unit/Dp // dev.voir.areca.foundation.overlay/FlowModalSize.component2|component2(){}[0]
     final fun component3(): androidx.compose.ui.unit/Dp // dev.voir.areca.foundation.overlay/FlowModalSize.component3|component3(){}[0]
-    final fun copy(androidx.compose.foundation.layout/PaddingValues = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ...): dev.voir.areca.foundation.overlay/FlowModalSize // dev.voir.areca.foundation.overlay/FlowModalSize.copy|copy(androidx.compose.foundation.layout.PaddingValues;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp){}[0]
+    final fun component4(): androidx.compose.ui.unit/Dp // dev.voir.areca.foundation.overlay/FlowModalSize.component4|component4(){}[0]
+    final fun copy(androidx.compose.foundation.layout/PaddingValues = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ...): dev.voir.areca.foundation.overlay/FlowModalSize // dev.voir.areca.foundation.overlay/FlowModalSize.copy|copy(androidx.compose.foundation.layout.PaddingValues;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp){}[0]
     final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.foundation.overlay/FlowModalSize.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // dev.voir.areca.foundation.overlay/FlowModalSize.hashCode|hashCode(){}[0]
     final fun toString(): kotlin/String // dev.voir.areca.foundation.overlay/FlowModalSize.toString|toString(){}[0]
@@ -4241,7 +4244,7 @@ final class dev.voir.areca.foundation.overlay/FlowModalSize { // dev.voir.areca.
         final val Default // dev.voir.areca.foundation.overlay/FlowModalSize.Companion.Default|{}Default[0]
             final fun <get-Default>(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.foundation.overlay/FlowModalSize // dev.voir.areca.foundation.overlay/FlowModalSize.Companion.Default.<get-Default>|<get-Default>(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
 
-        final fun default(androidx.compose.foundation.layout/PaddingValues?, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.voir.areca.foundation.overlay/FlowModalSize // dev.voir.areca.foundation.overlay/FlowModalSize.Companion.default|default(androidx.compose.foundation.layout.PaddingValues?;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+        final fun default(androidx.compose.foundation.layout/PaddingValues?, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.voir.areca.foundation.overlay/FlowModalSize // dev.voir.areca.foundation.overlay/FlowModalSize.Companion.default|default(androidx.compose.foundation.layout.PaddingValues?;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
     }
 }
 

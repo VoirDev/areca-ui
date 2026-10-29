@@ -3512,22 +3512,25 @@ public final class dev/voir/areca/foundation/overlay/FlowModalKt {
 public final class dev/voir/areca/foundation/overlay/FlowModalSize {
 	public static final field $stable I
 	public static final field Companion Ldev/voir/areca/foundation/overlay/FlowModalSize$Companion;
-	public synthetic fun <init> (Landroidx/compose/foundation/layout/PaddingValues;FFLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Landroidx/compose/foundation/layout/PaddingValues;FFFILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Landroidx/compose/foundation/layout/PaddingValues;FFFLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Landroidx/compose/foundation/layout/PaddingValues;
 	public final fun component2-D9Ej5fM ()F
 	public final fun component3-D9Ej5fM ()F
-	public final fun copy-VpY3zN4 (Landroidx/compose/foundation/layout/PaddingValues;FF)Ldev/voir/areca/foundation/overlay/FlowModalSize;
-	public static synthetic fun copy-VpY3zN4$default (Ldev/voir/areca/foundation/overlay/FlowModalSize;Landroidx/compose/foundation/layout/PaddingValues;FFILjava/lang/Object;)Ldev/voir/areca/foundation/overlay/FlowModalSize;
+	public final fun component4-D9Ej5fM ()F
+	public final fun copy-qQh39rQ (Landroidx/compose/foundation/layout/PaddingValues;FFF)Ldev/voir/areca/foundation/overlay/FlowModalSize;
+	public static synthetic fun copy-qQh39rQ$default (Ldev/voir/areca/foundation/overlay/FlowModalSize;Landroidx/compose/foundation/layout/PaddingValues;FFFILjava/lang/Object;)Ldev/voir/areca/foundation/overlay/FlowModalSize;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getDragHeight-D9Ej5fM ()F
 	public final fun getDragPadding ()Landroidx/compose/foundation/layout/PaddingValues;
 	public final fun getDragWidth-D9Ej5fM ()F
+	public final fun getMaxWidth-D9Ej5fM ()F
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
 
 public final class dev/voir/areca/foundation/overlay/FlowModalSize$Companion {
-	public final fun default-WMci_g0 (Landroidx/compose/foundation/layout/PaddingValues;FFLandroidx/compose/runtime/Composer;II)Ldev/voir/areca/foundation/overlay/FlowModalSize;
+	public final fun default-hFKHopI (Landroidx/compose/foundation/layout/PaddingValues;FFFLandroidx/compose/runtime/Composer;II)Ldev/voir/areca/foundation/overlay/FlowModalSize;
 	public final fun getDefault (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/foundation/overlay/FlowModalSize;
 }
 

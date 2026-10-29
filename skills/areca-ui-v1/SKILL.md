@@ -176,6 +176,9 @@ CompositionLocalProvider(
   `sizes = SettingsDefaults.sizes(…)`. `LocalNoticeStyle`, `LocalConfirmSheetStyle` and
   `LocalConfirmSheetSize` stay `null` unless provided: a notice follows its tone, and a confirm
   sheet builds on the `LocalFlowModalStyle` / `LocalFlowModalSize` in scope.
+- A sheet opens in its own window, so capping the width of the screens does not reach it. An app
+  that keeps a phone layout on a wide window caps every sheet with `LocalFlowModalSize provides
+  FlowModalSize.default(maxWidth = …)` — `ConfirmSheet` and `SelectFlowModal` follow it too.
 - Never write a wrapper composable whose only job is to restyle a component.
 - Build presets and `default(…)` inside composition: they read the theme where called, so a style
   built inside `ArecaDarkTheme` is dark.
