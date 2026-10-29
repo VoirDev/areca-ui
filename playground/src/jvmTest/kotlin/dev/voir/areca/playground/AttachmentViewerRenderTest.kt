@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Density
 import dev.voir.areca.flow.attachments.AttachmentItem
 import dev.voir.areca.flow.attachments.AttachmentState
-import dev.voir.areca.flow.attachments.LocalAttachmentImageLoader
+import dev.voir.areca.media.LocalMediaImageLoader
 import dev.voir.areca.flow.attachments.LocalAttachmentPdfRenderer
 import dev.voir.areca.flow.attachments.viewer.AttachmentViewer
 import dev.voir.areca.flow.attachments.viewer.AttachmentViewerPage
@@ -58,7 +58,7 @@ private fun renderViewer(name: String, dark: Boolean, viewer: @Composable () -> 
     ) {
         ArecaThemeProvider(darkTheme = dark) {
             CompositionLocalProvider(
-                LocalAttachmentImageLoader provides SampleAttachmentImageLoader,
+                LocalMediaImageLoader provides SampleAttachmentImageLoader,
                 LocalAttachmentPdfRenderer provides SampleAttachmentPdfRenderer,
             ) {
                 Box(Modifier.fillMaxSize().background(ArecaTheme.colors.bgCanvas))

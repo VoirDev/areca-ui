@@ -69,9 +69,29 @@ start at the repository root.
 
 ## Attachments flow
 
+- [ ] `AttachmentImageLoader`, `AttachmentImageState` and `LocalAttachmentImageLoader` are deprecated
+      in favour of media's loader and still read as a fallback; remove them in a later release.
+- [ ] The viewer's filmstrip (`AttachmentFilmstrip`) and media's `ThumbnailStrip` do the same job
+      with different looks — the current file grown rather than ringed.
 - [ ] `DownloadProgress` fill comes from `ArecaTheme.colors.bgContrast` rather than the style.
 - [ ] `AttachmentPdfDocument.close()` changes the inherited contract (it may arrive during a
       `render`) without redeclaring the member with its own KDoc.
+
+## Media
+
+- [ ] Pinch, peek, swipe-down-to-close and the open/close transition are covered by JVM UI tests
+      only; none has been checked on an Android or iOS device.
+- [ ] The viewer's transition assumes its dialog window and the screen's window share coordinates
+      (both edge to edge). Unverified on iOS, where a source frame's bounds may be offset.
+- [ ] `ZoomBehavior.Peek` lifts the picture into a full-window `Popup`; on Android that popup window
+      may take the touches that follow the gesture until it is removed.
+- [ ] No screenshots of media or the gallery flow in `docs/images`, and no `renderDocImages` shots
+      for them.
+
+## Gallery flow
+
+- [ ] The playground has no desktop device size, so the desktop product page renders in a plain
+      window-sized frame rather than `DeviceFrame`.
 
 ## Icons
 
@@ -87,6 +107,6 @@ start at the repository root.
 ## Documentation
 
 - [ ] Playground pages for `PasswordField` and `SearchField` (they appear only as variants on the
-      Text field page), `StepIndicator`, `SwipePager` / `PageIndicator` / `PagerControls`,
+      Text field page), `StepIndicator`, `SwipePager` / `PagerControls`,
       `DropdownPopup`, `BadgeSelect`, and Foundations pages for the typography, spacing, radius,
       elevation and motion tokens.

@@ -1,6 +1,6 @@
 # Modules beyond foundation
 
-Open this when a screen needs charts, dates and times, cropping, an on-screen keyboard, the icon set,
+Open this when a screen needs charts, dates and times, cropping, pictures and carousels, an on-screen keyboard, the icon set,
 or authentication, profile or attachment screens. It says which artifact to add and which reference
 to read next; each reference lists every public composable of its module with exact signatures,
 rules and recipes.
@@ -12,10 +12,12 @@ rules and recipes.
 | `dev.voir.areca:charts` | `dev.voir.areca.charts` | Yes (`api`) | [charts.md](charts.md) |
 | `dev.voir.areca:datetime` | `dev.voir.areca.datetime`, `.calendar`, `.calendar.range` | Yes (`api`), plus `kotlinx-datetime` 0.8.x (`api`) | [datetime.md](datetime.md) |
 | `dev.voir.areca:crop` | `dev.voir.areca.crop` | **No**: declare `dev.voir.areca:foundation` yourself | [crop.md](crop.md) |
+| `dev.voir.areca:media` | `dev.voir.areca.media`, `.image`, `.zoom`, `.carousel`, `.thumbnail` | Yes (`api`) | [media.md](media.md) |
 | `dev.voir.areca:keyboard` | `dev.voir.areca.keyboard`, `.layout`, `.key` | Yes (`api`) | [keyboard.md](keyboard.md) |
 | `dev.voir.areca:icons` | `dev.voir.areca.icons` | Not theme-bound; depends on nothing in Areca | [icons.md](icons.md) |
 | `dev.voir.areca:flow-auth` | `dev.voir.areca.flow.auth`, `.part`, `.sso` | Yes (`api`) | [flow-auth.md](flow-auth.md) |
 | `dev.voir.areca:flow-profile` | `dev.voir.areca.flow.profile`, `.part`, `.row`, `.session`, `.sheet` | Yes (`api`), plus `datetime` (`api`) | [flow-profile.md](flow-profile.md) |
+| `dev.voir.areca:flow-gallery` | `dev.voir.areca.flow.gallery.part`, `.grid` | Yes (`api`), plus `media` (`api`) | [flow-gallery.md](flow-gallery.md) |
 | `dev.voir.areca:flow-attachments` | `dev.voir.areca.flow.attachments`, `.part`, `.row`, `.sheet`, `.viewer` | Yes (`api`) | [flow-attachments.md](flow-attachments.md) |
 
 ```kotlin
@@ -32,10 +34,14 @@ commonMain.dependencies {
 - **datetime** — a calendar (one day, many, a range), a heat-map month, month tiles, a date tile, a
   time picker, or a date-time field in a form.
 - **crop** — framing a photo before it is saved or uploaded: an avatar, a cover, a post.
+- **media** — pictures from data: a framed picture with loading and failed faces, labels on it,
+  pinch to look closer, a carousel of pictures, thumbnails.
 - **keyboard** — an on-screen keyboard docked to the screen's bottom for amounts, PINs, codes or a
   calculator, instead of the platform keyboard.
 - **icons** — only when the app itself draws `ArecaIcons.*`; otherwise pass the app's own
   `ImageVector` or `Painter`.
+- **flow-gallery** — a product gallery: captions and author lines under pictures,
+  the gallery's one action, a grid page of grouped tiles.
 - **flow-auth** — sign in, sign up, email-first, verify a code, pages an emailed link opens, provider
   buttons.
 - **flow-profile** — profile, edit profile, username, account menu and switcher, sign-in methods, data
@@ -69,7 +75,8 @@ commonMain.dependencies {
   For a navigation destination of your own, use foundation `SystemBars(color)`.
 - **No module loads images, decodes, uploads or renders PDFs.** Flows read pictures through a loader
   the app implements once over its image library — `LocalAvatarImageLoader` (profile),
-  `LocalAttachmentImageLoader` and `LocalAttachmentPdfRenderer` (attachments). Unprovided, pictures
+  `LocalMediaImageLoader` (media, attachments and galleries) and `LocalAttachmentPdfRenderer`
+  (attachments). Unprovided, pictures
   fall back to initials or file glyphs.
 - **Cropping belongs to the app.** Write one crop screen with `crop` and open it from every place
   that crops, each with its own `CropSpec`: `EditableAvatar`'s `onChangePhoto` (profile) and

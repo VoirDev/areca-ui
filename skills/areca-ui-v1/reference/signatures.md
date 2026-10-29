@@ -36,7 +36,7 @@ Every foundation symbol is imported from its family's package. Extension composa
 | `….foundation.badge`, `….foundation.avatar` | `Badge`, `BadgeStyle`, `BadgeSize`, `NotificationBadge`, `IndicatorDot`, `BadgeSelect`, `LazyBadgeSelect`, `FlowBadgeSelect`, `BadgeOption`, `BadgeSelectionMode`; `Avatar` |
 | `….foundation.stat` | `Stat`, `StatGrid`, `StatStyle`, `StatSize`, `LocalStatStyle`, `LocalStatSize` |
 | `….foundation.collection`, `….foundation.table` | `ContentList`, `PagedContentList`, `GroupedContentList`, `GroupedPagedContentList`, `LimitedContentListState`, `PagedContentListState`, `ContentListGroup`, `ContentListLabels`, `ContentListDefaults`, `LazyVerticalGroupedGrid`, `LazyHorizontalGroupedGrid`, `GroupedGridData`; `Table`, `LazyTable`, `TableColumn` |
-| `….foundation.navigation`, `….foundation.wheel`, `….foundation.slot` | `NavList`, `NavNode`, `NavData`, `NavItem`, `SwipePager`, `PagerControls`, `PageIndicator`, `rememberPagerController`; `WheelPicker`, `WheelPickerColumn`, `WheelPickerItem`, `WheelPickerHighlight`, `WheelPickerEdgeFade`, `rememberWheelPickerColumnState`; `SlotRow`, `SlotRowLayout` (`Default`, `Auto`, `Center`, `Top`, `FirstLine`, `Centered`, `Fill`, `wrap(…)`), `SlotRowAlignment`, `Modifier.firstLineCenter(textStyle)`, `FirstLineCenter` |
+| `….foundation.navigation`, `….foundation.wheel`, `….foundation.slot` | `NavList`, `NavNode`, `NavData`, `NavItem`, `SwipePager`, `PagerControls`, `PageIndicator`, `PageIndicatorVariant`, `PageIndicatorStyle`, `PageIndicatorSize`, `PageCounter`, `PageCounterStyle`, `PageCounterSize`, `rememberPagerController`; `WheelPicker`, `WheelPickerColumn`, `WheelPickerItem`, `WheelPickerHighlight`, `WheelPickerEdgeFade`, `rememberWheelPickerColumnState`; `SlotRow`, `SlotRowLayout` (`Default`, `Auto`, `Center`, `Top`, `FirstLine`, `Centered`, `Fill`, `wrap(…)`), `SlotRowAlignment`, `Modifier.firstLineCenter(textStyle)`, `FirstLineCenter` |
 | `dev.voir.areca.indication`, `.modifier`, `.platform`, `.shape` | `TouchIndication`, `FadeIndication`, `StrokeIndication`, `LiquidSweepIndication`, `FocusOutline`; `clickCursor`, `minimumTouchTarget`, `thenIf`; `SystemBars`; `SquircleShape` |
 | `dev.voir.areca` | `ExperimentalArecaApi` |
 
@@ -921,8 +921,22 @@ fun PagerControls(controller: PagerController, actionText: String?, modifier: Mo
 
 fun PageIndicator(pageCount: Int, currentPage: Int, modifier: Modifier = Modifier,
     currentPageOffset: Float = 0f, contentDescription: String? = null,
+    variant: PageIndicatorVariant = PageIndicatorVariant.Elongated, progress: () -> Float = { 0f },
+    onPageClick: ((page: Int) -> Unit)? = null,
     style: PageIndicatorStyle = …, size: PageIndicatorSize = …)
-// Overload: `pagerState: PagerState` in place of the page numbers.
+// Overload: `pagerState: PagerState` in place of the page numbers and offset.
+// PageIndicatorVariant: Elongated (default), Dots, Shrinking(window = 5), Line, Segments.
+// `progress` fills the current segment (autoplay); `onPageClick` is pointer-only, the marks stay
+// one element named by `contentDescription`. Segments fill the width the modifier gives them.
+// PageIndicatorStyle(current, other, capsule = null): default(…), onImage() — white marks on a
+// translucent capsule. PageIndicatorSize adds lineThickness and lineLength.
+
+fun PageCounter(currentPage: Int, pageCount: Int, modifier: Modifier = Modifier,
+    contentDescription: String? = null,
+    text: (index: Int, count: Int) -> String = { i, n -> "${i + 1} / $n" },
+    style: PageCounterStyle = …, size: PageCounterSize = …)
+// Overload: `pagerState: PagerState`. "3 / 9" in a capsule, tabular figures.
+// PageCounterStyle(bg, content): default(), onImage(). PageCounterSize(padding, textStyle, shape).
 
 fun StepIndicator(stepCount: Int, currentStep: Int, modifier: Modifier = Modifier,
     contentDescription: String? = null, style: StepIndicatorStyle = …,

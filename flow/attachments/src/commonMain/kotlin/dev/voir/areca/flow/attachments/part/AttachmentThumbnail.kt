@@ -20,16 +20,16 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.unit.Dp
 import dev.voir.areca.flow.attachments.AttachmentFormat
-import dev.voir.areca.flow.attachments.AttachmentImageState
 import dev.voir.areca.flow.attachments.AttachmentItem
 import dev.voir.areca.flow.attachments.AttachmentState
-import dev.voir.areca.flow.attachments.LocalAttachmentImageLoader
+import dev.voir.areca.flow.attachments.attachmentPictureLoader
 import dev.voir.areca.foundation.feedback.Spinner
 import dev.voir.areca.foundation.feedback.SpinnerSize
 import dev.voir.areca.foundation.feedback.SpinnerStyle
 import dev.voir.areca.foundation.icon.Icon
 import dev.voir.areca.foundation.icon.IconSize
 import dev.voir.areca.foundation.text.Text
+import dev.voir.areca.media.MediaImageState
 import dev.voir.areca.theme.ArecaTheme
 
 /**
@@ -42,8 +42,8 @@ import dev.voir.areca.theme.ArecaTheme
  * picture once it decodes, so a picture still loading, or one that cannot be decoded, still says
  * what the file is instead of leaving an empty square.
  *
- * The picture comes from [LocalAttachmentImageLoader]'s
- * [loadSquare][dev.voir.areca.flow.attachments.AttachmentImageLoader.loadSquare], asked for at the
+ * The picture comes from [LocalMediaImageLoader][dev.voir.areca.media.LocalMediaImageLoader]'s
+ * [loadSquare][dev.voir.areca.media.MediaImageLoader.loadSquare], asked for at the
  * size that covers the square — never at the file's, which for a photograph is thousands of pixels
  * on its long edge.
  *
@@ -98,9 +98,9 @@ public fun AttachmentThumbnail(
             val model = item.model
             if (item.format == AttachmentFormat.Image && model != null) {
                 val side = with(LocalDensity.current) { size.roundToPx() }
-                val picture = LocalAttachmentImageLoader.current.loadSquare(model = model, side = side)
+                val picture = attachmentPictureLoader().loadSquare(model = model, side = side)
 
-                if (picture is AttachmentImageState.Ready) {
+                if (picture is MediaImageState.Ready) {
                     Image(
                         painter = picture.painter,
                         contentDescription = null,

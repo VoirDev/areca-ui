@@ -868,6 +868,7 @@ table.
 | `NavList` | A sidebar of destinations, with expandable sections |
 | `NavItem` | One destination row, for a sidebar you compose yourself |
 | `SwipePager` / `PagerControls` / `PageIndicator` | Pages swiped sideways with their dots and a next button — an onboarding tour |
+| `PageCounter` | Where the page on screen sits among the rest as a count ("3 / 9") — a picture's corner, a viewer's bar |
 
 The controls in a bar's `leading` and `trailing` slots are under
 [Buttons and actions](#buttons-and-actions).
@@ -947,6 +948,31 @@ FloatingTabBar(
     selectedValue = destination,
     onValueSelected = { destination = it },
 )
+```
+
+`PageIndicator` draws a pager's position as marks; `variant` picks them. `Elongated` (the default)
+stretches the current dot, `Dots` only colours it, `Shrinking()` slides a window of five dots over any
+number of pages, `Line` moves a thumb along a track, and `Segments` draws story bars across the width
+it is given, the current one filled to `progress`. Over a picture, pass `PageIndicatorStyle.onImage()`
+— white marks on a capsule — and `PageCounterStyle.onImage()` for the count. `onPageClick` lets a
+pointer jump to a page; the marks stay one element to a screen reader, named by `contentDescription`.
+
+```kotlin
+Box {
+    HorizontalPager(state = pagerState) { page -> ProductPicture(pictures[page]) }
+    PageIndicator(
+        pagerState = pagerState,
+        variant = PageIndicatorVariant.Shrinking(),
+        style = PageIndicatorStyle.onImage(),
+        contentDescription = "Picture ${pagerState.currentPage + 1} of ${pictures.size}",
+        modifier = Modifier.align(Alignment.BottomCenter).padding(ArecaTheme.spacing.lg),
+    )
+    PageCounter(
+        pagerState = pagerState,
+        style = PageCounterStyle.onImage(),
+        modifier = Modifier.align(Alignment.TopEnd).padding(ArecaTheme.spacing.md),
+    )
+}
 ```
 
 Selection is the caller's in `Tabs`, `TabBar`, `FloatingTabBar` and `NavList`. The first three also

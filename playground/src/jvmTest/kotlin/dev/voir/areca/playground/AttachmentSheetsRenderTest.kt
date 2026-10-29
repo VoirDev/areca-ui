@@ -10,7 +10,7 @@ import androidx.compose.ui.ImageComposeScene
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Density
 import dev.voir.areca.flow.attachments.AttachmentFormat
-import dev.voir.areca.flow.attachments.LocalAttachmentImageLoader
+import dev.voir.areca.media.LocalMediaImageLoader
 import dev.voir.areca.flow.attachments.sheet.AttachmentOptions
 import dev.voir.areca.flow.attachments.sheet.AttachmentOptionsSheet
 import dev.voir.areca.flow.attachments.sheet.AttachmentRenameSheet
@@ -65,7 +65,7 @@ private fun renderSheet(name: String, dark: Boolean, sheet: @Composable () -> Un
         density = Density(DENSITY),
     ) {
         ArecaThemeProvider(darkTheme = dark) {
-            CompositionLocalProvider(LocalAttachmentImageLoader provides SampleAttachmentImageLoader) {
+            CompositionLocalProvider(LocalMediaImageLoader provides SampleAttachmentImageLoader) {
                 Box(Modifier.fillMaxSize().background(ArecaTheme.colors.bgCanvas))
                 sheet()
             }

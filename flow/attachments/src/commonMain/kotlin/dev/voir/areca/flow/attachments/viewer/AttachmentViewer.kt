@@ -1,43 +1,29 @@
 package dev.voir.areca.flow.attachments.viewer
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.AccessibilityManager
-import androidx.compose.ui.platform.LocalAccessibilityManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.window.Dialog
 import dev.voir.areca.flow.attachments.AttachmentItem
 import dev.voir.areca.flow.attachments.AttachmentState
-import dev.voir.areca.foundation.AnnounceOnChange
-import dev.voir.areca.foundation.overlay.edgeToEdgeDialogProperties
 import dev.voir.areca.foundation.text.Text
-import dev.voir.areca.platform.SystemBars
-import dev.voir.areca.theme.ArecaDarkTheme
+import dev.voir.areca.media.viewer.MediaViewer
+import dev.voir.areca.media.viewer.MediaViewerBars
+import dev.voir.areca.media.viewer.MediaViewerChrome
+import dev.voir.areca.media.viewer.MediaViewerStyle
 import dev.voir.areca.theme.ArecaTheme
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -135,130 +121,77 @@ public fun AttachmentViewer(
     },
     sheets: @Composable () -> Unit = {},
 ) {
-    val pagerState = rememberPagerState(
-        initialPage = items.indexOfFirst { item -> item.key == initialKey }.coerceAtLeast(0),
-        pageCount = { items.size },
-    )
-    val scope = rememberCoroutineScope()
-    val current = items.getOrNull(pagerState.currentPage.coerceAtMost(items.lastIndex))
-    val latestDismiss by rememberUpdatedState(onDismiss)
     val latestRequest by rememberUpdatedState(onRequest)
-    val accessibilityManager = LocalAccessibilityManager.current
+    var index by remember { mutableIntStateOf(items.indexOfFirst { item -> item.key == initialKey }.coerceAtLeast(0)) }
 
-    LaunchedEffect(items.isEmpty()) {
-        if (items.isEmpty()) latestDismiss()
-    }
-
-    LaunchedEffect(notice, onNoticeDismiss) {
-        val timeout = noticeTimeout(noticeDuration, accessibilityManager)
-        if (notice != null && onNoticeDismiss != null && timeout != null) {
-            delay(timeout)
-            onNoticeDismiss()
-        }
-    }
-
-    // Keyed on the settled page, not the current one: a swipe passes through the pages between,
-    // and none of those was asked for.
-    val settled = items.getOrNull(pagerState.settledPage)
-    LaunchedEffect(settled?.key, settled?.state) {
-        if (settled?.state == AttachmentState.Remote) latestRequest(settled)
-    }
-
-    Dialog(
-        onDismissRequest = onDismiss,
-        properties = edgeToEdgeDialogProperties(dismissOnClickOutside = false),
-    ) {
-        SystemBars(style.bg)
-        ArecaDarkTheme {
-            Box(
-                modifier = modifier
-                    .fillMaxSize()
-                    .background(style.bg)
-                    .windowInsetsPadding(WindowInsets.safeDrawing),
-            ) {
-                Column(modifier = Modifier.fillMaxSize()) {
-                    if (current != null) {
-                        val here = current.state == AttachmentState.Ready || current.state is AttachmentState.Uploading
-
-                        AttachmentViewerTopBar(
-                            title = title(current),
-                            position = position?.takeIf { items.size > 1 }?.invoke(pagerState.currentPage, items.size),
-                            style = style,
-                            closeLabel = closeLabel,
-                            onClose = onDismiss,
-                            shareLabel = shareLabel,
-                            onShare = onShare?.takeIf { here }?.let { share -> { share(current) } },
-                            moreLabel = moreLabel,
-                            onMore = onMore?.let { more -> { more(current) } },
-                        )
-                    }
-
-                    HorizontalPager(
-                        state = pagerState,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f),
-                        key = { index -> items[index].key.toString() },
-                    ) { index ->
-                        page(items[index])
-                    }
-
-                    val line = current?.let(caption)
-                    if (!line.isNullOrEmpty()) {
-                        Spacer(Modifier.height(ArecaTheme.spacing.lg))
-
-                        Text(
-                            text = line,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = ArecaTheme.spacing.horizontalContentInsets),
-                            style = ArecaTheme.typography.bodySmall,
-                            color = style.detail,
-                            textAlign = TextAlign.Center,
-                            maxLines = 1,
-                            overflow = TextOverflow.MiddleEllipsis,
-                        )
-                    }
-
-                    if (items.size > 1) {
-                        Spacer(Modifier.height(ArecaTheme.spacing.lg))
-
-                        AttachmentFilmstrip(
-                            items = items,
-                            current = pagerState.currentPage,
-                            position = { pagerState.currentPage + pagerState.currentPageOffsetFraction },
-                            onSelect = { index -> scope.launch { pagerState.animateScrollToPage(index) } },
-                            label = filmstripLabel,
-                            style = style,
-                        )
-                    }
-
-                    Spacer(Modifier.height(ArecaTheme.spacing.xl))
-                }
-
-                AnnounceOnChange(notice)
-
-                if (notice != null) {
-                    Text(
-                        text = notice,
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(
-                                start = ArecaTheme.spacing.horizontalContentInsets,
-                                end = ArecaTheme.spacing.horizontalContentInsets,
-                                bottom = ArecaTheme.spacing.xl9 + ArecaTheme.spacing.xl3,
-                            )
-                            .background(style.pillBg, CircleShape)
-                            .padding(horizontal = ArecaTheme.spacing.xl, vertical = ArecaTheme.spacing.md),
-                        style = ArecaTheme.typography.bodySmall,
-                        color = style.pillContent,
-                        textAlign = TextAlign.Center,
-                    )
-                }
+    MediaViewer(
+        itemCount = items.size,
+        onDismiss = onDismiss,
+        modifier = modifier,
+        initialIndex = index,
+        key = { page -> items[page].key.toString() },
+        onIndexChange = { page -> index = page },
+        // Keyed on the settled page, not the current one: a swipe passes through the pages between,
+        // and none of those was asked for.
+        onIndexSettle = { page ->
+            val settled = items.getOrNull(page)
+            if (settled?.state == AttachmentState.Remote) latestRequest(settled)
+        },
+        // A file is read, not looked at: its heading and filmstrip stay up, above and below it, so
+        // nothing covers a page's edges.
+        chrome = MediaViewerChrome.Always,
+        bars = MediaViewerBars.Docked,
+        notice = notice,
+        onNoticeDismiss = onNoticeDismiss,
+        noticeDuration = noticeDuration,
+        style = MediaViewerStyle.dark(bg = style.bg).copy(noticeBg = style.pillBg, noticeContent = style.pillContent),
+        topBar = { viewer ->
+            val current = items.getOrNull(viewer.currentIndex)
+            if (current != null) {
+                val here = current.state == AttachmentState.Ready || current.state is AttachmentState.Uploading
+                AttachmentViewerTopBar(
+                    title = title(current),
+                    position = position?.takeIf { items.size > 1 }?.invoke(viewer.currentIndex, items.size),
+                    style = style,
+                    closeLabel = closeLabel,
+                    onClose = viewer::dismiss,
+                    shareLabel = shareLabel,
+                    onShare = onShare?.takeIf { here }?.let { share -> { share(current) } },
+                    moreLabel = moreLabel,
+                    onMore = onMore?.let { more -> { more(current) } },
+                )
             }
-
-            sheets()
-        }
+        },
+        footer = { viewer ->
+            val line = items.getOrNull(viewer.currentIndex)?.let(caption)
+            if (!line.isNullOrEmpty()) {
+                Text(
+                    text = line,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = ArecaTheme.spacing.horizontalContentInsets),
+                    style = ArecaTheme.typography.bodySmall,
+                    color = style.detail,
+                    textAlign = TextAlign.Center,
+                    maxLines = 1,
+                    overflow = TextOverflow.MiddleEllipsis,
+                )
+            }
+            if (items.size > 1) {
+                Spacer(Modifier.height(ArecaTheme.spacing.lg))
+                AttachmentFilmstrip(
+                    items = items,
+                    current = viewer.currentIndex,
+                    position = { viewer.currentIndex + viewer.currentIndexOffset },
+                    onSelect = { page -> viewer.goTo(page) },
+                    label = filmstripLabel,
+                    style = style,
+                )
+            }
+        },
+        sheets = sheets,
+    ) { at ->
+        Box(Modifier.fillMaxSize()) { page(items[at]) }
     }
 }
 
@@ -273,25 +206,3 @@ internal fun viewerCaption(item: AttachmentItem): String? =
     listOfNotNull(item.fileName.takeIf { name -> name != item.label }, item.size)
         .joinToString(" · ")
         .ifEmpty { null }
-
-/**
- * How long a notice stays, once the platform's accessibility settings have had their say.
- *
- * The platform lengthens a timeout for a reader who asked for more time; a notice is text alone,
- * with no control to reach.
- *
- * @param duration How long the application asked for.
- * @param accessibilityManager The platform's accessibility settings, or `null` where the platform
- *   offers none, which keeps [duration].
- * @return How long the notice stays, or `null` when the settings ask for it to stay until cleared.
- */
-internal fun noticeTimeout(duration: Duration, accessibilityManager: AccessibilityManager?): Duration? {
-    if (accessibilityManager == null) return duration
-    val recommendedMillis = accessibilityManager.calculateRecommendedTimeoutMillis(
-        originalTimeoutMillis = duration.inWholeMilliseconds,
-        containsIcons = false,
-        containsText = true,
-        containsControls = false,
-    )
-    return recommendedMillis.milliseconds.takeIf { timeout -> timeout.isFinite() }
-}

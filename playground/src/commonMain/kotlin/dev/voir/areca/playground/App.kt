@@ -12,12 +12,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import dev.voir.areca.flow.attachments.LocalAttachmentImageLoader
 import dev.voir.areca.flow.attachments.LocalAttachmentPdfRenderer
 import dev.voir.areca.flow.profile.LocalAvatarImageLoader
+import dev.voir.areca.media.LocalMediaImageLoader
 import dev.voir.areca.playground.flow.attachments.SampleAttachmentImageLoader
 import dev.voir.areca.playground.flow.attachments.SampleAttachmentPdfRenderer
 import dev.voir.areca.playground.flow.profile.SampleAvatarLoader
+import dev.voir.areca.playground.media.SampleMediaImageLoader
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -64,8 +65,10 @@ fun App() {
             LocalAvatarImageLoader provides SampleAvatarLoader,
             // The same for attachments: pictures and PDFs are drawn by samples that need no network,
             // the way an application provides its own. See flow/attachments/README.md.
-            LocalAttachmentImageLoader provides SampleAttachmentImageLoader,
             LocalAttachmentPdfRenderer provides SampleAttachmentPdfRenderer,
+            // One loader for every picture, as an application provides: media's painted samples that
+            // load, stall or fail on demand, then the attachment samples.
+            LocalMediaImageLoader provides SampleMediaImageLoader(fallback = SampleAttachmentImageLoader),
         ) {
             val navController = rememberNavController()
 

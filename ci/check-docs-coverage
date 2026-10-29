@@ -12,8 +12,8 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 modules=(
-  ui/foundation ui/charts ui/crop ui/datetime ui/keyboard
-  flow/auth flow/profile flow/attachments
+  ui/foundation ui/charts ui/crop ui/datetime ui/keyboard ui/media
+  flow/auth flow/profile flow/attachments flow/gallery
 )
 skill="skills/areca-ui-v1"
 catalogue="docs/components.md"

@@ -26,6 +26,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,7 +47,11 @@ import dev.voir.areca.foundation.feedback.Spinner
 import dev.voir.areca.foundation.feedback.SpinnerSize
 import dev.voir.areca.foundation.feedback.SpinnerStyle
 import dev.voir.areca.foundation.text.Text
+import dev.voir.areca.media.zoom.ZoomLabels
+import dev.voir.areca.media.zoom.rememberZoomState
+import dev.voir.areca.media.zoom.zoomControls
 import dev.voir.areca.theme.ArecaTheme
+import kotlinx.coroutines.launch
 
 /**
  * A PDF, drawn as a column of pages that can be brought closer.
@@ -144,7 +149,8 @@ private fun PdfPages(
     modifier: Modifier = Modifier,
 ) {
     val listState = rememberLazyListState()
-    val zoom = remember { ZoomState(maxScale = MAX_SCALE) { Size.Unspecified } }
+    val zoom = rememberZoomState(maxScale = MAX_SCALE)
+    val scope = rememberCoroutineScope()
     val page by remember { derivedStateOf { listState.firstVisibleItemIndex + 1 } }
     val sharp by remember { derivedStateOf { zoom.isZoomed } }
     val gutter = ArecaTheme.spacing.xl3
@@ -156,12 +162,10 @@ private fun PdfPages(
             .clipToBounds()
             .zoomControls(
                 state = zoom,
-                zoomInLabel = zoomInLabel,
-                zoomOutLabel = zoomOutLabel,
-                resetZoomLabel = resetZoomLabel,
+                labels = ZoomLabels(zoomIn = zoomInLabel, zoomOut = zoomOutLabel, reset = resetZoomLabel),
             )
             .pointerInput(zoom) {
-                detectTapGestures(onDoubleTap = zoom::toggle)
+                detectTapGestures(onDoubleTap = { focus -> scope.launch { zoom.animateToggle(focus) } })
             }
             // Read before the column, so a pinch and a zoomed drag reach neither its scrolling nor
             // the pager's.

@@ -1,0 +1,11 @@
+public final class dev/voir/areca/flow/gallery/grid/GalleryGridKt {
+	public static final fun GalleryGroupHeader (Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Landroidx/compose/runtime/Composer;II)V
+	public static final fun GalleryTile (Ljava/lang/Object;Ljava/lang/String;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ldev/voir/areca/media/image/MediaFit;Ljava/lang/String;Ldev/voir/areca/media/viewer/MediaTransitionState;Ljava/lang/Object;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class dev/voir/areca/flow/gallery/part/GalleryFooterKt {
+	public static final fun GalleryAuthor (Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+	public static final fun GalleryCaption (Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;Landroidx/compose/runtime/Composer;II)V
+	public static final fun GalleryPrimaryAction (Ljava/lang/String;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/vector/ImageVector;ZLandroidx/compose/runtime/Composer;II)V
+}
+

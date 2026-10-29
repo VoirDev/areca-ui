@@ -1,0 +1,630 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <dev.voir.areca:media>
+final enum class dev.voir.areca.media.carousel/CarouselSnap : kotlin/Enum<dev.voir.areca.media.carousel/CarouselSnap> { // dev.voir.areca.media.carousel/CarouselSnap|null[0]
+    enum entry Item // dev.voir.areca.media.carousel/CarouselSnap.Item|null[0]
+    enum entry Page // dev.voir.areca.media.carousel/CarouselSnap.Page|null[0]
+
+    final val entries // dev.voir.areca.media.carousel/CarouselSnap.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<dev.voir.areca.media.carousel/CarouselSnap> // dev.voir.areca.media.carousel/CarouselSnap.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): dev.voir.areca.media.carousel/CarouselSnap // dev.voir.areca.media.carousel/CarouselSnap.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<dev.voir.areca.media.carousel/CarouselSnap> // dev.voir.areca.media.carousel/CarouselSnap.values|values#static(){}[0]
+}
+
+final enum class dev.voir.areca.media.compare/CompareArrangement : kotlin/Enum<dev.voir.areca.media.compare/CompareArrangement> { // dev.voir.areca.media.compare/CompareArrangement|null[0]
+    enum entry Column // dev.voir.areca.media.compare/CompareArrangement.Column|null[0]
+    enum entry Row // dev.voir.areca.media.compare/CompareArrangement.Row|null[0]
+
+    final val entries // dev.voir.areca.media.compare/CompareArrangement.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<dev.voir.areca.media.compare/CompareArrangement> // dev.voir.areca.media.compare/CompareArrangement.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): dev.voir.areca.media.compare/CompareArrangement // dev.voir.areca.media.compare/CompareArrangement.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<dev.voir.areca.media.compare/CompareArrangement> // dev.voir.areca.media.compare/CompareArrangement.values|values#static(){}[0]
+}
+
+final enum class dev.voir.areca.media.image/MediaFit : kotlin/Enum<dev.voir.areca.media.image/MediaFit> { // dev.voir.areca.media.image/MediaFit|null[0]
+    enum entry Fill // dev.voir.areca.media.image/MediaFit.Fill|null[0]
+    enum entry Whole // dev.voir.areca.media.image/MediaFit.Whole|null[0]
+
+    final val entries // dev.voir.areca.media.image/MediaFit.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<dev.voir.areca.media.image/MediaFit> // dev.voir.areca.media.image/MediaFit.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): dev.voir.areca.media.image/MediaFit // dev.voir.areca.media.image/MediaFit.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<dev.voir.areca.media.image/MediaFit> // dev.voir.areca.media.image/MediaFit.values|values#static(){}[0]
+}
+
+final enum class dev.voir.areca.media.image/MediaScrim : kotlin/Enum<dev.voir.areca.media.image/MediaScrim> { // dev.voir.areca.media.image/MediaScrim|null[0]
+    enum entry Both // dev.voir.areca.media.image/MediaScrim.Both|null[0]
+    enum entry Bottom // dev.voir.areca.media.image/MediaScrim.Bottom|null[0]
+    enum entry None // dev.voir.areca.media.image/MediaScrim.None|null[0]
+    enum entry Top // dev.voir.areca.media.image/MediaScrim.Top|null[0]
+
+    final val entries // dev.voir.areca.media.image/MediaScrim.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<dev.voir.areca.media.image/MediaScrim> // dev.voir.areca.media.image/MediaScrim.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): dev.voir.areca.media.image/MediaScrim // dev.voir.areca.media.image/MediaScrim.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<dev.voir.areca.media.image/MediaScrim> // dev.voir.areca.media.image/MediaScrim.values|values#static(){}[0]
+}
+
+final enum class dev.voir.areca.media.image/MediaState : kotlin/Enum<dev.voir.areca.media.image/MediaState> { // dev.voir.areca.media.image/MediaState|null[0]
+    enum entry Failed // dev.voir.areca.media.image/MediaState.Failed|null[0]
+    enum entry Loading // dev.voir.areca.media.image/MediaState.Loading|null[0]
+    enum entry Ready // dev.voir.areca.media.image/MediaState.Ready|null[0]
+
+    final val entries // dev.voir.areca.media.image/MediaState.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<dev.voir.areca.media.image/MediaState> // dev.voir.areca.media.image/MediaState.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): dev.voir.areca.media.image/MediaState // dev.voir.areca.media.image/MediaState.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<dev.voir.areca.media.image/MediaState> // dev.voir.areca.media.image/MediaState.values|values#static(){}[0]
+}
+
+final enum class dev.voir.areca.media.viewer/MediaViewerBars : kotlin/Enum<dev.voir.areca.media.viewer/MediaViewerBars> { // dev.voir.areca.media.viewer/MediaViewerBars|null[0]
+    enum entry Docked // dev.voir.areca.media.viewer/MediaViewerBars.Docked|null[0]
+    enum entry Overlay // dev.voir.areca.media.viewer/MediaViewerBars.Overlay|null[0]
+
+    final val entries // dev.voir.areca.media.viewer/MediaViewerBars.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<dev.voir.areca.media.viewer/MediaViewerBars> // dev.voir.areca.media.viewer/MediaViewerBars.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): dev.voir.areca.media.viewer/MediaViewerBars // dev.voir.areca.media.viewer/MediaViewerBars.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<dev.voir.areca.media.viewer/MediaViewerBars> // dev.voir.areca.media.viewer/MediaViewerBars.values|values#static(){}[0]
+}
+
+final enum class dev.voir.areca.media.viewer/MediaViewerChrome : kotlin/Enum<dev.voir.areca.media.viewer/MediaViewerChrome> { // dev.voir.areca.media.viewer/MediaViewerChrome|null[0]
+    enum entry Always // dev.voir.areca.media.viewer/MediaViewerChrome.Always|null[0]
+    enum entry TapToToggle // dev.voir.areca.media.viewer/MediaViewerChrome.TapToToggle|null[0]
+
+    final val entries // dev.voir.areca.media.viewer/MediaViewerChrome.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<dev.voir.areca.media.viewer/MediaViewerChrome> // dev.voir.areca.media.viewer/MediaViewerChrome.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): dev.voir.areca.media.viewer/MediaViewerChrome // dev.voir.areca.media.viewer/MediaViewerChrome.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<dev.voir.areca.media.viewer/MediaViewerChrome> // dev.voir.areca.media.viewer/MediaViewerChrome.values|values#static(){}[0]
+}
+
+final enum class dev.voir.areca.media.zoom/ZoomBehavior : kotlin/Enum<dev.voir.areca.media.zoom/ZoomBehavior> { // dev.voir.areca.media.zoom/ZoomBehavior|null[0]
+    enum entry Hover // dev.voir.areca.media.zoom/ZoomBehavior.Hover|null[0]
+    enum entry None // dev.voir.areca.media.zoom/ZoomBehavior.None|null[0]
+    enum entry Peek // dev.voir.areca.media.zoom/ZoomBehavior.Peek|null[0]
+    enum entry Sticky // dev.voir.areca.media.zoom/ZoomBehavior.Sticky|null[0]
+
+    final val entries // dev.voir.areca.media.zoom/ZoomBehavior.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<dev.voir.areca.media.zoom/ZoomBehavior> // dev.voir.areca.media.zoom/ZoomBehavior.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): dev.voir.areca.media.zoom/ZoomBehavior // dev.voir.areca.media.zoom/ZoomBehavior.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<dev.voir.areca.media.zoom/ZoomBehavior> // dev.voir.areca.media.zoom/ZoomBehavior.values|values#static(){}[0]
+}
+
+abstract interface dev.voir.areca.media.image/MediaPictureScope { // dev.voir.areca.media.image/MediaPictureScope|null[0]
+    abstract fun (androidx.compose.ui/Modifier).pinned(kotlin/Float, kotlin/Float): androidx.compose.ui/Modifier // dev.voir.areca.media.image/MediaPictureScope.pinned|pinned@androidx.compose.ui.Modifier(kotlin.Float;kotlin.Float){}[0]
+}
+
+abstract interface dev.voir.areca.media.viewer/MediaViewerPageScope { // dev.voir.areca.media.viewer/MediaViewerPageScope|null[0]
+    abstract val isCurrent // dev.voir.areca.media.viewer/MediaViewerPageScope.isCurrent|{}isCurrent[0]
+        abstract fun <get-isCurrent>(): kotlin/Boolean // dev.voir.areca.media.viewer/MediaViewerPageScope.isCurrent.<get-isCurrent>|<get-isCurrent>(){}[0]
+    abstract val zoomState // dev.voir.areca.media.viewer/MediaViewerPageScope.zoomState|{}zoomState[0]
+        abstract fun <get-zoomState>(): dev.voir.areca.media.zoom/ZoomState // dev.voir.areca.media.viewer/MediaViewerPageScope.zoomState.<get-zoomState>|<get-zoomState>(){}[0]
+
+    abstract fun onEdgeSwipe(kotlin/Int) // dev.voir.areca.media.viewer/MediaViewerPageScope.onEdgeSwipe|onEdgeSwipe(kotlin.Int){}[0]
+    abstract fun onTap() // dev.voir.areca.media.viewer/MediaViewerPageScope.onTap|onTap(){}[0]
+}
+
+abstract interface dev.voir.areca.media/MediaImageLoader { // dev.voir.areca.media/MediaImageLoader|null[0]
+    abstract fun load(kotlin/Any, kotlin/Int, androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.media/MediaImageState // dev.voir.areca.media/MediaImageLoader.load|load(kotlin.Any;kotlin.Int;androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+    open fun loadSquare(kotlin/Any, kotlin/Int, androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.media/MediaImageState // dev.voir.areca.media/MediaImageLoader.loadSquare|loadSquare(kotlin.Any;kotlin.Int;androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+
+    final object None : dev.voir.areca.media/MediaImageLoader { // dev.voir.areca.media/MediaImageLoader.None|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.media/MediaImageLoader.None.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.media/MediaImageLoader.None.hashCode|hashCode(){}[0]
+        final fun load(kotlin/Any, kotlin/Int, androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.media/MediaImageState // dev.voir.areca.media/MediaImageLoader.None.load|load(kotlin.Any;kotlin.Int;androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.media/MediaImageLoader.None.toString|toString(){}[0]
+    }
+}
+
+sealed interface dev.voir.areca.media.carousel/CarouselPageSize { // dev.voir.areca.media.carousel/CarouselPageSize|null[0]
+    final class Fixed : dev.voir.areca.media.carousel/CarouselPageSize { // dev.voir.areca.media.carousel/CarouselPageSize.Fixed|null[0]
+        constructor <init>(androidx.compose.ui.unit/Dp) // dev.voir.areca.media.carousel/CarouselPageSize.Fixed.<init>|<init>(androidx.compose.ui.unit.Dp){}[0]
+
+        final val width // dev.voir.areca.media.carousel/CarouselPageSize.Fixed.width|{}width[0]
+            final fun <get-width>(): androidx.compose.ui.unit/Dp // dev.voir.areca.media.carousel/CarouselPageSize.Fixed.width.<get-width>|<get-width>(){}[0]
+
+        final fun component1(): androidx.compose.ui.unit/Dp // dev.voir.areca.media.carousel/CarouselPageSize.Fixed.component1|component1(){}[0]
+        final fun copy(androidx.compose.ui.unit/Dp = ...): dev.voir.areca.media.carousel/CarouselPageSize.Fixed // dev.voir.areca.media.carousel/CarouselPageSize.Fixed.copy|copy(androidx.compose.ui.unit.Dp){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.media.carousel/CarouselPageSize.Fixed.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.media.carousel/CarouselPageSize.Fixed.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.media.carousel/CarouselPageSize.Fixed.toString|toString(){}[0]
+    }
+
+    final class Fraction : dev.voir.areca.media.carousel/CarouselPageSize { // dev.voir.areca.media.carousel/CarouselPageSize.Fraction|null[0]
+        constructor <init>(kotlin/Float) // dev.voir.areca.media.carousel/CarouselPageSize.Fraction.<init>|<init>(kotlin.Float){}[0]
+
+        final val fraction // dev.voir.areca.media.carousel/CarouselPageSize.Fraction.fraction|{}fraction[0]
+            final fun <get-fraction>(): kotlin/Float // dev.voir.areca.media.carousel/CarouselPageSize.Fraction.fraction.<get-fraction>|<get-fraction>(){}[0]
+
+        final fun component1(): kotlin/Float // dev.voir.areca.media.carousel/CarouselPageSize.Fraction.component1|component1(){}[0]
+        final fun copy(kotlin/Float = ...): dev.voir.areca.media.carousel/CarouselPageSize.Fraction // dev.voir.areca.media.carousel/CarouselPageSize.Fraction.copy|copy(kotlin.Float){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.media.carousel/CarouselPageSize.Fraction.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.media.carousel/CarouselPageSize.Fraction.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.media.carousel/CarouselPageSize.Fraction.toString|toString(){}[0]
+    }
+
+    final class PerPage : dev.voir.areca.media.carousel/CarouselPageSize { // dev.voir.areca.media.carousel/CarouselPageSize.PerPage|null[0]
+        constructor <init>(kotlin/Int) // dev.voir.areca.media.carousel/CarouselPageSize.PerPage.<init>|<init>(kotlin.Int){}[0]
+
+        final val count // dev.voir.areca.media.carousel/CarouselPageSize.PerPage.count|{}count[0]
+            final fun <get-count>(): kotlin/Int // dev.voir.areca.media.carousel/CarouselPageSize.PerPage.count.<get-count>|<get-count>(){}[0]
+
+        final fun component1(): kotlin/Int // dev.voir.areca.media.carousel/CarouselPageSize.PerPage.component1|component1(){}[0]
+        final fun copy(kotlin/Int = ...): dev.voir.areca.media.carousel/CarouselPageSize.PerPage // dev.voir.areca.media.carousel/CarouselPageSize.PerPage.copy|copy(kotlin.Int){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.media.carousel/CarouselPageSize.PerPage.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.media.carousel/CarouselPageSize.PerPage.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.media.carousel/CarouselPageSize.PerPage.toString|toString(){}[0]
+    }
+
+    final object Fill : dev.voir.areca.media.carousel/CarouselPageSize { // dev.voir.areca.media.carousel/CarouselPageSize.Fill|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.media.carousel/CarouselPageSize.Fill.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.media.carousel/CarouselPageSize.Fill.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.media.carousel/CarouselPageSize.Fill.toString|toString(){}[0]
+    }
+}
+
+sealed interface dev.voir.areca.media.image/MediaPlaceholder { // dev.voir.areca.media.image/MediaPlaceholder|null[0]
+    final class Blurred : dev.voir.areca.media.image/MediaPlaceholder { // dev.voir.areca.media.image/MediaPlaceholder.Blurred|null[0]
+        constructor <init>(kotlin/Any) // dev.voir.areca.media.image/MediaPlaceholder.Blurred.<init>|<init>(kotlin.Any){}[0]
+
+        final val model // dev.voir.areca.media.image/MediaPlaceholder.Blurred.model|{}model[0]
+            final fun <get-model>(): kotlin/Any // dev.voir.areca.media.image/MediaPlaceholder.Blurred.model.<get-model>|<get-model>(){}[0]
+
+        final fun component1(): kotlin/Any // dev.voir.areca.media.image/MediaPlaceholder.Blurred.component1|component1(){}[0]
+        final fun copy(kotlin/Any = ...): dev.voir.areca.media.image/MediaPlaceholder.Blurred // dev.voir.areca.media.image/MediaPlaceholder.Blurred.copy|copy(kotlin.Any){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.media.image/MediaPlaceholder.Blurred.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.media.image/MediaPlaceholder.Blurred.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.media.image/MediaPlaceholder.Blurred.toString|toString(){}[0]
+    }
+
+    final object None : dev.voir.areca.media.image/MediaPlaceholder { // dev.voir.areca.media.image/MediaPlaceholder.None|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.media.image/MediaPlaceholder.None.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.media.image/MediaPlaceholder.None.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.media.image/MediaPlaceholder.None.toString|toString(){}[0]
+    }
+
+    final object Skeleton : dev.voir.areca.media.image/MediaPlaceholder { // dev.voir.areca.media.image/MediaPlaceholder.Skeleton|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.media.image/MediaPlaceholder.Skeleton.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.media.image/MediaPlaceholder.Skeleton.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.media.image/MediaPlaceholder.Skeleton.toString|toString(){}[0]
+    }
+}
+
+sealed interface dev.voir.areca.media/MediaImageState { // dev.voir.areca.media/MediaImageState|null[0]
+    final class Ready : dev.voir.areca.media/MediaImageState { // dev.voir.areca.media/MediaImageState.Ready|null[0]
+        constructor <init>(androidx.compose.ui.graphics.painter/Painter) // dev.voir.areca.media/MediaImageState.Ready.<init>|<init>(androidx.compose.ui.graphics.painter.Painter){}[0]
+
+        final val painter // dev.voir.areca.media/MediaImageState.Ready.painter|{}painter[0]
+            final fun <get-painter>(): androidx.compose.ui.graphics.painter/Painter // dev.voir.areca.media/MediaImageState.Ready.painter.<get-painter>|<get-painter>(){}[0]
+
+        final fun component1(): androidx.compose.ui.graphics.painter/Painter // dev.voir.areca.media/MediaImageState.Ready.component1|component1(){}[0]
+        final fun copy(androidx.compose.ui.graphics.painter/Painter = ...): dev.voir.areca.media/MediaImageState.Ready // dev.voir.areca.media/MediaImageState.Ready.copy|copy(androidx.compose.ui.graphics.painter.Painter){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.media/MediaImageState.Ready.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.media/MediaImageState.Ready.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.media/MediaImageState.Ready.toString|toString(){}[0]
+    }
+
+    final object Failed : dev.voir.areca.media/MediaImageState { // dev.voir.areca.media/MediaImageState.Failed|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.media/MediaImageState.Failed.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.media/MediaImageState.Failed.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.media/MediaImageState.Failed.toString|toString(){}[0]
+    }
+
+    final object Loading : dev.voir.areca.media/MediaImageState { // dev.voir.areca.media/MediaImageState.Loading|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.media/MediaImageState.Loading.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.voir.areca.media/MediaImageState.Loading.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.voir.areca.media/MediaImageState.Loading.toString|toString(){}[0]
+    }
+}
+
+final class dev.voir.areca.media.carousel/CarouselState { // dev.voir.areca.media.carousel/CarouselState|null[0]
+    final val currentItem // dev.voir.areca.media.carousel/CarouselState.currentItem|{}currentItem[0]
+        final fun <get-currentItem>(): kotlin/Int // dev.voir.areca.media.carousel/CarouselState.currentItem.<get-currentItem>|<get-currentItem>(){}[0]
+    final val currentPage // dev.voir.areca.media.carousel/CarouselState.currentPage|{}currentPage[0]
+        final fun <get-currentPage>(): kotlin/Int // dev.voir.areca.media.carousel/CarouselState.currentPage.<get-currentPage>|<get-currentPage>(){}[0]
+    final val currentPageOffset // dev.voir.areca.media.carousel/CarouselState.currentPageOffset|{}currentPageOffset[0]
+        final fun <get-currentPageOffset>(): kotlin/Float // dev.voir.areca.media.carousel/CarouselState.currentPageOffset.<get-currentPageOffset>|<get-currentPageOffset>(){}[0]
+    final val isScrollInProgress // dev.voir.areca.media.carousel/CarouselState.isScrollInProgress|{}isScrollInProgress[0]
+        final fun <get-isScrollInProgress>(): kotlin/Boolean // dev.voir.areca.media.carousel/CarouselState.isScrollInProgress.<get-isScrollInProgress>|<get-isScrollInProgress>(){}[0]
+    final val itemCount // dev.voir.areca.media.carousel/CarouselState.itemCount|{}itemCount[0]
+        final fun <get-itemCount>(): kotlin/Int // dev.voir.areca.media.carousel/CarouselState.itemCount.<get-itemCount>|<get-itemCount>(){}[0]
+    final val loop // dev.voir.areca.media.carousel/CarouselState.loop|{}loop[0]
+        final fun <get-loop>(): kotlin/Boolean // dev.voir.areca.media.carousel/CarouselState.loop.<get-loop>|<get-loop>(){}[0]
+    final val pageCount // dev.voir.areca.media.carousel/CarouselState.pageCount|{}pageCount[0]
+        final fun <get-pageCount>(): kotlin/Int // dev.voir.areca.media.carousel/CarouselState.pageCount.<get-pageCount>|<get-pageCount>(){}[0]
+
+    final var autoplayProgress // dev.voir.areca.media.carousel/CarouselState.autoplayProgress|{}autoplayProgress[0]
+        final fun <get-autoplayProgress>(): kotlin/Float // dev.voir.areca.media.carousel/CarouselState.autoplayProgress.<get-autoplayProgress>|<get-autoplayProgress>(){}[0]
+
+    final fun goToItem(kotlin/Int, kotlin/Boolean = ...) // dev.voir.areca.media.carousel/CarouselState.goToItem|goToItem(kotlin.Int;kotlin.Boolean){}[0]
+    final fun goToPage(kotlin/Int, kotlin/Boolean = ...) // dev.voir.areca.media.carousel/CarouselState.goToPage|goToPage(kotlin.Int;kotlin.Boolean){}[0]
+    final fun next() // dev.voir.areca.media.carousel/CarouselState.next|next(){}[0]
+    final fun previous() // dev.voir.areca.media.carousel/CarouselState.previous|previous(){}[0]
+}
+
+final class dev.voir.areca.media.compare/CompareLabels { // dev.voir.areca.media.compare/CompareLabels|null[0]
+    constructor <init>(kotlin/String = ..., kotlin/String = ...) // dev.voir.areca.media.compare/CompareLabels.<init>|<init>(kotlin.String;kotlin.String){}[0]
+
+    final val first // dev.voir.areca.media.compare/CompareLabels.first|{}first[0]
+        final fun <get-first>(): kotlin/String // dev.voir.areca.media.compare/CompareLabels.first.<get-first>|<get-first>(){}[0]
+    final val second // dev.voir.areca.media.compare/CompareLabels.second|{}second[0]
+        final fun <get-second>(): kotlin/String // dev.voir.areca.media.compare/CompareLabels.second.<get-second>|<get-second>(){}[0]
+
+    final fun component1(): kotlin/String // dev.voir.areca.media.compare/CompareLabels.component1|component1(){}[0]
+    final fun component2(): kotlin/String // dev.voir.areca.media.compare/CompareLabels.component2|component2(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/String = ...): dev.voir.areca.media.compare/CompareLabels // dev.voir.areca.media.compare/CompareLabels.copy|copy(kotlin.String;kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.media.compare/CompareLabels.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.media.compare/CompareLabels.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.media.compare/CompareLabels.toString|toString(){}[0]
+}
+
+final class dev.voir.areca.media.compare/CompareStyle { // dev.voir.areca.media.compare/CompareStyle|null[0]
+    constructor <init>(androidx.compose.ui.graphics/Shape, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color) // dev.voir.areca.media.compare/CompareStyle.<init>|<init>(androidx.compose.ui.graphics.Shape;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color){}[0]
+
+    final val bg // dev.voir.areca.media.compare/CompareStyle.bg|{}bg[0]
+        final fun <get-bg>(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.compare/CompareStyle.bg.<get-bg>|<get-bg>(){}[0]
+    final val divider // dev.voir.areca.media.compare/CompareStyle.divider|{}divider[0]
+        final fun <get-divider>(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.compare/CompareStyle.divider.<get-divider>|<get-divider>(){}[0]
+    final val knob // dev.voir.areca.media.compare/CompareStyle.knob|{}knob[0]
+        final fun <get-knob>(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.compare/CompareStyle.knob.<get-knob>|<get-knob>(){}[0]
+    final val knobContent // dev.voir.areca.media.compare/CompareStyle.knobContent|{}knobContent[0]
+        final fun <get-knobContent>(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.compare/CompareStyle.knobContent.<get-knobContent>|<get-knobContent>(){}[0]
+    final val labelBg // dev.voir.areca.media.compare/CompareStyle.labelBg|{}labelBg[0]
+        final fun <get-labelBg>(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.compare/CompareStyle.labelBg.<get-labelBg>|<get-labelBg>(){}[0]
+    final val labelContent // dev.voir.areca.media.compare/CompareStyle.labelContent|{}labelContent[0]
+        final fun <get-labelContent>(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.compare/CompareStyle.labelContent.<get-labelContent>|<get-labelContent>(){}[0]
+    final val shape // dev.voir.areca.media.compare/CompareStyle.shape|{}shape[0]
+        final fun <get-shape>(): androidx.compose.ui.graphics/Shape // dev.voir.areca.media.compare/CompareStyle.shape.<get-shape>|<get-shape>(){}[0]
+
+    final fun component1(): androidx.compose.ui.graphics/Shape // dev.voir.areca.media.compare/CompareStyle.component1|component1(){}[0]
+    final fun component2(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.compare/CompareStyle.component2|component2(){}[0]
+    final fun component3(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.compare/CompareStyle.component3|component3(){}[0]
+    final fun component4(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.compare/CompareStyle.component4|component4(){}[0]
+    final fun component5(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.compare/CompareStyle.component5|component5(){}[0]
+    final fun component6(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.compare/CompareStyle.component6|component6(){}[0]
+    final fun component7(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.compare/CompareStyle.component7|component7(){}[0]
+    final fun copy(androidx.compose.ui.graphics/Shape = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ...): dev.voir.areca.media.compare/CompareStyle // dev.voir.areca.media.compare/CompareStyle.copy|copy(androidx.compose.ui.graphics.Shape;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.media.compare/CompareStyle.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.media.compare/CompareStyle.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.media.compare/CompareStyle.toString|toString(){}[0]
+
+    final object Companion { // dev.voir.areca.media.compare/CompareStyle.Companion|null[0]
+        final fun default(androidx.compose.ui.graphics/Shape?, androidx.compose.ui.graphics/Color, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.voir.areca.media.compare/CompareStyle // dev.voir.areca.media.compare/CompareStyle.Companion.default|default(androidx.compose.ui.graphics.Shape?;androidx.compose.ui.graphics.Color;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+    }
+}
+
+final class dev.voir.areca.media.image/HotspotStyle { // dev.voir.areca.media.image/HotspotStyle|null[0]
+    constructor <init>(androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color) // dev.voir.areca.media.image/HotspotStyle.<init>|<init>(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color){}[0]
+
+    final val bg // dev.voir.areca.media.image/HotspotStyle.bg|{}bg[0]
+        final fun <get-bg>(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.image/HotspotStyle.bg.<get-bg>|<get-bg>(){}[0]
+    final val content // dev.voir.areca.media.image/HotspotStyle.content|{}content[0]
+        final fun <get-content>(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.image/HotspotStyle.content.<get-content>|<get-content>(){}[0]
+    final val ring // dev.voir.areca.media.image/HotspotStyle.ring|{}ring[0]
+        final fun <get-ring>(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.image/HotspotStyle.ring.<get-ring>|<get-ring>(){}[0]
+
+    final fun component1(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.image/HotspotStyle.component1|component1(){}[0]
+    final fun component2(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.image/HotspotStyle.component2|component2(){}[0]
+    final fun component3(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.image/HotspotStyle.component3|component3(){}[0]
+    final fun copy(androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ...): dev.voir.areca.media.image/HotspotStyle // dev.voir.areca.media.image/HotspotStyle.copy|copy(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.media.image/HotspotStyle.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.media.image/HotspotStyle.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.media.image/HotspotStyle.toString|toString(){}[0]
+
+    final object Companion { // dev.voir.areca.media.image/HotspotStyle.Companion|null[0]
+        final fun default(androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.voir.areca.media.image/HotspotStyle // dev.voir.areca.media.image/HotspotStyle.Companion.default|default(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+    }
+}
+
+final class dev.voir.areca.media.image/MediaFrameSize { // dev.voir.areca.media.image/MediaFrameSize|null[0]
+    constructor <init>(androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp) // dev.voir.areca.media.image/MediaFrameSize.<init>|<init>(androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp){}[0]
+
+    final val compactBelow // dev.voir.areca.media.image/MediaFrameSize.compactBelow|{}compactBelow[0]
+        final fun <get-compactBelow>(): androidx.compose.ui.unit/Dp // dev.voir.areca.media.image/MediaFrameSize.compactBelow.<get-compactBelow>|<get-compactBelow>(){}[0]
+    final val failureGlyph // dev.voir.areca.media.image/MediaFrameSize.failureGlyph|{}failureGlyph[0]
+        final fun <get-failureGlyph>(): androidx.compose.ui.unit/Dp // dev.voir.areca.media.image/MediaFrameSize.failureGlyph.<get-failureGlyph>|<get-failureGlyph>(){}[0]
+    final val inset // dev.voir.areca.media.image/MediaFrameSize.inset|{}inset[0]
+        final fun <get-inset>(): androidx.compose.ui.unit/Dp // dev.voir.areca.media.image/MediaFrameSize.inset.<get-inset>|<get-inset>(){}[0]
+
+    final fun component1(): androidx.compose.ui.unit/Dp // dev.voir.areca.media.image/MediaFrameSize.component1|component1(){}[0]
+    final fun component2(): androidx.compose.ui.unit/Dp // dev.voir.areca.media.image/MediaFrameSize.component2|component2(){}[0]
+    final fun component3(): androidx.compose.ui.unit/Dp // dev.voir.areca.media.image/MediaFrameSize.component3|component3(){}[0]
+    final fun copy(androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ...): dev.voir.areca.media.image/MediaFrameSize // dev.voir.areca.media.image/MediaFrameSize.copy|copy(androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.media.image/MediaFrameSize.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.media.image/MediaFrameSize.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.media.image/MediaFrameSize.toString|toString(){}[0]
+
+    final object Companion { // dev.voir.areca.media.image/MediaFrameSize.Companion|null[0]
+        final val Default // dev.voir.areca.media.image/MediaFrameSize.Companion.Default|{}Default[0]
+            final fun <get-Default>(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.media.image/MediaFrameSize // dev.voir.areca.media.image/MediaFrameSize.Companion.Default.<get-Default>|<get-Default>(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+        final val Product // dev.voir.areca.media.image/MediaFrameSize.Companion.Product|{}Product[0]
+            final fun <get-Product>(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.media.image/MediaFrameSize // dev.voir.areca.media.image/MediaFrameSize.Companion.Product.<get-Product>|<get-Product>(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+
+        final fun default(androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.voir.areca.media.image/MediaFrameSize // dev.voir.areca.media.image/MediaFrameSize.Companion.default|default(androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+    }
+}
+
+final class dev.voir.areca.media.image/MediaFrameStyle { // dev.voir.areca.media.image/MediaFrameStyle|null[0]
+    constructor <init>(androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Shape, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color) // dev.voir.areca.media.image/MediaFrameStyle.<init>|<init>(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Shape;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color){}[0]
+
+    final val bg // dev.voir.areca.media.image/MediaFrameStyle.bg|{}bg[0]
+        final fun <get-bg>(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.image/MediaFrameStyle.bg.<get-bg>|<get-bg>(){}[0]
+    final val content // dev.voir.areca.media.image/MediaFrameStyle.content|{}content[0]
+        final fun <get-content>(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.image/MediaFrameStyle.content.<get-content>|<get-content>(){}[0]
+    final val scrim // dev.voir.areca.media.image/MediaFrameStyle.scrim|{}scrim[0]
+        final fun <get-scrim>(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.image/MediaFrameStyle.scrim.<get-scrim>|<get-scrim>(){}[0]
+    final val shape // dev.voir.areca.media.image/MediaFrameStyle.shape|{}shape[0]
+        final fun <get-shape>(): androidx.compose.ui.graphics/Shape // dev.voir.areca.media.image/MediaFrameStyle.shape.<get-shape>|<get-shape>(){}[0]
+
+    final fun component1(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.image/MediaFrameStyle.component1|component1(){}[0]
+    final fun component2(): androidx.compose.ui.graphics/Shape // dev.voir.areca.media.image/MediaFrameStyle.component2|component2(){}[0]
+    final fun component3(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.image/MediaFrameStyle.component3|component3(){}[0]
+    final fun component4(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.image/MediaFrameStyle.component4|component4(){}[0]
+    final fun copy(androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Shape = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ...): dev.voir.areca.media.image/MediaFrameStyle // dev.voir.areca.media.image/MediaFrameStyle.copy|copy(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Shape;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.media.image/MediaFrameStyle.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.media.image/MediaFrameStyle.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.media.image/MediaFrameStyle.toString|toString(){}[0]
+
+    final object Companion { // dev.voir.areca.media.image/MediaFrameStyle.Companion|null[0]
+        final val Default // dev.voir.areca.media.image/MediaFrameStyle.Companion.Default|{}Default[0]
+            final fun <get-Default>(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.media.image/MediaFrameStyle // dev.voir.areca.media.image/MediaFrameStyle.Companion.Default.<get-Default>|<get-Default>(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+
+        final fun bare(androidx.compose.ui.graphics/Color, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.voir.areca.media.image/MediaFrameStyle // dev.voir.areca.media.image/MediaFrameStyle.Companion.bare|bare(androidx.compose.ui.graphics.Color;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+        final fun circle(androidx.compose.ui.graphics/Color, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.voir.areca.media.image/MediaFrameStyle // dev.voir.areca.media.image/MediaFrameStyle.Companion.circle|circle(androidx.compose.ui.graphics.Color;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+        final fun default(androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Shape?, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.voir.areca.media.image/MediaFrameStyle // dev.voir.areca.media.image/MediaFrameStyle.Companion.default|default(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Shape?;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+    }
+}
+
+final class dev.voir.areca.media.thumbnail/ThumbnailStripSize { // dev.voir.areca.media.thumbnail/ThumbnailStripSize|null[0]
+    constructor <init>(androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp) // dev.voir.areca.media.thumbnail/ThumbnailStripSize.<init>|<init>(androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp){}[0]
+
+    final val ringGap // dev.voir.areca.media.thumbnail/ThumbnailStripSize.ringGap|{}ringGap[0]
+        final fun <get-ringGap>(): androidx.compose.ui.unit/Dp // dev.voir.areca.media.thumbnail/ThumbnailStripSize.ringGap.<get-ringGap>|<get-ringGap>(){}[0]
+    final val ringWidth // dev.voir.areca.media.thumbnail/ThumbnailStripSize.ringWidth|{}ringWidth[0]
+        final fun <get-ringWidth>(): androidx.compose.ui.unit/Dp // dev.voir.areca.media.thumbnail/ThumbnailStripSize.ringWidth.<get-ringWidth>|<get-ringWidth>(){}[0]
+    final val side // dev.voir.areca.media.thumbnail/ThumbnailStripSize.side|{}side[0]
+        final fun <get-side>(): androidx.compose.ui.unit/Dp // dev.voir.areca.media.thumbnail/ThumbnailStripSize.side.<get-side>|<get-side>(){}[0]
+    final val spacing // dev.voir.areca.media.thumbnail/ThumbnailStripSize.spacing|{}spacing[0]
+        final fun <get-spacing>(): androidx.compose.ui.unit/Dp // dev.voir.areca.media.thumbnail/ThumbnailStripSize.spacing.<get-spacing>|<get-spacing>(){}[0]
+
+    final fun component1(): androidx.compose.ui.unit/Dp // dev.voir.areca.media.thumbnail/ThumbnailStripSize.component1|component1(){}[0]
+    final fun component2(): androidx.compose.ui.unit/Dp // dev.voir.areca.media.thumbnail/ThumbnailStripSize.component2|component2(){}[0]
+    final fun component3(): androidx.compose.ui.unit/Dp // dev.voir.areca.media.thumbnail/ThumbnailStripSize.component3|component3(){}[0]
+    final fun component4(): androidx.compose.ui.unit/Dp // dev.voir.areca.media.thumbnail/ThumbnailStripSize.component4|component4(){}[0]
+    final fun copy(androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ...): dev.voir.areca.media.thumbnail/ThumbnailStripSize // dev.voir.areca.media.thumbnail/ThumbnailStripSize.copy|copy(androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.media.thumbnail/ThumbnailStripSize.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.media.thumbnail/ThumbnailStripSize.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.media.thumbnail/ThumbnailStripSize.toString|toString(){}[0]
+
+    final object Companion { // dev.voir.areca.media.thumbnail/ThumbnailStripSize.Companion|null[0]
+        final val Default // dev.voir.areca.media.thumbnail/ThumbnailStripSize.Companion.Default|{}Default[0]
+            final fun <get-Default>(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.media.thumbnail/ThumbnailStripSize // dev.voir.areca.media.thumbnail/ThumbnailStripSize.Companion.Default.<get-Default>|<get-Default>(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+
+        final fun default(androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.voir.areca.media.thumbnail/ThumbnailStripSize // dev.voir.areca.media.thumbnail/ThumbnailStripSize.Companion.default|default(androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+    }
+}
+
+final class dev.voir.areca.media.thumbnail/ThumbnailStripStyle { // dev.voir.areca.media.thumbnail/ThumbnailStripStyle|null[0]
+    constructor <init>(androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Shape, kotlin/Float) // dev.voir.areca.media.thumbnail/ThumbnailStripStyle.<init>|<init>(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Shape;kotlin.Float){}[0]
+
+    final val otherAlpha // dev.voir.areca.media.thumbnail/ThumbnailStripStyle.otherAlpha|{}otherAlpha[0]
+        final fun <get-otherAlpha>(): kotlin/Float // dev.voir.areca.media.thumbnail/ThumbnailStripStyle.otherAlpha.<get-otherAlpha>|<get-otherAlpha>(){}[0]
+    final val ring // dev.voir.areca.media.thumbnail/ThumbnailStripStyle.ring|{}ring[0]
+        final fun <get-ring>(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.thumbnail/ThumbnailStripStyle.ring.<get-ring>|<get-ring>(){}[0]
+    final val shape // dev.voir.areca.media.thumbnail/ThumbnailStripStyle.shape|{}shape[0]
+        final fun <get-shape>(): androidx.compose.ui.graphics/Shape // dev.voir.areca.media.thumbnail/ThumbnailStripStyle.shape.<get-shape>|<get-shape>(){}[0]
+
+    final fun component1(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.thumbnail/ThumbnailStripStyle.component1|component1(){}[0]
+    final fun component2(): androidx.compose.ui.graphics/Shape // dev.voir.areca.media.thumbnail/ThumbnailStripStyle.component2|component2(){}[0]
+    final fun component3(): kotlin/Float // dev.voir.areca.media.thumbnail/ThumbnailStripStyle.component3|component3(){}[0]
+    final fun copy(androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Shape = ..., kotlin/Float = ...): dev.voir.areca.media.thumbnail/ThumbnailStripStyle // dev.voir.areca.media.thumbnail/ThumbnailStripStyle.copy|copy(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Shape;kotlin.Float){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.media.thumbnail/ThumbnailStripStyle.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.media.thumbnail/ThumbnailStripStyle.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.media.thumbnail/ThumbnailStripStyle.toString|toString(){}[0]
+
+    final object Companion { // dev.voir.areca.media.thumbnail/ThumbnailStripStyle.Companion|null[0]
+        final val Default // dev.voir.areca.media.thumbnail/ThumbnailStripStyle.Companion.Default|{}Default[0]
+            final fun <get-Default>(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.media.thumbnail/ThumbnailStripStyle // dev.voir.areca.media.thumbnail/ThumbnailStripStyle.Companion.Default.<get-Default>|<get-Default>(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+
+        final fun default(androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Shape?, kotlin/Float, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.voir.areca.media.thumbnail/ThumbnailStripStyle // dev.voir.areca.media.thumbnail/ThumbnailStripStyle.Companion.default|default(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Shape?;kotlin.Float;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+        final fun onDark(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.media.thumbnail/ThumbnailStripStyle // dev.voir.areca.media.thumbnail/ThumbnailStripStyle.Companion.onDark|onDark(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+        final fun onLight(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.media.thumbnail/ThumbnailStripStyle // dev.voir.areca.media.thumbnail/ThumbnailStripStyle.Companion.onLight|onLight(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+    }
+}
+
+final class dev.voir.areca.media.viewer/MediaTransitionState // dev.voir.areca.media.viewer/MediaTransitionState|null[0]
+
+final class dev.voir.areca.media.viewer/MediaViewerState { // dev.voir.areca.media.viewer/MediaViewerState|null[0]
+    final val currentIndex // dev.voir.areca.media.viewer/MediaViewerState.currentIndex|{}currentIndex[0]
+        final fun <get-currentIndex>(): kotlin/Int // dev.voir.areca.media.viewer/MediaViewerState.currentIndex.<get-currentIndex>|<get-currentIndex>(){}[0]
+    final val currentIndexOffset // dev.voir.areca.media.viewer/MediaViewerState.currentIndexOffset|{}currentIndexOffset[0]
+        final fun <get-currentIndexOffset>(): kotlin/Float // dev.voir.areca.media.viewer/MediaViewerState.currentIndexOffset.<get-currentIndexOffset>|<get-currentIndexOffset>(){}[0]
+    final val isZoomed // dev.voir.areca.media.viewer/MediaViewerState.isZoomed|{}isZoomed[0]
+        final fun <get-isZoomed>(): kotlin/Boolean // dev.voir.areca.media.viewer/MediaViewerState.isZoomed.<get-isZoomed>|<get-isZoomed>(){}[0]
+    final val itemCount // dev.voir.areca.media.viewer/MediaViewerState.itemCount|{}itemCount[0]
+        final fun <get-itemCount>(): kotlin/Int // dev.voir.areca.media.viewer/MediaViewerState.itemCount.<get-itemCount>|<get-itemCount>(){}[0]
+
+    final var isChromeVisible // dev.voir.areca.media.viewer/MediaViewerState.isChromeVisible|{}isChromeVisible[0]
+        final fun <get-isChromeVisible>(): kotlin/Boolean // dev.voir.areca.media.viewer/MediaViewerState.isChromeVisible.<get-isChromeVisible>|<get-isChromeVisible>(){}[0]
+
+    final fun dismiss() // dev.voir.areca.media.viewer/MediaViewerState.dismiss|dismiss(){}[0]
+    final fun goTo(kotlin/Int, kotlin/Boolean = ...) // dev.voir.areca.media.viewer/MediaViewerState.goTo|goTo(kotlin.Int;kotlin.Boolean){}[0]
+    final fun showChrome() // dev.voir.areca.media.viewer/MediaViewerState.showChrome|showChrome(){}[0]
+    final fun toggleChrome() // dev.voir.areca.media.viewer/MediaViewerState.toggleChrome|toggleChrome(){}[0]
+}
+
+final class dev.voir.areca.media.viewer/MediaViewerStyle { // dev.voir.areca.media.viewer/MediaViewerStyle|null[0]
+    constructor <init>(androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, kotlin/Boolean) // dev.voir.areca.media.viewer/MediaViewerStyle.<init>|<init>(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;kotlin.Boolean){}[0]
+
+    final val bg // dev.voir.areca.media.viewer/MediaViewerStyle.bg|{}bg[0]
+        final fun <get-bg>(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.viewer/MediaViewerStyle.bg.<get-bg>|<get-bg>(){}[0]
+    final val bgChromeHidden // dev.voir.areca.media.viewer/MediaViewerStyle.bgChromeHidden|{}bgChromeHidden[0]
+        final fun <get-bgChromeHidden>(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.viewer/MediaViewerStyle.bgChromeHidden.<get-bgChromeHidden>|<get-bgChromeHidden>(){}[0]
+    final val content // dev.voir.areca.media.viewer/MediaViewerStyle.content|{}content[0]
+        final fun <get-content>(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.viewer/MediaViewerStyle.content.<get-content>|<get-content>(){}[0]
+    final val dark // dev.voir.areca.media.viewer/MediaViewerStyle.dark|{}dark[0]
+        final fun <get-dark>(): kotlin/Boolean // dev.voir.areca.media.viewer/MediaViewerStyle.dark.<get-dark>|<get-dark>(){}[0]
+    final val noticeBg // dev.voir.areca.media.viewer/MediaViewerStyle.noticeBg|{}noticeBg[0]
+        final fun <get-noticeBg>(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.viewer/MediaViewerStyle.noticeBg.<get-noticeBg>|<get-noticeBg>(){}[0]
+    final val noticeContent // dev.voir.areca.media.viewer/MediaViewerStyle.noticeContent|{}noticeContent[0]
+        final fun <get-noticeContent>(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.viewer/MediaViewerStyle.noticeContent.<get-noticeContent>|<get-noticeContent>(){}[0]
+    final val scrim // dev.voir.areca.media.viewer/MediaViewerStyle.scrim|{}scrim[0]
+        final fun <get-scrim>(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.viewer/MediaViewerStyle.scrim.<get-scrim>|<get-scrim>(){}[0]
+
+    final fun component1(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.viewer/MediaViewerStyle.component1|component1(){}[0]
+    final fun component2(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.viewer/MediaViewerStyle.component2|component2(){}[0]
+    final fun component3(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.viewer/MediaViewerStyle.component3|component3(){}[0]
+    final fun component4(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.viewer/MediaViewerStyle.component4|component4(){}[0]
+    final fun component5(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.viewer/MediaViewerStyle.component5|component5(){}[0]
+    final fun component6(): androidx.compose.ui.graphics/Color // dev.voir.areca.media.viewer/MediaViewerStyle.component6|component6(){}[0]
+    final fun component7(): kotlin/Boolean // dev.voir.areca.media.viewer/MediaViewerStyle.component7|component7(){}[0]
+    final fun copy(androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., kotlin/Boolean = ...): dev.voir.areca.media.viewer/MediaViewerStyle // dev.voir.areca.media.viewer/MediaViewerStyle.copy|copy(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;kotlin.Boolean){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.media.viewer/MediaViewerStyle.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.media.viewer/MediaViewerStyle.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.media.viewer/MediaViewerStyle.toString|toString(){}[0]
+    final fun topBar(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.foundation.topbar/TopBarStyle // dev.voir.areca.media.viewer/MediaViewerStyle.topBar|topBar(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+
+    final object Companion { // dev.voir.areca.media.viewer/MediaViewerStyle.Companion|null[0]
+        final fun dark(androidx.compose.ui.graphics/Color, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.voir.areca.media.viewer/MediaViewerStyle // dev.voir.areca.media.viewer/MediaViewerStyle.Companion.dark|dark(androidx.compose.ui.graphics.Color;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+        final fun light(androidx.compose.ui.graphics/Color, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.voir.areca.media.viewer/MediaViewerStyle // dev.voir.areca.media.viewer/MediaViewerStyle.Companion.light|light(androidx.compose.ui.graphics.Color;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+    }
+}
+
+final class dev.voir.areca.media.zoom/ZoomLabels { // dev.voir.areca.media.zoom/ZoomLabels|null[0]
+    constructor <init>(kotlin/String = ..., kotlin/String = ..., kotlin/String = ...) // dev.voir.areca.media.zoom/ZoomLabels.<init>|<init>(kotlin.String;kotlin.String;kotlin.String){}[0]
+
+    final val reset // dev.voir.areca.media.zoom/ZoomLabels.reset|{}reset[0]
+        final fun <get-reset>(): kotlin/String // dev.voir.areca.media.zoom/ZoomLabels.reset.<get-reset>|<get-reset>(){}[0]
+    final val zoomIn // dev.voir.areca.media.zoom/ZoomLabels.zoomIn|{}zoomIn[0]
+        final fun <get-zoomIn>(): kotlin/String // dev.voir.areca.media.zoom/ZoomLabels.zoomIn.<get-zoomIn>|<get-zoomIn>(){}[0]
+    final val zoomOut // dev.voir.areca.media.zoom/ZoomLabels.zoomOut|{}zoomOut[0]
+        final fun <get-zoomOut>(): kotlin/String // dev.voir.areca.media.zoom/ZoomLabels.zoomOut.<get-zoomOut>|<get-zoomOut>(){}[0]
+
+    final fun component1(): kotlin/String // dev.voir.areca.media.zoom/ZoomLabels.component1|component1(){}[0]
+    final fun component2(): kotlin/String // dev.voir.areca.media.zoom/ZoomLabels.component2|component2(){}[0]
+    final fun component3(): kotlin/String // dev.voir.areca.media.zoom/ZoomLabels.component3|component3(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/String = ..., kotlin/String = ...): dev.voir.areca.media.zoom/ZoomLabels // dev.voir.areca.media.zoom/ZoomLabels.copy|copy(kotlin.String;kotlin.String;kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.media.zoom/ZoomLabels.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.media.zoom/ZoomLabels.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.media.zoom/ZoomLabels.toString|toString(){}[0]
+}
+
+final class dev.voir.areca.media.zoom/ZoomState { // dev.voir.areca.media.zoom/ZoomState|null[0]
+    final val canZoomIn // dev.voir.areca.media.zoom/ZoomState.canZoomIn|{}canZoomIn[0]
+        final fun <get-canZoomIn>(): kotlin/Boolean // dev.voir.areca.media.zoom/ZoomState.canZoomIn.<get-canZoomIn>|<get-canZoomIn>(){}[0]
+    final val isZoomed // dev.voir.areca.media.zoom/ZoomState.isZoomed|{}isZoomed[0]
+        final fun <get-isZoomed>(): kotlin/Boolean // dev.voir.areca.media.zoom/ZoomState.isZoomed.<get-isZoomed>|<get-isZoomed>(){}[0]
+    final val maxScale // dev.voir.areca.media.zoom/ZoomState.maxScale|{}maxScale[0]
+        final fun <get-maxScale>(): kotlin/Float // dev.voir.areca.media.zoom/ZoomState.maxScale.<get-maxScale>|<get-maxScale>(){}[0]
+
+    final var content // dev.voir.areca.media.zoom/ZoomState.content|{}content[0]
+        final fun <get-content>(): androidx.compose.ui.geometry/Size // dev.voir.areca.media.zoom/ZoomState.content.<get-content>|<get-content>(){}[0]
+        final fun <set-content>(androidx.compose.ui.geometry/Size) // dev.voir.areca.media.zoom/ZoomState.content.<set-content>|<set-content>(androidx.compose.ui.geometry.Size){}[0]
+    final var frame // dev.voir.areca.media.zoom/ZoomState.frame|{}frame[0]
+        final fun <get-frame>(): androidx.compose.ui.geometry/Size // dev.voir.areca.media.zoom/ZoomState.frame.<get-frame>|<get-frame>(){}[0]
+    final var offset // dev.voir.areca.media.zoom/ZoomState.offset|{}offset[0]
+        final fun <get-offset>(): androidx.compose.ui.geometry/Offset // dev.voir.areca.media.zoom/ZoomState.offset.<get-offset>|<get-offset>(){}[0]
+    final var scale // dev.voir.areca.media.zoom/ZoomState.scale|{}scale[0]
+        final fun <get-scale>(): kotlin/Float // dev.voir.areca.media.zoom/ZoomState.scale.<get-scale>|<get-scale>(){}[0]
+
+    final fun panBy(androidx.compose.ui.geometry/Offset): androidx.compose.ui.geometry/Offset // dev.voir.areca.media.zoom/ZoomState.panBy|panBy(androidx.compose.ui.geometry.Offset){}[0]
+    final fun reset() // dev.voir.areca.media.zoom/ZoomState.reset|reset(){}[0]
+    final fun settle() // dev.voir.areca.media.zoom/ZoomState.settle|settle(){}[0]
+    final fun zoom(kotlin/Float, androidx.compose.ui.geometry/Offset, androidx.compose.ui.geometry/Offset = ...) // dev.voir.areca.media.zoom/ZoomState.zoom|zoom(kotlin.Float;androidx.compose.ui.geometry.Offset;androidx.compose.ui.geometry.Offset){}[0]
+    final fun zoomIn() // dev.voir.areca.media.zoom/ZoomState.zoomIn|zoomIn(){}[0]
+    final fun zoomOut() // dev.voir.areca.media.zoom/ZoomState.zoomOut|zoomOut(){}[0]
+    final suspend fun animateReset() // dev.voir.areca.media.zoom/ZoomState.animateReset|animateReset(){}[0]
+    final suspend fun animateToggle(androidx.compose.ui.geometry/Offset) // dev.voir.areca.media.zoom/ZoomState.animateToggle|animateToggle(androidx.compose.ui.geometry.Offset){}[0]
+}
+
+final val dev.voir.areca.media.carousel/dev_voir_areca_media_carousel_CarouselPageSize_Fill$stableprop // dev.voir.areca.media.carousel/dev_voir_areca_media_carousel_CarouselPageSize_Fill$stableprop|#static{}dev_voir_areca_media_carousel_CarouselPageSize_Fill$stableprop[0]
+final val dev.voir.areca.media.carousel/dev_voir_areca_media_carousel_CarouselPageSize_Fixed$stableprop // dev.voir.areca.media.carousel/dev_voir_areca_media_carousel_CarouselPageSize_Fixed$stableprop|#static{}dev_voir_areca_media_carousel_CarouselPageSize_Fixed$stableprop[0]
+final val dev.voir.areca.media.carousel/dev_voir_areca_media_carousel_CarouselPageSize_Fraction$stableprop // dev.voir.areca.media.carousel/dev_voir_areca_media_carousel_CarouselPageSize_Fraction$stableprop|#static{}dev_voir_areca_media_carousel_CarouselPageSize_Fraction$stableprop[0]
+final val dev.voir.areca.media.carousel/dev_voir_areca_media_carousel_CarouselPageSize_PerPage$stableprop // dev.voir.areca.media.carousel/dev_voir_areca_media_carousel_CarouselPageSize_PerPage$stableprop|#static{}dev_voir_areca_media_carousel_CarouselPageSize_PerPage$stableprop[0]
+final val dev.voir.areca.media.carousel/dev_voir_areca_media_carousel_CarouselState$stableprop // dev.voir.areca.media.carousel/dev_voir_areca_media_carousel_CarouselState$stableprop|#static{}dev_voir_areca_media_carousel_CarouselState$stableprop[0]
+final val dev.voir.areca.media.compare/dev_voir_areca_media_compare_CompareLabels$stableprop // dev.voir.areca.media.compare/dev_voir_areca_media_compare_CompareLabels$stableprop|#static{}dev_voir_areca_media_compare_CompareLabels$stableprop[0]
+final val dev.voir.areca.media.compare/dev_voir_areca_media_compare_CompareStyle$stableprop // dev.voir.areca.media.compare/dev_voir_areca_media_compare_CompareStyle$stableprop|#static{}dev_voir_areca_media_compare_CompareStyle$stableprop[0]
+final val dev.voir.areca.media.image/LocalMediaFrameSize // dev.voir.areca.media.image/LocalMediaFrameSize|{}LocalMediaFrameSize[0]
+    final fun <get-LocalMediaFrameSize>(): androidx.compose.runtime/ProvidableCompositionLocal<dev.voir.areca.media.image/MediaFrameSize?> // dev.voir.areca.media.image/LocalMediaFrameSize.<get-LocalMediaFrameSize>|<get-LocalMediaFrameSize>(){}[0]
+final val dev.voir.areca.media.image/LocalMediaFrameStyle // dev.voir.areca.media.image/LocalMediaFrameStyle|{}LocalMediaFrameStyle[0]
+    final fun <get-LocalMediaFrameStyle>(): androidx.compose.runtime/ProvidableCompositionLocal<dev.voir.areca.media.image/MediaFrameStyle?> // dev.voir.areca.media.image/LocalMediaFrameStyle.<get-LocalMediaFrameStyle>|<get-LocalMediaFrameStyle>(){}[0]
+final val dev.voir.areca.media.image/dev_voir_areca_media_image_HotspotStyle$stableprop // dev.voir.areca.media.image/dev_voir_areca_media_image_HotspotStyle$stableprop|#static{}dev_voir_areca_media_image_HotspotStyle$stableprop[0]
+final val dev.voir.areca.media.image/dev_voir_areca_media_image_MediaFrameSize$stableprop // dev.voir.areca.media.image/dev_voir_areca_media_image_MediaFrameSize$stableprop|#static{}dev_voir_areca_media_image_MediaFrameSize$stableprop[0]
+final val dev.voir.areca.media.image/dev_voir_areca_media_image_MediaFrameStyle$stableprop // dev.voir.areca.media.image/dev_voir_areca_media_image_MediaFrameStyle$stableprop|#static{}dev_voir_areca_media_image_MediaFrameStyle$stableprop[0]
+final val dev.voir.areca.media.image/dev_voir_areca_media_image_MediaPlaceholder_Blurred$stableprop // dev.voir.areca.media.image/dev_voir_areca_media_image_MediaPlaceholder_Blurred$stableprop|#static{}dev_voir_areca_media_image_MediaPlaceholder_Blurred$stableprop[0]
+final val dev.voir.areca.media.image/dev_voir_areca_media_image_MediaPlaceholder_None$stableprop // dev.voir.areca.media.image/dev_voir_areca_media_image_MediaPlaceholder_None$stableprop|#static{}dev_voir_areca_media_image_MediaPlaceholder_None$stableprop[0]
+final val dev.voir.areca.media.image/dev_voir_areca_media_image_MediaPlaceholder_Skeleton$stableprop // dev.voir.areca.media.image/dev_voir_areca_media_image_MediaPlaceholder_Skeleton$stableprop|#static{}dev_voir_areca_media_image_MediaPlaceholder_Skeleton$stableprop[0]
+final val dev.voir.areca.media.thumbnail/LocalThumbnailStripSize // dev.voir.areca.media.thumbnail/LocalThumbnailStripSize|{}LocalThumbnailStripSize[0]
+    final fun <get-LocalThumbnailStripSize>(): androidx.compose.runtime/ProvidableCompositionLocal<dev.voir.areca.media.thumbnail/ThumbnailStripSize?> // dev.voir.areca.media.thumbnail/LocalThumbnailStripSize.<get-LocalThumbnailStripSize>|<get-LocalThumbnailStripSize>(){}[0]
+final val dev.voir.areca.media.thumbnail/LocalThumbnailStripStyle // dev.voir.areca.media.thumbnail/LocalThumbnailStripStyle|{}LocalThumbnailStripStyle[0]
+    final fun <get-LocalThumbnailStripStyle>(): androidx.compose.runtime/ProvidableCompositionLocal<dev.voir.areca.media.thumbnail/ThumbnailStripStyle?> // dev.voir.areca.media.thumbnail/LocalThumbnailStripStyle.<get-LocalThumbnailStripStyle>|<get-LocalThumbnailStripStyle>(){}[0]
+final val dev.voir.areca.media.thumbnail/dev_voir_areca_media_thumbnail_ThumbnailStripSize$stableprop // dev.voir.areca.media.thumbnail/dev_voir_areca_media_thumbnail_ThumbnailStripSize$stableprop|#static{}dev_voir_areca_media_thumbnail_ThumbnailStripSize$stableprop[0]
+final val dev.voir.areca.media.thumbnail/dev_voir_areca_media_thumbnail_ThumbnailStripStyle$stableprop // dev.voir.areca.media.thumbnail/dev_voir_areca_media_thumbnail_ThumbnailStripStyle$stableprop|#static{}dev_voir_areca_media_thumbnail_ThumbnailStripStyle$stableprop[0]
+final val dev.voir.areca.media.viewer/LocalMediaViewerStyle // dev.voir.areca.media.viewer/LocalMediaViewerStyle|{}LocalMediaViewerStyle[0]
+    final fun <get-LocalMediaViewerStyle>(): androidx.compose.runtime/ProvidableCompositionLocal<dev.voir.areca.media.viewer/MediaViewerStyle?> // dev.voir.areca.media.viewer/LocalMediaViewerStyle.<get-LocalMediaViewerStyle>|<get-LocalMediaViewerStyle>(){}[0]
+final val dev.voir.areca.media.viewer/dev_voir_areca_media_viewer_MediaTransitionState$stableprop // dev.voir.areca.media.viewer/dev_voir_areca_media_viewer_MediaTransitionState$stableprop|#static{}dev_voir_areca_media_viewer_MediaTransitionState$stableprop[0]
+final val dev.voir.areca.media.viewer/dev_voir_areca_media_viewer_MediaViewerState$stableprop // dev.voir.areca.media.viewer/dev_voir_areca_media_viewer_MediaViewerState$stableprop|#static{}dev_voir_areca_media_viewer_MediaViewerState$stableprop[0]
+final val dev.voir.areca.media.viewer/dev_voir_areca_media_viewer_MediaViewerStyle$stableprop // dev.voir.areca.media.viewer/dev_voir_areca_media_viewer_MediaViewerStyle$stableprop|#static{}dev_voir_areca_media_viewer_MediaViewerStyle$stableprop[0]
+final val dev.voir.areca.media.zoom/dev_voir_areca_media_zoom_ZoomLabels$stableprop // dev.voir.areca.media.zoom/dev_voir_areca_media_zoom_ZoomLabels$stableprop|#static{}dev_voir_areca_media_zoom_ZoomLabels$stableprop[0]
+final val dev.voir.areca.media.zoom/dev_voir_areca_media_zoom_ZoomState$stableprop // dev.voir.areca.media.zoom/dev_voir_areca_media_zoom_ZoomState$stableprop|#static{}dev_voir_areca_media_zoom_ZoomState$stableprop[0]
+final val dev.voir.areca.media/LocalMediaImageLoader // dev.voir.areca.media/LocalMediaImageLoader|{}LocalMediaImageLoader[0]
+    final fun <get-LocalMediaImageLoader>(): androidx.compose.runtime/ProvidableCompositionLocal<dev.voir.areca.media/MediaImageLoader> // dev.voir.areca.media/LocalMediaImageLoader.<get-LocalMediaImageLoader>|<get-LocalMediaImageLoader>(){}[0]
+final val dev.voir.areca.media/dev_voir_areca_media_MediaImageLoader_None$stableprop // dev.voir.areca.media/dev_voir_areca_media_MediaImageLoader_None$stableprop|#static{}dev_voir_areca_media_MediaImageLoader_None$stableprop[0]
+final val dev.voir.areca.media/dev_voir_areca_media_MediaImageState_Failed$stableprop // dev.voir.areca.media/dev_voir_areca_media_MediaImageState_Failed$stableprop|#static{}dev_voir_areca_media_MediaImageState_Failed$stableprop[0]
+final val dev.voir.areca.media/dev_voir_areca_media_MediaImageState_Loading$stableprop // dev.voir.areca.media/dev_voir_areca_media_MediaImageState_Loading$stableprop|#static{}dev_voir_areca_media_MediaImageState_Loading$stableprop[0]
+final val dev.voir.areca.media/dev_voir_areca_media_MediaImageState_Ready$stableprop // dev.voir.areca.media/dev_voir_areca_media_MediaImageState_Ready$stableprop|#static{}dev_voir_areca_media_MediaImageState_Ready$stableprop[0]
+
+final fun (androidx.compose.ui/Modifier).dev.voir.areca.media.viewer/mediaTransitionSource(dev.voir.areca.media.viewer/MediaTransitionState, kotlin/Any, androidx.compose.ui.geometry/Size = ...): androidx.compose.ui/Modifier // dev.voir.areca.media.viewer/mediaTransitionSource|mediaTransitionSource@androidx.compose.ui.Modifier(dev.voir.areca.media.viewer.MediaTransitionState;kotlin.Any;androidx.compose.ui.geometry.Size){}[0]
+final fun (androidx.compose.ui/Modifier).dev.voir.areca.media.zoom/zoomControls(dev.voir.areca.media.zoom/ZoomState, dev.voir.areca.media.zoom/ZoomLabels?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): androidx.compose.ui/Modifier // dev.voir.areca.media.zoom/zoomControls|zoomControls@androidx.compose.ui.Modifier(dev.voir.areca.media.zoom.ZoomState;dev.voir.areca.media.zoom.ZoomLabels?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun (androidx.compose.ui/Modifier).dev.voir.areca.media.zoom/zoomable(dev.voir.areca.media.zoom/ZoomState, androidx.compose.ui.geometry/Size, dev.voir.areca.media.zoom/ZoomBehavior?, kotlin/Function0<kotlin/Unit>?, kotlin/Function1<kotlin/Int, kotlin/Unit>?, dev.voir.areca.media.zoom/ZoomLabels?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): androidx.compose.ui/Modifier // dev.voir.areca.media.zoom/zoomable|zoomable@androidx.compose.ui.Modifier(dev.voir.areca.media.zoom.ZoomState;androidx.compose.ui.geometry.Size;dev.voir.areca.media.zoom.ZoomBehavior?;kotlin.Function0<kotlin.Unit>?;kotlin.Function1<kotlin.Int,kotlin.Unit>?;dev.voir.areca.media.zoom.ZoomLabels?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun (dev.voir.areca.media.viewer/MediaViewerPageScope).dev.voir.areca.media.viewer/MediaViewerImage(kotlin/Any?, kotlin/String?, androidx.compose.ui/Modifier?, dev.voir.areca.media.image/MediaFit?, dev.voir.areca.media.image/MediaPlaceholder?, kotlin/String?, kotlin/String?, dev.voir.areca.media.zoom/ZoomLabels?, kotlin/Function3<dev.voir.areca.media.image/MediaPictureScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.voir.areca.media.viewer/MediaViewerImage|MediaViewerImage@dev.voir.areca.media.viewer.MediaViewerPageScope(kotlin.Any?;kotlin.String?;androidx.compose.ui.Modifier?;dev.voir.areca.media.image.MediaFit?;dev.voir.areca.media.image.MediaPlaceholder?;kotlin.String?;kotlin.String?;dev.voir.areca.media.zoom.ZoomLabels?;kotlin.Function3<dev.voir.areca.media.image.MediaPictureScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.media.carousel/Carousel(dev.voir.areca.media.carousel/CarouselState, androidx.compose.ui/Modifier?, dev.voir.areca.media.carousel/CarouselPageSize?, dev.voir.areca.media.carousel/CarouselSnap?, androidx.compose.ui.unit/Dp, androidx.compose.foundation.layout/PaddingValues?, kotlin.time/Duration?, kotlin/Boolean, kotlin/String?, kotlin/Function1<kotlin/Int, kotlin/Any>?, kotlin/Function3<kotlin/Int, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int, kotlin/Int) // dev.voir.areca.media.carousel/Carousel|Carousel(dev.voir.areca.media.carousel.CarouselState;androidx.compose.ui.Modifier?;dev.voir.areca.media.carousel.CarouselPageSize?;dev.voir.areca.media.carousel.CarouselSnap?;androidx.compose.ui.unit.Dp;androidx.compose.foundation.layout.PaddingValues?;kotlin.time.Duration?;kotlin.Boolean;kotlin.String?;kotlin.Function1<kotlin.Int,kotlin.Any>?;kotlin.Function3<kotlin.Int,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.media.carousel/CarouselArrows(dev.voir.areca.media.carousel/CarouselState, androidx.compose.ui/Modifier?, kotlin/String?, kotlin/String?, dev.voir.areca.foundation.button/IconButtonStyle?, dev.voir.areca.foundation.button/IconButtonSize?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.voir.areca.media.carousel/CarouselArrows|CarouselArrows(dev.voir.areca.media.carousel.CarouselState;androidx.compose.ui.Modifier?;kotlin.String?;kotlin.String?;dev.voir.areca.foundation.button.IconButtonStyle?;dev.voir.areca.foundation.button.IconButtonSize?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.media.carousel/dev_voir_areca_media_carousel_CarouselPageSize_Fill$stableprop_getter(): kotlin/Int // dev.voir.areca.media.carousel/dev_voir_areca_media_carousel_CarouselPageSize_Fill$stableprop_getter|dev_voir_areca_media_carousel_CarouselPageSize_Fill$stableprop_getter(){}[0]
+final fun dev.voir.areca.media.carousel/dev_voir_areca_media_carousel_CarouselPageSize_Fixed$stableprop_getter(): kotlin/Int // dev.voir.areca.media.carousel/dev_voir_areca_media_carousel_CarouselPageSize_Fixed$stableprop_getter|dev_voir_areca_media_carousel_CarouselPageSize_Fixed$stableprop_getter(){}[0]
+final fun dev.voir.areca.media.carousel/dev_voir_areca_media_carousel_CarouselPageSize_Fraction$stableprop_getter(): kotlin/Int // dev.voir.areca.media.carousel/dev_voir_areca_media_carousel_CarouselPageSize_Fraction$stableprop_getter|dev_voir_areca_media_carousel_CarouselPageSize_Fraction$stableprop_getter(){}[0]
+final fun dev.voir.areca.media.carousel/dev_voir_areca_media_carousel_CarouselPageSize_PerPage$stableprop_getter(): kotlin/Int // dev.voir.areca.media.carousel/dev_voir_areca_media_carousel_CarouselPageSize_PerPage$stableprop_getter|dev_voir_areca_media_carousel_CarouselPageSize_PerPage$stableprop_getter(){}[0]
+final fun dev.voir.areca.media.carousel/dev_voir_areca_media_carousel_CarouselState$stableprop_getter(): kotlin/Int // dev.voir.areca.media.carousel/dev_voir_areca_media_carousel_CarouselState$stableprop_getter|dev_voir_areca_media_carousel_CarouselState$stableprop_getter(){}[0]
+final fun dev.voir.areca.media.carousel/rememberCarouselState(kotlin/Int, kotlin/Int, kotlin/Boolean, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.voir.areca.media.carousel/CarouselState // dev.voir.areca.media.carousel/rememberCarouselState|rememberCarouselState(kotlin.Int;kotlin.Int;kotlin.Boolean;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.media.compare/CompareFade(kotlin/Function3<androidx.compose.foundation.layout/BoxScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, kotlin/Function3<androidx.compose.foundation.layout/BoxScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.ui/Modifier?, kotlin/Float, kotlin/Float, dev.voir.areca.media.compare/CompareLabels?, kotlin/String?, dev.voir.areca.media.compare/CompareStyle?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.voir.areca.media.compare/CompareFade|CompareFade(kotlin.Function3<androidx.compose.foundation.layout.BoxScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;kotlin.Function3<androidx.compose.foundation.layout.BoxScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.ui.Modifier?;kotlin.Float;kotlin.Float;dev.voir.areca.media.compare.CompareLabels?;kotlin.String?;dev.voir.areca.media.compare.CompareStyle?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.media.compare/CompareHold(kotlin/Function3<androidx.compose.foundation.layout/BoxScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, kotlin/Function3<androidx.compose.foundation.layout/BoxScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.ui/Modifier?, kotlin/Float, dev.voir.areca.media.compare/CompareLabels?, kotlin/String?, dev.voir.areca.media.compare/CompareStyle?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.voir.areca.media.compare/CompareHold|CompareHold(kotlin.Function3<androidx.compose.foundation.layout.BoxScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;kotlin.Function3<androidx.compose.foundation.layout.BoxScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.ui.Modifier?;kotlin.Float;dev.voir.areca.media.compare.CompareLabels?;kotlin.String?;dev.voir.areca.media.compare.CompareStyle?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.media.compare/ComparePair(kotlin/Function3<androidx.compose.foundation.layout/BoxScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, kotlin/Function3<androidx.compose.foundation.layout/BoxScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.ui/Modifier?, dev.voir.areca.media.compare/CompareArrangement?, kotlin/Float, dev.voir.areca.media.compare/CompareLabels?, dev.voir.areca.media.compare/CompareLabels?, kotlin/Function1<kotlin/Int, kotlin/Unit>?, kotlin/String?, dev.voir.areca.media.compare/CompareStyle?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.voir.areca.media.compare/ComparePair|ComparePair(kotlin.Function3<androidx.compose.foundation.layout.BoxScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;kotlin.Function3<androidx.compose.foundation.layout.BoxScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.ui.Modifier?;dev.voir.areca.media.compare.CompareArrangement?;kotlin.Float;dev.voir.areca.media.compare.CompareLabels?;dev.voir.areca.media.compare.CompareLabels?;kotlin.Function1<kotlin.Int,kotlin.Unit>?;kotlin.String?;dev.voir.areca.media.compare.CompareStyle?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.media.compare/CompareSideBySide(kotlin/Function3<androidx.compose.foundation.layout/BoxScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, kotlin/Function3<androidx.compose.foundation.layout/BoxScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.ui/Modifier?, dev.voir.areca.media.compare/CompareArrangement?, kotlin/Float, dev.voir.areca.media.compare/CompareLabels?, kotlin/Float, dev.voir.areca.media.zoom/ZoomLabels?, dev.voir.areca.media.compare/CompareStyle?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.voir.areca.media.compare/CompareSideBySide|CompareSideBySide(kotlin.Function3<androidx.compose.foundation.layout.BoxScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;kotlin.Function3<androidx.compose.foundation.layout.BoxScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.ui.Modifier?;dev.voir.areca.media.compare.CompareArrangement?;kotlin.Float;dev.voir.areca.media.compare.CompareLabels?;kotlin.Float;dev.voir.areca.media.zoom.ZoomLabels?;dev.voir.areca.media.compare.CompareStyle?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.media.compare/CompareSlider(kotlin/Function3<androidx.compose.foundation.layout/BoxScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, kotlin/Function3<androidx.compose.foundation.layout/BoxScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.ui/Modifier?, kotlin/Float, androidx.compose.foundation.gestures/Orientation?, kotlin/Float, dev.voir.areca.media.compare/CompareLabels?, kotlin/String?, dev.voir.areca.media.compare/CompareStyle?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.voir.areca.media.compare/CompareSlider|CompareSlider(kotlin.Function3<androidx.compose.foundation.layout.BoxScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;kotlin.Function3<androidx.compose.foundation.layout.BoxScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.ui.Modifier?;kotlin.Float;androidx.compose.foundation.gestures.Orientation?;kotlin.Float;dev.voir.areca.media.compare.CompareLabels?;kotlin.String?;dev.voir.areca.media.compare.CompareStyle?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.media.compare/dev_voir_areca_media_compare_CompareLabels$stableprop_getter(): kotlin/Int // dev.voir.areca.media.compare/dev_voir_areca_media_compare_CompareLabels$stableprop_getter|dev_voir_areca_media_compare_CompareLabels$stableprop_getter(){}[0]
+final fun dev.voir.areca.media.compare/dev_voir_areca_media_compare_CompareStyle$stableprop_getter(): kotlin/Int // dev.voir.areca.media.compare/dev_voir_areca_media_compare_CompareStyle$stableprop_getter|dev_voir_areca_media_compare_CompareStyle$stableprop_getter(){}[0]
+final fun dev.voir.areca.media.image/Hotspot(kotlin/Function0<kotlin/Unit>, kotlin/String, androidx.compose.ui/Modifier?, kotlin/String?, kotlin/Boolean, dev.voir.areca.media.image/HotspotStyle?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.voir.areca.media.image/Hotspot|Hotspot(kotlin.Function0<kotlin.Unit>;kotlin.String;androidx.compose.ui.Modifier?;kotlin.String?;kotlin.Boolean;dev.voir.areca.media.image.HotspotStyle?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.media.image/MediaFrame(androidx.compose.ui/Modifier?, kotlin/Float?, dev.voir.areca.media.image/MediaState?, kotlin/Function0<kotlin/Unit>?, kotlin/Function0<kotlin/Unit>?, kotlin/String?, dev.voir.areca.media.image/MediaScrim?, kotlin/String?, kotlin/String?, dev.voir.areca.media.image/MediaFrameStyle?, dev.voir.areca.media.image/MediaFrameSize?, kotlin/Function3<androidx.compose.foundation.layout/BoxScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function3<androidx.compose.foundation.layout/BoxScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int, kotlin/Int) // dev.voir.areca.media.image/MediaFrame|MediaFrame(androidx.compose.ui.Modifier?;kotlin.Float?;dev.voir.areca.media.image.MediaState?;kotlin.Function0<kotlin.Unit>?;kotlin.Function0<kotlin.Unit>?;kotlin.String?;dev.voir.areca.media.image.MediaScrim?;kotlin.String?;kotlin.String?;dev.voir.areca.media.image.MediaFrameStyle?;dev.voir.areca.media.image.MediaFrameSize?;kotlin.Function3<androidx.compose.foundation.layout.BoxScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function3<androidx.compose.foundation.layout.BoxScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.media.image/MediaFrame(kotlin/Any?, kotlin/String?, androidx.compose.ui/Modifier?, kotlin/Float?, dev.voir.areca.media.image/MediaFit?, dev.voir.areca.media.image/MediaPlaceholder?, dev.voir.areca.media.zoom/ZoomBehavior?, kotlin/Function0<kotlin/Unit>?, kotlin/String?, dev.voir.areca.media.image/MediaScrim?, kotlin/String?, kotlin/String?, dev.voir.areca.media.zoom/ZoomLabels?, dev.voir.areca.media.viewer/MediaTransitionState?, kotlin/Any?, dev.voir.areca.media.image/MediaFrameStyle?, dev.voir.areca.media.image/MediaFrameSize?, kotlin/Function3<dev.voir.areca.media.image/MediaPictureScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function3<androidx.compose.foundation.layout/BoxScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int, kotlin/Int) // dev.voir.areca.media.image/MediaFrame|MediaFrame(kotlin.Any?;kotlin.String?;androidx.compose.ui.Modifier?;kotlin.Float?;dev.voir.areca.media.image.MediaFit?;dev.voir.areca.media.image.MediaPlaceholder?;dev.voir.areca.media.zoom.ZoomBehavior?;kotlin.Function0<kotlin.Unit>?;kotlin.String?;dev.voir.areca.media.image.MediaScrim?;kotlin.String?;kotlin.String?;dev.voir.areca.media.zoom.ZoomLabels?;dev.voir.areca.media.viewer.MediaTransitionState?;kotlin.Any?;dev.voir.areca.media.image.MediaFrameStyle?;dev.voir.areca.media.image.MediaFrameSize?;kotlin.Function3<dev.voir.areca.media.image.MediaPictureScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function3<androidx.compose.foundation.layout.BoxScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.media.image/MediaImage(kotlin/Any?, kotlin/String?, androidx.compose.ui/Modifier?, dev.voir.areca.media.image/MediaFit?, dev.voir.areca.media.image/MediaPlaceholder?, dev.voir.areca.media.zoom/ZoomBehavior?, dev.voir.areca.media.zoom/ZoomState?, kotlin/Function0<kotlin/Unit>?, kotlin/Function1<kotlin/Int, kotlin/Unit>?, kotlin/String?, kotlin/String?, dev.voir.areca.media.zoom/ZoomLabels?, dev.voir.areca.media.image/MediaFrameStyle?, dev.voir.areca.media.image/MediaFrameSize?, kotlin/Function3<dev.voir.areca.media.image/MediaPictureScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function4<androidx.compose.foundation.layout/BoxScope, kotlin/Function0<kotlin/Unit>, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int, kotlin/Int) // dev.voir.areca.media.image/MediaImage|MediaImage(kotlin.Any?;kotlin.String?;androidx.compose.ui.Modifier?;dev.voir.areca.media.image.MediaFit?;dev.voir.areca.media.image.MediaPlaceholder?;dev.voir.areca.media.zoom.ZoomBehavior?;dev.voir.areca.media.zoom.ZoomState?;kotlin.Function0<kotlin.Unit>?;kotlin.Function1<kotlin.Int,kotlin.Unit>?;kotlin.String?;kotlin.String?;dev.voir.areca.media.zoom.ZoomLabels?;dev.voir.areca.media.image.MediaFrameStyle?;dev.voir.areca.media.image.MediaFrameSize?;kotlin.Function3<dev.voir.areca.media.image.MediaPictureScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function4<androidx.compose.foundation.layout.BoxScope,kotlin.Function0<kotlin.Unit>,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.media.image/dev_voir_areca_media_image_HotspotStyle$stableprop_getter(): kotlin/Int // dev.voir.areca.media.image/dev_voir_areca_media_image_HotspotStyle$stableprop_getter|dev_voir_areca_media_image_HotspotStyle$stableprop_getter(){}[0]
+final fun dev.voir.areca.media.image/dev_voir_areca_media_image_MediaFrameSize$stableprop_getter(): kotlin/Int // dev.voir.areca.media.image/dev_voir_areca_media_image_MediaFrameSize$stableprop_getter|dev_voir_areca_media_image_MediaFrameSize$stableprop_getter(){}[0]
+final fun dev.voir.areca.media.image/dev_voir_areca_media_image_MediaFrameStyle$stableprop_getter(): kotlin/Int // dev.voir.areca.media.image/dev_voir_areca_media_image_MediaFrameStyle$stableprop_getter|dev_voir_areca_media_image_MediaFrameStyle$stableprop_getter(){}[0]
+final fun dev.voir.areca.media.image/dev_voir_areca_media_image_MediaPlaceholder_Blurred$stableprop_getter(): kotlin/Int // dev.voir.areca.media.image/dev_voir_areca_media_image_MediaPlaceholder_Blurred$stableprop_getter|dev_voir_areca_media_image_MediaPlaceholder_Blurred$stableprop_getter(){}[0]
+final fun dev.voir.areca.media.image/dev_voir_areca_media_image_MediaPlaceholder_None$stableprop_getter(): kotlin/Int // dev.voir.areca.media.image/dev_voir_areca_media_image_MediaPlaceholder_None$stableprop_getter|dev_voir_areca_media_image_MediaPlaceholder_None$stableprop_getter(){}[0]
+final fun dev.voir.areca.media.image/dev_voir_areca_media_image_MediaPlaceholder_Skeleton$stableprop_getter(): kotlin/Int // dev.voir.areca.media.image/dev_voir_areca_media_image_MediaPlaceholder_Skeleton$stableprop_getter|dev_voir_areca_media_image_MediaPlaceholder_Skeleton$stableprop_getter(){}[0]
+final fun dev.voir.areca.media.thumbnail/ThumbnailStrip(kotlin/Int, kotlin/Int, kotlin/Function1<kotlin/Int, kotlin/Unit>, androidx.compose.ui/Modifier?, androidx.compose.foundation.gestures/Orientation?, androidx.compose.foundation.layout/PaddingValues?, kotlin/Function2<kotlin/Int, kotlin/Int, kotlin/String>?, dev.voir.areca.media.thumbnail/ThumbnailStripStyle?, dev.voir.areca.media.thumbnail/ThumbnailStripSize?, kotlin/Function3<kotlin/Int, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.voir.areca.media.thumbnail/ThumbnailStrip|ThumbnailStrip(kotlin.Int;kotlin.Int;kotlin.Function1<kotlin.Int,kotlin.Unit>;androidx.compose.ui.Modifier?;androidx.compose.foundation.gestures.Orientation?;androidx.compose.foundation.layout.PaddingValues?;kotlin.Function2<kotlin.Int,kotlin.Int,kotlin.String>?;dev.voir.areca.media.thumbnail.ThumbnailStripStyle?;dev.voir.areca.media.thumbnail.ThumbnailStripSize?;kotlin.Function3<kotlin.Int,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.media.thumbnail/dev_voir_areca_media_thumbnail_ThumbnailStripSize$stableprop_getter(): kotlin/Int // dev.voir.areca.media.thumbnail/dev_voir_areca_media_thumbnail_ThumbnailStripSize$stableprop_getter|dev_voir_areca_media_thumbnail_ThumbnailStripSize$stableprop_getter(){}[0]
+final fun dev.voir.areca.media.thumbnail/dev_voir_areca_media_thumbnail_ThumbnailStripStyle$stableprop_getter(): kotlin/Int // dev.voir.areca.media.thumbnail/dev_voir_areca_media_thumbnail_ThumbnailStripStyle$stableprop_getter|dev_voir_areca_media_thumbnail_ThumbnailStripStyle$stableprop_getter(){}[0]
+final fun dev.voir.areca.media.viewer/MediaViewer(kotlin/Int, kotlin/Function0<kotlin/Unit>, androidx.compose.ui/Modifier?, kotlin/Int, dev.voir.areca.media.viewer/MediaTransitionState?, kotlin/Function1<kotlin/Int, kotlin/Any>?, kotlin/Function1<kotlin/Int, kotlin/Unit>?, kotlin/Function1<kotlin/Int, kotlin/Unit>?, dev.voir.areca.media.viewer/MediaViewerChrome?, dev.voir.areca.media.viewer/MediaViewerBars?, kotlin/String?, kotlin/Function0<kotlin/Unit>?, kotlin.time/Duration, kotlin/String?, kotlin/String?, dev.voir.areca.media.viewer/MediaViewerStyle?, kotlin/Function4<androidx.compose.foundation.layout/BoxScope, kotlin/Int, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function4<androidx.compose.foundation.layout/BoxScope, dev.voir.areca.media.viewer/MediaViewerState, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function4<androidx.compose.foundation.layout/ColumnScope, dev.voir.areca.media.viewer/MediaViewerState, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function4<dev.voir.areca.media.viewer/MediaViewerPageScope, kotlin/Int, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int, kotlin/Int, kotlin/Int) // dev.voir.areca.media.viewer/MediaViewer|MediaViewer(kotlin.Int;kotlin.Function0<kotlin.Unit>;androidx.compose.ui.Modifier?;kotlin.Int;dev.voir.areca.media.viewer.MediaTransitionState?;kotlin.Function1<kotlin.Int,kotlin.Any>?;kotlin.Function1<kotlin.Int,kotlin.Unit>?;kotlin.Function1<kotlin.Int,kotlin.Unit>?;dev.voir.areca.media.viewer.MediaViewerChrome?;dev.voir.areca.media.viewer.MediaViewerBars?;kotlin.String?;kotlin.Function0<kotlin.Unit>?;kotlin.time.Duration;kotlin.String?;kotlin.String?;dev.voir.areca.media.viewer.MediaViewerStyle?;kotlin.Function4<androidx.compose.foundation.layout.BoxScope,kotlin.Int,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function4<androidx.compose.foundation.layout.BoxScope,dev.voir.areca.media.viewer.MediaViewerState,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function4<androidx.compose.foundation.layout.ColumnScope,dev.voir.areca.media.viewer.MediaViewerState,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function4<dev.voir.areca.media.viewer.MediaViewerPageScope,kotlin.Int,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.media.viewer/MediaViewer(kotlin/Int, kotlin/Function0<kotlin/Unit>, androidx.compose.ui/Modifier?, kotlin/Int, dev.voir.areca.media.viewer/MediaTransitionState?, kotlin/Function1<kotlin/Int, kotlin/Any>?, kotlin/Function1<kotlin/Int, kotlin/Unit>?, kotlin/Function1<kotlin/Int, kotlin/Unit>?, dev.voir.areca.media.viewer/MediaViewerChrome?, dev.voir.areca.media.viewer/MediaViewerBars?, kotlin/String?, kotlin/Function0<kotlin/Unit>?, kotlin.time/Duration?, kotlin/String?, kotlin/String?, dev.voir.areca.media.viewer/MediaViewerStyle?, kotlin/Function4<androidx.compose.foundation.layout/BoxScope, kotlin/Int, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function4<androidx.compose.foundation.layout/BoxScope, dev.voir.areca.media.viewer/MediaViewerState, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function4<androidx.compose.foundation.layout/ColumnScope, dev.voir.areca.media.viewer/MediaViewerState, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function4<dev.voir.areca.media.viewer/MediaViewerPageScope, kotlin/Int, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int, kotlin/Int, kotlin/Int) // dev.voir.areca.media.viewer/MediaViewer|MediaViewer(kotlin.Int;kotlin.Function0<kotlin.Unit>;androidx.compose.ui.Modifier?;kotlin.Int;dev.voir.areca.media.viewer.MediaTransitionState?;kotlin.Function1<kotlin.Int,kotlin.Any>?;kotlin.Function1<kotlin.Int,kotlin.Unit>?;kotlin.Function1<kotlin.Int,kotlin.Unit>?;dev.voir.areca.media.viewer.MediaViewerChrome?;dev.voir.areca.media.viewer.MediaViewerBars?;kotlin.String?;kotlin.Function0<kotlin.Unit>?;kotlin.time.Duration?;kotlin.String?;kotlin.String?;dev.voir.areca.media.viewer.MediaViewerStyle?;kotlin.Function4<androidx.compose.foundation.layout.BoxScope,kotlin.Int,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function4<androidx.compose.foundation.layout.BoxScope,dev.voir.areca.media.viewer.MediaViewerState,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function4<androidx.compose.foundation.layout.ColumnScope,dev.voir.areca.media.viewer.MediaViewerState,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function4<dev.voir.areca.media.viewer.MediaViewerPageScope,kotlin.Int,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.media.viewer/dev_voir_areca_media_viewer_MediaTransitionState$stableprop_getter(): kotlin/Int // dev.voir.areca.media.viewer/dev_voir_areca_media_viewer_MediaTransitionState$stableprop_getter|dev_voir_areca_media_viewer_MediaTransitionState$stableprop_getter(){}[0]
+final fun dev.voir.areca.media.viewer/dev_voir_areca_media_viewer_MediaViewerState$stableprop_getter(): kotlin/Int // dev.voir.areca.media.viewer/dev_voir_areca_media_viewer_MediaViewerState$stableprop_getter|dev_voir_areca_media_viewer_MediaViewerState$stableprop_getter(){}[0]
+final fun dev.voir.areca.media.viewer/dev_voir_areca_media_viewer_MediaViewerStyle$stableprop_getter(): kotlin/Int // dev.voir.areca.media.viewer/dev_voir_areca_media_viewer_MediaViewerStyle$stableprop_getter|dev_voir_areca_media_viewer_MediaViewerStyle$stableprop_getter(){}[0]
+final fun dev.voir.areca.media.viewer/rememberMediaTransitionState(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.media.viewer/MediaTransitionState // dev.voir.areca.media.viewer/rememberMediaTransitionState|rememberMediaTransitionState(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+final fun dev.voir.areca.media.zoom/dev_voir_areca_media_zoom_ZoomLabels$stableprop_getter(): kotlin/Int // dev.voir.areca.media.zoom/dev_voir_areca_media_zoom_ZoomLabels$stableprop_getter|dev_voir_areca_media_zoom_ZoomLabels$stableprop_getter(){}[0]
+final fun dev.voir.areca.media.zoom/dev_voir_areca_media_zoom_ZoomState$stableprop_getter(): kotlin/Int // dev.voir.areca.media.zoom/dev_voir_areca_media_zoom_ZoomState$stableprop_getter|dev_voir_areca_media_zoom_ZoomState$stableprop_getter(){}[0]
+final fun dev.voir.areca.media.zoom/rememberZoomState(kotlin/Float, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.voir.areca.media.zoom/ZoomState // dev.voir.areca.media.zoom/rememberZoomState|rememberZoomState(kotlin.Float;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.media/dev_voir_areca_media_MediaImageLoader_None$stableprop_getter(): kotlin/Int // dev.voir.areca.media/dev_voir_areca_media_MediaImageLoader_None$stableprop_getter|dev_voir_areca_media_MediaImageLoader_None$stableprop_getter(){}[0]
+final fun dev.voir.areca.media/dev_voir_areca_media_MediaImageState_Failed$stableprop_getter(): kotlin/Int // dev.voir.areca.media/dev_voir_areca_media_MediaImageState_Failed$stableprop_getter|dev_voir_areca_media_MediaImageState_Failed$stableprop_getter(){}[0]
+final fun dev.voir.areca.media/dev_voir_areca_media_MediaImageState_Loading$stableprop_getter(): kotlin/Int // dev.voir.areca.media/dev_voir_areca_media_MediaImageState_Loading$stableprop_getter|dev_voir_areca_media_MediaImageState_Loading$stableprop_getter(){}[0]
+final fun dev.voir.areca.media/dev_voir_areca_media_MediaImageState_Ready$stableprop_getter(): kotlin/Int // dev.voir.areca.media/dev_voir_areca_media_MediaImageState_Ready$stableprop_getter|dev_voir_areca_media_MediaImageState_Ready$stableprop_getter(){}[0]

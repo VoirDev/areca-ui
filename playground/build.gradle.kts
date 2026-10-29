@@ -93,6 +93,7 @@ kotlin {
 
             implementation(projects.flow.attachments)
             implementation(projects.flow.auth)
+            implementation(projects.flow.gallery)
             implementation(projects.flow.profile)
             implementation(projects.ui.charts)
             implementation(projects.ui.crop)
@@ -100,6 +101,7 @@ kotlin {
             implementation(projects.ui.foundation)
             implementation(projects.standalone.icons)
             implementation(projects.ui.keyboard)
+            implementation(projects.ui.media)
         }
 
         commonTest.dependencies {

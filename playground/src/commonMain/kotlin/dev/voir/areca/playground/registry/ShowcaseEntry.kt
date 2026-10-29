@@ -29,6 +29,9 @@ enum class ShowcaseGroup(val label: String) {
     /** The image cropper, its toolbar and its dial from `:ui:crop`. */
     Crop("Crop"),
 
+    /** Pictures from `:ui:media`: frames, zoom, carousels and thumbnails. */
+    Media("Media"),
+
     /** Screens from `:flow:auth`, and the parts they are assembled from. */
     AuthFlow("Auth flow"),
 
@@ -37,6 +40,9 @@ enum class ShowcaseGroup(val label: String) {
 
     /** Screens from `:flow:attachments`, and the parts they are assembled from. */
     AttachmentsFlow("Attachments flow"),
+
+    /** Screens from `:flow:gallery`, and the parts they are assembled from. */
+    GalleryFlow("Gallery flow"),
 }
 
 /**
@@ -123,6 +129,12 @@ enum class ShowcaseSection(val label: String, val group: ShowcaseGroup) {
 
     /** The full-screen viewer, the page it draws each file on, and the layout of a file it cannot draw. */
     AttachmentsViewer("Viewer", ShowcaseGroup.AttachmentsFlow),
+
+    /** Whole gallery screens. */
+    GalleryScreens("Screens", ShowcaseGroup.GalleryFlow),
+
+    /** The bars, words and grid pieces they are built from. */
+    GalleryParts("Parts", ShowcaseGroup.GalleryFlow),
 }
 
 /**

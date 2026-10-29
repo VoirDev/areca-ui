@@ -53,6 +53,7 @@ region that is always dark in `ArecaDarkTheme`, both in `dev.voir.areca.theme` �
 | Choose one of a few values; words with a moving pill; a three-state toggle | `SlidingSelector` (`SlidingSelectorStyle.Segmented`, `Pill`, `Underline`, `Button`; `SelectorMode.Optional` to allow none) |
 | Navigate a sidebar or a tree | `NavList` |
 | Page through an onboarding tour | `SwipePager` with `PagerControls` and `PageIndicator` |
+| Say which picture or page is on screen | `PageIndicator` (`variant`: dots, a shrinking window, a line, story segments); as a count, `PageCounter` |
 | Show the steps of a flow | `StepIndicator` |
 | Refresh by pulling | `PagedContentList(onRefresh = …)`, or `PullToRefreshLayout` (experimental) |
 | Open a bottom sheet | `FlowModal` with `FlowModalActionBar` |
@@ -332,7 +333,8 @@ With a title and a row-wide tap target, use the list rows under
 | [`NavItem`](../ui/foundation/README.md#navigation-tabs-tab-bar-and-top-bar) | One destination row, for a sidebar you compose yourself | `navigation` | `NavListShowcase` |
 | [`SwipePager`](../ui/foundation/README.md#navigation-tabs-tab-bar-and-top-bar) | Pages swiped sideways | `navigation` | — |
 | [`PagerControls`](../ui/foundation/README.md#navigation-tabs-tab-bar-and-top-bar) | A pager's dots and next button | `navigation` | — |
-| [`PageIndicator`](../ui/foundation/README.md#navigation-tabs-tab-bar-and-top-bar) | A pager's dots alone | `navigation` | — |
+| [`PageIndicator`](../ui/foundation/README.md#navigation-tabs-tab-bar-and-top-bar) | A pager's position as marks: elongated or plain dots, a shrinking window, a line or story segments; on the page or over a picture | `navigation` | `PageIndicatorShowcase` |
+| [`PageCounter`](../ui/foundation/README.md#navigation-tabs-tab-bar-and-top-bar) | A pager's position as a count, "3 / 9" | `navigation` | `PageCounterShowcase` |
 
 A top bar's controls — `BackAction` and the rest — are under
 [Buttons and actions](#buttons-and-actions).

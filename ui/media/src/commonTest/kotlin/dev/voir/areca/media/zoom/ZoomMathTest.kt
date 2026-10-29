@@ -1,4 +1,4 @@
-package dev.voir.areca.flow.attachments.viewer
+package dev.voir.areca.media.zoom
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size

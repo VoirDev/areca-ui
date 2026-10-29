@@ -112,7 +112,7 @@ in one place and every component follows. → [Theme](docs/theme.md) ·
 | Display | `Icon`, `FeaturedIcon`, `Badge`, `Avatar`, `Stat`, `StatGrid` |
 | Lists and settings | Grouped lists, settings rows (toggle, navigation, value), `ContentList`, `PagedContentList`, `Table`, `LazyTable` |
 | Layout | `BaseLayout`, `CollapsingHeaderLayout`, `PullToRefreshLayout`, `Card`, `Expandable`, dividers |
-| Navigation | `TopBar`, `LargeTopBar`, `Tabs`, `TabBar`, `FloatingTabBar`, `NavList`, `SwipePager`, `PageIndicator` |
+| Navigation | `TopBar`, `LargeTopBar`, `Tabs`, `TabBar`, `FloatingTabBar`, `NavList`, `SwipePager`, `PageIndicator`, `PageCounter` |
 | Overlays | `Dialog`, `ConfirmationDialog`, `FlowModal`, `ConfirmSheet`, `DropdownPopup` |
 | Feedback | `Notice`, `Toast`, `Spinner`, `ProgressBar`, `Skeleton`, `StepIndicator`, `StatusScene`, `WheelPicker` |
 
@@ -126,6 +126,7 @@ in one place and every component follows. → [Theme](docs/theme.md) ·
 | [Charts](ui/charts/README.md) | `dev.voir.areca:charts` | Bar, stacked-bar, column and line charts, a meter bar and a legend |
 | [Date and time](ui/datetime/README.md) | `dev.voir.areca:datetime` | Calendar, date range, month and year picker, time picker, date-time field, heat-map days |
 | [Crop](ui/crop/README.md) | `dev.voir.areca:crop` | An image cropper with aspect ratios, straightening, zoom, rotation and mirroring |
+| [Media](ui/media/README.md) | `dev.voir.areca:media` | Picture frames with loading and failed faces, zoom, carousels, thumbnails, a full-screen viewer, hotspots and before/after comparisons |
 | [Keyboard](ui/keyboard/README.md) | `dev.voir.areca:keyboard` | An on-screen keyboard: host, layouts and key grids |
 
 ### Flows — parts for whole screens
@@ -138,6 +139,7 @@ it means. Each README has recipes to copy.
 | [Auth](flow/auth/README.md) | `dev.voir.areca:flow-auth` | Sign in, email first, verify a code, sign-in providers, pages an emailed link opens |
 | [Profile](flow/profile/README.md) | `dev.voir.areca:flow-profile` | Profile cards, account rows, account switcher, devices, sign out, delete account |
 | [Attachments](flow/attachments/README.md) | `dev.voir.areca:flow-attachments` | The strip of attached files, sheets that add one, the viewer |
+| [Gallery](flow/gallery/README.md) | `dev.voir.areca:flow-gallery` | Product gallery captions, author lines, the primary action and grid pages, with recipes |
 
 ### Standalone
 
@@ -171,7 +173,7 @@ need, exact signatures, rules and screen recipes. In Claude Code:
 
 | Skill | Covers |
 | --- | --- |
-| `areca:areca-ui-v1` | Screens with the theme, foundation, charts, date and time, crop, keyboard, flows and icons |
+| `areca:areca-ui-v1` | Screens with the theme, foundation, charts, date and time, crop, media, keyboard, flows and icons |
 | `areca:areca-viewmodel-v1` | Presentation code on `dev.voir.areca:viewmodel` |
 
 Other agents can read [`skills/`](skills) directly.

@@ -139,8 +139,8 @@ class SidebarTreeTest {
     @Test
     fun `registry ids start with a module prefix`() {
         val modules = setOf(
-            "foundation", "icons", "charts", "datetime", "keyboard", "crop",
-            "flow-auth", "flow-profile", "flow-attachments",
+            "foundation", "icons", "charts", "datetime", "keyboard", "crop", "media",
+            "flow-auth", "flow-profile", "flow-attachments", "flow-gallery",
         )
         val unknown = ShowcaseRegistry.map { it.id }.filter { it.substringBefore('/') !in modules }
 

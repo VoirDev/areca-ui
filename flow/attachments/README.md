@@ -86,7 +86,7 @@ The types the parts take:
 | `AttachmentItem` | One file, already worded; see [One file](#one-file) | `dev.voir.areca.flow.attachments` |
 | `AttachmentState` | Where the file's bytes are | `dev.voir.areca.flow.attachments` |
 | `AttachmentFormat` | How the file is drawn: a picture, a PDF, or a document; `AttachmentFormat.of(contentType, fileName)` | `dev.voir.areca.flow.attachments` |
-| `AttachmentImageLoader`, `AttachmentImageState`, `LocalAttachmentImageLoader` | How pictures are loaded; see [Pictures](#pictures) | `dev.voir.areca.flow.attachments` |
+| `AttachmentImageLoader`, `AttachmentImageState`, `LocalAttachmentImageLoader` | Deprecated: pictures load through media's `LocalMediaImageLoader`; see [Pictures](#pictures) | `dev.voir.areca.flow.attachments` |
 | `AttachmentPdfRenderer`, `AttachmentPdfDocument`, `LocalAttachmentPdfRenderer` | How PDFs are drawn; see [PDFs](#pdfs) | `dev.voir.areca.flow.attachments` |
 | `AttachmentTileStyle`, `LocalAttachmentTileStyle` | Colours and shape of every square | `dev.voir.areca.flow.attachments.part` |
 | `AttachmentChoice`, `AttachmentSourceOptions`, `AttachmentOptions` | One choice on the source or options sheet; the ready-made ones | `dev.voir.areca.flow.attachments.sheet` |
@@ -590,44 +590,29 @@ AttachmentViewer(
 - **A file the page cannot draw** — a document, an undecodable picture, a PDF with no renderer — is
   stated with its glyph, name and size, with `onOpenElsewhere` and `onSave` when you pass them.
 - `style.topBar()` (on an `AttachmentViewerStyle`, for example `AttachmentViewerStyle.Default.topBar()`) is the viewer's heading bar style, for a viewer of your own.
+- The viewer is media's `MediaViewer` with its bars docked above and below the file: a swipe down
+  on a file at its fitted size closes it, Escape closes it and the arrow keys page. Its pictures zoom
+  with media's zoom.
 
 ## Pictures
 
-Every part that draws a picture reads it from `LocalAttachmentImageLoader`. Provide a loader once,
-above everything — here, one built on Coil:
-
-```kotlin
-object CoilAttachmentImageLoader : AttachmentImageLoader {
-    @Composable
-    override fun load(model: Any, maxSize: Int): AttachmentImageState = coil(model, maxSize, Scale.FIT)
-
-    @Composable
-    override fun loadSquare(model: Any, side: Int): AttachmentImageState = coil(model, side, Scale.FILL)
-
-    @Composable
-    private fun coil(model: Any, size: Int, scale: Scale): AttachmentImageState {
-        val context = LocalPlatformContext.current
-        val request = remember(model, size, scale) {
-            ImageRequest.Builder(context).data(model).size(size).scale(scale).precision(Precision.INEXACT).build()
-        }
-        val painter = rememberAsyncImagePainter(request)
-        val state by painter.state.collectAsState()
-        return when (state) {
-            is AsyncImagePainter.State.Success -> AttachmentImageState.Ready(painter)
-            is AsyncImagePainter.State.Error -> AttachmentImageState.Failed
-            else -> AttachmentImageState.Loading
-        }
-    }
-}
-```
+Every part that draws a picture reads it from media's `LocalMediaImageLoader` — the one loader an
+application provides for every picture, attachments, galleries and frames alike. Implement
+`MediaImageLoader` once over your image library and provide it above everything; the Coil version
+is in [ui/media](../../ui/media/README.md#provide-a-loader).
 
 - `load(model, maxSize)` is for a picture drawn whole, such as the viewer's; `maxSize` is the
   longest edge it is drawn at.
 - `loadSquare(model, side)` is for a picture cropped into a square; return one that covers the
   square, its shorter edge at least `side`. Left out, it asks `load` for twice the side.
 - Decode no larger than either asks: a strip holds many photographs.
-- A picture that is loading or fails draws the file's glyph and extension. With no loader,
-  `AttachmentImageLoader.None` fails everything, so every file draws as its kind.
+- A picture that is loading or fails draws the file's glyph and extension. With no loader, every
+  picture fails, so every file draws as its kind.
+
+`AttachmentImageLoader`, `AttachmentImageState` and `LocalAttachmentImageLoader` are deprecated.
+An application that still provides `LocalAttachmentImageLoader` keeps working: attachments read
+`LocalMediaImageLoader` first and fall back to it while media's is unprovided. Move the
+implementation to `MediaImageLoader` — the same two functions, returning `MediaImageState`.
 
 ## PDFs
 
@@ -761,7 +746,7 @@ Provide the platform's renderer once, beside the image loader:
 
 ```kotlin
 CompositionLocalProvider(
-    LocalAttachmentImageLoader provides CoilAttachmentImageLoader,
+    LocalMediaImageLoader provides CoilMediaImageLoader,
     LocalAttachmentPdfRenderer provides platformPdfRenderer(read = attachments::read),
 ) {
     App()

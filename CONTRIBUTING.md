@@ -28,6 +28,11 @@ Run the showcase application:
 It builds and checks every module for every target, checks that the docs cover every public
 component, and confirms the libraries still publish.
 
+Behaviour that needs real input — gestures, presses, what a screen reader can set — is tested with
+Compose `ui-test` on the JVM, in a module's `jvmTest` (`ui/media`, `flow/gallery`); it runs with
+`build`. What a part looks like is checked by the playground's render tests, which write PNGs to
+`playground/build/screens`.
+
 ## Public API
 
 Every published module commits its public API as a dump under its `api/` directory:

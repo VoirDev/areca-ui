@@ -28,6 +28,8 @@ import dev.voir.areca.playground.foundation.layout.PullToRefreshShowcase
 import dev.voir.areca.playground.foundation.list.ListItemShowcase
 import dev.voir.areca.playground.foundation.list.ListShowcase
 import dev.voir.areca.playground.foundation.navigation.NavListShowcase
+import dev.voir.areca.playground.foundation.navigation.PageCounterShowcase
+import dev.voir.areca.playground.foundation.navigation.PageIndicatorShowcase
 import dev.voir.areca.playground.foundation.notice.NoticeShowcase
 import dev.voir.areca.playground.foundation.overlay.ConfirmSheetShowcase
 import dev.voir.areca.playground.foundation.overlay.ConfirmationDialogShowcase
@@ -504,6 +506,24 @@ internal val ComponentShowcases: List<ShowcaseEntry> = listOf(
         summary = "Sidebar navigation: a collapsible tree of sections built from selectable rows.",
         keywords = listOf("sidebar", "menu", "tree", "navigation", "nav list", "nav item"),
         content = { NavListShowcase() },
+    ),
+    ShowcaseEntry(
+        id = "foundation/page-counter",
+        group = ShowcaseGroup.Components,
+        section = ShowcaseSection.Navigation,
+        title = "Page counter",
+        summary = "Where the page on screen sits among the rest, as a count in a capsule.",
+        keywords = listOf("pager", "count", "3 of 9", "position", "gallery", "carousel"),
+        content = { PageCounterShowcase() },
+    ),
+    ShowcaseEntry(
+        id = "foundation/page-indicator",
+        group = ShowcaseGroup.Components,
+        section = ShowcaseSection.Navigation,
+        title = "Page indicator",
+        summary = "Marks saying which page is on screen: dots, a sliding window, a line or story bars.",
+        keywords = listOf("dots", "pager", "carousel", "onboarding", "stories", "segments", "gallery"),
+        content = { PageIndicatorShowcase() },
     ),
     ShowcaseEntry(
         id = "foundation/tab-bar",

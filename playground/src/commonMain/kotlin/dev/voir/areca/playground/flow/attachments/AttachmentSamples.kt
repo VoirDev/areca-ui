@@ -20,9 +20,9 @@ import androidx.compose.ui.graphics.painter.BrushPainter
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import dev.voir.areca.flow.attachments.AttachmentFormat
-import dev.voir.areca.flow.attachments.AttachmentImageLoader
-import dev.voir.areca.flow.attachments.AttachmentImageState
 import dev.voir.areca.flow.attachments.AttachmentItem
+import dev.voir.areca.media.MediaImageLoader
+import dev.voir.areca.media.MediaImageState
 import dev.voir.areca.flow.attachments.AttachmentPdfDocument
 import dev.voir.areca.flow.attachments.AttachmentPdfRenderer
 import dev.voir.areca.flow.attachments.AttachmentState
@@ -221,12 +221,12 @@ internal fun decodeSamplePhoto(model: Any?): Painter? = when (model) {
  * runs offline and shows every appearance a picture can take on demand. A cropped file's model is the
  * crop itself, an [ImageBitmap], and is drawn as it is.
  */
-internal object SampleAttachmentImageLoader : AttachmentImageLoader {
+internal object SampleAttachmentImageLoader : MediaImageLoader {
     /** @return The state the sample model stands for. */
     @Composable
-    override fun load(model: Any, maxSize: Int): AttachmentImageState {
+    override fun load(model: Any, maxSize: Int): MediaImageState {
         val picture = remember {
-            AttachmentImageState.Ready(
+            MediaImageState.Ready(
                 BrushPainter(
                     Brush.linearGradient(
                         colors = listOf(Color(0xFFE9E4DA), Color(0xFFB9B1A2)),
@@ -241,10 +241,10 @@ internal object SampleAttachmentImageLoader : AttachmentImageLoader {
             SampleFile.ReceiptPhoto -> picture
             SampleFile.LandscapePhoto, is ImageBitmap -> {
                 val painter = remember(model) { decodeSamplePhoto(model) }
-                if (painter == null) AttachmentImageState.Failed else AttachmentImageState.Ready(painter)
+                if (painter == null) MediaImageState.Failed else MediaImageState.Ready(painter)
             }
-            SampleFile.SlowPhoto -> AttachmentImageState.Loading
-            else -> AttachmentImageState.Failed
+            SampleFile.SlowPhoto -> MediaImageState.Loading
+            else -> MediaImageState.Failed
         }
     }
 }
