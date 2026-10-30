@@ -21,6 +21,7 @@ import dev.voir.areca.playground.foundation.settings.PrivacySettingsSample
 import dev.voir.areca.playground.foundation.settings.SettingsNavigatorSample
 import dev.voir.areca.theme.ArecaTheme
 import dev.voir.areca.theme.ArecaThemeProvider
+import dev.voir.areca.window.InputMode
 import org.jetbrains.skia.EncodedImageFormat
 import java.io.File
 import kotlin.test.Test
@@ -49,7 +50,7 @@ private fun render(name: String, height: Int, dark: Boolean, content: @Composabl
         height = (height * DENSITY).toInt(),
         density = Density(DENSITY),
     ) {
-        ArecaThemeProvider(darkTheme = dark) {
+        ArecaThemeProvider(darkTheme = dark, inputMode = InputMode.Touch) {
             Box(Modifier.fillMaxSize().background(ArecaTheme.colors.bgCanvas)) {
                 Column {
                     Spacer(Modifier.height(ArecaTheme.spacing.xl3))

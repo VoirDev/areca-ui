@@ -222,6 +222,10 @@ fun AttachmentSheets(state: AttachmentsState, viewModel: AttachmentsViewModel, c
 saves nothing until it is saved, so it does not. Where the device offers one source only — a
 desktop picks files — start that pick from the add square instead of raising a sheet.
 
+Nothing here changes for a tablet or a desktop: on a wide window every one of these sheets, and
+foundation's `ConfirmSheet`, opens as a centred dialog by itself; see
+[On a wide window](#on-a-wide-window).
+
 ### A form
 
 The files of a record being written, in a strip under its fields, saved with the form:
@@ -305,6 +309,120 @@ AttachmentSheets(files, viewModel, confirmRemoval = true)
 The strip adds and removes nothing here and draws nothing while there are no files: adding is a
 row of the screen's own, removing is in the viewer's options. Inside a sheet already padded by the
 gutter, pass `bleed = true`.
+
+### On a tablet or desktop
+
+The same record with its files beside it, in foundation's `SupportingPane`: the record is the main
+content, in a column no wider than it reads well, and the files are the supporting content.
+
+```kotlin
+// Only read below 920dp, where the files are a sheet rather than a pane.
+var filesOpen by remember { mutableStateOf(false) }
+
+SupportingPane(
+    supportingVisible = filesOpen,
+    onSupportingDismissRequest = { filesOpen = false },
+    modifier = Modifier
+        .fillMaxSize()
+        .background(ArecaTheme.colors.bgCanvas)
+        .windowInsetsPadding(WindowInsets.systemBars),
+    supportingHeader = {
+        TopBar(
+            title = stringResource(Res.string.attachments),
+            subtitle = if (files.items.isEmpty()) null else stringResource(Res.string.count_of_limit, files.items.size, files.limit),
+            size = TopBarSize.Compact,
+            windowInsets = FlowModalHeaderInsets,
+        )
+    },
+    main = {
+        // The record stops at a readable width, centred in whatever room the files leave it.
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .wrapContentWidth()
+                .widthIn(max = AdaptiveDefaults.ReadableWidth)
+                .fillMaxWidth(),
+        ) {
+            Spacer(Modifier.height(ArecaTheme.spacing.xl3))
+
+            // On the sections' own gutter, so the amount lines up with the cards under it.
+            Column(modifier = Modifier.padding(horizontal = ArecaTheme.spacing.horizontalContentInsets)) {
+                Text(
+                    text = expense.amount,
+                    modifier = Modifier.semantics { heading() },
+                    style = ArecaTheme.typography.headingLarge,
+                    color = ArecaTheme.colors.fgBase,
+                )
+                Text(
+                    text = expense.summary,
+                    style = ArecaTheme.typography.bodyMedium,
+                    color = ArecaTheme.colors.fgMuted,
+                )
+            }
+
+            Spacer(Modifier.height(ArecaTheme.spacing.xl3))
+
+            Settings {
+                Section {
+                    SettingsRow(title = { Text(stringResource(Res.string.category)) }, value = { Text(expense.category) })
+                    SettingsRow(title = { Text(stringResource(Res.string.account)) }, value = { Text(expense.account) })
+                    SettingsRow(title = { Text(stringResource(Res.string.note)) }, value = { Text(expense.note) })
+                }
+
+                // Beside the record there is nothing to open; without the pane, this row is the
+                // way to the files.
+                if (!isSupportingInline) {
+                    Section {
+                        SettingsRow(
+                            title = { Text(stringResource(Res.string.attachments)) },
+                            leading = { SettingsRowIcon(ArecaIcons.Paperclip) },
+                            value = { Text(files.items.size.toString()) },
+                            onClick = { filesOpen = true },
+                        )
+                    }
+                }
+            }
+        }
+    },
+    supporting = {
+        // Squares that wrap rather than a strip that scrolls sideways: the pane is tall and narrow.
+        // Adding is the last square; removing is in the viewer's options, as on a phone.
+        FlowRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .horizontalContentInsets()
+                .padding(top = ArecaTheme.spacing.sm, bottom = ArecaTheme.spacing.xl3),
+            horizontalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md),
+            verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg),
+        ) {
+            files.items.forEach { item ->
+                key(item.key) {
+                    AttachmentTile(item = item, onClick = { viewModel.open(item) }, detail = item.size)
+                }
+            }
+
+            if (files.items.size < files.limit) {
+                AttachmentAddTile(onClick = viewModel::add, caption = stringResource(Res.string.add))
+            }
+        }
+    },
+)
+
+AttachmentSheets(files, viewModel, confirmRemoval = true)
+```
+
+`SupportingPane` decides by the width it is given, not the window's. From 920dp — a tablet in
+landscape, a laptop, a desktop — the files are a pane at the end, always on screen, and the record
+has no row for them. Narrower — a tablet held upright, an unfolded foldable, a phone — they open in
+a sheet from the Attachments row, and `isSupportingInline` is what the record reads to offer it.
+To keep a phone's files on the page itself instead, draw
+[A record's details](#a-records-details)' strip in `main` where `isSupportingInline` is `false`.
+
+`AttachmentSheets` is unchanged: on these windows every sheet in it opens as a dialog, and the
+viewer has the whole window. The supporting pane needs foundation's adaptive layouts, which come
+with this module; see foundation's [Adaptive layouts](../../ui/foundation/README.md#adaptive-layouts).
 
 ### Documents
 
@@ -506,6 +624,8 @@ PendingAttachmentSheet(
 - A file that cannot be attached carries the reason, worded by the application, in
   `PendingAttachment.problem`. The sheet states it in place of the question, announces it, and
   offers only Close.
+- On a wide window the source and pending sheets open as centred dialogs, with the same heading,
+  question and Cancel and Attach; see [On a wide window](#on-a-wide-window).
 
 ## Acting on a file
 
@@ -537,6 +657,22 @@ AttachmentOptionsSheet(
   and does not close itself when a choice is made.
 - The source and options sheets close from the × in their heading. The pending and rename sheets
   have Cancel and Attach, or Cancel and Save, in the sheet's foot, which stays above the keyboard.
+
+## On a wide window
+
+Every sheet in the module — source, pending, options and rename — is a sheet rising from the
+bottom edge on a phone, and a centred dialog where foundation's `AdaptiveDefaults.usesDialog` says
+so for the whole window (`ArecaTheme.hostWindow`): from an expanded width up, unless the window is
+too short for a dialog, as a phone on its side is. The bottom edge of a tablet in landscape or a
+desktop is far from where the person is looking.
+
+- Nothing to pass: the sheet reads the window it opens over, never the pane it was opened from, so
+  a sheet raised from a narrow pane of a desktop window is still a dialog.
+- The dialog has the sheet's heading, content and foot. The heading and the foot stay put and the
+  content scrolls between them, so Attach and Save are never pushed off a short window.
+- The scrim, Escape and the back gesture close it, and arrive as `onDismiss` like a drag down does.
+  It is driven by the same state, and still does not close itself when a choice is made.
+- Foundation's `ConfirmSheet`, which asks before a removal, follows the same rule.
 
 ## The viewer
 
@@ -593,6 +729,11 @@ AttachmentViewer(
 - The viewer is media's `MediaViewer` with its bars docked above and below the file: a swipe down
   on a file at its fitted size closes it, Escape closes it and the arrow keys page. Its pictures zoom
   with media's zoom.
+- **On a tablet or a desktop** the viewer still has the whole window: a file is what it is opened
+  to look at. A picture fills the page at any size; a PDF's pages and a file stated rather than
+  drawn stay centred and no wider than foundation's `AdaptiveDefaults.ReadableWidth`, so a page
+  reads as a page. The sheets in `sheets` open as dialogs over it. A file's details belong to the
+  record beside the files — see [On a tablet or desktop](#on-a-tablet-or-desktop).
 
 ## Pictures
 
@@ -826,6 +967,8 @@ What the parts already do, and what to pass. General guidance:
   [`AttachmentFormShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/attachments/AttachmentFormShowcase.kt),
   [`AttachmentCroppingShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/attachments/AttachmentCroppingShowcase.kt),
   [`AttachmentDetailsShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/attachments/AttachmentDetailsShowcase.kt),
+  [`AttachmentWideDetailsShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/attachments/AttachmentWideDetailsShowcase.kt)
+  (in a window of any size, from a phone to a desktop),
   [`AttachmentDocumentsShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/attachments/AttachmentDocumentsShowcase.kt),
   with the shared sheets and viewer in
   [`AttachmentSheetsRecipe`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/attachments/AttachmentSheetsRecipe.kt),

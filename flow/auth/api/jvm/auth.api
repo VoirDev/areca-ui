@@ -81,6 +81,22 @@ public final class dev/voir/areca/flow/auth/AuthLayout$Plain : dev/voir/areca/fl
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class dev/voir/areca/flow/auth/AuthLayout$Split : dev/voir/areca/flow/auth/AuthLayout {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (FLdev/voir/areca/flow/auth/AuthLayout;)V
+	public synthetic fun <init> (FLdev/voir/areca/flow/auth/AuthLayout;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()F
+	public final fun component2 ()Ldev/voir/areca/flow/auth/AuthLayout;
+	public final fun copy (FLdev/voir/areca/flow/auth/AuthLayout;)Ldev/voir/areca/flow/auth/AuthLayout$Split;
+	public static synthetic fun copy$default (Ldev/voir/areca/flow/auth/AuthLayout$Split;FLdev/voir/areca/flow/auth/AuthLayout;ILjava/lang/Object;)Ldev/voir/areca/flow/auth/AuthLayout$Split;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFallback ()Ldev/voir/areca/flow/auth/AuthLayout;
+	public final fun getFraction ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class dev/voir/areca/flow/auth/AuthLegalLinks {
 	public static final field $stable I
 	public fun <init> ()V
@@ -143,14 +159,20 @@ public final class dev/voir/areca/flow/auth/part/AuthResendCodeKt {
 	public static final fun AuthResendCode-tWWzv_0 (Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZLandroidx/compose/runtime/Composer;II)V
 }
 
+public final class dev/voir/areca/flow/auth/part/AuthScaffoldDefaults {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/voir/areca/flow/auth/part/AuthScaffoldDefaults;
+	public final fun getMaxWidth-D9Ej5fM ()F
+}
+
 public final class dev/voir/areca/flow/auth/part/AuthScaffoldKt {
-	public static final fun AuthScaffold-UR9CgXA (Landroidx/compose/ui/Modifier;Ldev/voir/areca/flow/auth/AuthBranding;FLandroidx/compose/foundation/layout/WindowInsets;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+	public static final fun AuthScaffold-2WL1UgY (Landroidx/compose/ui/Modifier;Ldev/voir/areca/flow/auth/AuthBranding;FLandroidx/compose/foundation/layout/WindowInsets;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function2;FLkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class dev/voir/areca/flow/auth/part/ComposableSingletons$AuthScaffoldKt {
 	public static final field INSTANCE Ldev/voir/areca/flow/auth/part/ComposableSingletons$AuthScaffoldKt;
 	public fun <init> ()V
-	public final fun getLambda$-838545879$auth ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-1031448077$auth ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class dev/voir/areca/flow/auth/part/LegalConsentKt {

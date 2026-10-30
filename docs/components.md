@@ -24,6 +24,13 @@ region that is always dark in `ArecaDarkTheme`, both in `dev.voir.areca.theme` �
 | Act with an icon alone | `IconButton`; in a top bar, `IconAction` or a named control such as `SearchAction` |
 | Put a link in text | `TextLink`; a prompt and a link ("No account? Sign up") `TextLinkPrompt` |
 | Show text; a title with a supporting line | `Text` with a `TextVariant`; `Heading` |
+| Lay a screen out differently on a tablet or desktop | `AdaptiveContent` or `adaptive(…)` on `ArecaTheme.window`; `WindowClassBox` around each pane |
+| Navigate an app on phone, tablet and desktop | `AdaptiveNavigation`; `NavRail` on its own |
+| Show a list beside the open item; filters beside results | `ListDetail`; `SupportingPane` |
+| Keep a form or a grid from stretching on a wide window | `ContentColumn`; `AdaptiveGrid` |
+| Open a form or a row's actions | `AdaptiveSheet`; `AdaptiveMenu`, from a right-click or long press with `Modifier.contextMenu` |
+| Name an icon or a truncated control for a pointer user | `TooltipBox`; an `IconButton` shows its `contentDescription` already |
+| Give a scrolling element of your own a desktop scrollbar | `VerticalScrollbar`; `HorizontalScrollbar` |
 | Hide a value until revealed | `SensitiveText` |
 | Show an icon; give a block its subject; show a disclosure arrow | `Icon`; `FeaturedIcon`; `Chevron` |
 | Take labelled text input with a hint or an error | `FieldGroup` around `TextField` |
@@ -237,6 +244,7 @@ With a title and a row-wide tap target, use the list rows under
 | [`FlowModalActionBar`](../ui/foundation/README.md#overlays) | A sheet's footer with its commit button | `overlay` | `FlowModalShowcase` |
 | [`FlowModalSecondaryAction`](../ui/foundation/README.md#overlays) | The secondary button in a sheet's footer | `overlay` | `FlowModalShowcase` |
 | [`DropdownPopup`](../ui/foundation/README.md#overlays) | A surface hanging off the control that opened it — a menu | `overlay` | — |
+| [`TooltipBox`](../ui/foundation/README.md#overlays) | A short label naming its content under a pointer or keyboard focus | `overlay` | `TooltipShowcase` |
 
 ## Layout and surfaces
 
@@ -252,7 +260,31 @@ With a title and a row-wide tap target, use the list rows under
 | [`VerticalDivider`](../ui/foundation/README.md#layout-and-surfaces) | A vertical rule | `layout` | `DividerShowcase` |
 | [`RelativePositionLayout`](../ui/foundation/README.md#layout-and-surfaces) | A companion on one of eight sides of its content | `layout` | — |
 | [`Overlay`](../ui/foundation/README.md#layout-and-surfaces) | A tint over a box's content without changing its size | `layout` | `BaseLayoutShowcase` |
+| [`VerticalScrollbar`](../ui/foundation/README.md#layout-and-surfaces) | A draggable scrollbar for a column, list or grid, under a pointer only | `layout` | `ScrollbarShowcase` |
+| [`HorizontalScrollbar`](../ui/foundation/README.md#layout-and-surfaces) | The same for a row, under a pointer only | `layout` | `ScrollbarShowcase` |
 | [`SystemBars`](theme.md) | The colour behind the status and navigation bars, for a region that is always dark | `dev.voir.areca.platform` | — |
+
+## Adaptive layouts
+
+| Component | Use it for | Package | Playground |
+| --- | --- | --- | --- |
+| [`AdaptiveNavigation`](../ui/foundation/README.md#adaptive-layouts) | An app's top-level navigation: bottom bar, rail or sidebar by window | `adaptive` | `AdaptiveNavigationShowcase` |
+| [`NavRail`](../ui/foundation/README.md#adaptive-layouts) | A column of icon-and-label destinations along the start edge | `adaptive` | `AdaptiveNavigationShowcase` |
+| [`ListDetail`](../ui/foundation/README.md#adaptive-layouts) | A list and the open item, side by side when there is room; a pointer drags the divider | `adaptive` | `ListDetailShowcase` |
+| [`SupportingPane`](../ui/foundation/README.md#adaptive-layouts) | Main content with filters, reviews or details beside it, or in a sheet | `adaptive` | `SupportingPaneShowcase` |
+| [`ContentColumn`](../ui/foundation/README.md#adaptive-layouts) | A form or reading column that stops growing and centres | `adaptive` | `ContentColumnShowcase` |
+| [`AdaptiveGrid`](../ui/foundation/README.md#adaptive-layouts) | A grid whose column count follows its width | `adaptive` | `AdaptiveGridShowcase` |
+| [`AdaptiveSheet`](../ui/foundation/README.md#adaptive-layouts) | A sheet on a phone, a dialog on a wide window | `adaptive` | `AdaptiveSheetShowcase` |
+| [`AdaptiveMenu`](../ui/foundation/README.md#adaptive-layouts) | Actions for a row: a sheet under touch, a dropdown on a desktop | `adaptive` | `AdaptiveMenuShowcase` |
+| [`Modifier.contextMenu`](../ui/foundation/README.md#adaptive-layouts) | Opens a row's `AdaptiveMenu` on a right-click, a long press or the Menu key | `adaptive` | `AdaptiveMenuShowcase` |
+
+## Window classes
+
+| Component | Use it for | Package | Playground |
+| --- | --- | --- | --- |
+| [`AdaptiveContent`](../ui/foundation/README.md#window-classes) | One of several layouts, chosen by the width class in scope | `dev.voir.areca.window` | `WindowClassShowcase` |
+| [`WindowClassBox`](../ui/foundation/README.md#window-classes) | A pane that reports its own size as its content's window class | `dev.voir.areca.window` | `WindowClassShowcase` |
+| [`ProvideWindowClass`](../ui/foundation/README.md#window-classes) | A given window class for a subtree, in a preview or a test | `dev.voir.areca.window` | `WindowClassShowcase` |
 
 ## Slot rows
 

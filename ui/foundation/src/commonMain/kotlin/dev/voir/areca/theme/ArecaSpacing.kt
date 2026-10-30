@@ -12,9 +12,11 @@ import androidx.compose.ui.unit.dp
  * a fixed multiple of each other — the small end is fine-grained because that is where component
  * internals live, and the large end grows quickly because that is where section rhythm lives.
  *
- * The last two tokens are not part of the ramp. They are the page-level gutters every screen shares,
- * kept here so a consumer can widen a whole app's margins in one place. Apply them with
- * [dev.voir.areca.theme.contentInsets] rather than reading them directly.
+ * The last four tokens are not part of the ramp. They are the page-level gutters every screen shares,
+ * kept here so a consumer can widen a whole app's margins in one place. The horizontal gutter widens
+ * with the window: [horizontalContentInsets] on a compact one, [mediumHorizontalContentInsets] from
+ * 600dp and [expandedHorizontalContentInsets] from 840dp. Apply them with
+ * [dev.voir.areca.theme.contentInsets], which picks the step, rather than reading them directly.
  *
  * Every value has a default, so `ArecaSpacing()` is a complete scale and `copy` overrides one step.
  */
@@ -50,10 +52,14 @@ public data class ArecaSpacing(
     public val xl8: Dp = 80.dp,
     /** Widest step, for hero and splash layouts. */
     public val xl9: Dp = 96.dp,
-    /** Horizontal gutter between screen content and the window edge. */
+    /** Horizontal gutter between screen content and the window edge, on a compact window. */
     public val horizontalContentInsets: Dp = 16.dp,
     /** Vertical gutter between screen content and the top and bottom edges. */
     public val verticalContentInsets: Dp = 24.dp,
+    /** Horizontal gutter on a medium window, 600dp to 839dp wide. */
+    public val mediumHorizontalContentInsets: Dp = 24.dp,
+    /** Horizontal gutter on an expanded window and every wider one, from 840dp. */
+    public val expandedHorizontalContentInsets: Dp = 32.dp,
 )
 
 /** Spacing scale in scope. Read it through [ArecaTheme.spacing]. */

@@ -6,11 +6,15 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import dev.voir.areca.foundation.adaptive.AdaptiveDefaults
+import dev.voir.areca.foundation.overlay.Dialog
 import dev.voir.areca.foundation.overlay.FlowModal
 import dev.voir.areca.foundation.overlay.FlowModalHeaderInsets
 import dev.voir.areca.foundation.overlay.rememberFlowModal
@@ -32,8 +36,16 @@ import dev.voir.areca.theme.ArecaTheme
  * every other sheet that commits a draft — and keeps its heading free of controls. The bar keeps the
  * sheet's own gutter, so its title lines up with the content under it.
  *
+ * **A sheet on a phone, a dialog on a wide window.** Where [AdaptiveDefaults.usesDialog] says so
+ * for the whole window — a tablet in landscape, a desktop — the same heading, content and foot open
+ * as a centred foundation [Dialog] rather than rising from a bottom edge that is far from where the
+ * person is looking. The heading and the foot stay put there and the content scrolls between them,
+ * so a foot's commit is never pushed off a short window. Everywhere else, phones included, it is
+ * the sheet it has always been.
+ *
  * Shown and hidden from [visible], so the caller's state decides when it goes; dragging it away,
- * tapping the scrim and the back gesture all arrive as [onDismiss].
+ * tapping the scrim and the back gesture all arrive as [onDismiss], and in the dialog the scrim,
+ * Escape and the back gesture do.
  *
  * @param visible Whether the sheet is up.
  * @param title Heading of the sheet.
@@ -58,35 +70,26 @@ internal fun AttachmentSheetFrame(
     footer: (@Composable () -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    val controller = rememberFlowModal(autoHeight = true)
-
-    LaunchedEffect(visible) {
-        if (visible) controller.show() else controller.hide()
+    val header: @Composable () -> Unit = {
+        TopBar(
+            title = title,
+            subtitle = subtitle,
+            modifier = Modifier.fillMaxWidth(),
+            size = TopBarSize.Modal.copy(
+                padding = PaddingValues(
+                    horizontal = ArecaTheme.spacing.xl3,
+                    vertical = ArecaTheme.spacing.md,
+                ),
+            ),
+            style = TopBarStyle.Modal,
+            windowInsets = FlowModalHeaderInsets,
+            titleAlignment = titleAlignment,
+            leading = leading,
+            trailing = trailing,
+        )
     }
 
-    FlowModal(
-        controller = controller,
-        onDismissRequest = onDismiss,
-        header = {
-            TopBar(
-                title = title,
-                subtitle = subtitle,
-                modifier = Modifier.fillMaxWidth(),
-                size = TopBarSize.Modal.copy(
-                    padding = PaddingValues(
-                        horizontal = ArecaTheme.spacing.xl3,
-                        vertical = ArecaTheme.spacing.md,
-                    ),
-                ),
-                style = TopBarStyle.Modal,
-                windowInsets = FlowModalHeaderInsets,
-                titleAlignment = titleAlignment,
-                leading = leading,
-                trailing = trailing,
-            )
-        },
-        footer = footer,
-    ) {
+    val body: @Composable () -> Unit = {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -101,6 +104,45 @@ internal fun AttachmentSheetFrame(
             content()
         }
     }
+
+    // Chosen by the whole window, not the pane the sheet was opened from: a sheet raised from a
+    // narrow pane of a desktop window is still a dialog.
+    if (AdaptiveDefaults.usesDialog(ArecaTheme.hostWindow)) {
+        if (visible) {
+            Dialog(onDismissRequest = onDismiss) {
+                // The dialog's own header and footer slots would let a tall body push the foot out
+                // of a short window; here the body takes what is left between them and scrolls.
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    header()
+
+                    Column(
+                        modifier = Modifier
+                            .weight(1f, fill = false)
+                            .verticalScroll(rememberScrollState()),
+                    ) {
+                        body()
+                    }
+
+                    footer?.invoke()
+                }
+            }
+        }
+        return
+    }
+
+    val controller = rememberFlowModal(autoHeight = true)
+
+    LaunchedEffect(visible) {
+        if (visible) controller.show() else controller.hide()
+    }
+
+    FlowModal(
+        controller = controller,
+        onDismissRequest = onDismiss,
+        header = header,
+        footer = footer,
+        content = body,
+    )
 }
 
 /**

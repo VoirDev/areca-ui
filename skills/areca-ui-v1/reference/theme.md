@@ -27,7 +27,9 @@ fun ArecaThemeProvider(darkTheme: Boolean = false, baseColors: ArecaBaseColors =
     elevation: ArecaElevation = ArecaElevation(), motion: ArecaMotion = ArecaMotion(),
     fonts: ArecaFonts = ArecaFonts(),
     baseTypography: ArecaBaseTypography = ArecaBaseTypography.from(fonts),
-    typography: ArecaTypography = ArecaTypography.from(baseTypography),
+    inputMode: InputMode? = null,
+    sizing: ArecaSizing = ArecaSizing.forInput(inputMode ?: /* outer or platform input */),
+    typography: ArecaTypography = ArecaTypography.from(baseTypography, dense = sizing.dense),
     content: @Composable () -> Unit)
 ```
 
@@ -46,6 +48,17 @@ fun ArecaThemeProvider(darkTheme: Boolean = false, baseColors: ArecaBaseColors =
   inherit.
 - Without a provider — previews, tests — every accessor returns the light defaults. Wrap a preview
   in the provider when the dark theme or an app token matters.
+- `inputMode` (`InputMode.Touch` or `Pointer`) is reported through `ArecaTheme.window`. Leave it
+  `null`: the root then takes the platform's (touch on Android and iOS, a pointer on the desktop)
+  and a nested provider keeps the outer one. Pass it only for a device that breaks the rule, such as
+  a tablet with a trackpad. The window's size is always read, never passed.
+- `sizing` follows the input: `ArecaSizing.touch()` (controls 32/40/48/56/64dp, rows 32/44/56dp,
+  48dp touch target) or `ArecaSizing.pointer()` (28/32/36/44/52dp, rows 28/36/44dp, no touch target,
+  `dense = true`). Under `dense`, `typography.bodyMedium` and `labelLarge` are 14sp instead of 16sp.
+  Every `XSize` preset reads its height from `sizing`, so `ButtonSize.Medium` is 48dp on a phone and
+  36dp on a desktop — never hard-code a control height. Pass `sizing = ArecaSizing.pointer()` to
+  force a dense screen in a touch app; in a size of your own, pick values with
+  `sizing.select(touch = …, pointer = …)`.
 
 ## Reading tokens
 
@@ -56,6 +69,7 @@ Read through `ArecaTheme` inside composition; every accessor is `@Composable`.
 | `ArecaTheme.colors` | `ArecaColors` | Semantic colours for the direction in scope — what components and screens read |
 | `ArecaTheme.typography` | `ArecaTypography` | Named text styles (roles) |
 | `ArecaTheme.spacing` | `ArecaSpacing` | Spacing ramp and screen gutters |
+| `ArecaTheme.sizing` | `ArecaSizing` | Control heights and touch target for the input in scope — what every size preset reads |
 | `ArecaTheme.shapes` | `ArecaShapes` | Corner shapes; prefer these to `radius` |
 | `ArecaTheme.radius` | `ArecaRadius` | Raw corner lengths, for a hand-drawn corner in a `Canvas` |
 | `ArecaTheme.elevation` | `ArecaElevation` | Shadow elevations, a stacking order |
@@ -65,6 +79,8 @@ Read through `ArecaTheme` inside composition; every accessor is `@Composable`.
 | `ArecaTheme.baseColors` | `ArecaBaseColors` | Raw palette ramps; only when no semantic colour fits (a chart series, an illustration) |
 | `ArecaTheme.baseTypography` | `ArecaBaseTypography` | Raw type sizes; only when no role fits |
 | `ArecaTheme.fonts` | `ArecaFonts` | Font families |
+| `ArecaTheme.hostWindow` | `WindowClass` | The whole window's class, ignoring any `WindowClassBox` — choose an overlay's form by it (`AdaptiveDefaults.usesDialog(hostWindow)`) |
+| `ArecaTheme.window` | `WindowClass` | Not a token: width and height classes, input mode and profile of the window or `WindowClassBox` in scope — branch layout on it (SKILL.md, "Lay out by window class") |
 
 Never write `Color(0xFF…)`, `16.dp` padding, `14.sp`, `RoundedCornerShape(12.dp)` or `tween(300)` in
 screen code. A component dimension no token names (a chart's height, a fixed table column) may be a
@@ -206,11 +222,14 @@ default, for opting single styles into a second voice. Both default to `FontFami
 | `xl7` | 64 | Rhythm of sparse, full-height layouts |
 | `xl8` | 80 | Empty-state and onboarding breathing room |
 | `xl9` | 96 | Hero and splash layouts |
-| `horizontalContentInsets` | 16 | Screen gutter between content and the window's sides |
+| `horizontalContentInsets` | 16 | Screen gutter between content and the window's sides, compact window |
+| `mediumHorizontalContentInsets` | 24 | Side gutter on a medium window (600–839dp) |
+| `expandedHorizontalContentInsets` | 32 | Side gutter from an expanded window (840dp) up |
 | `verticalContentInsets` | 24 | Screen gutter at the top and bottom |
 
 Apply the gutters with `Modifier.horizontalContentInsets()`, `verticalContentInsets()` or
-`contentInsets()` (both), not by reading the tokens, so the gutter stays one decision.
+`contentInsets()` (both), not by reading the tokens, so the gutter stays one decision. The modifiers
+pick the side gutter for the window class in scope (inside a `WindowClassBox`, the box's).
 
 ## Corners
 

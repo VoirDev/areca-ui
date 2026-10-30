@@ -431,8 +431,12 @@ picks for the cell.
    the assembly a consumer is meant to copy, written the way they would write it. It is `private`
    to the page, and it is duplicated in the module's README — deliberately, because a recipe that
    is not compiled anywhere rots.
-3. **Every screen renders inside `DeviceFrame`.** A screen fills the viewport it is given, and a
-   showcase page's viewport is a desktop window — a shape no phone has.
+3. **Every screen renders inside `DeviceFrame` or `WindowFrame`.** A screen fills the viewport it is
+   given, and a showcase page's viewport is a desktop window — a shape no phone has. A phone screen
+   uses `DeviceFrame`; a screen that changes with the window uses `WindowFrame` with a `window`
+   control over `WindowPreset.entries`, so the reader checks it at every class, foldables included.
+   Both report their size as the screen's window class, and `WindowFrame` sizes the controls for its
+   preset's input.
 4. **Pass the device's insets.** `DeviceSize.windowInsets` exists because the real
    `WindowInsets.systemBars` on the desktop playground is zero, which hides exactly the padding
    mistakes the preview is for.

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -47,6 +48,8 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import dev.voir.areca.foundation.layout.HorizontalScrollbarOverlay
+import dev.voir.areca.foundation.layout.VerticalScrollbarOverlay
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.foundation.text.TextColor
 import dev.voir.areca.foundation.text.TextVariant
@@ -142,7 +145,10 @@ public data class TableSize(
 ) {
     /** Theme-backed presets and builders. */
     public companion object {
-        /** Theme default: 48dp rows under a 44dp header. */
+        /**
+         * Theme default: 48dp rows under a 44dp header under touch; 36dp rows under a 36dp header
+         * under a pointer.
+         */
         public val Default: TableSize
             @Composable
             get() = default()
@@ -160,15 +166,27 @@ public data class TableSize(
         @Composable
         public fun default(
             cellPadding: PaddingValues = PaddingValues(
-                vertical = ArecaTheme.spacing.md,
-                horizontal = ArecaTheme.spacing.lg,
+                vertical = ArecaTheme.sizing.select(
+                    touch = ArecaTheme.spacing.md,
+                    pointer = ArecaTheme.spacing.sm,
+                ),
+                horizontal = ArecaTheme.sizing.select(
+                    touch = ArecaTheme.spacing.lg,
+                    pointer = ArecaTheme.spacing.md,
+                ),
             ),
             headerPadding: PaddingValues = PaddingValues(
-                vertical = ArecaTheme.spacing.md,
-                horizontal = ArecaTheme.spacing.lg,
+                vertical = ArecaTheme.sizing.select(
+                    touch = ArecaTheme.spacing.md,
+                    pointer = ArecaTheme.spacing.sm,
+                ),
+                horizontal = ArecaTheme.sizing.select(
+                    touch = ArecaTheme.spacing.lg,
+                    pointer = ArecaTheme.spacing.md,
+                ),
             ),
-            headerHeight: Dp = 44.dp,
-            rowMinHeight: Dp = ArecaTheme.spacing.xl6,
+            headerHeight: Dp = ArecaTheme.sizing.rowMedium,
+            rowMinHeight: Dp = ArecaTheme.sizing.controlMd,
             dividerThickness: Dp = 1.dp,
         ): TableSize = TableSize(
             cellPadding = cellPadding,
@@ -219,20 +237,25 @@ public fun <T> LazyTable(
     WithTableState(columns = columns) {
         Column(modifier = modifier.tableSemantics(rowCount = items.size, columnCount = columns.size)) {
             TableHeader(columns = columns, style = style, size = size, drawRule = separated)
-            LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                itemsIndexed(
-                    items = items,
-                    key = if (key != null) { i, item -> key(i, item) } else null
-                ) { index, item ->
-                    TableBodyRow(
-                        columns = columns,
-                        item = item,
-                        itemIndex = index,
-                        style = style,
-                        size = size,
-                        drawRule = separated && index > 0,
-                    )
+            val bodyState = rememberLazyListState()
+            Box(modifier = Modifier.fillMaxWidth(), propagateMinConstraints = true) {
+                LazyColumn(state = bodyState) {
+                    itemsIndexed(
+                        items = items,
+                        key = if (key != null) { i, item -> key(i, item) } else null
+                    ) { index, item ->
+                        TableBodyRow(
+                            columns = columns,
+                            item = item,
+                            itemIndex = index,
+                            style = style,
+                            size = size,
+                            drawRule = separated && index > 0,
+                        )
+                    }
                 }
+                VerticalScrollbarOverlay(bodyState)
+                HorizontalScrollbarOverlay(LocalTableState.current.horizontalScroll)
             }
         }
     }
@@ -268,17 +291,20 @@ public fun <T> Table(
     WithTableState(columns = columns) {
         Column(modifier = modifier.tableSemantics(rowCount = items.size, columnCount = columns.size)) {
             TableHeader(columns = columns, style = style, size = size, drawRule = separated)
-            Column(modifier = Modifier.fillMaxWidth()) {
-                items.forEachIndexed { index, item ->
-                    TableBodyRow(
-                        columns = columns,
-                        item = item,
-                        itemIndex = index,
-                        style = style,
-                        size = size,
-                        drawRule = separated && index > 0,
-                    )
+            Box(modifier = Modifier.fillMaxWidth(), propagateMinConstraints = true) {
+                Column {
+                    items.forEachIndexed { index, item ->
+                        TableBodyRow(
+                            columns = columns,
+                            item = item,
+                            itemIndex = index,
+                            style = style,
+                            size = size,
+                            drawRule = separated && index > 0,
+                        )
+                    }
                 }
+                HorizontalScrollbarOverlay(LocalTableState.current.horizontalScroll)
             }
         }
     }

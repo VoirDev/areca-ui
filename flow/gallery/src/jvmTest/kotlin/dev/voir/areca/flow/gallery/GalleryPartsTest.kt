@@ -1,10 +1,12 @@
 package dev.voir.areca.flow.gallery
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.width
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertLeftPositionInRootIsEqualTo
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
@@ -40,6 +42,21 @@ class GalleryPartsTest {
 
         val header = onNodeWithText("Readers' photos").fetchSemanticsNode()
         assertTrue(SemanticsProperties.Heading in header.config)
+    }
+
+    @Test
+    fun `a group header keeps the gutter unless a grid keeps it`() = runComposeUiTest {
+        setContent {
+            ArecaThemeProvider {
+                Column {
+                    GalleryGroupHeader(title = "From the brand")
+                    GalleryGroupHeader(title = "Readers' photos", horizontalPadding = 0.dp)
+                }
+            }
+        }
+
+        onNodeWithText("From the brand").assertLeftPositionInRootIsEqualTo(16.dp)
+        onNodeWithText("Readers' photos").assertLeftPositionInRootIsEqualTo(0.dp)
     }
 
     @Test

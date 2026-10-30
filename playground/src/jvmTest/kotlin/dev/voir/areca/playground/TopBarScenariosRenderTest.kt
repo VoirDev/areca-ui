@@ -17,6 +17,7 @@ import dev.voir.areca.playground.foundation.topbar.TopBarAppearances
 import dev.voir.areca.playground.foundation.topbar.TopBarScenarios
 import dev.voir.areca.theme.ArecaTheme
 import dev.voir.areca.theme.ArecaThemeProvider
+import dev.voir.areca.window.InputMode
 import org.jetbrains.skia.EncodedImageFormat
 import java.io.File
 import kotlin.test.Test
@@ -50,7 +51,7 @@ private fun renderBars(
         height = (height * DENSITY).toInt(),
         density = Density(DENSITY),
     ) {
-        ArecaThemeProvider(darkTheme = dark) {
+        ArecaThemeProvider(darkTheme = dark, inputMode = InputMode.Touch) {
             Column(
                 Modifier.fillMaxSize().background(ArecaTheme.colors.bgCanvas),
                 verticalArrangement = Arrangement.spacedBy(4.dp),

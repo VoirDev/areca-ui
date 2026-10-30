@@ -39,6 +39,9 @@ import dev.voir.areca.foundation.icon.FeaturedIconSize
 import dev.voir.areca.foundation.icon.FeaturedIconStyle
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.theme.ArecaTheme
+import dev.voir.areca.foundation.adaptive.AdaptiveDefaults
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.unit.isSpecified
 
 /**
  * Colors and shapes of a [ConfirmSheet].
@@ -213,7 +216,8 @@ public data class ConfirmSheetSize(
 
 /**
  * A sheet — a `FlowModal`, rising from the bottom edge — that asks once before something hard to
- * take back.
+ * take back. On a window from expanded up the same question is a centred [Dialog] instead
+ * ([AdaptiveDefaults.usesDialog]), answered with the same buttons.
  *
  * Every confirmation is this shape, so the difference between signing out, deleting an account and
  * throwing away a half-filled form is an icon, some words and the colour of one box. A sheet rather
@@ -276,28 +280,12 @@ public fun ConfirmSheet(
     size: ConfirmSheetSize = LocalConfirmSheetSize.current ?: ConfirmSheetSize.Default,
     extra: (@Composable ColumnScope.() -> Unit)? = null,
 ) {
-    val controller = rememberFlowModal(autoHeight = true)
-
-    LaunchedEffect(visible) {
-        if (visible) controller.show() else controller.hide()
-    }
-
-    // Re-armed whenever either input changes, so a sheet shown again, or one whose failed work was
-    // cleared, can be answered again.
-    val gate = remember(visible, confirming) { ConfirmSheetAnswerGate(isArmed = visible) }
-    val confirm = { if (gate.tryAnswer(controller.state)) onConfirm() }
-    val dismiss = { if (gate.tryAnswer(controller.state)) onDismiss() }
-
     val layoutDirection = LocalLayoutDirection.current
     val padding = size.contentPadding
 
-    FlowModal(
-        controller = controller,
-        style = style.sheet,
-        size = size.sheet,
-        onDismissRequest = { if (!confirming) dismiss() },
-        modifier = modifier,
-    ) {
+    // The same question in either form: a sheet a thumb answers on a phone, a centred dialog on a
+    // window wide enough that the bottom edge is far from where the person is looking.
+    val body: @Composable (confirm: () -> Unit, dismiss: () -> Unit) -> Unit = { confirm, dismiss ->
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -385,6 +373,50 @@ public fun ConfirmSheet(
                 Text(cancelText)
             }
         }
+    }
+
+    if (AdaptiveDefaults.usesDialog(ArecaTheme.hostWindow)) {
+        // A dialog has no slide to answer during, so the gate is simply the first answer per showing.
+        val answered = remember(visible, confirming) { mutableStateOf(false) }
+        val answerOnce = { answer: () -> Unit ->
+            if (!answered.value) {
+                answered.value = true
+                answer()
+            }
+        }
+        if (visible) {
+            Dialog(
+                onDismissRequest = { if (!confirming) answerOnce(onDismiss) },
+                modifier = modifier,
+            ) {
+                body({ answerOnce(onConfirm) }, { answerOnce(onDismiss) })
+            }
+        }
+        return
+    }
+
+    val controller = rememberFlowModal(autoHeight = true)
+
+    LaunchedEffect(visible) {
+        if (visible) controller.show() else controller.hide()
+    }
+
+    // Re-armed whenever either input changes, so a sheet shown again, or one whose failed work was
+    // cleared, can be answered again.
+    val gate = remember(visible, confirming) { ConfirmSheetAnswerGate(isArmed = visible) }
+    val confirm = { if (gate.tryAnswer(controller.state)) onConfirm() }
+    val dismiss = { if (gate.tryAnswer(controller.state)) onDismiss() }
+
+    FlowModal(
+        controller = controller,
+        style = style.sheet,
+        // On a tablet held upright the sheet stops at a readable width rather than spanning it; a
+        // phone is narrower than the cap.
+        size = if (size.sheet.maxWidth.isSpecified) size.sheet else size.sheet.copy(maxWidth = AdaptiveDefaults.ReadableWidth),
+        onDismissRequest = { if (!confirming) dismiss() },
+        modifier = modifier,
+    ) {
+        body(confirm, dismiss)
     }
 }
 

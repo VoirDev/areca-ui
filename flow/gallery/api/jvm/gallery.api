@@ -1,5 +1,5 @@
 public final class dev/voir/areca/flow/gallery/grid/GalleryGridKt {
-	public static final fun GalleryGroupHeader (Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Landroidx/compose/runtime/Composer;II)V
+	public static final fun GalleryGroupHeader--jt2gSs (Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;FLandroidx/compose/runtime/Composer;II)V
 	public static final fun GalleryTile (Ljava/lang/Object;Ljava/lang/String;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ldev/voir/areca/media/image/MediaFit;Ljava/lang/String;Ldev/voir/areca/media/viewer/MediaTransitionState;Ljava/lang/Object;Landroidx/compose/runtime/Composer;II)V
 }
 

@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,6 +19,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.dp
+import dev.voir.areca.foundation.adaptive.AdaptiveGrid
 import dev.voir.areca.foundation.badge.Badge
 import dev.voir.areca.foundation.badge.BadgeSize
 import dev.voir.areca.foundation.badge.BadgeStyle
@@ -45,10 +45,13 @@ import dev.voir.areca.playground.media.SampleScene
 import dev.voir.areca.playground.media.SampleShape
 import dev.voir.areca.playground.showcase.FlowShowcase
 import dev.voir.areca.playground.showcase.ShowcaseStatus
-import dev.voir.areca.playground.showcase.canvas.DeviceFrame
-import dev.voir.areca.playground.showcase.canvas.DeviceSize
+import dev.voir.areca.playground.showcase.canvas.WindowPreset
 import dev.voir.areca.playground.showcase.canvas.windowInsets
+import dev.voir.areca.playground.showcase.chrome.ChromeText
+import dev.voir.areca.playground.showcase.chrome.ChromeTextRole
+import dev.voir.areca.playground.showcase.chrome.ChromeTone
 import dev.voir.areca.theme.ArecaTheme
+import dev.voir.areca.window.adaptive
 
 /**
  * A product in a list.
@@ -95,44 +98,57 @@ private fun productPictures(id: Int, shape: SampleShape, hue: Float): List<Sampl
 @Composable
 fun ProductCardsShowcase() = FlowShowcase(
     title = "Product cards",
-    summary = "Products two across, each card's pictures swiped on their own without opening; a tap opens that " +
-        "product's gallery.",
+    summary = "Products two across on a phone and more as the window widens, each card's pictures swiped on their own " +
+        "without opening; a tap opens that product's gallery.",
     module = "flow-gallery",
     status = ShowcaseStatus.Beta,
+    notes = {
+        ChromeText(text = "On a tablet or desktop", role = ChromeTextRole.Label)
+        ChromeText(
+            text = "ProductCardsRecipe lays the cards in AdaptiveGrid: two across on a phone, three on an unfolded " +
+                "foldable or a tablet held upright, four from 840dp, the cards stopping at the content width on a " +
+                "monitor.",
+            role = ChromeTextRole.SectionDescription,
+            tone = ChromeTone.Muted,
+        )
+    },
 ) {
-    val columns by enumControl("columns", 2, listOf(1, 2))
+    val preset by enumControl(
+        key = "window",
+        default = WindowPreset.Phone,
+        options = WindowPreset.entries,
+        optionLabel = { it.label },
+    )
 
     preview {
-        DeviceFrame(size = DeviceSize.Regular) {
-            ProductCardsRecipe(products = SampleProducts, columns = columns, windowInsets = DeviceSize.Regular.windowInsets)
+        GalleryWindowFrame(preset) {
+            ProductCardsRecipe(products = SampleProducts, windowInsets = preset.windowInsets)
         }
     }
 }
 
 /**
- * The recipe: a grid of cards, each a carousel with dots, a badge and a favourite over it, and the
- * name and price beneath.
+ * The recipe: an adaptive grid of cards, each a carousel with dots, a badge and a favourite over it,
+ * and the name and price beneath.
  *
  * @param products The products.
- * @param columns Cards across.
  * @param windowInsets The screen's insets.
  */
 @Composable
-private fun ProductCardsRecipe(products: List<SampleProduct>, columns: Int, windowInsets: WindowInsets) {
+private fun ProductCardsRecipe(products: List<SampleProduct>, windowInsets: WindowInsets) {
     var open by remember { mutableStateOf<Pair<SampleProduct, Int>?>(null) }
     val favourites = remember { mutableStateOf(setOf<String>()) }
 
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(columns),
+    AdaptiveGrid(
         modifier = Modifier.fillMaxSize().background(ArecaTheme.colors.bgCanvas),
+        minCellWidth = 140.dp,
+        maxColumns = adaptive(compact = 2, medium = 3, expanded = 4),
         contentPadding = PaddingValues(
-            start = ArecaTheme.spacing.horizontalContentInsets,
-            end = ArecaTheme.spacing.horizontalContentInsets,
             top = windowInsets.asPaddingValues().calculateTopPadding() + ArecaTheme.spacing.lg,
             bottom = windowInsets.asPaddingValues().calculateBottomPadding(),
         ),
-        horizontalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md),
-        verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.xl),
+        horizontalSpacing = ArecaTheme.spacing.md,
+        verticalSpacing = ArecaTheme.spacing.xl,
     ) {
         items(products, key = { product -> product.name }) { product ->
             Column(verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.sm)) {

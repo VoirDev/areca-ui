@@ -4,6 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
+import dev.voir.areca.window.LocalWindowClass
+import dev.voir.areca.window.PlatformInputMode
+import dev.voir.areca.window.ProvideWindowClass
+import dev.voir.areca.window.WindowClass
+import dev.voir.areca.window.WindowClassBox
+import dev.voir.areca.window.hostWindowClass
+import dev.voir.areca.window.overlayWindowClass
 
 /**
  * Entry point for every Areca design token.
@@ -13,10 +20,12 @@ import androidx.compose.runtime.staticCompositionLocalOf
  * a global.
  *
  * The accessors come in two kinds. [baseColors], [baseTypography], and [fonts] are the raw material
- * a theme is assembled from; [colors], [typography], [radius], [shapes], [spacing], [elevation], and
- * [motion] are the meaning assigned to it. Component code should read the semantic ones — they are
+ * a theme is assembled from; [colors], [typography], [radius], [shapes], [spacing], [sizing],
+ * [elevation], and [motion] are the meaning assigned to it. Component code should read the semantic ones — they are
  * what a consumer retunes — and drop to the raw ones only when no semantic token expresses the
  * intent.
+ *
+ * [window] is neither: it is not a token but the space the tokens are laid out in.
  *
  * Every accessor has a usable value without a provider, so previews and tests compose without
  * wrapping. That default is the light theme; only [ArecaThemeProvider] can make it dark.
@@ -53,6 +62,10 @@ public object ArecaTheme {
     public val spacing: ArecaSpacing
         @Composable @ReadOnlyComposable get() = LocalSpacing.current
 
+    /** Control heights and touch target for the input in scope. */
+    public val sizing: ArecaSizing
+        @Composable @ReadOnlyComposable get() = LocalSizing.current
+
     /** Shadow elevation scale. */
     public val elevation: ArecaElevation
         @Composable @ReadOnlyComposable get() = LocalElevation.current
@@ -72,6 +85,29 @@ public object ArecaTheme {
     /** Named text styles. */
     public val typography: ArecaTypography
         @Composable @ReadOnlyComposable get() = LocalTypography.current
+
+    /**
+     * The space this composable is laid out in: its width and height classes and its input mode.
+     *
+     * The window [ArecaThemeProvider] runs in, unless a [WindowClassBox] or [ProvideWindowClass]
+     * above put a container's in scope — so a component inside a narrow pane of a desktop window
+     * reads a compact width. Branch layout on [WindowClass.width] and reach for
+     * [dev.voir.areca.window.adaptive] for a single value; never test for a device.
+     *
+     * Without a provider it reads the hosting window and the platform's usual input mode.
+     */
+    public val window: WindowClass
+        @Composable @ReadOnlyComposable get() = LocalWindowClass.current ?: hostWindowClass(PlatformInputMode)
+
+    /**
+     * The whole window's class, ignoring any [WindowClassBox] in between.
+     *
+     * For what opens over the window rather than inside a pane — a sheet, a dialog, a menu — and
+     * chooses its form by the window: a sheet opened from a narrow pane of a desktop window is still
+     * a dialog. Lay content out by [window]; choose an overlay's form by this.
+     */
+    public val hostWindow: WindowClass
+        @Composable @ReadOnlyComposable get() = overlayWindowClass()
 
     /**
      * The [colors] this theme has in the dark: [colors] themselves when [isDark], otherwise

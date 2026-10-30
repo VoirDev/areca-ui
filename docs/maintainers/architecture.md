@@ -35,7 +35,8 @@ Within `foundation`, one rule decides where a declaration lives:
   of the family it belongs to; the root holds only what every family uses: `LocalContentColor`,
   `LocalTextStyle` and `AnnounceOnChange`.
 - `dev.voir.areca.*` — the machinery underneath them: `theme`, `modifier`, `indication`, `shape`,
-  `platform`, and `ExperimentalArecaApi` at the root.
+  `platform`, `window`, and `ExperimentalArecaApi` at the root. `window` classifies the space a
+  layout has; the composables in it draw nothing of their own.
 
 A new component joins the family it belongs to. It gets a package of its own only when it starts a
 family nothing else fits.

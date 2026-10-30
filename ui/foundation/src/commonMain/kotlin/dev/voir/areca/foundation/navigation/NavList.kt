@@ -1,12 +1,14 @@
 package dev.voir.areca.foundation.navigation
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.ProvidableCompositionLocal
@@ -24,6 +26,7 @@ import androidx.compose.ui.unit.Dp
 import dev.voir.areca.foundation.icon.Chevron
 import dev.voir.areca.foundation.icon.ChevronDirection
 import dev.voir.areca.foundation.layout.Expandable
+import dev.voir.areca.foundation.layout.VerticalScrollbarOverlay
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.theme.ArecaTheme
 
@@ -111,79 +114,82 @@ public fun NavList(
         mutableStateOf(emptyMap<String, Boolean>())
     }
 
-    LazyColumn(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(size.menuArrangement),
-    ) {
-        items(
-            items = nodes,
-            key = { node ->
+    val listState = rememberLazyListState()
+    Box(modifier = modifier.fillMaxWidth(), propagateMinConstraints = true) {
+        LazyColumn(
+            state = listState,
+            verticalArrangement = Arrangement.spacedBy(size.menuArrangement),
+        ) {
+            items(
+                items = nodes,
+                key = { node ->
+                    when (node) {
+                        is NavNode.Item -> "item:${node.item.id}"
+                        is NavNode.Section -> "section:${node.trigger.id}"
+                    }
+                },
+            ) { node ->
                 when (node) {
-                    is NavNode.Item -> "item:${node.item.id}"
-                    is NavNode.Section -> "section:${node.trigger.id}"
-                }
-            },
-        ) { node ->
-            when (node) {
-                is NavNode.Item -> NavItem(
-                    selected = node.item.id == selectedId,
-                    enabled = node.item.enabled,
-                    onClick = { onItemClick(node.item) },
-                ) {
-                    Text(node.item.title)
-                }
-
-                is NavNode.Section -> {
-                    val sectionId = node.trigger.id
-                    val expanded = node.isShownExpanded(toggledState = toggledSections[sectionId])
-                    val toggle = { toggledSections = toggledSections + (sectionId to !expanded) }
-
-                    NavItem(
-                        modifier = if (node.expandable) {
-                            Modifier.semantics {
-                                if (expanded) {
-                                    collapse { toggle(); true }
-                                } else {
-                                    expand { toggle(); true }
-                                }
-                            }
-                        } else {
-                            Modifier
-                        },
-                        selected = sectionId == selectedId,
-                        enabled = node.trigger.enabled,
-                        onClick = if (node.expandable) toggle else null,
-                        trailing = if (node.expandable) {
-                            {
-                                Chevron(
-                                    direction = if (expanded) {
-                                        ChevronDirection.Down
-                                    } else {
-                                        ChevronDirection.Right
-                                    },
-                                )
-                            }
-                        } else {
-                            null
-                        },
+                    is NavNode.Item -> NavItem(
+                        selected = node.item.id == selectedId,
+                        enabled = node.item.enabled,
+                        onClick = { onItemClick(node.item) },
                     ) {
-                        Text(node.trigger.title)
+                        Text(node.item.title)
                     }
 
-                    Expandable(expanded = expanded) {
-                        Column(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalArrangement = Arrangement.spacedBy(size.subMenuArrangement),
+                    is NavNode.Section -> {
+                        val sectionId = node.trigger.id
+                        val expanded = node.isShownExpanded(toggledState = toggledSections[sectionId])
+                        val toggle = { toggledSections = toggledSections + (sectionId to !expanded) }
+
+                        NavItem(
+                            modifier = if (node.expandable) {
+                                Modifier.semantics {
+                                    if (expanded) {
+                                        collapse { toggle(); true }
+                                    } else {
+                                        expand { toggle(); true }
+                                    }
+                                }
+                            } else {
+                                Modifier
+                            },
+                            selected = sectionId == selectedId,
+                            enabled = node.trigger.enabled,
+                            onClick = if (node.expandable) toggle else null,
+                            trailing = if (node.expandable) {
+                                {
+                                    Chevron(
+                                        direction = if (expanded) {
+                                            ChevronDirection.Down
+                                        } else {
+                                            ChevronDirection.Right
+                                        },
+                                    )
+                                }
+                            } else {
+                                null
+                            },
                         ) {
-                            Spacer(modifier = Modifier.height(size.sectionGap))
-                            node.children.forEach { child ->
-                                NavItem(
-                                    selected = child.id == selectedId,
-                                    indent = size.indent,
-                                    enabled = child.enabled,
-                                    onClick = { onItemClick(child) },
-                                ) {
-                                    Text(child.title)
+                            Text(node.trigger.title)
+                        }
+
+                        Expandable(expanded = expanded) {
+                            Column(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalArrangement = Arrangement.spacedBy(size.subMenuArrangement),
+                            ) {
+                                Spacer(modifier = Modifier.height(size.sectionGap))
+                                node.children.forEach { child ->
+                                    NavItem(
+                                        selected = child.id == selectedId,
+                                        indent = size.indent,
+                                        enabled = child.enabled,
+                                        onClick = { onItemClick(child) },
+                                    ) {
+                                        Text(child.title)
+                                    }
                                 }
                             }
                         }
@@ -191,6 +197,7 @@ public fun NavList(
                 }
             }
         }
+        VerticalScrollbarOverlay(listState)
     }
 }
 

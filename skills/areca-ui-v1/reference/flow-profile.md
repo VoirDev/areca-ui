@@ -39,7 +39,7 @@ deleting the account.
 | One fact: value as title, what it is under it ("@ada" over "Username") | `ProfileInfoRow(value, label)` | — |
 | Email with an "Unverified" badge and a "Verify" link | `EmailRow(email, isVerified, onVerify = …)` | — |
 | One sign-in provider: link, unlink, or why not | `LinkedAccountRow(name, isLinked, onLink, onUnlink, icon = …)` | — |
-| A birthday picked in a calendar sheet, removable | `BirthdayRow(value, onValueChange)` | `LocalDate`, `CalendarLabels` |
+| A birthday picked in a calendar sheet (a dialog on wide windows), removable | `BirthdayRow(value, onValueChange)` | `LocalDate`, `CalendarLabels` |
 | "Download your data": idle → preparing → ready / failed | `DataExportRow(state, onRequest, onDownload)` | `DataExportState` |
 | Account switcher rows | `AccountRow(account, isCurrent = …, onClick = …)`, `AddAccountRow(onClick)` | `ProfileSummary` |
 | The two ways out, danger tone | `SignOutRow(onClick)`, `DeleteAccountRow(onClick)` | — |
@@ -48,7 +48,7 @@ deleting the account.
 | One device row | `SessionRow(session, onClick = …)` | `SessionItem` |
 | A photo change in progress or failed | `AvatarUploadStatus(state, onRetry, onDismiss)` | `AvatarUploadState` |
 | The details below were not just fetched | `StaleDetailsNotice(message)` | — |
-| The whole screen when the profile could not load | `ProfileLoadFailure(message, onRetry)` | — |
+| The whole screen when the profile could not load (capped at `ReadableWidth`, centred) | `ProfileLoadFailure(message, onRetry)` | — |
 | Where a new picture comes from | `AvatarSourceSheet(visible, options, onDismiss)` | `AvatarSourceOption`, `AvatarSourceOptions` |
 | Confirm sign out / sign out others / end one session / delete | `SignOutSheet`, `SignOutOthersSheet`, `RevokeSessionSheet`, `DeleteAccountSheet` | `SessionItem` |
 
@@ -279,6 +279,17 @@ AvatarSourceOptions.remove(label: String = "Remove current photo", onClick: () -
 - `ActiveSessionsSections` leaves this device inert; signing out of **this** device is `SignOutRow` in
   the account menu, not a session action. Each sheet closes when answered and the row's spinner
   (`SessionItem.isRevoking`, `Loaded.isSigningOutOthers`) shows the work.
+- **Larger windows.** Phones are unchanged. From an expanded window up
+  (`AdaptiveDefaults.usesDialog(ArecaTheme.hostWindow)`: a tablet on its side, a laptop, a desktop —
+  not a phone on its side) every sheet here opens as a centred dialog with the same content and
+  answers: the confirmation sheets via foundation `ConfirmSheet`, `AvatarSourceSheet` and
+  `BirthdayRow`'s calendar by the same rule. The whole window decides, not the pane; nothing to pass.
+- **Cap the screen's column, not a part:** a card capped alone would sit narrower than the settings
+  list under it. After the insets add `.wrapContentWidth().widthIn(max = AdaptiveDefaults.ReadableWidth)
+  .fillMaxWidth()` — a no-op on a phone. Do not wrap the recipes in `ContentColumn`: it draws the
+  gutters the cards and sections already draw. `ProfileLoadFailure` is a whole screen and caps itself.
+- **Settings on a tablet or desktop** is a foundation `ListDetail`: summary card and section rows in
+  the list pane, the open page in the detail pane, back action only when `!isTwoPane` (recipe below).
 - `BirthdayRow` is bounded to today by default; move `maxDate` back for an age requirement. Save stays
   disabled until a day is tapped.
 - Put `SignOutRow` and `DeleteAccountRow` each in a `Section` of its own with no header.
@@ -311,7 +322,9 @@ fun ProfileContent(summary: ProfileSummary, phone: String, staleReason: String?,
     onEdit: () -> Unit, onShare: () -> Unit, onQr: () -> Unit, onDevices: () -> Unit) {
     Column(
         Modifier.fillMaxSize().background(ArecaTheme.colors.bgCanvas)
-            .verticalScroll(rememberScrollState()).windowInsetsPadding(WindowInsets.systemBars),
+            .verticalScroll(rememberScrollState()).windowInsetsPadding(WindowInsets.systemBars)
+            // Readable width on a tablet or desktop, centred; a no-op on a phone.
+            .wrapContentWidth().widthIn(max = AdaptiveDefaults.ReadableWidth).fillMaxWidth(),
     ) {
         if (staleReason != null) {
             StaleDetailsNotice(message = staleReason, title = staleTitle, modifier = Modifier.horizontalContentInsets())
@@ -368,7 +381,8 @@ when (val s = uiState) {
 ```kotlin
 Column(
     Modifier.fillMaxSize().background(ArecaTheme.colors.bgCanvas).verticalScroll(rememberScrollState())
-        .windowInsetsPadding(WindowInsets.systemBars).imePadding(),
+        .windowInsetsPadding(WindowInsets.systemBars).imePadding()
+        .wrapContentWidth().widthIn(max = AdaptiveDefaults.ReadableWidth).fillMaxWidth(),
 ) {
     EditableAvatar(summary = summary, busy = upload is AvatarUploadState.Uploading, onChangePhoto = onChangePhoto,
         changePhotoLabel = changePhoto, modifier = Modifier.horizontalContentInsets())
@@ -551,6 +565,65 @@ DeleteAccountSheet(
     onDismiss = { confirmingDelete = false },
 )
 ```
+
+### Settings on a tablet or desktop (list–detail)
+
+```kotlin
+enum class AccountPage(val title: StringResource) { EditProfile(Res.string.edit_profile), Devices(Res.string.devices) }
+
+@Composable
+fun AccountSettings(summary: ProfileSummary, deviceCount: Int, confirmingSignOut: Boolean,
+    onSignOut: () -> Unit, onSignOutDismissed: () -> Unit,
+    editProfile: @Composable () -> Unit, devices: @Composable () -> Unit) {   // the recipes above, unchanged
+    var open by rememberSaveable { mutableStateOf<AccountPage?>(null) }       // the app's state
+    ListDetail(
+        showDetail = open != null,
+        modifier = Modifier.fillMaxSize().background(ArecaTheme.colors.bgCanvas).windowInsetsPadding(WindowInsets.systemBars),
+        detailPlaceholder = {
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { Fallback(heading = { Text(chooseASetting) }) }
+        },
+        list = {
+            val marked = open.takeIf { isTwoPane }                              // mark only beside the page
+            val chevron: (@Composable BoxScope.() -> Unit)? = if (isTwoPane) null else ({ ListItemChevron() })
+            Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
+                Spacer(Modifier.height(ArecaTheme.spacing.lg))
+                ProfileSummaryCard(summary = summary, onClick = { open = AccountPage.EditProfile },
+                    modifier = Modifier.horizontalContentInsets(), trailing = { ProfileSummaryCardAction(label = editLabel) })
+                Spacer(Modifier.height(ArecaTheme.spacing.lg))
+                Settings {
+                    Section(header = { Text(accountLabel) }, separated = false) {
+                        SettingsRow(title = { Text(stringResource(AccountPage.EditProfile.title)) },
+                            leading = { SettingsRowIcon(ArecaIcons.UserEdit) }, trailing = chevron,
+                            selected = marked == AccountPage.EditProfile, onClick = { open = AccountPage.EditProfile })
+                        SettingsRow(title = { Text(stringResource(AccountPage.Devices.title)) }, value = { Text(deviceCount.toString()) },
+                            leading = { SettingsRowIcon(ArecaIcons.Laptop) }, trailing = chevron,
+                            selected = marked == AccountPage.Devices, onClick = { open = AccountPage.Devices })
+                    }
+                    Section { SignOutRow(onClick = onSignOut) }
+                }
+            }
+        },
+        detail = {
+            open?.let { page ->
+                Column(Modifier.fillMaxSize()) {
+                    TopBar(title = stringResource(page.title),
+                        leading = if (isTwoPane) null else ({ BackAction(onClick = { open = null }) }))
+                    Box(Modifier.weight(1f)) {
+                        when (page) { AccountPage.EditProfile -> editProfile(); AccountPage.Devices -> devices() }
+                    }
+                }
+            }
+        },
+    )
+    SignOutSheet(visible = confirmingSignOut, description = signOutDescription,
+        onConfirm = onSignOutDismissed, onDismiss = onSignOutDismissed)
+}
+```
+
+Two panes from a 600dp container (unfolded foldable, phone on its side, tablet, desktop); one at a
+time below, with the system back wired to `open = null`. Each pane is a `WindowClassBox`, so the
+pages lay themselves out for the pane; their own `systemBars` padding adds nothing once the layout
+took the bars.
 
 ### Image loader (once, at the root)
 

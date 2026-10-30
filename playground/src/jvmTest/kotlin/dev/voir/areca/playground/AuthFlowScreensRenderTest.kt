@@ -19,6 +19,7 @@ import dev.voir.areca.playground.flow.auth.LinkStep
 import dev.voir.areca.playground.flow.auth.VerifyCodePreview
 import dev.voir.areca.theme.ArecaTheme
 import dev.voir.areca.theme.ArecaThemeProvider
+import dev.voir.areca.window.InputMode
 import org.jetbrains.skia.EncodedImageFormat
 import java.io.File
 import kotlin.test.Test
@@ -48,7 +49,7 @@ private val OUTPUT = File(System.getProperty("render.out") ?: "build/screens/aut
 @OptIn(ExperimentalComposeUiApi::class)
 private fun render(name: String, dark: Boolean, content: @Composable () -> Unit) {
     val scene = ImageComposeScene(width = WIDTH, height = HEIGHT, density = Density(1f)) {
-        ArecaThemeProvider(darkTheme = dark) {
+        ArecaThemeProvider(darkTheme = dark, inputMode = InputMode.Touch) {
             Box(
                 modifier = Modifier.fillMaxSize().background(ArecaTheme.colors.bgSubtle),
                 contentAlignment = Alignment.Center,

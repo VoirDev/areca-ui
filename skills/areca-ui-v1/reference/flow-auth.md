@@ -15,14 +15,14 @@ finish registering, invitation, confirm address) and provider (SSO) buttons.
 | Package | Holds |
 | --- | --- |
 | `dev.voir.areca.flow.auth` | `AuthBranding`, `AuthLayout`, `AuthProvider`, `AuthLegalLinks` |
-| `dev.voir.areca.flow.auth.part` | `AuthScaffold`, `AuthHeader`, `AuthNameField`, `AuthEmailField`, `AuthPasswordField`, `AuthCodeField`, `AuthIdentityChip`, `AuthPasswordRequirements`, `AuthResendCode`, `AuthBanner`, `AuthProgress`, `AuthTextLink`, `AuthFooterPrompt`, `LegalConsent` |
+| `dev.voir.areca.flow.auth.part` | `AuthScaffold`, `AuthScaffoldDefaults`, `AuthHeader`, `AuthNameField`, `AuthEmailField`, `AuthPasswordField`, `AuthCodeField`, `AuthIdentityChip`, `AuthPasswordRequirements`, `AuthResendCode`, `AuthBanner`, `AuthProgress`, `AuthTextLink`, `AuthFooterPrompt`, `LegalConsent` |
 | `dev.voir.areca.flow.auth.sso` | `SsoGroup`, `SsoButton`, `SsoIconButton`, `SsoLayout` |
 
 ## Choose a part
 
 | Need | Use | Types |
 | --- | --- | --- |
-| The screen frame: insets, keyboard inset, scrolling, gutter, artwork, top bar, pinned footer | `AuthScaffold(branding, topBar, footer) { … }` (body is a `ColumnScope`) | `AuthBranding`, `AuthLayout` |
+| The screen frame: insets, keyboard inset, scrolling, gutter, artwork, top bar, pinned footer, a column capped on larger windows | `AuthScaffold(branding, topBar, footer) { … }` (body is a `ColumnScope`) | `AuthBranding`, `AuthLayout`, `AuthScaffoldDefaults` |
 | Title, subtitle and an optional mark; title is a heading | `AuthHeader(title, subtitle = …, icon = …)` | — |
 | Name, email, password boxes with autofill, keyboard and IME set | `AuthNameField`, `AuthEmailField`, `AuthPasswordField` | — |
 | A code by email or text, a digit per cell, one-time-code autofill, `onComplete` on the last digit | `AuthCodeField(value, onValueChange, onComplete = …)` | — |
@@ -51,7 +51,10 @@ AuthBranding(
     layout: AuthLayout = AuthLayout.Plain,
 )
 AuthLayout.Plain | HeroTop(fraction: Float = 0.42f) | HeroBottom(fraction: Float = 0.42f) | HeroInline | FullBleed
-    // fraction within AuthLayout.MinHeroFraction (0.1f) .. MaxHeroFraction (0.8f)
+    | Split(fraction: Float = 0.42f, fallback: AuthLayout = HeroTop())
+    // fraction within AuthLayout.MinHeroFraction (0.1f) .. MaxHeroFraction (0.8f); height share for
+    // HeroTop/HeroBottom, width share for Split. Split draws from WidthClass.Expanded (840dp) up while
+    // HeightClass > Compact (ArecaTheme.window); elsewhere it draws `fallback`.
 AuthProvider.Apple | Google | Facebook | Email
 AuthLegalLinks(terms: String = "terms", privacy: String = "privacy")   // handed back to onLinkClick
 
@@ -64,8 +67,10 @@ AuthLegalLinks(terms: String = "terms", privacy: String = "privacy")   // handed
     topBar: (@Composable () -> Unit)? = null,      // pinned above the form; first screen of a flow has none
     overlay: (@Composable BoxScope.() -> Unit)? = null,
     footer: (@Composable () -> Unit)? = null,      // pinned to the bottom edge; null = none
+    maxWidth: Dp = AuthScaffoldDefaults.MaxWidth,  // 480.dp incl. gutter; applies past compact width only
     content: @Composable ColumnScope.() -> Unit,
 )
+object AuthScaffoldDefaults { val MaxWidth: Dp /* 480.dp */ }
 @Composable fun AuthHeader(
     title: String,
     modifier: Modifier = Modifier,
@@ -197,7 +202,18 @@ AuthLegalLinks(terms: String = "terms", privacy: String = "privacy")   // handed
   Provider colours follow each provider's guidelines; do not restyle them.
 - **Layouts:** `Plain` for a long form; `HeroTop` / `HeroBottom(fraction)` for artwork; `HeroInline`
   for an illustration above the heading; `FullBleed` puts artwork behind everything and flips the
-  parts' foregrounds to `fgOnContrast` — put a scrim inside `hero` if the artwork is light.
+  parts' foregrounds to `fgOnContrast` — put a scrim inside `hero` if the artwork is light;
+  `Split(fraction, fallback)` for an app that also runs on tablets or desktops.
+- **Larger windows:** never branch on the window in an auth screen; the scaffold does it from
+  `ArecaTheme.window`. Compact width (under 600dp) draws exactly the phone screen. Wider, the column
+  (wordmark, body, footer) stops at `maxWidth` (480dp) and sits centred, the top bar's controls line
+  up with it, and with no band of artwork the body is centred in the height above the footer.
+  `HeroTop` / `HeroBottom` bands still span the window; `FullBleed` art fills it. `Split` draws the
+  hero as a full-height panel on the start side (fraction of the width) with the column centred
+  beside it from 840dp wide when the height is not compact (so not a phone on its side), else its
+  `fallback`. Pass `hero` artwork that crops to any shape (`ContentScale.Crop`, `fillMaxSize`). The
+  body sits in a `WindowClassBox`, so parts inside see the column's width class. Preview at
+  `ProvideWindowClass(WindowClass(DpSize(1440.dp, 900.dp), InputMode.Pointer)) { … }`.
 - **Top bar:** a screen reached from another takes foundation `TopBar` in `topBar` with
   `BackAction`. The scaffold lands its controls on the gutter and uses `TopBarStyle.Scrim` over
   `FullBleed`. When changing the bar's size, start from `LocalTopBarSize.current ?: TopBarSize.Default`
@@ -310,6 +326,25 @@ fun SignInScreen(
 
 The check is the app's (ViewModel): set `emailError` / `passwordError` from its own strings on
 submit, then call the service; map a refused sign-in to `formError`.
+
+### On a tablet or desktop
+
+The sign-in recipe above with one change — the branding. The scaffold draws the split from an
+expanded width up and the fallback on phones, the foldable and a tablet held upright:
+
+```kotlin
+AuthScaffold(
+    branding = AuthBranding(
+        wordmark = { Wordmark() },
+        hero = { Artwork() },                       // crops to any shape: a tall panel or a wide band
+        layout = AuthLayout.Split(),                // Split(fraction = 0.42f, fallback = AuthLayout.HeroTop())
+    ),
+    footer = { AuthFooterPrompt(prompt = signUpPrompt, linkText = signUpLink, onLinkClick = onSignUp) },
+) {
+    // The sign-in body, unchanged: AuthHeader, AuthEmailField, AuthPasswordField, the forgot link,
+    // AuthBanner, the Button and SsoGroup.
+}
+```
 
 ### Providers only
 

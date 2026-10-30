@@ -9,7 +9,9 @@ uploading a picture are the application's.
   <img alt="A profile screen built from flow-profile: a header card with picture, name and actions above a settings list of the account's details" src="../../docs/images/flow-profile-light.png" width="390">
 </picture>
 
-There is no `ProfileScreen`. Copy a [recipe](#recipes) and edit it.
+There is no `ProfileScreen`. Copy a [recipe](#recipes) and edit it. On a tablet or a desktop the
+same parts make [a list and the page it opens](#on-a-tablet-or-desktop), and every sheet opens as a
+centred dialog.
 
 ## Install
 
@@ -160,6 +162,23 @@ Settings(styles = SettingsDefaults.styles(section = SettingsDefaults.sectionStyl
 
 ## Recipes
 
+Each screen is one column. On a phone it is the window's width, as before; on a tablet or a desktop
+it stops at `AdaptiveDefaults.ReadableWidth` (640dp), centred, so the cards and the settings list keep
+a readable width together. The cap is the column's rather than a part's: a card capped on its own
+would sit narrower than the list under it. The recipes that show their column write it as three
+modifiers after the insets:
+
+```kotlin
+.windowInsetsPadding(WindowInsets.systemBars)
+// On a tablet or a desktop the column stops at a readable width, centred; a phone is narrower.
+.wrapContentWidth()
+.widthIn(max = AdaptiveDefaults.ReadableWidth)
+.fillMaxWidth()
+```
+
+Foundation's `ContentColumn` caps the same way but draws the screen gutters itself, and the cards
+and the settings sections already draw theirs.
+
 ### The profile
 
 A stale-data notice, the header card with three actions, the account's details and a link to
@@ -182,7 +201,11 @@ fun ProfileScreen(
             .fillMaxSize()
             .background(ArecaTheme.colors.bgCanvas)
             .verticalScroll(rememberScrollState())
-            .windowInsetsPadding(WindowInsets.systemBars),
+            .windowInsetsPadding(WindowInsets.systemBars)
+            // On a tablet or a desktop the column stops at a readable width, centred; a phone is narrower.
+            .wrapContentWidth()
+            .widthIn(max = AdaptiveDefaults.ReadableWidth)
+            .fillMaxWidth(),
     ) {
         // Above everything it describes.
         if (staleReason != null) {
@@ -238,7 +261,8 @@ ProfileCoverCard(
 )
 ```
 
-When the profile cannot be loaded at all, the screen is the failure:
+When the profile cannot be loaded at all, the screen is the failure. It is the whole screen, so it
+caps itself at `ReadableWidth`, centred:
 
 ```kotlin
 when (val state = uiState) {
@@ -259,7 +283,11 @@ Column(
         .verticalScroll(rememberScrollState())
         .windowInsetsPadding(WindowInsets.systemBars)
         // The keyboard lifts the fields rather than covering them.
-        .imePadding(),
+        .imePadding()
+        // On a tablet or a desktop the column stops at a readable width, centred; a phone is narrower.
+        .wrapContentWidth()
+        .widthIn(max = AdaptiveDefaults.ReadableWidth)
+        .fillMaxWidth(),
 ) {
     EditableAvatar(
         summary = summary,
@@ -516,6 +544,146 @@ Store the square (`applyMask = false`): `EditableAvatar` and `ProfileAvatar` cli
 and the stored picture then suits any shape drawn later. A different avatar shape is a different
 `CropSpec`; the parts take the same arguments.
 
+### On a tablet or desktop
+
+The account menu as a foundation `ListDetail`: the summary card and the section rows in the list
+pane, and the page a row opens — the edit-profile and devices screens above, unchanged — in the
+detail pane. From a 600dp container the two sit side by side; below that, on a phone, the page
+replaces the list and offers a way back.
+
+```kotlin
+// The pages the settings open, each a recipe above.
+enum class AccountPage(val title: StringResource) {
+    EditProfile(Res.string.edit_profile),
+    Devices(Res.string.devices),
+}
+
+@Composable
+fun AccountSettings(
+    summary: ProfileSummary,
+    deviceCount: Int,
+    confirmingSignOut: Boolean,
+    onSignOut: () -> Unit,
+    onSignOutDismissed: () -> Unit,
+    editProfile: @Composable () -> Unit,
+    devices: @Composable () -> Unit,
+) {
+    // The open page is the screen's state; ListDetail decides whether it shows beside the list or
+    // instead of it.
+    var open by rememberSaveable { mutableStateOf<AccountPage?>(null) }
+
+    ListDetail(
+        showDetail = open != null,
+        modifier = Modifier
+            .fillMaxSize()
+            .background(ArecaTheme.colors.bgCanvas)
+            .windowInsetsPadding(WindowInsets.systemBars),
+        detailPlaceholder = {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Fallback(
+                    heading = { Text(stringResource(Res.string.choose_a_setting)) },
+                    body = { Text(stringResource(Res.string.choose_a_setting_body)) },
+                )
+            }
+        },
+        list = {
+            // Only a list beside the page marks the open row; alone, it has nothing to point at.
+            val marked = open.takeIf { isTwoPane }
+            // A chevron says the row pushes a page; beside the page it would promise nothing.
+            val chevron: (@Composable BoxScope.() -> Unit)? =
+                if (isTwoPane) null else ({ ListItemChevron() })
+
+            Column(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
+                Spacer(Modifier.height(ArecaTheme.spacing.lg))
+
+                ProfileSummaryCard(
+                    summary = summary,
+                    onClick = { open = AccountPage.EditProfile },
+                    modifier = Modifier.horizontalContentInsets(),
+                    trailing = { ProfileSummaryCardAction(label = stringResource(Res.string.edit)) },
+                    onClickLabel = stringResource(Res.string.edit_your_profile),
+                )
+
+                Spacer(Modifier.height(ArecaTheme.spacing.lg))
+
+                Settings {
+                    // Every row carries a tile, and the tiles already separate the rows.
+                    Section(header = { Text(stringResource(Res.string.account)) }, separated = false) {
+                        SettingsRow(
+                            title = { Text(stringResource(AccountPage.EditProfile.title)) },
+                            leading = { SettingsRowIcon(ArecaIcons.UserEdit) },
+                            trailing = chevron,
+                            selected = marked == AccountPage.EditProfile,
+                            onClick = { open = AccountPage.EditProfile },
+                        )
+                        SettingsRow(
+                            title = { Text(stringResource(AccountPage.Devices.title)) },
+                            value = { Text(deviceCount.toString()) },
+                            leading = { SettingsRowIcon(ArecaIcons.Laptop) },
+                            trailing = chevron,
+                            selected = marked == AccountPage.Devices,
+                            onClick = { open = AccountPage.Devices },
+                        )
+                    }
+
+                    Section { SignOutRow(onClick = onSignOut) }
+                }
+
+                Spacer(Modifier.height(ArecaTheme.spacing.xl3))
+            }
+        },
+        detail = {
+            // Composed only while a page is open.
+            open?.let { page ->
+                Column(modifier = Modifier.fillMaxSize()) {
+                    TopBar(
+                        title = stringResource(page.title),
+                        // A way back only when the list is not beside the page.
+                        leading = if (isTwoPane) null else ({ BackAction(onClick = { open = null }) }),
+                    )
+
+                    Box(modifier = Modifier.weight(1f)) {
+                        when (page) {
+                            AccountPage.EditProfile -> editProfile()
+                            AccountPage.Devices -> devices()
+                        }
+                    }
+                }
+            }
+        },
+    )
+
+    SignOutSheet(
+        visible = confirmingSignOut,
+        description = stringResource(Res.string.sign_out_description),
+        onConfirm = onSignOutDismissed,
+        onDismiss = onSignOutDismissed,
+    )
+}
+
+AccountSettings(
+    summary = summary,
+    deviceCount = sessions.size,
+    …,
+    editProfile = { EditProfileScreen(…) }, // Editing the profile, above
+    devices = { DevicesScreen(…) },         // Devices, above
+)
+```
+
+- Two panes need a 600dp container: an unfolded foldable, a phone on its side, a tablet either way
+  up, a desktop. The list takes 280, 320 or 360dp by the container, a hairline follows and the page
+  fills the rest. In a narrower container one shows at a time; wire the system back to
+  `open = null` as the back action is, however the application handles back.
+- Each pane is a `WindowClassBox`, so a page lays itself out for its pane, not the window. The
+  screens above need no change: their column stops at `ReadableWidth`, centred in a wide pane, and
+  their own `WindowInsets.systemBars` padding adds nothing once the layout has taken the bars.
+- Beside the page, the open row is `selected` and the rows drop their chevron; alone, they keep it
+  and nothing is marked.
+- Every sheet opened from either pane is a centred dialog from an expanded window up — see
+  [Sheets](#sheets).
+- More pages are an entry in `AccountPage`, a row and a branch: the sign-in methods, data export and
+  account switcher of [the account menu](#the-account-menu) make one.
+
 ## Pictures
 
 Every part that draws a picture reads it from `LocalAvatarImageLoader`. Provide a loader once,
@@ -586,6 +754,13 @@ shows what happened next.
 
 - **Driven by state.** Every sheet takes `visible` — `RevokeSessionSheet` takes the `session`
   itself — and reports `onDismiss` for the scrim, back and Cancel alike.
+- **Dialogs on wide windows.** From an expanded window up — a tablet on its side, a laptop, a
+  desktop — every sheet opens as a centred dialog with the same content and the same answers:
+  the confirmation sheets through foundation's `ConfirmSheet`, `AvatarSourceSheet` and
+  `BirthdayRow`'s calendar by the same rule, `AdaptiveDefaults.usesDialog(ArecaTheme.hostWindow)`.
+  The whole window decides, not the pane that opened the sheet. On a phone, a phone on its side, a
+  foldable and a tablet held upright they rise from the bottom edge, exactly as before. Nothing to
+  pass: the parameters are the same either way.
 - **`confirming = true`** shows the confirming button's spinner and blocks further presses,
   the scrim's included; clear it when the work ends.
 - **Answered once.** Only the first press while the sheet rests open counts. Answer `onConfirm` by
@@ -606,7 +781,8 @@ warning in a sign-out note. For brand accents, pass styles to the settings list 
 
 ## Birthdays
 
-`BirthdayRow` takes a `kotlinx.datetime.LocalDate?` and opens a calendar sheet.
+`BirthdayRow` takes a `kotlinx.datetime.LocalDate?` and opens a calendar sheet — a centred dialog
+from an expanded window up, as every sheet here.
 
 - The calendar is bounded by `minDate`–`maxDate`; `maxDate` is today by default. Move it back for
   an age requirement. A `null` limit falls back to the calendar's range, 1900 to 2100.
@@ -691,8 +867,9 @@ What the parts already do, and what to pass. General guidance:
   [`ChangePhotoShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/profile/ChangePhotoShowcase.kt),
   [`UsernameShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/profile/UsernameShowcase.kt),
   [`AccountShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/profile/AccountShowcase.kt),
-  [`DevicesShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/profile/DevicesShowcase.kt)
-  — and a page for every part, in
+  [`DevicesShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/profile/DevicesShowcase.kt),
+  [`AccountSettingsShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/profile/AccountSettingsShowcase.kt)
+  (in a window you pick, from a phone to a desktop) — and a page for every part, in
   [`playground/flow/profile`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/profile).
 - **KDoc:** every part's parameters, in the sources under
   [`src/commonMain`](src/commonMain/kotlin/dev/voir/areca/flow/profile).

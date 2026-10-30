@@ -39,11 +39,18 @@ import dev.voir.areca.playground.showcase.chrome.ChromeTextRole
 import dev.voir.areca.playground.showcase.chrome.ChromeTone
 import dev.voir.areca.theme.ArecaTheme
 import dev.voir.areca.theme.ArecaThemeProvider
+import dev.voir.areca.window.InputMode
 
 private val SidebarWidth = 264.dp
 
 /** Theme the whole playground shell renders in. */
 private enum class ShellTheme { Light, Dark }
+
+/**
+ * Input the pages are sized for. Touch by default: most pages document mobile components, and the
+ * desktop playground would otherwise draw every one at pointer density.
+ */
+private enum class ShellInput { Touch, Pointer }
 
 /**
  * The Areca playground.
@@ -55,9 +62,16 @@ private enum class ShellTheme { Light, Dark }
 @Composable
 fun App() {
     var shellTheme by rememberSaveable { mutableStateOf(ShellTheme.Light) }
+    var shellInput by rememberSaveable { mutableStateOf(ShellInput.Touch) }
     val dark = shellTheme == ShellTheme.Dark
 
-    ArecaThemeProvider(darkTheme = dark) {
+    ArecaThemeProvider(
+        darkTheme = dark,
+        inputMode = when (shellInput) {
+            ShellInput.Touch -> InputMode.Touch
+            ShellInput.Pointer -> InputMode.Pointer
+        },
+    ) {
         CompositionLocalProvider(
             LocalPlaygroundDarkTheme provides dark,
             // Every avatar in the playground draws through the sample loader, the way an
@@ -87,7 +101,12 @@ fun App() {
                         .width(SidebarWidth)
                         .fillMaxHeight(),
                 ) {
-                    ShellHeader(theme = shellTheme, onThemeChange = { shellTheme = it })
+                    ShellHeader(
+                        theme = shellTheme,
+                        onThemeChange = { shellTheme = it },
+                        input = shellInput,
+                        onInputChange = { shellInput = it },
+                    )
 
                     ShowcaseSidebar(
                         entries = ShowcaseRegistry,
@@ -123,6 +142,8 @@ fun App() {
 private fun ShellHeader(
     theme: ShellTheme,
     onThemeChange: (ShellTheme) -> Unit,
+    input: ShellInput,
+    onInputChange: (ShellInput) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -150,6 +171,14 @@ private fun ShellHeader(
             options = ShellTheme.entries,
             selected = theme,
             onSelect = onThemeChange,
+            label = { it.name },
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        ChromeSegmented(
+            options = ShellInput.entries,
+            selected = input,
+            onSelect = onInputChange,
             label = { it.name },
             modifier = Modifier.fillMaxWidth(),
         )

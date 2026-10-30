@@ -70,10 +70,14 @@ public data class ArecaTypography(
          * competing with a heading.
          *
          * @param baseTypography Measurements the styles are built on.
+         * @param dense Whether the styles are for pointer sizing: body copy ([ArecaTypography.bodyMedium])
+         *   and the large control label ([ArecaTypography.labelLarge]) step down to the small size, the way
+         *   desktop interfaces set them. Headings and every other role stay.
          * @return Complete set of named styles.
          */
         public fun from(
             baseTypography: ArecaBaseTypography = ArecaBaseTypography.from(),
+            dense: Boolean = false,
         ): ArecaTypography = ArecaTypography(
             headingExtraSmall = baseTypography.lg.merge(fontWeight = FontWeight.SemiBold),
             headingSmall = baseTypography.xl.merge(fontWeight = FontWeight.SemiBold),
@@ -83,7 +87,7 @@ public data class ArecaTypography(
 
             bodyExtraSmall = baseTypography.xs,
             bodySmall = baseTypography.sm,
-            bodyMedium = baseTypography.md,
+            bodyMedium = if (dense) baseTypography.sm else baseTypography.md,
             bodyLarge = baseTypography.lg,
             bodyExtraLarge = baseTypography.xl.merge(fontWeight = FontWeight.Medium),
 
@@ -96,7 +100,7 @@ public data class ArecaTypography(
 
             labelSmall = baseTypography.xs.merge(fontWeight = FontWeight.Medium),
             labelMedium = baseTypography.sm.merge(fontWeight = FontWeight.Medium),
-            labelLarge = baseTypography.md.merge(fontWeight = FontWeight.Medium),
+            labelLarge = (if (dense) baseTypography.sm else baseTypography.md).merge(fontWeight = FontWeight.Medium),
         )
     }
 }

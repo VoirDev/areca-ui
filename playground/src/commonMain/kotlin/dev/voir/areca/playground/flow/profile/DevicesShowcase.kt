@@ -5,8 +5,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -20,6 +23,7 @@ import dev.voir.areca.flow.profile.session.ActiveSessionsState
 import dev.voir.areca.flow.profile.session.SessionItem
 import dev.voir.areca.flow.profile.sheet.RevokeSessionSheet
 import dev.voir.areca.flow.profile.sheet.SignOutOthersSheet
+import dev.voir.areca.foundation.adaptive.AdaptiveDefaults
 import dev.voir.areca.foundation.settings.Section
 import dev.voir.areca.foundation.settings.Settings
 import dev.voir.areca.foundation.settings.SettingsSelectRow
@@ -119,6 +123,8 @@ fun DevicesShowcase() = FlowShowcase(
  * The recipe: a devices screen built from `flow-profile`'s session sections and sheets on the
  * foundation settings list.
  *
+ * Internal so [AccountSettingsShowcase] can open it in its detail pane, as an application would.
+ *
  * @param state The device list.
  * @param revoking The session whose revoke sheet is up, or `null`.
  * @param confirmingSignOutOthers Whether the sign-out-others sheet is up.
@@ -131,7 +137,7 @@ fun DevicesShowcase() = FlowShowcase(
  * @param windowInsets Regions the system occupies.
  */
 @Composable
-private fun DevicesRecipe(
+internal fun DevicesRecipe(
     state: ActiveSessionsState,
     revoking: SessionItem?,
     confirmingSignOutOthers: Boolean,
@@ -150,7 +156,11 @@ private fun DevicesRecipe(
             .fillMaxSize()
             .background(ArecaTheme.colors.bgCanvas)
             .verticalScroll(rememberScrollState())
-            .windowInsetsPadding(windowInsets),
+            .windowInsetsPadding(windowInsets)
+            // On a tablet or a desktop the column stops at a readable width, centred; a phone is narrower.
+            .wrapContentWidth()
+            .widthIn(max = AdaptiveDefaults.ReadableWidth)
+            .fillMaxWidth(),
     ) {
         Spacer(Modifier.height(ArecaTheme.spacing.lg))
 

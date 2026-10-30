@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dev.voir.areca.foundation.icon.IconSize
 import dev.voir.areca.indication.TouchIndication
-import dev.voir.areca.modifier.MinimumTouchTarget
 import dev.voir.areca.modifier.minimumTouchTarget
 import dev.voir.areca.modifier.thenIf
 import dev.voir.areca.theme.ArecaTheme
@@ -40,8 +39,9 @@ import dev.voir.areca.theme.tween
  * @property shape Shape of the control. Circular in every preset — a square radio is a checkbox.
  * @property touchTarget Smallest width and height an interactive radio occupies in layout. The ring
  *   is centred in the slot, and the band around it still answers a touch. Every named step reserves
- *   48dp, the minimum a finger reliably hits. [Dp.Unspecified] — the constructor's default —
- *   reserves nothing beyond the ring. A display-only radio never reserves the band.
+ *   [dev.voir.areca.theme.ArecaSizing.touchTarget]: 48dp, the minimum a finger reliably hits, under
+ *   touch, and nothing under a pointer. [Dp.Unspecified] — the constructor's default — reserves
+ *   nothing beyond the ring. A display-only radio never reserves the band.
  */
 @Immutable
 public data class RadioSize(
@@ -56,24 +56,30 @@ public data class RadioSize(
         /** 16dp. Inline with body text, or in a dense list. */
         public val Small: RadioSize
             @Composable
-            get() = RadioSize(
-                container = IconSize.Small,
-                borderWidth = 1.5.dp,
-                dotSize = 6.dp,
-                shape = ArecaTheme.shapes.full,
-                touchTarget = MinimumTouchTarget,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                return RadioSize(
+                    container = IconSize.Small,
+                    borderWidth = 1.5.dp,
+                    dotSize = 6.dp,
+                    shape = ArecaTheme.shapes.full,
+                    touchTarget = sizing.touchTarget,
+                )
+            }
 
         /** 20dp. The default. */
         public val Medium: RadioSize
             @Composable
-            get() = RadioSize(
-                container = IconSize.Medium,
-                borderWidth = 1.5.dp,
-                dotSize = 8.dp,
-                shape = ArecaTheme.shapes.full,
-                touchTarget = MinimumTouchTarget,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                return RadioSize(
+                    container = IconSize.Medium,
+                    borderWidth = 1.5.dp,
+                    dotSize = 8.dp,
+                    shape = ArecaTheme.shapes.full,
+                    touchTarget = sizing.touchTarget,
+                )
+            }
 
         /** Theme default: [Medium]. */
         public val Default: RadioSize
@@ -83,13 +89,16 @@ public data class RadioSize(
         /** 24dp. A standalone choice, or a list the user reads at arm's length. */
         public val Large: RadioSize
             @Composable
-            get() = RadioSize(
-                container = IconSize.Large,
-                borderWidth = 2.dp,
-                dotSize = 10.dp,
-                shape = ArecaTheme.shapes.full,
-                touchTarget = MinimumTouchTarget,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                return RadioSize(
+                    container = IconSize.Large,
+                    borderWidth = 2.dp,
+                    dotSize = 10.dp,
+                    shape = ArecaTheme.shapes.full,
+                    touchTarget = sizing.touchTarget,
+                )
+            }
     }
 }
 

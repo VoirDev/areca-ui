@@ -39,13 +39,16 @@ import dev.voir.areca.foundation.feedback.SpinnerSize
 import dev.voir.areca.foundation.feedback.SpinnerStyle
 import dev.voir.areca.foundation.icon.FeaturedIconSize
 import dev.voir.areca.foundation.icon.Icon
+import dev.voir.areca.foundation.overlay.AnchoredPlacement
+import dev.voir.areca.foundation.overlay.TooltipPopup
+import dev.voir.areca.foundation.overlay.rememberPointerTooltip
+import dev.voir.areca.foundation.overlay.tooltipTrigger
 import dev.voir.areca.foundation.icon.LocalIconSize
 import dev.voir.areca.indication.FadeIndication
 import dev.voir.areca.indication.FocusOutline
 import dev.voir.areca.indication.StrokeIndication
 import dev.voir.areca.indication.TouchIndication
 import dev.voir.areca.indication.reshapedTo
-import dev.voir.areca.modifier.MinimumTouchTarget
 import dev.voir.areca.modifier.clickCursor
 import dev.voir.areca.modifier.minimumTouchTarget
 import dev.voir.areca.modifier.thenIf
@@ -223,7 +226,8 @@ public data class IconButtonStyle(
  * @property spinner Size of the loading spinner, which replaces the icon.
  * @property touchTarget Smallest width and height an interactive button occupies in layout. The
  *   container is centred in the slot, and the band around it still answers a touch. Every named
- *   step reserves 48dp, the minimum a finger reliably hits. [Dp.Unspecified] — the constructor's
+ *   step reserves [dev.voir.areca.theme.ArecaSizing.touchTarget]: 48dp, the minimum a finger
+ *   reliably hits, under touch, and nothing under a pointer. [Dp.Unspecified] — the constructor's
  *   default — reserves nothing beyond the container, for a size built around a layout that already
  *   provides the target, such as a bar or a field.
  */
@@ -235,73 +239,98 @@ public data class IconButtonSize(
     public val spinner: SpinnerSize,
     public val touchTarget: Dp = Dp.Unspecified,
 ) {
-    /** The named steps, smallest first. */
+    /**
+     * The named steps, smallest first.
+     *
+     * Each step from [ExtraSmall] up is a step of [ArecaTheme.sizing], so it follows the input: the dp
+     * in each step's summary is touch, then pointer. The icon shrinks with the container so it fills
+     * the same share of it, and the touch target is the sizing's — 48dp under touch, none under a
+     * pointer.
+     */
     public companion object {
         /** 20dp. Inline with text, where a full-size button would break the line. */
         public val Tiny: IconButtonSize
             @Composable
-            get() = IconButtonSize(
-                container = 20.dp,
-                icon = 12.dp,
-                borderWidth = 1.dp,
-                spinner = SpinnerSize.ExtraSmall,
-                touchTarget = MinimumTouchTarget,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                return IconButtonSize(
+                    container = 20.dp,
+                    icon = 12.dp,
+                    borderWidth = 1.dp,
+                    spinner = SpinnerSize.ExtraSmall,
+                    touchTarget = sizing.touchTarget,
+                )
+            }
 
-        /** 32dp. Trailing affordance of a dense row or a compact field. */
+        /** 32dp under touch, 28dp under a pointer. Trailing affordance of a dense row or a compact field. */
         public val ExtraSmall: IconButtonSize
             @Composable
-            get() = IconButtonSize(
-                container = 32.dp,
-                icon = 18.dp,
-                borderWidth = 1.dp,
-                spinner = SpinnerSize.Small,
-                touchTarget = MinimumTouchTarget,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                return IconButtonSize(
+                    container = sizing.controlXs,
+                    icon = sizing.select(touch = 18.dp, pointer = 16.dp),
+                    borderWidth = 1.dp,
+                    spinner = SpinnerSize.Small,
+                    touchTarget = sizing.touchTarget,
+                )
+            }
 
-        /** 40dp. Toolbar action, or a field's clear button. */
+        /** 40dp under touch, 32dp under a pointer. Toolbar action, or a field's clear button. */
         public val Small: IconButtonSize
             @Composable
-            get() = IconButtonSize(
-                container = 40.dp,
-                icon = 22.dp,
-                borderWidth = 1.dp,
-                spinner = SpinnerSize.Medium,
-                touchTarget = MinimumTouchTarget,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                return IconButtonSize(
+                    container = sizing.controlSm,
+                    icon = sizing.select(touch = 22.dp, pointer = 18.dp),
+                    borderWidth = 1.dp,
+                    spinner = sizing.select(touch = SpinnerSize.Medium, pointer = SpinnerSize.Small),
+                    touchTarget = sizing.touchTarget,
+                )
+            }
 
-        /** 48dp. The default, and a comfortable touch target. */
+        /** 48dp under touch, 36dp under a pointer. The default. */
         public val Medium: IconButtonSize
             @Composable
-            get() = IconButtonSize(
-                container = 48.dp,
-                icon = 26.dp,
-                borderWidth = 1.dp,
-                spinner = SpinnerSize.Medium,
-                touchTarget = MinimumTouchTarget,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                return IconButtonSize(
+                    container = sizing.controlMd,
+                    icon = sizing.select(touch = 26.dp, pointer = 20.dp),
+                    borderWidth = 1.dp,
+                    spinner = SpinnerSize.Medium,
+                    touchTarget = sizing.touchTarget,
+                )
+            }
 
-        /** 56dp. A standalone action, such as a floating control. */
+        /** 56dp under touch, 44dp under a pointer. A standalone action, such as a floating control. */
         public val Large: IconButtonSize
             @Composable
-            get() = IconButtonSize(
-                container = 56.dp,
-                icon = 30.dp,
-                borderWidth = 1.dp,
-                spinner = SpinnerSize.Large,
-                touchTarget = MinimumTouchTarget,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                return IconButtonSize(
+                    container = sizing.controlLg,
+                    icon = sizing.select(touch = 30.dp, pointer = 24.dp),
+                    borderWidth = 1.dp,
+                    spinner = SpinnerSize.Large,
+                    touchTarget = sizing.touchTarget,
+                )
+            }
 
-        /** 64dp. An action that is the subject of its own block. */
+        /** 64dp under touch, 52dp under a pointer. An action that is the subject of its own block. */
         public val ExtraLarge: IconButtonSize
             @Composable
-            get() = IconButtonSize(
-                container = 64.dp,
-                icon = 34.dp,
-                borderWidth = 1.dp,
-                spinner = SpinnerSize.ExtraLarge,
-                touchTarget = MinimumTouchTarget,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                return IconButtonSize(
+                    container = sizing.controlXl,
+                    icon = sizing.select(touch = 34.dp, pointer = 28.dp),
+                    borderWidth = 1.dp,
+                    spinner = sizing.select(touch = SpinnerSize.ExtraLarge, pointer = SpinnerSize.Large),
+                    touchTarget = sizing.touchTarget,
+                )
+            }
     }
 }
 
@@ -315,11 +344,13 @@ public val LocalIconButtonStyle: ProvidableCompositionLocal<IconButtonStyle?> = 
  * An action shown as an icon alone, in a square container.
  *
  * Always square, so that a row of them aligns whatever their icons are. An interactive button
- * smaller than [IconButtonSize.touchTarget] reserves the difference around itself in layout, so a
- * 32dp button still takes a 48dp touch.
+ * smaller than [IconButtonSize.touchTarget] reserves the difference around itself in layout, so
+ * under touch a 32dp button still takes a 48dp touch.
  *
  * An icon alone says nothing to assistive technology, so give the [Icon] inside a
- * `contentDescription`. The overloads taking an icon directly make that a required parameter.
+ * `contentDescription`. The overloads taking an icon directly make that a required parameter, and
+ * under a pointer they show it as a tooltip, as [dev.voir.areca.foundation.overlay.TooltipBox] does,
+ * when the pointer rests on the button. Wrap this overload in a `TooltipBox` for the same.
  *
  * [loading] replaces the icon with a spinner, blocks the press, and tells assistive technology the
  * button is busy. `null` for [onClick] makes it non-interactive, for an icon inside an
@@ -353,6 +384,37 @@ public fun IconButton(
     interactionSource: MutableInteractionSource? = null,
     content: @Composable BoxScope.() -> Unit,
 ) {
+    IconButtonLayout(
+        onClick = onClick,
+        modifier = modifier,
+        style = style,
+        size = size,
+        enabled = enabled,
+        loading = loading,
+        loadingStateDescription = loadingStateDescription,
+        interactionSource = interactionSource,
+        tooltip = null,
+        content = content,
+    )
+}
+
+/**
+ * The icon button itself, with [tooltip] shown under a pointer: the overloads taking an icon pass
+ * its content description, which is what a pointer user cannot otherwise read.
+ */
+@Composable
+private fun IconButtonLayout(
+    onClick: (() -> Unit)?,
+    modifier: Modifier,
+    style: IconButtonStyle,
+    size: IconButtonSize,
+    enabled: Boolean,
+    loading: Boolean,
+    loadingStateDescription: String,
+    interactionSource: MutableInteractionSource?,
+    tooltip: String?,
+    content: @Composable BoxScope.() -> Unit,
+) {
     val source = interactionSource ?: remember { MutableInteractionSource() }
     val interactive = enabled && !loading
 
@@ -376,6 +438,7 @@ public fun IconButton(
     )
 
     val click = onClick
+    val pointerTooltip = rememberPointerTooltip(enabled = tooltip != null && click != null)
     CompositionLocalProvider(
         LocalContentColor provides contentColor,
         LocalIconSize provides size.icon,
@@ -384,6 +447,7 @@ public fun IconButton(
             modifier = modifier
                 .thenIf(click != null) { minimumTouchTarget(size.touchTarget) }
                 .size(size.container)
+                .tooltipTrigger(pointerTooltip)
                 .background(backgroundColor, style.shape)
                 .border(size.borderWidth, borderColor, style.shape)
                 .then(
@@ -427,6 +491,9 @@ public fun IconButton(
                     content()
                 }
             }
+            if (pointerTooltip != null && tooltip != null) {
+                TooltipPopup(pointerTooltip, tooltip, AnchoredPlacement.BelowCenter)
+            }
         }
     }
 }
@@ -461,7 +528,7 @@ public fun IconButton(
     loadingStateDescription: String = "Busy",
     interactionSource: MutableInteractionSource? = null,
 ) {
-    IconButton(
+    IconButtonLayout(
         onClick = onClick,
         modifier = modifier,
         style = style,
@@ -470,6 +537,7 @@ public fun IconButton(
         loading = loading,
         loadingStateDescription = loadingStateDescription,
         interactionSource = interactionSource,
+        tooltip = contentDescription,
     ) {
         Icon(imageVector = imageVector, contentDescription = contentDescription)
     }
@@ -504,7 +572,7 @@ public fun IconButton(
     loadingStateDescription: String = "Busy",
     interactionSource: MutableInteractionSource? = null,
 ) {
-    IconButton(
+    IconButtonLayout(
         onClick = onClick,
         modifier = modifier,
         style = style,
@@ -513,6 +581,7 @@ public fun IconButton(
         loading = loading,
         loadingStateDescription = loadingStateDescription,
         interactionSource = interactionSource,
+        tooltip = contentDescription,
     ) {
         Icon(bitmap = imageBitmap, contentDescription = contentDescription)
     }
@@ -547,7 +616,7 @@ public fun IconButton(
     loadingStateDescription: String = "Busy",
     interactionSource: MutableInteractionSource? = null,
 ) {
-    IconButton(
+    IconButtonLayout(
         onClick = onClick,
         modifier = modifier,
         style = style,
@@ -556,6 +625,7 @@ public fun IconButton(
         loading = loading,
         loadingStateDescription = loadingStateDescription,
         interactionSource = interactionSource,
+        tooltip = contentDescription,
     ) {
         Icon(painter = painter, contentDescription = contentDescription)
     }

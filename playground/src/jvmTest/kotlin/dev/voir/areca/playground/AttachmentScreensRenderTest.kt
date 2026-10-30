@@ -18,6 +18,7 @@ import dev.voir.areca.playground.flow.attachments.SampleAttachmentImageLoader
 import dev.voir.areca.playground.flow.attachments.SampleAttachmentPdfRenderer
 import dev.voir.areca.theme.ArecaTheme
 import dev.voir.areca.theme.ArecaThemeProvider
+import dev.voir.areca.window.InputMode
 import org.jetbrains.skia.EncodedImageFormat
 import java.io.File
 import kotlin.test.Test
@@ -46,7 +47,7 @@ private val OUTPUT = File(System.getProperty("render.out") ?: "build/screens")
 @OptIn(ExperimentalComposeUiApi::class)
 private fun renderPage(name: String, page: @Composable () -> Unit) {
     val scene = ImageComposeScene(width = WIDTH, height = HEIGHT, density = Density(1f)) {
-        ArecaThemeProvider(darkTheme = false) {
+        ArecaThemeProvider(darkTheme = false, inputMode = InputMode.Touch) {
             CompositionLocalProvider(
                 LocalMediaImageLoader provides SampleAttachmentImageLoader,
                 LocalAttachmentPdfRenderer provides SampleAttachmentPdfRenderer,

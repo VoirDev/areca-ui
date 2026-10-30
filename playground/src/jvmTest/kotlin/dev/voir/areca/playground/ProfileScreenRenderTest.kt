@@ -62,6 +62,7 @@ import dev.voir.areca.playground.flow.profile.SampleAvatarLoader
 import dev.voir.areca.theme.ArecaTheme
 import dev.voir.areca.theme.ArecaThemeProvider
 import dev.voir.areca.theme.horizontalContentInsets
+import dev.voir.areca.window.InputMode
 import kotlinx.datetime.LocalDate
 import org.jetbrains.skia.EncodedImageFormat
 import java.io.File
@@ -93,7 +94,7 @@ private fun render(name: String, dark: Boolean = false, content: @Composable () 
         height = (HEIGHT * DENSITY).toInt(),
         density = Density(DENSITY),
     ) {
-        ArecaThemeProvider(darkTheme = dark) {
+        ArecaThemeProvider(darkTheme = dark, inputMode = InputMode.Touch) {
             CompositionLocalProvider(LocalAvatarImageLoader provides SampleAvatarLoader) {
                 Column(
                     Modifier

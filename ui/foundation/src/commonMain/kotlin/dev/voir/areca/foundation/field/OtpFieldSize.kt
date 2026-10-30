@@ -59,55 +59,70 @@ public data class OtpFieldSize(
             get() = Medium
 
         /**
-         * A compact cell, 40 by 48dp — a code inside a dialog or a settings row.
+         * A compact cell, 40 by 48dp under touch, 32 by 36dp under a pointer — a code inside a
+         * dialog or a settings row.
          */
         public val Small: OtpFieldSize
             @Composable
-            get() = OtpFieldSize(
-                cellWidth = 40.dp,
-                cellHeight = 48.dp,
-                gap = ArecaTheme.spacing.sm,
-                groupGap = ArecaTheme.spacing.xl,
-                borderWidth = 1.dp,
-                focusRing = 3.dp,
-                caretWidth = 2.dp,
-                caretHeight = 20.dp,
-                textStyle = codeTextStyle(ArecaTheme.baseTypography.lg),
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                val spacing = ArecaTheme.spacing
+                return OtpFieldSize(
+                    cellWidth = sizing.select(touch = 40.dp, pointer = 32.dp),
+                    cellHeight = sizing.controlMd,
+                    gap = sizing.select(touch = spacing.sm, pointer = spacing.xs),
+                    groupGap = sizing.select(touch = spacing.xl, pointer = spacing.lg),
+                    borderWidth = 1.dp,
+                    focusRing = 3.dp,
+                    caretWidth = 2.dp,
+                    caretHeight = 20.dp,
+                    textStyle = codeTextStyle(ArecaTheme.baseTypography.lg),
+                )
+            }
 
         /**
-         * The default cell, 48 by 56dp — the code a verification screen exists for.
+         * The default cell, 48 by 56dp under touch, 40 by 44dp under a pointer — the code a
+         * verification screen exists for.
          */
         public val Medium: OtpFieldSize
             @Composable
-            get() = OtpFieldSize(
-                cellWidth = 48.dp,
-                cellHeight = 56.dp,
-                gap = ArecaTheme.spacing.md,
-                groupGap = ArecaTheme.spacing.xl2,
-                borderWidth = 1.dp,
-                focusRing = 3.dp,
-                caretWidth = 2.dp,
-                caretHeight = 24.dp,
-                textStyle = codeTextStyle(ArecaTheme.baseTypography.xl),
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                val spacing = ArecaTheme.spacing
+                return OtpFieldSize(
+                    cellWidth = sizing.select(touch = 48.dp, pointer = 40.dp),
+                    cellHeight = sizing.controlLg,
+                    gap = sizing.select(touch = spacing.md, pointer = spacing.sm),
+                    groupGap = sizing.select(touch = spacing.xl2, pointer = spacing.xl),
+                    borderWidth = 1.dp,
+                    focusRing = 3.dp,
+                    caretWidth = 2.dp,
+                    caretHeight = 24.dp,
+                    textStyle = codeTextStyle(ArecaTheme.baseTypography.xl),
+                )
+            }
 
         /**
-         * A roomy cell, 56 by 64dp — a short code, four digits, that is the whole screen.
+         * A roomy cell, 56 by 64dp under touch, 48 by 52dp under a pointer — a short code, four
+         * digits, that is the whole screen.
          */
         public val Large: OtpFieldSize
             @Composable
-            get() = OtpFieldSize(
-                cellWidth = 56.dp,
-                cellHeight = 64.dp,
-                gap = ArecaTheme.spacing.lg,
-                groupGap = ArecaTheme.spacing.xl3,
-                borderWidth = 1.dp,
-                focusRing = 4.dp,
-                caretWidth = 2.dp,
-                caretHeight = 28.dp,
-                textStyle = codeTextStyle(ArecaTheme.baseTypography.xl2),
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                val spacing = ArecaTheme.spacing
+                return OtpFieldSize(
+                    cellWidth = sizing.select(touch = 56.dp, pointer = 48.dp),
+                    cellHeight = sizing.controlXl,
+                    gap = sizing.select(touch = spacing.lg, pointer = spacing.md),
+                    groupGap = sizing.select(touch = spacing.xl3, pointer = spacing.xl2),
+                    borderWidth = 1.dp,
+                    focusRing = 4.dp,
+                    caretWidth = 2.dp,
+                    caretHeight = 28.dp,
+                    textStyle = codeTextStyle(ArecaTheme.baseTypography.xl2),
+                )
+            }
 
         /**
          * Turns a step of the base type ramp into the type a code is drawn in.

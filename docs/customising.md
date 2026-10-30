@@ -209,11 +209,28 @@ So **never `Modifier.clip` an interactive element** — the clip crops the ring.
 
 ## Touch targets
 
-`MinimumTouchTarget` (in `dev.voir.areca.modifier`) is 48dp. A control that draws smaller — a 32dp
-icon button, a 20dp checkbox — reserves the rest in layout around itself, so a neighbour never sits
-inside its band. The sizes of `Button`, `IconButton`, `Badge`, `Checkbox`, `Radio`, `Toggle`,
-`Swatch` and `SwatchPicker` carry this as `touchTarget`. It is reserved only for a control with an
-action: one given a `null` callback is display-only and keeps its drawn size.
+The touch target is `ArecaTheme.sizing.touchTarget`: 48dp under touch and none under a pointer,
+which needs no more than the control draws. A control that draws smaller — a 32dp icon button, a 20dp
+checkbox — reserves the rest in layout around itself, so a neighbour never sits inside its band. The
+sizes of `Button`, `IconButton`, `Badge`, `Checkbox`, `Radio`, `Toggle`, `Swatch` and `SwatchPicker`
+carry this as `touchTarget`. It is reserved only for a control with an action: one given a `null`
+callback is display-only and keeps its drawn size. `MinimumTouchTarget` (in
+`dev.voir.areca.modifier`) is the 48dp constant, for a surface of your own that is always touched.
+
+## Touch and pointer sizes
+
+Every size preset is drawn for the input in scope. `ButtonSize.Medium` is 48dp tall on a phone and
+36dp on a laptop; a field, an icon button and a list row beside it shrink by the same step, so they
+still line up. The heights come from `ArecaTheme.sizing` (see [Theme](theme.md#sizing)); the
+paddings that fit them are chosen per preset with `sizing.select(touch = …, pointer = …)`, which a
+size of your own can use the same way:
+
+```kotlin
+val sizing = ArecaTheme.sizing
+val chipSize = ButtonSize.Small.copy(
+    padding = PaddingValues(horizontal = sizing.select(touch = 14.dp, pointer = 10.dp)),
+)
+```
 
 ## Your own pressable surface
 

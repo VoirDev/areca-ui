@@ -26,7 +26,6 @@ import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dev.voir.areca.indication.TouchIndication
-import dev.voir.areca.modifier.MinimumTouchTarget
 import dev.voir.areca.modifier.minimumTouchTarget
 import dev.voir.areca.modifier.thenIf
 import dev.voir.areca.theme.ArecaTheme
@@ -84,8 +83,9 @@ public val TriStateToggleCycle: List<ToggleState> =
  * @property borderWidth Width of the track's outline, for styles that define one.
  * @property touchTarget Smallest width and height an interactive toggle occupies in layout. The
  *   track is centred in the slot, and the band around it still answers a touch. Every named step
- *   reserves 48dp, the minimum a finger reliably hits. [Dp.Unspecified] — the constructor's
- *   default — reserves nothing beyond the track. A display-only toggle never reserves the band.
+ *   reserves [dev.voir.areca.theme.ArecaSizing.touchTarget]: 48dp, the minimum a finger reliably
+ *   hits, under touch, and nothing under a pointer. [Dp.Unspecified] — the constructor's default —
+ *   reserves nothing beyond the track. A display-only toggle never reserves the band.
  */
 @Immutable
 public data class ToggleSize(
@@ -100,22 +100,28 @@ public data class ToggleSize(
         /** 36×20dp. Inside a dense row, or beside compact text. */
         public val Small: ToggleSize
             @Composable
-            get() = ToggleSize(
-                trackWidth = 36.dp,
-                trackHeight = 20.dp,
-                padding = 2.dp,
-                touchTarget = MinimumTouchTarget,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                return ToggleSize(
+                    trackWidth = 36.dp,
+                    trackHeight = 20.dp,
+                    padding = 2.dp,
+                    touchTarget = sizing.touchTarget,
+                )
+            }
 
         /** 40×24dp. The default. */
         public val Medium: ToggleSize
             @Composable
-            get() = ToggleSize(
-                trackWidth = 40.dp,
-                trackHeight = 24.dp,
-                padding = 2.dp,
-                touchTarget = MinimumTouchTarget,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                return ToggleSize(
+                    trackWidth = 40.dp,
+                    trackHeight = 24.dp,
+                    padding = 2.dp,
+                    touchTarget = sizing.touchTarget,
+                )
+            }
 
         /** Theme default: [Medium]. */
         public val Default: ToggleSize
@@ -125,12 +131,15 @@ public data class ToggleSize(
         /** 56×32dp. A standalone switch, or a settings screen read at arm's length. */
         public val Large: ToggleSize
             @Composable
-            get() = ToggleSize(
-                trackWidth = 56.dp,
-                trackHeight = 32.dp,
-                padding = 3.dp,
-                touchTarget = MinimumTouchTarget,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                return ToggleSize(
+                    trackWidth = 56.dp,
+                    trackHeight = 32.dp,
+                    padding = 3.dp,
+                    touchTarget = sizing.touchTarget,
+                )
+            }
     }
 }
 

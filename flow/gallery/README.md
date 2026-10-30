@@ -35,40 +35,68 @@ parameter with an English default where the part cannot do without it.
 
 ## Recipes
 
+The product page, product cards and the grid page change with the window, through foundation's
+`AdaptiveContent`, `adaptive` and `AdaptiveGrid`; each says what it does **on a tablet or desktop**,
+and on a phone each is what it always was. The other recipes are phone screens. The viewer every
+recipe opens fills the window at any size.
+
 ### Product page
 
-A hero carousel whose pictures open a detail gallery, the picture growing out of the hero and the
-hero landing on the last picture seen. Playground: **Gallery flow › Product page**.
+One assembly for every window: the phone page below 840dp, the
+[desktop product page](#desktop-product-page) from 840dp — a tablet or a phone on its side, a laptop,
+a monitor. Copy this and the two pages it names. Playground: **Gallery flow › Product page**, with a
+window picker.
+
+```kotlin
+AdaptiveContent(
+    compact = { ProductPage(product, pictures) },
+    expanded = { DesktopProductPage(product, pictures) },
+)
+```
+
+**On a tablet or desktop.** A medium window — an unfolded foldable, a tablet held upright — keeps
+the phone page. It is touched, not pointed at, and at 600 to 839dp the desktop arrangement leaves the
+picture narrower than the phone's hero once the rail and the details have their width. What changes
+there is the hero, which turns landscape (`adaptive(compact = 1f, medium = 4f / 3f)`) so the price
+and the button stay above the fold of a near-square screen. Because the compact and medium steps
+share one layout, a foldable opened mid-browse keeps the hero on the picture it was on. The gallery
+the page opens fills the window at every size; its foot stops at `AdaptiveDefaults.ReadableWidth`.
+
+The phone page: a hero carousel whose pictures open a detail gallery, the picture growing out of the
+hero and the hero landing on the last picture seen.
 
 ```kotlin
 val hero = rememberCarouselState(itemCount = pictures.size)
 val transition = rememberMediaTransitionState()
 var open by remember { mutableStateOf<Int?>(null) }
 
-Box {
-    Carousel(state = hero, contentDescription = "${product.name} pictures") { index ->
-        MediaFrame(
-            model = pictures[index].url,
-            contentDescription = pictures[index].caption,
-            aspectRatio = 1f,
-            fit = MediaFit.Whole,
-            zoom = ZoomBehavior.Peek,
-            onClick = { open = index },
-            onClickLabel = "Open pictures",
-            transition = transition,
-            transitionKey = pictures[index].id,
-            style = MediaFrameStyle.default(shape = ArecaTheme.shapes.none),
-            size = MediaFrameSize.Product,
+Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
+    Box {
+        Carousel(state = hero, contentDescription = "${product.name} pictures") { index ->
+            MediaFrame(
+                model = pictures[index].url,
+                contentDescription = pictures[index].caption,
+                aspectRatio = adaptive(compact = 1f, medium = 4f / 3f),
+                fit = MediaFit.Whole,
+                zoom = ZoomBehavior.Peek,
+                onClick = { open = index },
+                onClickLabel = "Open pictures",
+                transition = transition,
+                transitionKey = pictures[index].id,
+                style = MediaFrameStyle.default(shape = ArecaTheme.shapes.none),
+                size = MediaFrameSize.Product,
+            )
+        }
+        PageIndicator(
+            pageCount = hero.pageCount,
+            currentPage = hero.currentPage,
+            currentPageOffset = hero.currentPageOffset,
+            variant = PageIndicatorVariant.Dots,
+            style = PageIndicatorStyle.onImage(),
+            modifier = Modifier.align(Alignment.BottomCenter).padding(ArecaTheme.spacing.lg),
         )
     }
-    PageIndicator(
-        pageCount = hero.pageCount,
-        currentPage = hero.currentPage,
-        currentPageOffset = hero.currentPageOffset,
-        variant = PageIndicatorVariant.Dots,
-        style = PageIndicatorStyle.onImage(),
-        modifier = Modifier.align(Alignment.BottomCenter).padding(ArecaTheme.spacing.lg),
-    )
+    ProductDetails(Modifier.horizontalContentInsets().padding(vertical = ArecaTheme.spacing.xl))
 }
 
 open?.let { start ->
@@ -92,7 +120,10 @@ open?.let { start ->
             )
         },
         footer = { viewer ->
-            Column(verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg)) {
+            Column(
+                Modifier.widthIn(max = AdaptiveDefaults.ReadableWidth).align(Alignment.CenterHorizontally),
+                verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg),
+            ) {
                 GalleryCaption(title = pictures[viewer.currentIndex].caption, kicker = "From the brand")
                 ThumbnailStrip(
                     count = viewer.itemCount,
@@ -117,10 +148,21 @@ open?.let { start ->
 ### Product cards
 
 Products in a list, each card's pictures swiped on their own without opening; a tap opens that
-product's gallery. Playground: **Gallery flow › Product cards**.
+product's gallery. Playground: **Gallery flow › Product cards**, with a window picker.
+
+**On a tablet or desktop.** Foundation's `AdaptiveGrid` lays the cards: two across on a phone, three
+on an unfolded foldable or a tablet held upright, four from 840dp, the row stopping at
+`AdaptiveDefaults.ContentWidth` on a monitor with the gutter widening with the window. The 140dp
+minimum keeps the narrowest phone at two.
 
 ```kotlin
-LazyVerticalGrid(columns = GridCells.Fixed(2), horizontalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md)) {
+AdaptiveGrid(
+    minCellWidth = 140.dp,
+    maxColumns = adaptive(compact = 2, medium = 3, expanded = 4),
+    contentPadding = PaddingValues(top = ArecaTheme.spacing.lg),
+    horizontalSpacing = ArecaTheme.spacing.md,
+    verticalSpacing = ArecaTheme.spacing.xl,
+) {
     items(products, key = { it.id }) { product ->
         Column(verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.sm)) {
             val state = rememberCarouselState(itemCount = product.pictures.size)
@@ -263,78 +305,96 @@ MediaFrame(
 
 ### Desktop product page
 
-A wide window: a thumbnail rail beside the picture, arrows for the pointer, the picture magnified
-under the mouse, a click opening the gallery. Playground: **Gallery flow › Desktop product page**.
+The product page from 840dp, which [Product page](#product-page) draws there: a thumbnail rail
+beside the picture and the details beside both, the whole page stopping at
+`AdaptiveDefaults.ContentWidth` on a monitor. Under a pointer the picture has arrows and magnifies
+under the mouse; touched — a tablet on its side — it swipes and peeks instead, as `CarouselArrows`
+asks. A click opens the same full-window gallery as the phone page. Playground:
+**Gallery flow › Desktop product page**, with a window picker.
 
 ```kotlin
-Row(horizontalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.xl)) {
-    ThumbnailStrip(
-        count = pictures.size,
-        selectedIndex = state.currentItem,
-        onSelect = { state.goToItem(it) },
-        modifier = Modifier.width(72.dp).fillMaxHeight(),
-        orientation = Orientation.Vertical,
-    ) { index -> MediaFrame(model = pictures[index].thumbnailUrl, contentDescription = null) }
+val pointer = ArecaTheme.window.input == InputMode.Pointer
 
-    Box(Modifier.weight(1f)) {
-        Carousel(state = state, modifier = Modifier.fillMaxHeight()) { index ->
-            MediaFrame(
-                model = pictures[index].url,
-                contentDescription = pictures[index].caption,
-                modifier = Modifier.fillMaxHeight(),
-                fit = MediaFit.Whole,
-                zoom = ZoomBehavior.Hover,
-                onClick = { open = index },
-                transition = transition,
-                transitionKey = pictures[index].id,
-                size = MediaFrameSize.Product,
-            )
+ContentColumn(modifier = Modifier.fillMaxSize(), maxWidth = AdaptiveDefaults.ContentWidth) {
+    Row(
+        Modifier.fillMaxSize().padding(vertical = ArecaTheme.spacing.xl3),
+        horizontalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.xl),
+    ) {
+        ThumbnailStrip(
+            count = pictures.size,
+            selectedIndex = state.currentItem,
+            onSelect = { state.goToItem(it) },
+            modifier = Modifier.width(72.dp).fillMaxHeight(),
+            orientation = Orientation.Vertical,
+        ) { index -> MediaFrame(model = pictures[index].thumbnailUrl, contentDescription = null) }
+
+        Box(Modifier.weight(1f).fillMaxHeight()) {
+            Carousel(state = state, modifier = Modifier.fillMaxHeight()) { index ->
+                MediaFrame(
+                    model = pictures[index].url,
+                    contentDescription = pictures[index].caption,
+                    modifier = Modifier.fillMaxHeight(),
+                    fit = MediaFit.Whole,
+                    zoom = if (pointer) ZoomBehavior.Hover else ZoomBehavior.Peek,
+                    onClick = { open = index },
+                    transition = transition,
+                    transitionKey = pictures[index].id,
+                    size = MediaFrameSize.Product,
+                )
+            }
+            if (pointer) CarouselArrows(state, modifier = Modifier.align(Alignment.Center))
         }
-        CarouselArrows(state, modifier = Modifier.align(Alignment.Center))
-    }
 
-    ProductDetails(Modifier.width(280.dp))
+        ProductDetails(Modifier.width(280.dp).fillMaxHeight().verticalScroll(rememberScrollState()))
+    }
 }
 ```
 
 ### Grid page
 
-Every picture in its group, three across; a tile opens the viewer at that picture among all of
-them, with a caption under the brand's pictures and an author under readers'. Playground:
-**Gallery flow › Grid page**.
+Every picture in its group; a tile opens the viewer at that picture among all of them, with a
+caption under the brand's pictures and an author under readers'. Playground:
+**Gallery flow › Grid page**, with a window picker.
+
+**On a tablet or desktop.** Foundation's `AdaptiveGrid` lays the tiles: three across on a phone,
+four on an unfolded foldable or a tablet held upright, six from 840dp, the cells stopping at
+`AdaptiveDefaults.ContentWidth` on a monitor. A group's header spans its line and leaves the gutter
+to the grid (`horizontalPadding = 0.dp`). A picture opens the full-window viewer at every size —
+a grid is browsed, not read beside its detail, so there is no list-and-detail split.
 
 ```kotlin
-LazyColumn {
+AdaptiveGrid(
+    minCellWidth = 88.dp,
+    maxColumns = adaptive(compact = 3, medium = 4, expanded = 6),
+    horizontalSpacing = ArecaTheme.spacing.sm,
+    verticalSpacing = ArecaTheme.spacing.none,
+) {
     groups.forEach { group ->
-        item(key = group.title) { GalleryGroupHeader(title = group.title, count = "${group.pictures.size}") }
-        items(group.pictures.chunked(3)) { row ->
-            Row(
-                Modifier.padding(horizontal = ArecaTheme.spacing.horizontalContentInsets, vertical = ArecaTheme.spacing.xs),
-                horizontalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.sm),
-            ) {
-                row.forEach { picture ->
-                    GalleryTile(
-                        model = picture.url,
-                        contentDescription = picture.caption,
-                        onClick = { open = all.indexOf(picture) },
-                        modifier = Modifier.weight(1f),
-                        label = picture.author,
-                        transition = transition,
-                        transitionKey = picture.id,
-                    )
-                }
-                repeat(3 - row.size) { Spacer(Modifier.weight(1f)) }
-            }
+        item(key = group.title, span = { GridItemSpan(maxLineSpan) }) {
+            GalleryGroupHeader(title = group.title, count = "${group.pictures.size}", horizontalPadding = 0.dp)
+        }
+        items(group.pictures, key = { it.id }) { picture ->
+            GalleryTile(
+                model = picture.url,
+                contentDescription = picture.caption,
+                onClick = { open = all.indexOf(picture) },
+                modifier = Modifier.padding(vertical = ArecaTheme.spacing.xs),
+                label = picture.author,
+                transition = transition,
+                transitionKey = picture.id,
+            )
         }
     }
 }
 // The viewer as in the product page, its footer:
 footer = { viewer ->
-    val picture = all[viewer.currentIndex]
-    if (picture.author != null) {
-        GalleryAuthor(name = "Photo by ${picture.author}", letters = picture.author.take(1), detail = picture.date)
-    } else {
-        GalleryCaption(title = picture.caption, kicker = picture.group)
+    Column(Modifier.widthIn(max = AdaptiveDefaults.ReadableWidth).align(Alignment.CenterHorizontally)) {
+        val picture = all[viewer.currentIndex]
+        if (picture.author != null) {
+            GalleryAuthor(name = "Photo by ${picture.author}", letters = picture.author.take(1), detail = picture.date)
+        } else {
+            GalleryCaption(title = picture.caption, kicker = picture.group)
+        }
     }
 }
 ```

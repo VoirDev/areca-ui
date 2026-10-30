@@ -119,9 +119,11 @@ desktop has no announcement API, so there the reader finds the message when it r
 
 ## Touch targets
 
-Every control that draws smaller than 48dp — a 32dp icon button, a 20dp checkbox, a small badge —
-reserves the rest in layout around itself, so a neighbour never sits inside its band. Only controls
-with an action reserve it; a display-only control keeps its drawn size.
+Under touch, every control that draws smaller than 48dp — a 32dp icon button, a 20dp checkbox, a
+small badge — reserves the rest in layout around itself, so a neighbour never sits inside its band.
+Only controls with an action reserve it; a display-only control keeps its drawn size. Under a pointer
+the target is the control itself (`ArecaTheme.sizing.touchTarget` is zero), as on every desktop
+system; a tablet with a trackpad stays touch unless the app passes `inputMode`.
 
 Give your own small controls the same guarantee with `Modifier.minimumTouchTarget()` (in
 `dev.voir.areca.modifier`), applied outside the element's size and before its `clickable`. See
@@ -133,6 +135,17 @@ Every interactive component draws keyboard focus as a ring outside its bounds, f
 without changing anything inside it — so hover, press and focus can show at
 once. Never `Modifier.clip` an interactive element: the clip crops the ring. Use
 `Modifier.background(color, shape)` for a shaped fill.
+
+## Pointer affordances
+
+A tooltip is for the eye: `TooltipBox` and the tooltip an `IconButton` shows under a pointer are
+hidden from assistive technology, so the element still needs its own description — for an
+`IconButton`, the `contentDescription` the tooltip repeats. A tooltip also shows when keyboard focus
+arrives, not only on hover. `Modifier.contextMenu` opens a row's actions from the keyboard (the Menu
+key or Shift+F10) and gives the row a long-click action, named by its `label`, that a screen reader
+offers; a touch long press alone would be out of reach for both. Scrollbars and `ListDetail`'s
+draggable divider are pointer conveniences: the content they move scrolls and the panes lay
+themselves out without them.
 
 ## Right to left
 

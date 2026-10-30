@@ -24,7 +24,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dev.voir.areca.indication.TouchIndication
-import dev.voir.areca.modifier.MinimumTouchTarget
 import dev.voir.areca.modifier.clickCursor
 import dev.voir.areca.modifier.minimumTouchTarget
 import dev.voir.areca.modifier.thenIf
@@ -74,8 +73,9 @@ public data class SwatchStyle(
  *   visible fill rather than growing the swatch.
  * @property touchTarget Smallest width and height a pressable swatch occupies in layout. The swatch
  *   is centred in the slot, and the band around it still answers a touch. Every named step reserves
- *   48dp, the minimum a finger reliably hits. [Dp.Unspecified] — the constructor's default —
- *   reserves nothing beyond the swatch. A static sample never reserves the band.
+ *   [dev.voir.areca.theme.ArecaSizing.touchTarget]: 48dp, the minimum a finger reliably hits, under
+ *   touch, and nothing under a pointer. [Dp.Unspecified] — the constructor's default — reserves
+ *   nothing beyond the swatch. A static sample never reserves the band.
  */
 @Immutable
 public data class SwatchSize(
@@ -88,29 +88,38 @@ public data class SwatchSize(
         /** 24dp. A swatch inline with text, or a dense palette grid. */
         public val Small: SwatchSize
             @Composable
-            get() = SwatchSize(
-                container = 24.dp,
-                borderWidth = 1.5.dp,
-                touchTarget = MinimumTouchTarget,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                return SwatchSize(
+                    container = 24.dp,
+                    borderWidth = 1.5.dp,
+                    touchTarget = sizing.touchTarget,
+                )
+            }
 
         /** 36dp. A color picker's swatch, and the theme default. */
         public val Medium: SwatchSize
             @Composable
-            get() = SwatchSize(
-                container = 36.dp,
-                borderWidth = 2.dp,
-                touchTarget = MinimumTouchTarget,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                return SwatchSize(
+                    container = 36.dp,
+                    borderWidth = 2.dp,
+                    touchTarget = sizing.touchTarget,
+                )
+            }
 
         /** 48dp. A single prominent swatch, such as a currently-selected color. */
         public val Large: SwatchSize
             @Composable
-            get() = SwatchSize(
-                container = 48.dp,
-                borderWidth = 2.dp,
-                touchTarget = MinimumTouchTarget,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                return SwatchSize(
+                    container = 48.dp,
+                    borderWidth = 2.dp,
+                    touchTarget = sizing.touchTarget,
+                )
+            }
 
         /** Theme default: [Medium]. */
         public val Default: SwatchSize

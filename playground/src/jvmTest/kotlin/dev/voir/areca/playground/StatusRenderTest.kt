@@ -35,6 +35,7 @@ import dev.voir.areca.icons.Lightbulb
 import dev.voir.areca.icons.RefreshCcw
 import dev.voir.areca.theme.ArecaTheme
 import dev.voir.areca.theme.ArecaThemeProvider
+import dev.voir.areca.window.InputMode
 import org.jetbrains.skia.EncodedImageFormat
 import java.io.File
 import kotlin.test.Test
@@ -89,7 +90,7 @@ private fun render(
         height = (height * DENSITY).toInt(),
         density = Density(DENSITY),
     ) {
-        ArecaThemeProvider(darkTheme = dark) {
+        ArecaThemeProvider(darkTheme = dark, inputMode = InputMode.Touch) {
             Box(Modifier.fillMaxSize().background(ArecaTheme.colors.bgCanvas)) { content() }
         }
     }

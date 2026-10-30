@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import dev.voir.areca.foundation.icon.Icon
 import dev.voir.areca.icon.BundledIcons
 import dev.voir.areca.icon.Check
-import dev.voir.areca.modifier.MinimumTouchTarget
 import dev.voir.areca.theme.ArecaTheme
 import dev.voir.areca.theme.tween
 
@@ -186,7 +185,7 @@ public data class SwatchPickerSize(
             swatchBorderSelected: Dp = swatchBorder,
             swatchScaleSelected: Float = 1.1f,
             icon: Dp = swatch / 2,
-            touchTarget: Dp = MinimumTouchTarget,
+            touchTarget: Dp = ArecaTheme.sizing.touchTarget,
         ): SwatchPickerSize = SwatchPickerSize(
             spacing = spacing,
             swatch = swatch,

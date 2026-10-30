@@ -35,6 +35,7 @@ import dev.voir.areca.playground.flow.attachments.SampleFileOption
 import dev.voir.areca.playground.flow.attachments.SampleStateOption
 import dev.voir.areca.theme.ArecaTheme
 import dev.voir.areca.theme.ArecaThemeProvider
+import dev.voir.areca.window.InputMode
 import org.jetbrains.skia.EncodedImageFormat
 import java.io.File
 import kotlin.test.Test
@@ -65,7 +66,7 @@ private fun render(name: String, dark: Boolean, content: @Composable () -> Unit)
         height = (HEIGHT * DENSITY).toInt(),
         density = Density(DENSITY),
     ) {
-        ArecaThemeProvider(darkTheme = dark) {
+        ArecaThemeProvider(darkTheme = dark, inputMode = InputMode.Touch) {
             CompositionLocalProvider(LocalMediaImageLoader provides SampleAttachmentImageLoader) {
                 Column(
                     Modifier

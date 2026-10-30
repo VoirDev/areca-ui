@@ -102,6 +102,7 @@ import dev.voir.areca.icons.ArrowLeftRight
 import dev.voir.areca.icons.X
 import dev.voir.areca.theme.ArecaTheme
 import dev.voir.areca.theme.ArecaThemeProvider
+import dev.voir.areca.window.InputMode
 import java.io.File
 import kotlin.test.Test
 import kotlin.time.Clock
@@ -151,7 +152,7 @@ private fun render(
         height = (height * DENSITY).toInt(),
         density = Density(DENSITY),
     ) {
-        ArecaThemeProvider(darkTheme = dark) {
+        ArecaThemeProvider(darkTheme = dark, inputMode = InputMode.Touch) {
             Box(Modifier.fillMaxSize().background(ArecaTheme.colors.bgCanvas)) { content() }
         }
     }

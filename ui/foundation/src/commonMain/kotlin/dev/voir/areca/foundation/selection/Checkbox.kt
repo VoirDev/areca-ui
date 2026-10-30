@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dev.voir.areca.foundation.icon.IconSize
 import dev.voir.areca.indication.TouchIndication
-import dev.voir.areca.modifier.MinimumTouchTarget
 import dev.voir.areca.modifier.minimumTouchTarget
 import dev.voir.areca.modifier.thenIf
 import dev.voir.areca.theme.ArecaTheme
@@ -44,8 +43,9 @@ import dev.voir.areca.theme.tween
  * @property shape Shape of the box.
  * @property touchTarget Smallest width and height an interactive checkbox occupies in layout. The
  *   box is centred in the slot, and the band around it still answers a touch. Every named step
- *   reserves 48dp, the minimum a finger reliably hits. [Dp.Unspecified] — the constructor's
- *   default — reserves nothing beyond the box. A display-only checkbox never reserves the band.
+ *   reserves [dev.voir.areca.theme.ArecaSizing.touchTarget]: 48dp, the minimum a finger reliably
+ *   hits, under touch, and nothing under a pointer. [Dp.Unspecified] — the constructor's default —
+ *   reserves nothing beyond the box. A display-only checkbox never reserves the band.
  */
 @Immutable
 public data class CheckboxSize(
@@ -60,24 +60,30 @@ public data class CheckboxSize(
         /** 16dp. Inline with body text, or in a dense list. */
         public val Small: CheckboxSize
             @Composable
-            get() = CheckboxSize(
-                container = IconSize.Small,
-                borderWidth = 1.5.dp,
-                markStrokeWidth = 2.dp,
-                shape = ArecaTheme.shapes.sm,
-                touchTarget = MinimumTouchTarget,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                return CheckboxSize(
+                    container = IconSize.Small,
+                    borderWidth = 1.5.dp,
+                    markStrokeWidth = 2.dp,
+                    shape = ArecaTheme.shapes.sm,
+                    touchTarget = sizing.touchTarget,
+                )
+            }
 
         /** 20dp. The default. */
         public val Medium: CheckboxSize
             @Composable
-            get() = CheckboxSize(
-                container = IconSize.Medium,
-                borderWidth = 1.5.dp,
-                markStrokeWidth = 2.25.dp,
-                shape = ArecaTheme.shapes.sm,
-                touchTarget = MinimumTouchTarget,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                return CheckboxSize(
+                    container = IconSize.Medium,
+                    borderWidth = 1.5.dp,
+                    markStrokeWidth = 2.25.dp,
+                    shape = ArecaTheme.shapes.sm,
+                    touchTarget = sizing.touchTarget,
+                )
+            }
 
         /** Theme default: [Medium]. */
         public val Default: CheckboxSize
@@ -87,13 +93,16 @@ public data class CheckboxSize(
         /** 24dp. A standalone checkbox, such as a single consent control. */
         public val Large: CheckboxSize
             @Composable
-            get() = CheckboxSize(
-                container = IconSize.Large,
-                borderWidth = 2.dp,
-                markStrokeWidth = 2.75.dp,
-                shape = ArecaTheme.shapes.sm,
-                touchTarget = MinimumTouchTarget,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                return CheckboxSize(
+                    container = IconSize.Large,
+                    borderWidth = 2.dp,
+                    markStrokeWidth = 2.75.dp,
+                    shape = ArecaTheme.shapes.sm,
+                    touchTarget = sizing.touchTarget,
+                )
+            }
     }
 }
 

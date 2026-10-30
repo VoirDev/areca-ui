@@ -27,7 +27,6 @@ import dev.voir.areca.foundation.selection.ToggleState
 import dev.voir.areca.foundation.selection.toToggleableState
 import dev.voir.areca.foundation.slot.SlotRowLayout
 import dev.voir.areca.indication.TouchIndication
-import dev.voir.areca.modifier.MinimumTouchTarget
 import dev.voir.areca.modifier.clickCursor
 import dev.voir.areca.modifier.minimumTouchTarget
 import dev.voir.areca.theme.ArecaTheme
@@ -44,8 +43,8 @@ import dev.voir.areca.theme.ArecaTheme
  * **Split.** With [onClick], the row opens more settings for the feature — a schedule, a list of
  * exceptions — and the switch turns the feature on or off without leaving the screen. A short
  * vertical rule stands between the two targets so the split is visible before it is discovered. The
- * row is then announced as a button and the switch as a switch of its own — one target with a
- * finger-sized hit area, focused and toggled as a whole.
+ * row is then announced as a button and the switch as a switch of its own — one target, with a
+ * finger-sized hit area under touch, focused and toggled as a whole.
  *
  * While [status] is [SettingsRowStatus.Loading], a spinner stands before the switch, the switch holds
  * still and presses are ignored; an error message appears under the text when the change failed.
@@ -177,7 +176,8 @@ public fun SettingsToggleRow(
  *
  * The [Toggle] inside is display-only — no press, focus or semantics of its own — so a press
  * lands on this target once and assistive technology meets one switch. The target follows the row's
- * enabled state, section included, and reserves a finger-sized slot around the drawn track.
+ * enabled state, section included, and reserves the sizing's touch target around the drawn track:
+ * 48dp under touch, none under a pointer.
  *
  * @param state Current state of the switch.
  * @param readOnly Whether the switch shows its state but rejects changes, as it does while a
@@ -194,7 +194,7 @@ private fun SplitSwitch(
 
     Box(
         modifier = Modifier
-            .minimumTouchTarget(MinimumTouchTarget)
+            .minimumTouchTarget(ArecaTheme.sizing.touchTarget)
             .triStateToggleable(
                 state = state.toToggleableState(),
                 enabled = enabled,

@@ -15,6 +15,7 @@ import dev.voir.areca.foundation.list.ListItemColor
 import dev.voir.areca.foundation.list.ListItemSize
 import dev.voir.areca.foundation.list.ListItemStyle
 import dev.voir.areca.theme.ArecaTheme
+import dev.voir.areca.theme.horizontalGutter
 
 /**
  * Theme-backed defaults for [Settings].
@@ -160,8 +161,12 @@ public object SettingsDefaults {
     public fun sizes(
         row: ListItemSize = rowSize(),
         section: SettingsSectionSize = sectionSize(),
-        iconTile: FeaturedIconSize = FeaturedIconSize(container = 28.dp, icon = 16.dp, borderWidth = 1.dp),
-        splitDividerHeight: Dp = 24.dp,
+        iconTile: FeaturedIconSize = FeaturedIconSize(
+            container = ArecaTheme.sizing.select(touch = 28.dp, pointer = 24.dp),
+            icon = 16.dp,
+            borderWidth = 1.dp,
+        ),
+        splitDividerHeight: Dp = ArecaTheme.sizing.select(touch = 24.dp, pointer = 20.dp),
         spinner: SpinnerSize = SpinnerSize(container = 18.dp),
         statusTextStyle: TextStyle = ArecaTheme.typography.bodySmall,
         badge: BadgeSize = BadgeSize.ExtraSmall,
@@ -178,13 +183,14 @@ public object SettingsDefaults {
     /**
      * Metrics of a settings row.
      *
-     * The medium list density with four changes. The row is padded 16dp across and 12dp down —
-     * roughly 4:3 rather than the medium density's 2:1, so a row with a subtitle breathes instead of
-     * reading as a squashed line. A single-line text row still comes to 48dp, one touch target and
-     * no taller, so a long screen of switches does not become a long scroll. The value is set at
-     * title size, because in a settings row the value is the answer to the title rather than a
-     * footnote to it. And the leading slot stands a full step away from the text, so a column of
-     * icon tiles reads as its own column.
+     * The medium list density with four changes. The row is padded 16dp across and 12dp down under
+     * touch, 12dp and 8dp under a pointer — roughly 4:3 rather than the medium density's 2:1, so a
+     * row with a subtitle breathes instead of reading as a squashed line. A single-line text row
+     * still comes to 48dp under touch, one touch target and no taller, and to 36dp under a pointer,
+     * so a long screen of switches does not become a long scroll. The value is set at title size,
+     * because in a settings row the value is the answer to the title rather than a footnote to it.
+     * And the leading slot stands a full step away from the text, so a column of icon tiles reads
+     * as its own column.
      *
      * @param titleTextStyle Text style of the title.
      * @param subtitleTextStyle Text style of the subtitle.
@@ -198,24 +204,30 @@ public object SettingsDefaults {
         subtitleTextStyle: TextStyle = ArecaTheme.typography.bodySmall,
         valueTextStyle: TextStyle = ArecaTheme.typography.bodyMedium,
         captionTextStyle: TextStyle = ArecaTheme.typography.bodyExtraSmall,
-    ): ListItemSize = ListItemSize.Medium.copy(
-        titleTextStyle = titleTextStyle,
-        subtitleTextStyle = subtitleTextStyle,
-        valueTextStyle = valueTextStyle,
-        captionTextStyle = captionTextStyle,
-        contentPadding = PaddingValues(
-            horizontal = ArecaTheme.spacing.xl,
-            vertical = ArecaTheme.spacing.lg,
-        ),
-        minHeight = 24.dp,
-        leadingGap = ArecaTheme.spacing.xl,
-        icon = 22.dp,
-    )
+    ): ListItemSize {
+        val sizing = ArecaTheme.sizing
+        val spacing = ArecaTheme.spacing
+        return ListItemSize.Medium.copy(
+            titleTextStyle = titleTextStyle,
+            subtitleTextStyle = subtitleTextStyle,
+            valueTextStyle = valueTextStyle,
+            captionTextStyle = captionTextStyle,
+            contentPadding = PaddingValues(
+                horizontal = sizing.select(touch = spacing.xl, pointer = spacing.lg),
+                vertical = sizing.select(touch = spacing.lg, pointer = spacing.md),
+            ),
+            minHeight = sizing.select(touch = 24.dp, pointer = 20.dp),
+            leadingGap = sizing.select(touch = spacing.xl, pointer = spacing.lg),
+            icon = sizing.select(touch = 22.dp, pointer = 18.dp),
+        )
+    }
 
     /**
      * Metrics of a section.
      *
-     * @param outerPadding Padding around the section, header and footer included.
+     * @param outerPadding Padding around the section, header and footer included. Defaults to the
+     *   screen gutter for the width class in scope, so a section lines up with
+     *   `Modifier.horizontalContentInsets()` at every width.
      * @param sectionGap Spacing between sections.
      * @param headerInsidePadding Padding around a header inside the card.
      * @param headerOutsidePadding Padding around a header above the card.
@@ -229,9 +241,7 @@ public object SettingsDefaults {
      */
     @Composable
     public fun sectionSize(
-        outerPadding: PaddingValues = PaddingValues(
-            horizontal = ArecaTheme.spacing.horizontalContentInsets,
-        ),
+        outerPadding: PaddingValues = PaddingValues(horizontal = horizontalGutter),
         sectionGap: Dp = ArecaTheme.spacing.lg,
         headerInsidePadding: PaddingValues = PaddingValues(
             start = ArecaTheme.spacing.xl,

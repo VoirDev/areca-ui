@@ -48,6 +48,10 @@ import dev.voir.areca.theme.ArecaDarkTheme
  *
  * A notice that takes the place of a progress bar — the download stopped — is announced.
  *
+ * A picture fills the page at any size. A PDF's column of pages and a stated file are no wider than
+ * [dev.voir.areca.foundation.adaptive.AdaptiveDefaults.ReadableWidth] and centred, which a phone
+ * never reaches: on a tablet or a desktop a page reads as a page rather than a poster.
+ *
  * Every word is a parameter: the ones the page cannot do without default to English, the rest to
  * nothing. Like the viewer, the page is dark whatever the application's theme.
  *

@@ -68,6 +68,53 @@ and `button`.
   `size: XSize`, the `Default` values, presets and `default(...)`, defaults provided for a subtree,
   `ActionColor`, parameter order, interaction and focus, and touch targets.
 
+## Window classes
+
+`ArecaTheme.window` is the space a composable is laid out in, classified, in
+`dev.voir.areca.window`. Lay a screen out by it, never by a device check: a tablet in a narrow split
+view is a compact window and gets the phone layout.
+
+| Part | Holds |
+| --- | --- |
+| `WidthClass` | `Compact` under 600dp, `Medium` from 600, `Expanded` from 840, `Large` from 1200, `ExtraLarge` from 1600. Ordered, so `width >= WidthClass.Medium` reads as "at least medium" |
+| `HeightClass` | `Compact` under 480dp (a phone on its side), `Medium` from 480, `Expanded` from 900 |
+| `InputMode` | `Touch` or `Pointer`: what presses the controls. Touch on Android and iOS, a pointer on the desktop, unless `ArecaThemeProvider(inputMode = …)` says otherwise |
+| `WindowProfile` | A familiar name for the combination: `PhonePortrait`, `PhoneLandscape`, `TabletPortrait`, `TabletLandscape`, `Desktop` |
+| `WindowClass` | `size`, `width`, `height`, `input`, `profile` and `isLandscape` together |
+
+| Composable | Use it for |
+| --- | --- |
+| `adaptive(compact, medium, expanded, large, extraLarge)` | A value for the width class in scope — a column count, a gutter. Only `compact` is required; each wider step defaults to the one below |
+| `AdaptiveContent(compact, medium, expanded, large, extraLarge)` | One of several layouts for the width class in scope, with the same fallback |
+| `WindowClassBox` | A box that reports its own size as the class of its content, so a pane answers for the pane |
+| `ProvideWindowClass` | A given class for a subtree: a preview or a test at a chosen window |
+
+```kotlin
+AdaptiveContent(
+    compact = { MessageList(onOpen = navigateToMessage) },
+    medium = {
+        Row(Modifier.fillMaxSize()) {
+            WindowClassBox(Modifier.width(adaptive(compact = 280.dp, expanded = 320.dp)).fillMaxHeight()) {
+                MessageList(onOpen = select)
+            }
+            VerticalDivider()
+            WindowClassBox(Modifier.weight(1f).fillMaxHeight()) { MessageDetail(selected) }
+        }
+    },
+)
+```
+
+`ArecaTheme.hostWindow` is the whole window's class whatever `WindowClassBox` is in between — what
+opens over the window (a sheet, a dialog, a menu) chooses its form by it.
+`AdaptiveDefaults.usesDialog(ArecaTheme.hostWindow)` is the rule `AdaptiveSheet` and `ConfirmSheet`
+follow: a dialog from an expanded width up, unless the window is too short; a sheet of your own can
+follow it too.
+
+The outermost provider reads the window's size from `LocalWindowInfo`; a nested provider, such as
+`ArecaDarkTheme`, keeps the class above it. Until the window is measured the size is unspecified,
+which reads as `Compact` width and `Medium` height. `WidthClass.select` and `HeightClass.select` pick
+a value outside composition.
+
 ## Components
 
 One section per family. Each component's KDoc is the reference for every parameter; this is the
@@ -92,6 +139,7 @@ map and the options that matter.
 | [Tables](#tables) | `table` |
 | [Navigation, tabs, tab bar and top bar](#navigation-tabs-tab-bar-and-top-bar) | `navigation`, `tabs`, `tabbar`, `topbar` |
 | [Wheel picker](#wheel-picker) | `wheel` |
+| [Adaptive layouts](#adaptive-layouts) | `adaptive` |
 
 ### Buttons and actions
 
@@ -103,7 +151,7 @@ map and the options that matter.
 | Component | Use it for |
 | --- | --- |
 | `Button` | An action with a label, and optionally an icon either side |
-| `IconButton` | An action shown by an icon alone. Always give it a `contentDescription` |
+| `IconButton` | An action shown by an icon alone. Always give it a `contentDescription`; under a pointer it shows as a tooltip |
 
 ```kotlin
 Button("Continue", onClick = onContinue, modifier = Modifier.fillMaxWidth(), loading = saving)
@@ -119,7 +167,9 @@ IconButton(
 `enabled = false` says the action is unavailable. `loading = true` says it is under way: the press
 is blocked, a spinner replaces the trailing slot, and assistive technology hears
 `loadingStateDescription`. Button sizes run `ExtraSmall` (32dp) to `ExtraLarge` (64dp), icon button
-sizes `Tiny` (20dp) to `ExtraLarge`; `Medium`, 48dp, is the default for both. The style factories
+sizes `Tiny` (20dp) to `ExtraLarge`; `Medium`, 48dp, is the default for both. Those are the touch
+heights; under a pointer every step is smaller — `Medium` is 36dp — and reserves no touch target (see
+[Customising](../../docs/customising.md#touch-and-pointer-sizes)). The style factories
 `solid`, `soft`, `outlined` and `plain` take an `ActionColor`; see
 [Customising](../../docs/customising.md).
 
@@ -542,12 +592,13 @@ a `Fallback` stands in for part of one and appears at once. Their slots line up 
 
 | Component | Use it for |
 | --- | --- |
-| `ConfirmSheet` | A yes-or-no question answered with a thumb: sign out, delete, discard |
+| `ConfirmSheet` | A yes-or-no question answered with a thumb: sign out, delete, discard. A centred dialog on a window from expanded up |
 | `ConfirmationDialog` | The same question as a centred dialog, with `suspend` handlers that show progress |
 | `Dialog` | A centred window for a short task — rename, pick one thing. End it with `ModalDefaults.Actions` |
 | `FlowModal` | A bottom sheet the user can drag between heights and away — a form, a picker, a filter |
 | `FlowModalActionBar` | A sheet's footer: the commit button, and an optional secondary action in `leading` |
 | `FlowModalSecondaryAction` | The secondary button in a `FlowModalActionBar` — "Cancel", "Reset" |
+| `TooltipBox` | A short label naming its content when the pointer rests on it or keyboard focus reaches it. Never under touch |
 | `DropdownPopup` | A surface hanging off the control that opened it — a menu |
 
 ```kotlin
@@ -641,6 +692,7 @@ Box {
 | `HorizontalDivider` / `VerticalDivider` | A rule, optionally labelled — "or" between two choices |
 | `RelativePositionLayout` | A companion on one of eight sides of its content — a label above a bar |
 | `Overlay` | A tint over a `Box`'s content without changing its size — a loading veil |
+| `VerticalScrollbar` / `HorizontalScrollbar` | A draggable scrollbar beside a scrolling element of your own, drawn under a pointer and never under touch. Areca's lists, grids and tables draw their own |
 
 ```kotlin
 BaseLayout(
@@ -1025,6 +1077,68 @@ WheelPicker(horizontalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md))
 Each column needs a width of its own — a `weight` or a fixed `width`. `valueDescription` turns an
 item into what a screen reader says for it; the default is `toString()`. Dates and times have their
 own pickers in [datetime](../datetime/README.md).
+
+### Adaptive layouts
+
+Layouts that take the form the window calls for, in `dev.voir.areca.foundation.adaptive`. Each
+falls back to the phone pattern Areca screens already use, and decides by the space it is given — a
+layout inside a narrow pane takes its compact form. See [Window classes](#window-classes).
+
+| Component | Compact | Wider |
+| --- | --- | --- |
+| `AdaptiveNavigation` | `TabBar` along the bottom | `NavRail` on a medium or expanded window (or a phone on its side); a sidebar of `NavItem` rows from 1200dp, collapsible to the rail |
+| `NavRail` | — | A column of icon-and-label destinations along the start edge, with a `header` slot for the primary action |
+| `ListDetail` | The list, then the detail in its place while `showDetail` | List (280–360dp) and detail side by side from a 600dp container, `detailPlaceholder` while nothing is open. A pointer drags the divider |
+| `SupportingPane` | Supporting content in an `AdaptiveSheet` while `supportingVisible` | A permanent 340–360dp pane at the end from a 920dp container |
+| `ContentColumn` | Full width less the gutters | Centred, no wider than `AdaptiveDefaults.ReadableWidth` (640dp) or a `maxWidth` you pass |
+| `AdaptiveGrid` | Two columns of 160dp cells | As many columns as fit, cells capped at `AdaptiveDefaults.ContentWidth` (1200dp) and centred |
+| `AdaptiveSheet` | A `FlowModal` from the bottom edge, capped at 640dp | A centred `Dialog` from an expanded window up |
+| `AdaptiveMenu` | A sheet of `AdaptiveMenuItem` rows | A `DropdownPopup` at the trigger, from an expanded window up or under a pointer |
+| `Modifier.contextMenu` | Opens an `AdaptiveMenu` on a long press | Opens it on a right-click, at the pointer |
+
+```kotlin
+AdaptiveNavigation(
+    destinations = listOf(
+        NavDestination(Tab.Home, "Home", ArecaIcons.Home),
+        NavDestination(Tab.Activity, "Activity", ArecaIcons.Receipt),
+    ),
+    selectedValue = tab,
+    onValueSelected = { tab = it },
+    sidebarCollapsed = collapsed,
+    onSidebarCollapsedChange = { collapsed = it },
+) {
+    ListDetail(
+        showDetail = selected != null,
+        list = { TransactionList(onOpen = { selected = it }) },
+        detail = { TransactionDetail(selected!!, onBack = if (isTwoPane) null else { { selected = null } }) },
+    )
+}
+```
+
+The slots of `AdaptiveNavigation`, `ListDetail` and `SupportingPane` know which form they are in —
+`layout`, `isTwoPane`, `isSupportingInline` — so a screen draws a back action or a "Filters" button
+only when the layout needs it. `ListDetail` and `SupportingPane` keep each part's saved state, such as
+a scroll position, when a resize switches the form. `AdaptiveSheet` and `AdaptiveMenu` choose by the
+whole window, not by the pane that opened them. `NavRail` takes `NavRailStyle` and `NavRailSize`,
+seeded by the provider like every other component.
+
+Under a pointer the layouts take what a desktop expects. `ListDetail`'s divider is a handle: a drag
+moves the list's edge between `AdaptiveDefaults.ListPaneMinWidth` (240dp) and what leaves the detail
+`AdaptiveDefaults.DetailPaneMinWidth` (320dp), and a double-click puts it back; pass
+`resizable = false` to pin it. `Modifier.contextMenu(state)` on a row opens its `AdaptiveMenu` on a
+right-click under a pointer and a long press under touch, from the Menu key or Shift+F10, and from
+assistive technology's long-click action; the gesture that opens the menu does not also click the
+row.
+
+```kotlin
+val menu = rememberDropdownPopup()
+ListItem(
+    title = { Text(transaction.merchant) },
+    onClick = { open(transaction) },
+    modifier = Modifier.contextMenu(menu),
+)
+AdaptiveMenu(state = menu, title = transaction.merchant, actions = actions)
+```
 
 ## Accessibility
 

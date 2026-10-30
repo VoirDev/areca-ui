@@ -3,11 +3,15 @@ package dev.voir.areca.playground.flow.gallery
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import dev.voir.areca.flow.gallery.part.GalleryAuthor
 import dev.voir.areca.flow.gallery.part.GalleryCaption
 import dev.voir.areca.flow.gallery.part.GalleryPrimaryAction
+import dev.voir.areca.foundation.adaptive.AdaptiveDefaults
 import dev.voir.areca.foundation.topbar.CloseAction
 import dev.voir.areca.foundation.topbar.TopBar
 import dev.voir.areca.foundation.topbar.TopBarTitleAlignment
@@ -25,7 +29,8 @@ import dev.voir.areca.theme.ArecaTheme
 
 /**
  * The gallery viewer the screen pages open, as the product page recipe draws it: a bar with the
- * position, a caption or an author line, thumbnails when there are several pictures, and an action.
+ * position, a caption or an author line, thumbnails when there are several pictures, and an action,
+ * the foot kept to a readable width on a wide window.
  *
  * @param pictures The pictures.
  * @param start The picture it opens on.
@@ -67,7 +72,11 @@ internal fun SampleGalleryViewer(
             )
         },
         footer = { viewer ->
-            Column(verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg)) {
+            // Under the picture at a readable width, not stretched across a desktop window.
+            Column(
+                Modifier.widthIn(max = AdaptiveDefaults.ReadableWidth).align(Alignment.CenterHorizontally),
+                verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg),
+            ) {
                 val picture = pictures[viewer.currentIndex]
                 if (author != null) {
                     GalleryAuthor(name = "Photo by $author", letters = author.take(1), detail = "12 October 2026", caption = picture.title)
