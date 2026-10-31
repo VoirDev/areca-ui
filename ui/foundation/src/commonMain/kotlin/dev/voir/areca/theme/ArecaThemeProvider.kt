@@ -11,6 +11,10 @@ import androidx.compose.ui.unit.dp
 import dev.voir.areca.ExperimentalArecaApi
 import dev.voir.areca.foundation.LocalContentColor
 import dev.voir.areca.foundation.LocalTextStyle
+import dev.voir.areca.foundation.adaptive.EdgeColumnSize
+import dev.voir.areca.foundation.adaptive.EdgeColumnStyle
+import dev.voir.areca.foundation.adaptive.LocalEdgeColumnSize
+import dev.voir.areca.foundation.adaptive.LocalEdgeColumnStyle
 import dev.voir.areca.foundation.adaptive.LocalNavRailSize
 import dev.voir.areca.foundation.adaptive.LocalNavRailStyle
 import dev.voir.areca.foundation.adaptive.NavRailSize
@@ -399,6 +403,8 @@ public fun ArecaThemeProvider(
             LocalNavListSize provides NavListSize.Default,
             LocalNavRailSize provides NavRailSize.Default,
             LocalNavRailStyle provides NavRailStyle.Default,
+            LocalEdgeColumnSize provides EdgeColumnSize.Default,
+            LocalEdgeColumnStyle provides EdgeColumnStyle.Default,
             LocalDropdownPopupSize provides DropdownPopupSize.Default,
             LocalConfirmationDialogSize provides ConfirmationDialogSize.Default,
             LocalConfirmationDialogStyle provides ConfirmationDialogStyle.Default,

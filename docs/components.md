@@ -25,7 +25,7 @@ region that is always dark in `ArecaDarkTheme`, both in `dev.voir.areca.theme` â
 | Put a link in text | `TextLink`; a prompt and a link ("No account? Sign up") `TextLinkPrompt` |
 | Show text; a title with a supporting line | `Text` with a `TextVariant`; `Heading` |
 | Lay a screen out differently on a tablet or desktop | `AdaptiveContent` or `adaptive(â€¦)` on `ArecaTheme.window`; `WindowClassBox` around each pane |
-| Navigate an app on phone, tablet and desktop | `AdaptiveNavigation`; `NavRail` on its own |
+| Navigate an app on phone, tablet and desktop | `AdaptiveNavigation` with `AdaptiveToolbar` on each screen; `EdgeColumn` or `NavRail` on their own |
 | Show a list beside the open item; filters beside results | `ListDetail`; `SupportingPane` |
 | Keep a form or a grid from stretching on a wide window | `ContentColumn`; `AdaptiveGrid` |
 | Open a form or a row's actions | `AdaptiveSheet`; `AdaptiveMenu`, from a right-click or long press with `Modifier.contextMenu` |
@@ -268,7 +268,13 @@ With a title and a row-wide tap target, use the list rows under
 
 | Component | Use it for | Package | Playground |
 | --- | --- | --- | --- |
-| [`AdaptiveNavigation`](../ui/foundation/README.md#adaptive-layouts) | An app's top-level navigation: bottom bar, rail or sidebar by window | `adaptive` | `AdaptiveNavigationShowcase` |
+| [`AdaptiveNavigation`](../ui/foundation/README.md#adaptive-layouts) | An app's top-level navigation: bottom bar, edge column, rail or sidebar by window | `adaptive` | `AdaptiveNavigationShowcase` |
+| [`AdaptiveToolbar`](../ui/foundation/README.md#adaptive-layouts) | A screen's title, back and actions: a top bar, or round buttons in the edge column | `adaptive` | `AdaptiveNavigationShowcase` |
+| [`EdgeColumn`](../ui/foundation/README.md#adaptive-layouts) | A floating column of status, toolbar, destinations and search along one edge | `adaptive` | `AdaptiveNavigationShowcase` |
+| [`EdgeButton`](../ui/foundation/README.md#adaptive-layouts) | A round action of the edge column: plain, primary or toggled | `adaptive` | `AdaptiveNavigationShowcase` |
+| [`VerticalTabBar`](../ui/foundation/README.md#adaptive-layouts) | Destinations as a vertical capsule of icons, the overflow in More | `adaptive` | `AdaptiveNavigationShowcase` |
+| [`EdgeStatus`](../ui/foundation/README.md#adaptive-layouts) | The app's own status icon in the edge column, filled when it needs attention | `adaptive` | `AdaptiveNavigationShowcase` |
+| [`FloatingSidebar`](../ui/foundation/README.md#adaptive-layouts) | A sidebar floating in from an edge over a scrim | `adaptive` | `AdaptiveNavigationShowcase` |
 | [`NavRail`](../ui/foundation/README.md#adaptive-layouts) | A column of icon-and-label destinations along the start edge | `adaptive` | `AdaptiveNavigationShowcase` |
 | [`ListDetail`](../ui/foundation/README.md#adaptive-layouts) | A list and the open item, side by side when there is room; a pointer drags the divider | `adaptive` | `ListDetailShowcase` |
 | [`SupportingPane`](../ui/foundation/README.md#adaptive-layouts) | Main content with filters, reviews or details beside it, or in a sheet | `adaptive` | `SupportingPaneShowcase` |

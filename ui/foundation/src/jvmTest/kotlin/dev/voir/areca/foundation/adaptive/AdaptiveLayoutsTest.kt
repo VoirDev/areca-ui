@@ -49,7 +49,12 @@ class AdaptiveLayoutsTest {
         }
     }
 
-    private fun navigationLayout(width: Int, height: Int, collapsed: Boolean = false): AdaptiveNavigationLayout {
+    private fun navigationLayout(
+        width: Int,
+        height: Int,
+        style: AdaptiveNavigationStyle = AdaptiveNavigationStyle.EdgeColumn,
+        sidebarVisible: Boolean = style == AdaptiveNavigationStyle.Rail,
+    ): AdaptiveNavigationLayout {
         var drawn: AdaptiveNavigationLayout? = null
         runComposeUiTest {
             setContent {
@@ -58,7 +63,8 @@ class AdaptiveLayoutsTest {
                         destinations = destinations,
                         selectedValue = "Home",
                         onValueSelected = {},
-                        sidebarCollapsed = collapsed,
+                        style = style,
+                        sidebarVisible = sidebarVisible,
                     ) { drawn = layout }
                 }
             }
@@ -71,10 +77,20 @@ class AdaptiveLayoutsTest {
     fun `navigation follows the window`() {
         assertEquals(AdaptiveNavigationLayout.BottomBar, navigationLayout(393, 852))
         assertEquals(AdaptiveNavigationLayout.Rail, navigationLayout(852, 393))
-        assertEquals(AdaptiveNavigationLayout.Rail, navigationLayout(690, 830))
-        assertEquals(AdaptiveNavigationLayout.Rail, navigationLayout(1180, 820))
-        assertEquals(AdaptiveNavigationLayout.Sidebar, navigationLayout(1440, 900))
-        assertEquals(AdaptiveNavigationLayout.Rail, navigationLayout(1440, 900, collapsed = true))
+        assertEquals(AdaptiveNavigationLayout.EdgeColumn, navigationLayout(690, 830))
+        assertEquals(AdaptiveNavigationLayout.EdgeColumn, navigationLayout(1180, 820))
+        assertEquals(AdaptiveNavigationLayout.EdgeColumn, navigationLayout(1440, 900))
+    }
+
+    @Test
+    fun `the rail style keeps the rail and the sidebar`() {
+        val rail = AdaptiveNavigationStyle.Rail
+        assertEquals(AdaptiveNavigationLayout.BottomBar, navigationLayout(393, 852, rail))
+        assertEquals(AdaptiveNavigationLayout.Rail, navigationLayout(852, 393, rail))
+        assertEquals(AdaptiveNavigationLayout.Rail, navigationLayout(690, 830, rail))
+        assertEquals(AdaptiveNavigationLayout.Rail, navigationLayout(1180, 820, rail))
+        assertEquals(AdaptiveNavigationLayout.Sidebar, navigationLayout(1440, 900, rail))
+        assertEquals(AdaptiveNavigationLayout.Rail, navigationLayout(1440, 900, rail, sidebarVisible = false))
     }
 
     @Test
@@ -112,6 +128,7 @@ class AdaptiveLayoutsTest {
                             destinations = destinations,
                             selectedValue = "Home",
                             onValueSelected = {},
+                            style = AdaptiveNavigationStyle.Rail,
                             footer = { drawn = true },
                         ) {}
                     }
@@ -131,7 +148,9 @@ class AdaptiveLayoutsTest {
         var screen: WindowClass? = null
         setContent {
             Window(690, 830) {
-                AdaptiveNavigation(destinations, "Home", {}) { screen = ArecaTheme.window }
+                AdaptiveNavigation(destinations, "Home", {}, style = AdaptiveNavigationStyle.Rail) {
+                    screen = ArecaTheme.window
+                }
             }
         }
         waitForIdle()

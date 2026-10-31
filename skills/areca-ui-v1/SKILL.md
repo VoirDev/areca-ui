@@ -272,6 +272,9 @@ size in pixels or an `isTablet` flag: a tablet in a narrow split view is a compa
 decides layout (`WidthClass.Compact` under 600dp, `Medium` from 600, `Expanded` from 840, `Large`
 from 1200, `ExtraLarge` from 1600); `HeightClass.Compact` (under 480dp) is a phone on its side;
 `InputMode` (`Touch` or `Pointer`) decides only what depends on how controls are pressed.
+`ArecaTheme.window.fold` is a foldable's fold (Android only, else `null`): keep text and controls
+off its `bounds`, and while its `state` is `FoldState.HalfOpened` lay each half out for itself.
+`ListDetail`, `SupportingPane` and the edge column follow it already.
 
 - One value: `adaptive(compact = 2, medium = 3, expanded = 4)`. Name only `compact` and the steps
   where the value changes; each wider step falls back to the one below.
@@ -279,15 +282,29 @@ from 1200, `ExtraLarge` from 1600); `HeightClass.Compact` (under 480dp) is a pho
 - Panes: wrap each pane of a multi-pane layout in `WindowClassBox(modifier) { … }` so what is inside
   reads the pane's class, not the window's.
 - Previews and tests at a chosen window: `ProvideWindowClass(WindowClass(DpSize(820.dp, 1180.dp),
-  InputMode.Touch)) { … }`. It changes the class only; to draw at another input's sizes too, nest
+  InputMode.Touch)) { … }`; a foldable adds `fold = WindowFold.vertical(at = 380.dp, height = 720.dp)`. It changes the class only; to draw at another input's sizes too, nest
   `ArecaThemeProvider(inputMode = …)`.
 - Use the adaptive layouts (`dev.voir.areca.foundation.adaptive`) before branching by hand:
-  `AdaptiveNavigation` for the app shell (bottom bar, rail, sidebar), `ListDetail`,
+  `AdaptiveNavigation` for the app shell (bottom bar on a phone, the edge column from medium up),
+  `ListDetail`,
   `SupportingPane`, `ContentColumn` for forms and auth, `AdaptiveGrid`, `AdaptiveSheet` instead of a
   bare `FlowModal` for forms (`ConfirmSheet` is already a dialog on wide windows), `AdaptiveMenu`
   for a row's actions. Their slots say which form they are in (`layout`, `isTwoPane`,
   `isSupportingInline`): draw a back action only when `!isTwoPane`, a "Filters" button only when
   `!isSupportingInline`. Signatures: reference/signatures.md.
+- Inside `AdaptiveNavigation`, every screen declares its title, back and actions with
+  `AdaptiveToolbar(title, onBack, actions)`, never a `TopBar`: it is a bar on a phone, and from a
+  medium window up it hands back to the edge column and places the actions by
+  `ArecaTheme.hostWindow.actionReach` — beside the title as labelled buttons on a tablet on its side
+  or under a pointer (`ActionReach.Header`), at the foot of the column between the tabs and search on
+  a tablet held upright or an unfolded foldable (`ActionReach.Thumb`). A screen that draws its own
+  actions branches on the same `actionReach`, never on width or on the device. Keep text and
+  controls inside the scope's `contentPadding` (the column's clearance) and let backgrounds and
+  media run under the column. The app's primary action goes in `header` (an `EdgeButton` with
+  `EdgeButtonEmphasis.Primary` in the column; it follows the reach too), its sync or offline state in
+  `status` as an `EdgeStatus` with the full text in `footer`, search in `onSearch`. Never draw
+  your own buttons along the column's edge or across `ArecaTheme.window`'s top as a toolbar.
+  Placement, the screen states and a shell of your own: reference/adaptive-shell.md.
 - Desktop affordances come with the components; do not build them by hand. Put
   `Modifier.contextMenu(menu)` on a row that has an `AdaptiveMenu`, ahead of its `clickable`: it
   opens the menu on a right-click, a long press, the Menu key and the accessibility long-click, and
@@ -594,6 +611,9 @@ Foundation:
   type role, gap, corner, elevation or duration, re-theming for a brand, or building a dark region.
 - [reference/signatures.md](reference/signatures.md) — calling a foundation component whose
   parameters, overloads, defaults or package you are not sure of, or fixing an import.
+- [reference/adaptive-shell.md](reference/adaptive-shell.md) — an app shell for phones, tablets and
+  foldables: where destinations, a screen's toolbar, search and status go on each window, and
+  `AdaptiveToolbar` inside `AdaptiveNavigation`.
 - [reference/recipes.md](reference/recipes.md) — building a settings screen, a validated form, a
   remote list, a confirmation, a tabbed shell, pickers (segmented, pill, three-state), a bottom
   sheet, a menu, a dark region, a card with a footer, a custom pressable surface or an analytics

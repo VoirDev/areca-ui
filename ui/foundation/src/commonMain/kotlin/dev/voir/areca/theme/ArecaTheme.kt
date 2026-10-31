@@ -97,7 +97,7 @@ public object ArecaTheme {
      * Without a provider it reads the hosting window and the platform's usual input mode.
      */
     public val window: WindowClass
-        @Composable @ReadOnlyComposable get() = LocalWindowClass.current ?: hostWindowClass(PlatformInputMode)
+        @Composable @ReadOnlyComposable get() = LocalWindowClass.current ?: hostWindowClass(PlatformInputMode, fold = null)
 
     /**
      * The whole window's class, ignoring any [WindowClassBox] in between.
