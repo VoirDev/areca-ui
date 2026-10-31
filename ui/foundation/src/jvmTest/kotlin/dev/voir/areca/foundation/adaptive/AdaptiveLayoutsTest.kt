@@ -78,6 +78,55 @@ class AdaptiveLayoutsTest {
     }
 
     @Test
+    fun `an app's own bottom bar floats over the full-height screen and says what it covers`() = runComposeUiTest {
+        var screenHeight: Int? = null
+        var covered: Dp? = null
+        setContent {
+            Window(393, 852) {
+                AdaptiveNavigation(
+                    destinations = destinations,
+                    selectedValue = "Home",
+                    onValueSelected = {},
+                    bottomBar = { Box(Modifier.fillMaxWidth().height(72.dp)) },
+                ) {
+                    covered = contentPadding.calculateBottomPadding()
+                    Box(Modifier.fillMaxSize().onGloballyPositioned { screenHeight = it.size.height })
+                }
+            }
+        }
+        waitForIdle()
+
+        assertEquals(72.dp, covered)
+        // The screen keeps the window's whole height: the bar is drawn over it, not beside it.
+        assertEquals(with(density) { 852.dp.roundToPx() }, screenHeight)
+    }
+
+    @Test
+    fun `the footer shows on the rail and the sidebar, never on the bottom bar`() {
+        fun footerDrawn(width: Int, height: Int): Boolean {
+            var drawn = false
+            runComposeUiTest {
+                setContent {
+                    Window(width, height) {
+                        AdaptiveNavigation(
+                            destinations = destinations,
+                            selectedValue = "Home",
+                            onValueSelected = {},
+                            footer = { drawn = true },
+                        ) {}
+                    }
+                }
+                waitForIdle()
+            }
+            return drawn
+        }
+
+        assertFalse(footerDrawn(393, 852))
+        assertTrue(footerDrawn(1180, 820))
+        assertTrue(footerDrawn(1440, 900))
+    }
+
+    @Test
     fun `the screen beside a rail reads the space the rail leaves`() = runComposeUiTest {
         var screen: WindowClass? = null
         setContent {

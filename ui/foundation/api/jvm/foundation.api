@@ -46,7 +46,7 @@ public final class dev/voir/areca/foundation/adaptive/AdaptiveMenuKt {
 }
 
 public final class dev/voir/areca/foundation/adaptive/AdaptiveNavigationKt {
-	public static final fun AdaptiveNavigation (Ljava/util/List;Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;ZLkotlin/jvm/functions/Function1;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+	public static final fun AdaptiveNavigation (Ljava/util/List;Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;ZLkotlin/jvm/functions/Function1;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;III)V
 }
 
 public final class dev/voir/areca/foundation/adaptive/AdaptiveNavigationLayout : java/lang/Enum {
@@ -59,6 +59,7 @@ public final class dev/voir/areca/foundation/adaptive/AdaptiveNavigationLayout :
 }
 
 public abstract interface class dev/voir/areca/foundation/adaptive/AdaptiveNavigationScope {
+	public abstract fun getContentPadding ()Landroidx/compose/foundation/layout/PaddingValues;
 	public abstract fun getLayout ()Ldev/voir/areca/foundation/adaptive/AdaptiveNavigationLayout;
 }
 
