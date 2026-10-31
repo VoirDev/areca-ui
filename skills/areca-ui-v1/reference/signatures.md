@@ -38,8 +38,8 @@ Every foundation symbol is imported from its family's package. Extension composa
 | `….foundation.collection`, `….foundation.table` | `ContentList`, `PagedContentList`, `GroupedContentList`, `GroupedPagedContentList`, `LimitedContentListState`, `PagedContentListState`, `ContentListGroup`, `ContentListLabels`, `ContentListDefaults`, `LazyVerticalGroupedGrid`, `LazyHorizontalGroupedGrid`, `GroupedGridData`; `Table`, `LazyTable`, `TableColumn` |
 | `….foundation.navigation`, `….foundation.wheel`, `….foundation.slot` | `NavList`, `NavNode`, `NavData`, `NavItem`, `SwipePager`, `PagerControls`, `PageIndicator`, `PageIndicatorVariant`, `PageIndicatorStyle`, `PageIndicatorSize`, `PageCounter`, `PageCounterStyle`, `PageCounterSize`, `rememberPagerController`; `WheelPicker`, `WheelPickerColumn`, `WheelPickerItem`, `WheelPickerHighlight`, `WheelPickerEdgeFade`, `rememberWheelPickerColumnState`; `SlotRow`, `SlotRowLayout` (`Default`, `Auto`, `Center`, `Top`, `FirstLine`, `Centered`, `Fill`, `wrap(…)`), `SlotRowAlignment`, `Modifier.firstLineCenter(textStyle)`, `FirstLineCenter` |
 | `dev.voir.areca.indication`, `.modifier`, `.platform`, `.shape` | `TouchIndication`, `FadeIndication`, `StrokeIndication`, `LiquidSweepIndication`, `FocusOutline`; `clickCursor`, `minimumTouchTarget`, `thenIf`; `SystemBars`; `SquircleShape` |
-| `….foundation.adaptive` | `AdaptiveNavigation`, `AdaptiveNavigationLayout`, `AdaptiveNavigationScope`, `NavRail`, `NavDestination`, `NavRailStyle`, `NavRailSize`, `ListDetail`, `ListDetailScope`, `SupportingPane`, `SupportingPaneScope`, `ContentColumn`, `AdaptiveGrid`, `AdaptiveSheet`, `AdaptiveMenu`, `AdaptiveMenuItem`, `contextMenu`, `AdaptiveDefaults` |
-| `dev.voir.areca.window` | `WindowClass`, `WidthClass`, `HeightClass`, `InputMode`, `WindowProfile`, `adaptive`, `AdaptiveContent`, `WindowClassBox`, `ProvideWindowClass` |
+| `….foundation.adaptive` | `AdaptiveNavigation`, `AdaptiveNavigationStyle`, `AdaptiveNavigationLayout`, `AdaptiveNavigationScope`, `AdaptiveToolbar`, `AdaptiveToolbarAction`, `EdgeColumn`, `EdgeColumnSide`, `EdgeColumnStyle`, `EdgeColumnSize`, `EdgeButton`, `EdgeButtonEmphasis`, `VerticalTabBar`, `EdgeStatus`, `FloatingSidebar`, `NavRail`, `NavDestination`, `NavRailStyle`, `NavRailSize`, `ListDetail`, `ListDetailScope`, `SupportingPane`, `SupportingPaneScope`, `ContentColumn`, `AdaptiveGrid`, `AdaptiveSheet`, `AdaptiveMenu`, `AdaptiveMenuItem`, `contextMenu`, `AdaptiveDefaults` |
+| `dev.voir.areca.window` | `WindowClass`, `WindowFold`, `FoldOrientation`, `FoldState`, `WidthClass`, `HeightClass`, `InputMode`, `WindowProfile`, `adaptive`, `AdaptiveContent`, `WindowClassBox`, `ProvideWindowClass` |
 | `dev.voir.areca` | `ExperimentalArecaApi` |
 
 ## Theme and helpers
@@ -50,13 +50,25 @@ included: [theme.md](theme.md).
 
 ```kotlin
 // dev.voir.areca.window — read the one in scope as ArecaTheme.window
-class WindowClass(val size: DpSize, val input: InputMode) // + width: WidthClass, height: HeightClass,
-                                                          //   profile: WindowProfile, isLandscape
+class WindowClass(val size: DpSize, val input: InputMode, val fold: WindowFold? = null)
+    // + width: WidthClass, height: HeightClass, profile: WindowProfile, actionReach: ActionReach,
+    // isLandscape; WindowClass.WideAspectRatio = 1.25f (touch at least this wide = on its side)
+enum class ActionReach { Header, Thumb }
+    // Header: a pointer, a phone on its side, touch at least WideAspectRatio wide. Thumb: a phone, a
+    // tablet held upright, an unfolded foldable. Read it from ArecaTheme.hostWindow, not the pane.
+class WindowFold(val orientation: FoldOrientation, val bounds: DpRect,
+    val state: FoldState = FoldState.Flat, val isSeparating: Boolean = state == FoldState.HalfOpened)
+    // WindowFold.vertical(at: Dp, height: Dp, state = Flat); WindowFold.horizontal(at: Dp, width: Dp,
+    // state = HalfOpened). FoldOrientation { Vertical, Horizontal }; FoldState { Flat, HalfOpened }.
+    // Reported on Android only. In a WindowClassBox: the box's coordinates, null when it misses the box.
+    // Given to ProvideWindowClass: measured from that provider's top-left corner.
 enum class WidthClass(val minWidth: Dp) { Compact, Medium, Expanded, Large, ExtraLarge }
     // 0, 600, 840, 1200, 1600dp; WidthClass.of(width); select(compact, medium = compact, …)
 enum class HeightClass(val minHeight: Dp) { Compact, Medium, Expanded } // 0, 480, 900dp
 enum class InputMode { Touch, Pointer }
 enum class WindowProfile { PhonePortrait, PhoneLandscape, TabletPortrait, TabletLandscape, Desktop }
+    // Under touch, TabletLandscape vs TabletPortrait by shape (WideAspectRatio), not width; Desktop
+    // is expanded and wider under a pointer.
 
 fun <T> adaptive(compact: T, medium: T = compact, expanded: T = medium, large: T = expanded,
     extraLarge: T = large): T
@@ -71,19 +83,66 @@ fun ProvideWindowClass(windowClass: WindowClass, content: @Composable () -> Unit
 class NavDestination<T : Any>(val value: T, val label: String, val icon: ImageVector,
     val enabled: Boolean = true)
 fun <T : Any> AdaptiveNavigation(destinations: List<NavDestination<T>>, selectedValue: T?,
-    onValueSelected: (T) -> Unit, modifier: Modifier = Modifier, sidebarCollapsed: Boolean = false,
-    onSidebarCollapsedChange: ((Boolean) -> Unit)? = null,
-    sidebarToggleDescription: String = if (sidebarCollapsed) "Expand navigation" else "Collapse navigation",
+    onValueSelected: (T) -> Unit, modifier: Modifier = Modifier,
+    style: AdaptiveNavigationStyle = AdaptiveNavigationStyle.EdgeColumn,
+    edgeSide: EdgeColumnSide = EdgeColumnSide.Auto,
+    sidebarVisible: Boolean = style == AdaptiveNavigationStyle.Rail,
+    onSidebarVisibleChange: ((Boolean) -> Unit)? = null,
+    sidebarToggleDescription: String = if (sidebarVisible) "Hide navigation" else "Show navigation",
+    onSearch: (() -> Unit)? = null, searchDescription: String = "Search",
+    status: (@Composable AdaptiveNavigationScope.() -> Unit)? = null,
     header: (@Composable AdaptiveNavigationScope.() -> Unit)? = null,
+    sidebarSections: (@Composable ColumnScope.() -> Unit)? = null,
     footer: (@Composable AdaptiveNavigationScope.() -> Unit)? = null,
     bottomBar: (@Composable AdaptiveNavigationScope.() -> Unit)? = null,
     content: @Composable AdaptiveNavigationScope.() -> Unit)
-// bottomBar replaces the TabBar on a compact window and floats over the content, which keeps the full
-// height and reads the bar's height as AdaptiveNavigationScope.contentPadding (zero in every other
-// form). footer sits at the foot of the rail and the sidebar, above the collapse toggle.
 // AdaptiveNavigationScope.layout: AdaptiveNavigationLayout.BottomBar (compact, not short) |
-// Rail (medium, expanded, short, or collapsed sidebar) | Sidebar (large and up). The header shows
-// on the rail and the sidebar only. Content sits in a WindowClassBox.
+// Rail (a phone on its side; under style Rail also medium and expanded, or large with the sidebar
+// hidden) | Sidebar (large and up under style Rail) | EdgeColumn (medium and up under style
+// EdgeColumn). Content sits in a WindowClassBox. contentPadding: the bottomBar's height on a compact
+// window, EdgeColumnSize.clearance on the column's side beside the column, else zero.
+// Edge column: status and back at its top, header too under ActionReach.Header; a VerticalTabBar,
+// then under ActionReach.Thumb header and the screen's actions, then the onSearch button at its foot; the toggle opens a FloatingSidebar (rows, sidebarSections,
+// footer) and the tabs hide while it is open. status and footer also sit at the foot of the rail.
+// Full guide: adaptive-shell.md.
+class AdaptiveToolbarAction(val icon: ImageVector, val label: String, val onClick: () -> Unit,
+    val primary: Boolean = false, val enabled: Boolean = true, val destructive: Boolean = false)
+fun AdaptiveToolbar(title: String, modifier: Modifier = Modifier, onBack: (() -> Unit)? = null,
+    actions: List<AdaptiveToolbarAction> = emptyList(), backDescription: String = "Back",
+    moreDescription: String = "More", windowInsets: WindowInsets = WindowInsets(0, 0, 0, 0))
+// A TopBar except beside an EdgeColumn, where it draws the title as a heading and hands back to the
+// column (the most recently drawn screen's toolbar wins). Its actions: labelled buttons beside the
+// title under ActionReach.Header, round buttons at the column's foot under ActionReach.Thumb. Three
+// places in each, three icons in the bar, More counted; the rest fold into More. In two
+// panes the ListDetail list's and the SupportingPane supporting pane's toolbars stay bars.
+fun EdgeColumn(modifier: Modifier = Modifier, side: EdgeColumnSide = EdgeColumnSide.Auto,
+    size: EdgeColumnSize = LocalEdgeColumnSize.current ?: EdgeColumnSize.Default,
+    windowInsets: WindowInsets = /* safeDrawing, vertical and on its side */,
+    top: @Composable ColumnScope.() -> Unit, bottom: @Composable ColumnScope.() -> Unit)
+fun EdgeButton(imageVector: ImageVector, contentDescription: String, onClick: () -> Unit,
+    modifier: Modifier = Modifier, emphasis: EdgeButtonEmphasis = EdgeButtonEmphasis.Plain,
+    enabled: Boolean = true, style: EdgeColumnStyle = …, size: EdgeColumnSize = …)
+// EdgeColumnSide: Auto (the camera cutout's side, End without one) | Start | End. Align the column
+// to the same edge. At a horizontal fold, top stays above it and bottom below it.
+// EdgeButtonEmphasis: Plain | Primary (brand fill) | Toggled (contrast fill: an open sidebar)
+fun <T : Any> VerticalTabBar(destinations: List<NavDestination<T>>, selectedValue: T?,
+    onValueSelected: (T) -> Unit, modifier: Modifier = Modifier, moreLabel: String = "More",
+    style: EdgeColumnStyle = …, size: EdgeColumnSize = …)
+// Icons only, labels announced and shown as tooltips; past EdgeColumnSize.maxTabs (5) the last
+// tab is More, an AdaptiveMenu of the rest.
+fun EdgeStatus(imageVector: ImageVector, contentDescription: String, modifier: Modifier = Modifier,
+    attention: Boolean = false, onClick: (() -> Unit)? = null, style: EdgeColumnStyle = …,
+    size: EdgeColumnSize = …)
+fun FloatingSidebar(visible: Boolean, onDismissRequest: () -> Unit, modifier: Modifier = Modifier,
+    side: EdgeColumnSide = EdgeColumnSide.Auto, width: Dp = AdaptiveDefaults.FloatingSidebarWidth,
+    edgeOffset: Dp = 0.dp, title: String = "Navigation", dismissLabel: String = "Close navigation",
+    style: EdgeColumnStyle = …, size: EdgeColumnSize = …, windowInsets: WindowInsets = …,
+    content: @Composable ColumnScope.() -> Unit)
+// Draw it in a full-size Box under the EdgeColumn. Scrim tap and Escape call onDismissRequest;
+// route the platform back gesture there too.
+// EdgeColumnSize.Default: 48dp buttons in a 56dp column under touch (40 in 48 under a pointer), a
+// 12dp inset and gap, so clearance = 80dp (72dp). EdgeColumnStyle.Default: bgSurface circles with a
+// borderStrong hairline, the selected tab on bgBrandMuted, elevation.lg shadows.
 fun <T : Any> NavRail(destinations: List<NavDestination<T>>, selectedValue: T?,
     onValueSelected: (T) -> Unit, modifier: Modifier = Modifier,
     style: NavRailStyle = LocalNavRailStyle.current ?: NavRailStyle.Default,
@@ -96,6 +155,7 @@ fun ListDetail(showDetail: Boolean, modifier: Modifier = Modifier,
     detailPlaceholder: (@Composable ListDetailScope.() -> Unit)? = null,
     list: @Composable ListDetailScope.() -> Unit, detail: @Composable ListDetailScope.() -> Unit)
 // Two panes from a 600dp container (ListDetailScope.isTwoPane), else the detail replaces the list.
+// At a vertical fold that leaves both panes their minimum widths, the panes meet at the fold.
 // Under a pointer and resizable, the divider drags (ListPaneMinWidth 240 to leaving
 // DetailPaneMinWidth 320); a double-click resets it.
 fun SupportingPane(supportingVisible: Boolean, onSupportingDismissRequest: () -> Unit,
@@ -128,7 +188,7 @@ fun Modifier.contextMenu(state: DropdownPopupState, enabled: Boolean = true,
 // key or Shift+F10, and the accessibility long-click (named `label`) open state's AdaptiveMenu; the
 // gesture that opens it never also clicks.
 // AdaptiveDefaults: ReadableWidth 640, ContentWidth 1200, TwoPaneMinWidth 600,
-// SupportingPaneMinWidth 920, SidebarWidth 256, GridMinCellWidth 160, ListPaneMinWidth 240,
+// SupportingPaneMinWidth 920, SidebarWidth 256, FloatingSidebarWidth 300, GridMinCellWidth 160, ListPaneMinWidth 240,
 // DetailPaneMinWidth 320 (dp); listPaneWidth(container),
 // supportingPaneWidth(container); usesDialog(window) — true from an expanded width up unless the
 // window is short. A sheet of your own: if (AdaptiveDefaults.usesDialog(ArecaTheme.hostWindow))

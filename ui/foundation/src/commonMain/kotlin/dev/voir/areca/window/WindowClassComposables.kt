@@ -1,16 +1,30 @@
 package dev.voir.areca.window
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.onPlaced
+import androidx.compose.ui.layout.positionInWindow
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.isSpecified
 import dev.voir.areca.theme.ArecaTheme
@@ -103,6 +117,10 @@ internal fun currentInputMode(): InputMode = LocalInputMode.current ?: PlatformI
  * It changes the class, not the theme: sizing and type stay the ones the provider above chose. To
  * draw at another input's sizes as well, nest `ArecaThemeProvider(inputMode = …)` inside.
  *
+ * A [WindowClass.fold] given here is measured from this provider's top-left corner, so a preview of
+ * a foldable drawn anywhere on a page, at any scale, puts its fold where the class says. Its content
+ * is then laid out in one box, as a `Box` with its minimum size passed on lays out its children.
+ *
  * ```kotlin
  * ProvideWindowClass(WindowClass(DpSize(820.dp, 1180.dp), InputMode.Touch)) {
  *     InboxScreen()
@@ -117,8 +135,30 @@ public fun ProvideWindowClass(
     windowClass: WindowClass,
     content: @Composable () -> Unit,
 ) {
-    ProvideWindowLocals(windowClass, host = true, content = content)
+    if (windowClass.fold == null) {
+        ProvideWindowLocals(windowClass, host = true, content = content)
+        return
+    }
+    // A fold given here is in this provider's coordinates, wherever it is drawn and however it is
+    // scaled — a device frame in a preview — so boxes inside measure their place from it.
+    val anchor = remember { FoldAnchor() }
+    Box(modifier = Modifier.onPlaced { anchor.coordinates = it }, propagateMinConstraints = true) {
+        CompositionLocalProvider(LocalFoldAnchor provides anchor) {
+            ProvideWindowLocals(windowClass, host = true, content = content)
+        }
+    }
 }
+
+/** Where the class that reported a fold was placed, so a fold can be measured from it. */
+internal class FoldAnchor {
+    var coordinates: LayoutCoordinates? = null
+}
+
+/**
+ * The [ProvideWindowClass] a fold was given to, or `null` when the fold is the window's own and is
+ * measured from the window.
+ */
+internal val LocalFoldAnchor = staticCompositionLocalOf<FoldAnchor?> { null }
 
 /**
  * A box that reports its own size, rather than the window's, as the window class of its content.
@@ -129,7 +169,8 @@ public fun ProvideWindowClass(
  *
  * The class takes the box's largest allowed width and height. Along an axis the box is unbounded in
  * — the height of an item in a scrolling column — it keeps the outer class's length. The input mode
- * is always the outer one.
+ * is always the outer one. The window's [WindowClass.fold] reaches the box in the box's own
+ * coordinates once it has been placed, and only when it crosses the box.
  *
  * ```kotlin
  * Row(Modifier.fillMaxSize()) {
@@ -152,21 +193,72 @@ public fun WindowClassBox(
     content: @Composable BoxScope.() -> Unit,
 ) {
     val outer = ArecaTheme.window
+    val foldView = rememberFoldView()
     BoxWithConstraints(
-        modifier = modifier,
+        modifier = modifier.then(foldView.modifier),
         contentAlignment = contentAlignment,
         propagateMinConstraints = propagateMinConstraints,
     ) {
         val outerSize = outer.size
         val width = if (constraints.hasBoundedWidth) maxWidth else outerSize.widthOrUnspecified()
         val height = if (constraints.hasBoundedHeight) maxHeight else outerSize.heightOrUnspecified()
-        val windowClass = remember(width, height, outer.input) {
-            WindowClass(DpSize(width, height), outer.input)
+        val fold = foldView.foldIn(DpSize(width, height))
+        val windowClass = remember(width, height, outer.input, fold) {
+            WindowClass(DpSize(width, height), outer.input, fold)
         }
         ProvideWindowLocals(windowClass, host = false) {
             content()
         }
     }
+}
+
+/**
+ * The window's fold as one element sees it: put [modifier] on the element, then ask [foldIn] with
+ * its size.
+ */
+@Stable
+internal class FoldView(private val windowFold: WindowFold?, anchor: FoldAnchor?, density: Density) {
+    private var origin by mutableStateOf<DpOffset?>(null)
+
+    /** Records where the element was placed, while there is a fold to rebase. */
+    val modifier: Modifier = if (windowFold == null) {
+        Modifier
+    } else {
+        Modifier.onGloballyPositioned { coordinates ->
+            // Measured in the reporting provider's own, unscaled coordinates when there is one.
+            val from = anchor?.coordinates?.takeIf { it.isAttached }
+            val position = from?.localPositionOf(coordinates, Offset.Zero) ?: coordinates.positionInWindow()
+            origin = with(density) { DpOffset(position.x.toDp(), position.y.toDp()) }
+        }
+    }
+
+    /**
+     * The fold in the element's coordinates, or `null`: no fold, the element not placed yet, or a
+     * fold that does not cross it.
+     *
+     * @param size The element's size.
+     * @return The fold, or `null`.
+     */
+    fun foldIn(size: DpSize): WindowFold? {
+        val placed = origin ?: return null
+        if (windowFold == null || !size.isSpecified) return null
+        return windowFold.within(placed, size)
+    }
+}
+
+/**
+ * Remembers how the window's fold looks from the element its [FoldView.modifier] is put on. The
+ * window's fold is the host window's, whatever box the element is inside: in window coordinates, or
+ * in the coordinates of the [ProvideWindowClass] that gave it.
+ *
+ * @return The view of the fold.
+ */
+@Composable
+internal fun rememberFoldView(): FoldView {
+    val windowFold = LocalHostWindowClass.current?.fold
+    val anchor = LocalFoldAnchor.current
+    val density = LocalDensity.current
+    return remember(windowFold, anchor, density) { FoldView(windowFold, anchor, density) }
 }
 
 /**
@@ -250,9 +342,9 @@ internal fun ProvideThemeWindowClass(
 ) {
     val outer = LocalWindowClass.current
     val windowClass = when {
-        outer == null -> hostWindowClass(inputMode ?: PlatformInputMode)
+        outer == null -> hostWindowClass(inputMode ?: PlatformInputMode, platformWindowFold())
         inputMode == null || inputMode == outer.input -> outer
-        else -> WindowClass(outer.size, inputMode)
+        else -> WindowClass(outer.size, inputMode, outer.fold)
     }
     // A nested provider inside a box keeps the box as its class and the window as its host.
     ProvideWindowLocals(windowClass, host = outer == null, content = content)
@@ -265,14 +357,15 @@ internal fun ProvideThemeWindowClass(
  * layout; both read as an unspecified size rather than as a zero-sized window.
  *
  * @param input Input mode to report.
+ * @param fold The window's fold, or `null`.
  * @return The window's class.
  */
 @Composable
 @ReadOnlyComposable
-internal fun hostWindowClass(input: InputMode): WindowClass {
+internal fun hostWindowClass(input: InputMode, fold: WindowFold?): WindowClass {
     val size = LocalWindowInfo.current.containerDpSize
     val measured = size.isSpecified && size.width.value > 0f && size.height.value > 0f
-    return WindowClass(if (measured) size else DpSize.Unspecified, input)
+    return WindowClass(if (measured) size else DpSize.Unspecified, input, fold)
 }
 
 private fun DpSize.widthOrUnspecified(): Dp = if (isSpecified) width else Dp.Unspecified

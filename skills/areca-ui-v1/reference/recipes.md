@@ -16,6 +16,7 @@ Screens built from a flow module have their recipes in that module's reference:
 | Cropping a photo on its own | [crop.md](crop.md) |
 | Calendars, date ranges, time and date-time pickers | [datetime.md](datetime.md) |
 | Charts beyond the analytics overview below | [charts.md](charts.md) |
+| An app shell across phone, tablet and foldable: destinations, toolbars, search and status | [adaptive-shell.md](adaptive-shell.md) |
 
 The first recipe lists its imports in full; the others import from the packages in
 [signatures.md](signatures.md) plus the usual Compose ones. Literal strings stand in for the app's

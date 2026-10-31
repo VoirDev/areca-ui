@@ -26,6 +26,11 @@ kotlin {
             api(libs.compose.ui)
         }
 
+        // The fold a foldable reports, read in `platformWindowFold`.
+        androidMain.dependencies {
+            implementation(libs.androidx.window)
+        }
+
         commonTest.dependencies {
             implementation(kotlin("test"))
             implementation(libs.kotlinx.coroutines.test)

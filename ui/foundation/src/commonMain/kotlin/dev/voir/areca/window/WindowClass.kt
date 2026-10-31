@@ -153,11 +153,15 @@ public enum class InputMode {
 }
 
 /**
- * A familiar name for a combination of size classes and input.
+ * A familiar name for a combination of size classes, shape and input.
  *
  * Derived from the window, never from the device: a foldable unfolded is a [TabletPortrait], and a
  * desktop window dragged narrow is a [PhonePortrait]. Use it where a design is specified per
  * profile; branch on [WindowClass.width] where it is specified per breakpoint.
+ *
+ * Under touch a tablet's profile is decided by its shape, not its width: a 13-inch tablet held
+ * upright is as wide as a small one on its side, and an unfolded foldable on its side is wider than
+ * a tablet held upright while still being held like one.
  */
 public enum class WindowProfile {
     /** Width [WidthClass.Compact]: a phone held upright, a folded foldable, a narrow window. */
@@ -166,14 +170,42 @@ public enum class WindowProfile {
     /** Height [HeightClass.Compact] at any width: a phone on its side. */
     PhoneLandscape,
 
-    /** Width [WidthClass.Medium]: a tablet held upright, an unfolded foldable. */
+    /**
+     * Touch at [WidthClass.Medium] and wider, less than [WindowClass.WideAspectRatio] times as wide as
+     * it is tall: a tablet held upright, an unfolded foldable either way round. Also a medium window
+     * under a pointer.
+     */
     TabletPortrait,
 
-    /** Width [WidthClass.Expanded] under touch: a tablet on its side. */
+    /** Touch at [WidthClass.Medium] and wider, at least [WindowClass.WideAspectRatio] times as wide as it is tall: a tablet on its side. */
     TabletLandscape,
 
-    /** Width [WidthClass.Expanded] under a pointer, or [WidthClass.Large] and wider. */
+    /** Width [WidthClass.Expanded] and wider under a pointer. */
     Desktop,
+}
+
+/**
+ * Where a screen's actions are within reach: beside its title, or at the foot of the window under
+ * the thumbs.
+ *
+ * It answers how the window is held rather than how wide it is. A tablet on its side stands on a
+ * desk or is held by its short edges, and has room beside a title for labelled buttons; a phone, a
+ * tablet held upright and an unfolded foldable either way round are held from below, where only the
+ * foot of the window is in reach. A mouse or trackpad reaches everywhere, so a pointer is always
+ * [Header].
+ *
+ * Read it from the whole window, [dev.voir.areca.theme.ArecaTheme.hostWindow]: the hands hold the
+ * device, not the pane a screen is drawn in.
+ */
+public enum class ActionReach {
+    /**
+     * Beside the title: a pointer at any size, a phone on its side, and a touch window at least
+     * [WindowClass.WideAspectRatio] times as wide as it is tall.
+     */
+    Header,
+
+    /** At the foot of the window: a phone, a tablet held upright, an unfolded foldable. */
+    Thumb,
 }
 
 /**
@@ -187,11 +219,14 @@ public enum class WindowProfile {
  *
  * @property size Width and height of the window or container. Unspecified until it is measured.
  * @property input What presses the controls.
+ * @property fold The fold or hinge across the window or container, in its own coordinates, or `null`
+ *   for none — always `null` on iOS and the desktop, and under a [WindowClassBox] the fold doesn't cross.
  */
 @Immutable
 public class WindowClass(
     public val size: DpSize,
     public val input: InputMode,
+    public val fold: WindowFold? = null,
 ) {
     /** Width class of [size]. */
     public val width: WidthClass = WidthClass.of(size.widthOrUnspecified)
@@ -205,21 +240,49 @@ public class WindowClass(
             size.heightOrUnspecified.isSpecified &&
             size.width > size.height
 
-    /** The familiar name for [width], [height] and [input] together. */
+    /**
+     * Whether [size] is at least [WideAspectRatio] times as wide as it is tall: a tablet on its side,
+     * and not an unfolded foldable on its side, which is nearly square.
+     */
+    private val isWide: Boolean = isLandscape && size.width.value >= size.height.value * WideAspectRatio
+
+    /** Where the screen's actions are within reach, for how the window is held. */
+    public val actionReach: ActionReach = when {
+        input == InputMode.Pointer -> ActionReach.Header
+        height == HeightClass.Compact -> ActionReach.Header
+        width == WidthClass.Compact -> ActionReach.Thumb
+        isWide -> ActionReach.Header
+        else -> ActionReach.Thumb
+    }
+
+    /** The familiar name for [width], [height], the shape and [input] together. */
     public val profile: WindowProfile = when {
         height == HeightClass.Compact -> WindowProfile.PhoneLandscape
         width == WidthClass.Compact -> WindowProfile.PhonePortrait
-        width == WidthClass.Medium -> WindowProfile.TabletPortrait
-        width == WidthClass.Expanded && input == InputMode.Touch -> WindowProfile.TabletLandscape
-        else -> WindowProfile.Desktop
+        input == InputMode.Pointer ->
+            if (width == WidthClass.Medium) WindowProfile.TabletPortrait else WindowProfile.Desktop
+        isWide -> WindowProfile.TabletLandscape
+        else -> WindowProfile.TabletPortrait
     }
 
     override fun equals(other: Any?): Boolean =
-        this === other || (other is WindowClass && size == other.size && input == other.input)
+        this === other ||
+            (other is WindowClass && size == other.size && input == other.input && fold == other.fold)
 
-    override fun hashCode(): Int = 31 * size.hashCode() + input.hashCode()
+    override fun hashCode(): Int = 31 * (31 * size.hashCode() + input.hashCode()) + fold.hashCode()
 
-    override fun toString(): String = "WindowClass(size=$size, input=$input, width=$width, height=$height)"
+    override fun toString(): String =
+        "WindowClass(size=$size, input=$input, width=$width, height=$height, fold=$fold)"
+
+    /** The line between a wide window and a nearly square one. */
+    public companion object {
+        /**
+         * How many times as wide as it is tall a touch window has to be to count as a tablet on its
+         * side. Tablets on their side start at 4:3, about 1.33; unfolded foldables on their side reach
+         * about 1.2. The line sits between, so no device in use lands near it.
+         */
+        public const val WideAspectRatio: Float = 1.25f
+    }
 }
 
 // `DpSize.width` throws on a fully unspecified size; one unspecified side reads as `Dp.Unspecified`.

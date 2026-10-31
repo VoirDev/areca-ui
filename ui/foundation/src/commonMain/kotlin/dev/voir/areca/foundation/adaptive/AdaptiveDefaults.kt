@@ -35,6 +35,9 @@ public object AdaptiveDefaults {
     /** Width of the sidebar [AdaptiveNavigation] draws from a large window up. */
     public val SidebarWidth: Dp = 256.dp
 
+    /** Width of the [FloatingSidebar] an [AdaptiveNavigation] opens beside its [EdgeColumn]. */
+    public val FloatingSidebarWidth: Dp = 300.dp
+
     /** Smallest cell [AdaptiveGrid] lays out. */
     public val GridMinCellWidth: Dp = 160.dp
 

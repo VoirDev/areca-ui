@@ -114,6 +114,22 @@ fun WindowClassShowcase() = ShowcaseScaffold(
             }
         }
         case(
+            name = "Foldable on its side",
+            expectation = "841 × 701dp is Expanded and landscape, yet nearly square: TabletPortrait, Thumb reach.",
+        ) {
+            WindowFrame(preset = WindowPreset.FoldSideways, maxHeight = 280.dp) {
+                MailboxSample(WindowPreset.FoldSideways)
+            }
+        }
+        case(
+            name = "13-inch tablet held upright",
+            expectation = "1032dp wide is Expanded, as wide as a tablet on its side: still TabletPortrait, Thumb reach.",
+        ) {
+            WindowFrame(preset = WindowPreset.LargeTablet, maxHeight = 320.dp) {
+                MailboxSample(WindowPreset.LargeTablet)
+            }
+        }
+        case(
             name = "Pane on a large window",
             expectation = "The window is Large, while the 320dp list pane reads Compact and the detail Medium.",
         ) {
@@ -213,6 +229,7 @@ private fun ClassReadout(
         if (detailed) {
             Badge(style = BadgeStyle.Neutral) { Text("${windowClass.height.name} height") }
             Badge(style = BadgeStyle.Neutral) { Text(windowClass.input.name) }
+            Badge(style = BadgeStyle.Neutral) { Text("${windowClass.actionReach.name} reach") }
         }
     }
 }

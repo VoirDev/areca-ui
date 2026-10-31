@@ -79,8 +79,10 @@ view is a compact window and gets the phone layout.
 | `WidthClass` | `Compact` under 600dp, `Medium` from 600, `Expanded` from 840, `Large` from 1200, `ExtraLarge` from 1600. Ordered, so `width >= WidthClass.Medium` reads as "at least medium" |
 | `HeightClass` | `Compact` under 480dp (a phone on its side), `Medium` from 480, `Expanded` from 900 |
 | `InputMode` | `Touch` or `Pointer`: what presses the controls. Touch on Android and iOS, a pointer on the desktop, unless `ArecaThemeProvider(inputMode = …)` says otherwise |
-| `WindowProfile` | A familiar name for the combination: `PhonePortrait`, `PhoneLandscape`, `TabletPortrait`, `TabletLandscape`, `Desktop` |
-| `WindowClass` | `size`, `width`, `height`, `input`, `profile` and `isLandscape` together |
+| `WindowProfile` | A familiar name for the combination: `PhonePortrait`, `PhoneLandscape`, `TabletPortrait`, `TabletLandscape`, `Desktop`. Under touch a tablet's is decided by its shape: at least `WindowClass.WideAspectRatio` (1.25) times as wide as tall is `TabletLandscape`, anything squarer — a tablet held upright, an unfolded foldable either way round — `TabletPortrait` |
+| `ActionReach` | Where a screen's actions are within reach: `Header` beside the title (a pointer, a phone on its side, a touch window at least 1.25 times as wide as tall) or `Thumb` at the foot of the window (a phone, a tablet held upright, an unfolded foldable). Read it from `ArecaTheme.hostWindow`: the hands hold the device, not the pane |
+| `WindowFold` | A foldable's fold or hinge: `orientation` (`FoldOrientation.Vertical` or `Horizontal`), `bounds`, `state` (`FoldState.Flat` or `HalfOpened`) and `isSeparating`. Reported on Android; `null` on iOS and the desktop |
+| `WindowClass` | `size`, `width`, `height`, `input`, `profile`, `actionReach`, `isLandscape` and `fold` together |
 
 | Composable | Use it for |
 | --- | --- |
@@ -114,6 +116,15 @@ The outermost provider reads the window's size from `LocalWindowInfo`; a nested 
 `ArecaDarkTheme`, keeps the class above it. Until the window is measured the size is unspecified,
 which reads as `Compact` width and `Medium` height. `WidthClass.select` and `HeightClass.select` pick
 a value outside composition.
+
+On Android the outermost provider also reads the window's fold from Jetpack WindowManager, and
+follows the device as it is opened, closed and propped up. A `WindowClassBox` sees the fold in its
+own coordinates once it is placed, and none when the fold does not cross it, so a pane beside the
+fold has `fold == null`. Keep text and controls off `fold.bounds`; while `fold.state` is
+`HalfOpened`, lay each half out for itself. `ListDetail` and `SupportingPane` meet at a vertical
+fold and the `EdgeColumn` keeps its clusters either side of a horizontal one by themselves. To
+preview a foldable, give `ProvideWindowClass` a class with a fold — `WindowFold.vertical(at, height)`
+or `WindowFold.horizontal(at, width)` — measured from the provider's own top-left corner.
 
 ## Components
 
@@ -1086,9 +1097,13 @@ layout inside a narrow pane takes its compact form. See [Window classes](#window
 
 | Component | Compact | Wider |
 | --- | --- | --- |
-| `AdaptiveNavigation` | `TabBar` along the bottom | `NavRail` on a medium or expanded window (or a phone on its side); a sidebar of `NavItem` rows from 1200dp, collapsible to the rail |
+| `AdaptiveNavigation` | `TabBar` along the bottom; a `NavRail` without labels on a phone on its side | An `EdgeColumn` from a medium window up (the default `AdaptiveNavigationStyle.EdgeColumn`); under `AdaptiveNavigationStyle.Rail`, a `NavRail`, then a sidebar of `NavItem` rows from 1200dp the person can hide to the rail |
+| `AdaptiveToolbar` | A `TopBar`: back, the title, the actions | The title over the screen and back at the head of the `EdgeColumn`; the actions as labelled buttons beside the title under `ActionReach.Header`, as round buttons at the foot of the column under `ActionReach.Thumb` |
+| `EdgeColumn` | — | A floating column along one edge: status and back at its top, the destinations and search at its foot, a held-from-below window's actions between them |
+| `EdgeButton`, `VerticalTabBar`, `EdgeStatus` | — | The column's round actions, its vertical capsule of destinations, and the app's own status icon |
+| `FloatingSidebar` | — | A sidebar floating in beside the column over a scrim, every destination labelled |
 | `NavRail` | — | A column of icon-and-label destinations along the start edge, with a `header` slot for the primary action |
-| `ListDetail` | The list, then the detail in its place while `showDetail` | List (280–360dp) and detail side by side from a 600dp container, `detailPlaceholder` while nothing is open. A pointer drags the divider |
+| `ListDetail` | The list, then the detail in its place while `showDetail` | List (280–360dp) and detail side by side from a 600dp container, `detailPlaceholder` while nothing is open. A pointer drags the divider. On a foldable the panes meet at a vertical fold |
 | `SupportingPane` | Supporting content in an `AdaptiveSheet` while `supportingVisible` | A permanent 340–360dp pane at the end from a 920dp container |
 | `ContentColumn` | Full width less the gutters | Centred, no wider than `AdaptiveDefaults.ReadableWidth` (640dp) or a `maxWidth` you pass |
 | `AdaptiveGrid` | Two columns of 160dp cells | As many columns as fit, cells capped at `AdaptiveDefaults.ContentWidth` (1200dp) and centred |
@@ -1104,22 +1119,56 @@ AdaptiveNavigation(
     ),
     selectedValue = tab,
     onValueSelected = { tab = it },
-    sidebarCollapsed = collapsed,
-    onSidebarCollapsedChange = { collapsed = it },
+    sidebarVisible = sidebarOpen,
+    onSidebarVisibleChange = { sidebarOpen = it },
+    onSearch = openSearch,
+    status = { EdgeStatus(ArecaIcons.Check, contentDescription = "Synced") },
 ) {
     ListDetail(
         showDetail = selected != null,
-        list = { TransactionList(onOpen = { selected = it }) },
-        detail = { TransactionDetail(selected!!, onBack = if (isTwoPane) null else { { selected = null } }) },
+        modifier = Modifier.padding(contentPadding),
+        list = {
+            AdaptiveToolbar(title = "Activity")
+            TransactionList(onOpen = { selected = it })
+        },
+        detail = {
+            AdaptiveToolbar(
+                title = selected!!.merchant,
+                onBack = if (isTwoPane) null else { { selected = null } },
+                actions = listOf(AdaptiveToolbarAction(ArecaIcons.Share, "Share", onClick = share)),
+            )
+            TransactionDetail(selected!!)
+        },
     )
 }
 ```
 
+From a medium window up the chrome stacks in an `EdgeColumn` along `edgeSide` (the end edge by
+default), floating over the content: `status` and back at its top, a `VerticalTabBar` and the
+search button at its foot, the middle left empty. Screens declare their title, back and actions with
+`AdaptiveToolbar` in place of a `TopBar`: beside the column it draws the title and hands back to the
+column, which shows the toolbar of the screen drawn most recently, and everywhere else it is a
+`TopBar`. Back takes the sidebar toggle's place. The actions follow the window's `ActionReach`: a
+tablet on its side or a pointer draws them beside the title as labelled buttons, with room for the
+words; a tablet held upright or an unfolded foldable, held from below, puts them at the foot of the
+column between the tabs and search, with `header` over them. Past three places, More counted, they
+fold into More. In two panes the detail's toolbar takes the column and the list's stays a bar over
+its pane. `contentPadding` carries the column's clearance on its side (80dp under touch):
+keep text and controls inside it and let backgrounds run under the column. `edgeSide = EdgeColumnSide.Auto`, the
+default, puts the column on the camera cutout's side, and on the end side when the cutout is along
+the top or there is none. On a foldable propped up along a horizontal fold, status and the toolbar
+stay above the fold and the tabs and search below it. The toggle opens a
+`FloatingSidebar` beside the column — every destination labelled, then `sidebarSections` and
+`footer` — and the tabs give way to it while it is open. `AdaptiveNavigationStyle.Rail` keeps a
+`NavRail` and a sidebar of rows instead; there `sidebarVisible` chooses the sidebar or the rail on a
+large window. `EdgeColumn`, `EdgeButton`, `VerticalTabBar`, `EdgeStatus` and `FloatingSidebar` are
+public for a shell of your own, and take `EdgeColumnStyle` and `EdgeColumnSize`.
+
 An app whose phone bar is its own — a floating bar, a bar with an action in its middle — passes it as
 `bottomBar`. It replaces the `TabBar` on a compact window and is drawn over the bottom of the screen,
 which keeps its full height and reads what the bar covers from `contentPadding`, to end its scroll
-with. `footer` sits at the foot of the rail and the sidebar, above the collapse toggle — an account,
-a sync state.
+with. `footer` sits at the foot of the rail and the sidebars, above the rail's toggle — an account,
+a sync state in full.
 
 ```kotlin
 AdaptiveNavigation(

@@ -12,11 +12,13 @@ import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,14 +33,18 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isSpecified
 import dev.voir.areca.foundation.layout.VerticalDivider
 import dev.voir.areca.modifier.resizeCursor
 import dev.voir.areca.theme.ArecaTheme
+import dev.voir.areca.window.FoldOrientation
 import dev.voir.areca.window.InputMode
 import dev.voir.areca.window.WindowClassBox
+import dev.voir.areca.window.rememberFoldView
+import dev.voir.areca.window.thickness
 
 /** What the panes of a [ListDetail] know about how they are shown. */
 @Stable
@@ -64,6 +70,10 @@ public interface ListDetailScope {
  * from the detail's back action. Each pane is a [WindowClassBox], so it lays itself out for its own
  * width, and each keeps its saved state — the list's scroll position — when the other is shown and
  * when a resize moves between one pane and two.
+ *
+ * On a foldable opened along a vertical fold, the panes meet at the fold whenever that leaves each
+ * its minimum width — the list on one half, the detail on the other — the divider does not drag, and
+ * a hinge's strip is left empty.
  *
  * The open item is the app's state: keep the selection and [showDetail] together, and set
  * [showDetail] when an item is chosen.
@@ -106,13 +116,21 @@ public fun ListDetail(
     val holder = rememberSaveableStateHolder()
     // In dp; null until the person drags the divider.
     var draggedWidth by rememberSaveable { mutableStateOf<Float?>(null) }
-    BoxWithConstraints(modifier = modifier) {
+    val foldView = rememberFoldView()
+    BoxWithConstraints(modifier = modifier.then(foldView.modifier)) {
         val containerWidth = maxWidth
         val twoPane = containerWidth >= AdaptiveDefaults.TwoPaneMinWidth
         val scope = remember(twoPane) { ListDetailScopeImpl(twoPane) }
         if (twoPane) {
+            // A vertical fold that leaves both panes their minimum widths is where they meet.
+            val fold = foldView.foldIn(DpSize(maxWidth, maxHeight))
+                ?.takeIf { it.orientation == FoldOrientation.Vertical }
+                ?.takeIf {
+                    it.bounds.left >= AdaptiveDefaults.ListPaneMinWidth &&
+                        containerWidth - it.bounds.right >= AdaptiveDefaults.DetailPaneMinWidth
+                }
             val baseWidth = if (listWidth.isSpecified) listWidth else AdaptiveDefaults.listPaneWidth(containerWidth)
-            val paneWidth = (draggedWidth?.dp ?: baseWidth).coerceIn(
+            val paneWidth = fold?.bounds?.left ?: (draggedWidth?.dp ?: baseWidth).coerceIn(
                 AdaptiveDefaults.ListPaneMinWidth,
                 (containerWidth - AdaptiveDefaults.DetailPaneMinWidth).coerceAtLeast(AdaptiveDefaults.ListPaneMinWidth),
             )
@@ -122,9 +140,14 @@ public fun ListDetail(
                         .width(paneWidth)
                         .fillMaxHeight(),
                 ) {
-                    holder.SaveableStateProvider(ListKey) { scope.list() }
+                    // Beside the detail, the list keeps its toolbar over its own pane: the detail's
+                    // takes the edge column.
+                    CompositionLocalProvider(LocalToolbarInline provides true) {
+                        holder.SaveableStateProvider(ListKey) { scope.list() }
+                    }
                 }
-                VerticalDivider()
+                // A hinge hides a strip of the screen: leave it empty rather than draw a divider in it.
+                if (fold != null && fold.thickness > 0.dp) Spacer(Modifier.width(fold.thickness)) else VerticalDivider()
                 WindowClassBox(modifier = Modifier.weight(1f).fillMaxHeight()) {
                     if (showDetail) {
                         holder.SaveableStateProvider(DetailKey) { scope.detail() }
@@ -133,7 +156,7 @@ public fun ListDetail(
                     }
                 }
             }
-            if (resizable && ArecaTheme.window.input == InputMode.Pointer) {
+            if (fold == null && resizable && ArecaTheme.window.input == InputMode.Pointer) {
                 PaneResizeHandle(
                     paneWidth = paneWidth,
                     onResize = { draggedWidth = it.value },

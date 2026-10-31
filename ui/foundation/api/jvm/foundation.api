@@ -15,6 +15,7 @@ public final class dev/voir/areca/foundation/adaptive/AdaptiveDefaults {
 	public static final field INSTANCE Ldev/voir/areca/foundation/adaptive/AdaptiveDefaults;
 	public final fun getContentWidth-D9Ej5fM ()F
 	public final fun getDetailPaneMinWidth-D9Ej5fM ()F
+	public final fun getFloatingSidebarWidth-D9Ej5fM ()F
 	public final fun getGridMinCellWidth-D9Ej5fM ()F
 	public final fun getListPaneMinWidth-D9Ej5fM ()F
 	public final fun getReadableWidth-D9Ej5fM ()F
@@ -46,11 +47,12 @@ public final class dev/voir/areca/foundation/adaptive/AdaptiveMenuKt {
 }
 
 public final class dev/voir/areca/foundation/adaptive/AdaptiveNavigationKt {
-	public static final fun AdaptiveNavigation (Ljava/util/List;Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;ZLkotlin/jvm/functions/Function1;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;III)V
+	public static final fun AdaptiveNavigation (Ljava/util/List;Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Ldev/voir/areca/foundation/adaptive/AdaptiveNavigationStyle;Ldev/voir/areca/foundation/adaptive/EdgeColumnSide;ZLkotlin/jvm/functions/Function1;Ljava/lang/String;Lkotlin/jvm/functions/Function0;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;III)V
 }
 
 public final class dev/voir/areca/foundation/adaptive/AdaptiveNavigationLayout : java/lang/Enum {
 	public static final field BottomBar Ldev/voir/areca/foundation/adaptive/AdaptiveNavigationLayout;
+	public static final field EdgeColumn Ldev/voir/areca/foundation/adaptive/AdaptiveNavigationLayout;
 	public static final field Rail Ldev/voir/areca/foundation/adaptive/AdaptiveNavigationLayout;
 	public static final field Sidebar Ldev/voir/areca/foundation/adaptive/AdaptiveNavigationLayout;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
@@ -63,8 +65,32 @@ public abstract interface class dev/voir/areca/foundation/adaptive/AdaptiveNavig
 	public abstract fun getLayout ()Ldev/voir/areca/foundation/adaptive/AdaptiveNavigationLayout;
 }
 
+public final class dev/voir/areca/foundation/adaptive/AdaptiveNavigationStyle : java/lang/Enum {
+	public static final field EdgeColumn Ldev/voir/areca/foundation/adaptive/AdaptiveNavigationStyle;
+	public static final field Rail Ldev/voir/areca/foundation/adaptive/AdaptiveNavigationStyle;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/foundation/adaptive/AdaptiveNavigationStyle;
+	public static fun values ()[Ldev/voir/areca/foundation/adaptive/AdaptiveNavigationStyle;
+}
+
 public final class dev/voir/areca/foundation/adaptive/AdaptiveSheetKt {
 	public static final fun AdaptiveSheet (ZLkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class dev/voir/areca/foundation/adaptive/AdaptiveToolbarAction {
+	public static final field $stable I
+	public fun <init> (Landroidx/compose/ui/graphics/vector/ImageVector;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ZZZ)V
+	public synthetic fun <init> (Landroidx/compose/ui/graphics/vector/ImageVector;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getDestructive ()Z
+	public final fun getEnabled ()Z
+	public final fun getIcon ()Landroidx/compose/ui/graphics/vector/ImageVector;
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getOnClick ()Lkotlin/jvm/functions/Function0;
+	public final fun getPrimary ()Z
+}
+
+public final class dev/voir/areca/foundation/adaptive/AdaptiveToolbarKt {
+	public static final fun AdaptiveToolbar (Ljava/lang/String;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function0;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Landroidx/compose/foundation/layout/WindowInsets;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class dev/voir/areca/foundation/adaptive/ContentColumnKt {
@@ -74,6 +100,118 @@ public final class dev/voir/areca/foundation/adaptive/ContentColumnKt {
 public final class dev/voir/areca/foundation/adaptive/ContextMenuKt {
 	public static final fun contextMenu (Landroidx/compose/ui/Modifier;Ldev/voir/areca/foundation/overlay/DropdownPopupState;ZLjava/lang/String;)Landroidx/compose/ui/Modifier;
 	public static synthetic fun contextMenu$default (Landroidx/compose/ui/Modifier;Ldev/voir/areca/foundation/overlay/DropdownPopupState;ZLjava/lang/String;ILjava/lang/Object;)Landroidx/compose/ui/Modifier;
+}
+
+public final class dev/voir/areca/foundation/adaptive/EdgeButtonEmphasis : java/lang/Enum {
+	public static final field Plain Ldev/voir/areca/foundation/adaptive/EdgeButtonEmphasis;
+	public static final field Primary Ldev/voir/areca/foundation/adaptive/EdgeButtonEmphasis;
+	public static final field Toggled Ldev/voir/areca/foundation/adaptive/EdgeButtonEmphasis;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/foundation/adaptive/EdgeButtonEmphasis;
+	public static fun values ()[Ldev/voir/areca/foundation/adaptive/EdgeButtonEmphasis;
+}
+
+public final class dev/voir/areca/foundation/adaptive/EdgeColumnKt {
+	public static final fun EdgeButton (Landroidx/compose/ui/graphics/vector/ImageVector;Ljava/lang/String;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Ldev/voir/areca/foundation/adaptive/EdgeButtonEmphasis;ZLdev/voir/areca/foundation/adaptive/EdgeColumnStyle;Ldev/voir/areca/foundation/adaptive/EdgeColumnSize;Landroidx/compose/runtime/Composer;II)V
+	public static final fun EdgeColumn (Landroidx/compose/ui/Modifier;Ldev/voir/areca/foundation/adaptive/EdgeColumnSide;Ldev/voir/areca/foundation/adaptive/EdgeColumnSize;Landroidx/compose/foundation/layout/WindowInsets;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+	public static final fun EdgeStatus (Landroidx/compose/ui/graphics/vector/ImageVector;Ljava/lang/String;Landroidx/compose/ui/Modifier;ZLkotlin/jvm/functions/Function0;Ldev/voir/areca/foundation/adaptive/EdgeColumnStyle;Ldev/voir/areca/foundation/adaptive/EdgeColumnSize;Landroidx/compose/runtime/Composer;II)V
+	public static final fun VerticalTabBar (Ljava/util/List;Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ldev/voir/areca/foundation/adaptive/EdgeColumnStyle;Ldev/voir/areca/foundation/adaptive/EdgeColumnSize;Landroidx/compose/runtime/Composer;II)V
+	public static final fun getLocalEdgeColumnSize ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+	public static final fun getLocalEdgeColumnStyle ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
+public final class dev/voir/areca/foundation/adaptive/EdgeColumnSide : java/lang/Enum {
+	public static final field Auto Ldev/voir/areca/foundation/adaptive/EdgeColumnSide;
+	public static final field End Ldev/voir/areca/foundation/adaptive/EdgeColumnSide;
+	public static final field Start Ldev/voir/areca/foundation/adaptive/EdgeColumnSide;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/foundation/adaptive/EdgeColumnSide;
+	public static fun values ()[Ldev/voir/areca/foundation/adaptive/EdgeColumnSide;
+}
+
+public final class dev/voir/areca/foundation/adaptive/EdgeColumnSize {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/foundation/adaptive/EdgeColumnSize$Companion;
+	public synthetic fun <init> (FFFFFFFFFIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-D9Ej5fM ()F
+	public final fun component10 ()I
+	public final fun component11 ()I
+	public final fun component2-D9Ej5fM ()F
+	public final fun component3-D9Ej5fM ()F
+	public final fun component4-D9Ej5fM ()F
+	public final fun component5-D9Ej5fM ()F
+	public final fun component6-D9Ej5fM ()F
+	public final fun component7-D9Ej5fM ()F
+	public final fun component8-D9Ej5fM ()F
+	public final fun component9-D9Ej5fM ()F
+	public final fun copy-iKwkWLk (FFFFFFFFFII)Ldev/voir/areca/foundation/adaptive/EdgeColumnSize;
+	public static synthetic fun copy-iKwkWLk$default (Ldev/voir/areca/foundation/adaptive/EdgeColumnSize;FFFFFFFFFIIILjava/lang/Object;)Ldev/voir/areca/foundation/adaptive/EdgeColumnSize;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getButton-D9Ej5fM ()F
+	public final fun getCapsulePadding-D9Ej5fM ()F
+	public final fun getClearance-D9Ej5fM ()F
+	public final fun getContentGap-D9Ej5fM ()F
+	public final fun getIcon-D9Ej5fM ()F
+	public final fun getInset-D9Ej5fM ()F
+	public final fun getMaxTabs ()I
+	public final fun getMaxToolbarButtons ()I
+	public final fun getSpacing-D9Ej5fM ()F
+	public final fun getStatus-D9Ej5fM ()F
+	public final fun getStatusIcon-D9Ej5fM ()F
+	public final fun getWidth-D9Ej5fM ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/foundation/adaptive/EdgeColumnSize$Companion {
+	public final fun default-azTi_I8 (FFFFFFFFFIILandroidx/compose/runtime/Composer;III)Ldev/voir/areca/foundation/adaptive/EdgeColumnSize;
+	public final fun getDefault (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/foundation/adaptive/EdgeColumnSize;
+}
+
+public final class dev/voir/areca/foundation/adaptive/EdgeColumnStyle {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/foundation/adaptive/EdgeColumnStyle$Companion;
+	public synthetic fun <init> (JJJJJJJJJJJLandroidx/compose/ui/graphics/Shape;FLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component10-0d7_KjU ()J
+	public final fun component11-0d7_KjU ()J
+	public final fun component12 ()Landroidx/compose/ui/graphics/Shape;
+	public final fun component13-D9Ej5fM ()F
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-0d7_KjU ()J
+	public final fun component5-0d7_KjU ()J
+	public final fun component6-0d7_KjU ()J
+	public final fun component7-0d7_KjU ()J
+	public final fun component8-0d7_KjU ()J
+	public final fun component9-0d7_KjU ()J
+	public final fun copy-vaN77IY (JJJJJJJJJJJLandroidx/compose/ui/graphics/Shape;F)Ldev/voir/areca/foundation/adaptive/EdgeColumnStyle;
+	public static synthetic fun copy-vaN77IY$default (Ldev/voir/areca/foundation/adaptive/EdgeColumnStyle;JJJJJJJJJJJLandroidx/compose/ui/graphics/Shape;FILjava/lang/Object;)Ldev/voir/areca/foundation/adaptive/EdgeColumnStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAttention-0d7_KjU ()J
+	public final fun getBorder-0d7_KjU ()J
+	public final fun getContent-0d7_KjU ()J
+	public final fun getContentDisabled-0d7_KjU ()J
+	public final fun getContentSelected-0d7_KjU ()J
+	public final fun getIndicator-0d7_KjU ()J
+	public final fun getOnAttention-0d7_KjU ()J
+	public final fun getOnToggled-0d7_KjU ()J
+	public final fun getPanelShape ()Landroidx/compose/ui/graphics/Shape;
+	public final fun getScrim-0d7_KjU ()J
+	public final fun getShadowElevation-D9Ej5fM ()F
+	public final fun getSurface-0d7_KjU ()J
+	public final fun getToggled-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/foundation/adaptive/EdgeColumnStyle$Companion {
+	public final fun default-aPhkL98 (JJJJJJJJJJJLandroidx/compose/ui/graphics/Shape;FLandroidx/compose/runtime/Composer;III)Ldev/voir/areca/foundation/adaptive/EdgeColumnStyle;
+	public final fun getDefault (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/foundation/adaptive/EdgeColumnStyle;
+}
+
+public final class dev/voir/areca/foundation/adaptive/FloatingSidebarKt {
+	public static final fun FloatingSidebar-NVEY06Y (ZLkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Ldev/voir/areca/foundation/adaptive/EdgeColumnSide;FFLjava/lang/String;Ljava/lang/String;Ldev/voir/areca/foundation/adaptive/EdgeColumnStyle;Ldev/voir/areca/foundation/adaptive/EdgeColumnSize;Landroidx/compose/foundation/layout/WindowInsets;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;III)V
 }
 
 public final class dev/voir/areca/foundation/adaptive/ListDetailKt {
@@ -7040,6 +7178,30 @@ public final class dev/voir/areca/theme/ContentInsetsKt {
 	public static final fun verticalContentInsets (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/Modifier;
 }
 
+public final class dev/voir/areca/window/ActionReach : java/lang/Enum {
+	public static final field Header Ldev/voir/areca/window/ActionReach;
+	public static final field Thumb Ldev/voir/areca/window/ActionReach;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/window/ActionReach;
+	public static fun values ()[Ldev/voir/areca/window/ActionReach;
+}
+
+public final class dev/voir/areca/window/FoldOrientation : java/lang/Enum {
+	public static final field Horizontal Ldev/voir/areca/window/FoldOrientation;
+	public static final field Vertical Ldev/voir/areca/window/FoldOrientation;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/window/FoldOrientation;
+	public static fun values ()[Ldev/voir/areca/window/FoldOrientation;
+}
+
+public final class dev/voir/areca/window/FoldState : java/lang/Enum {
+	public static final field Flat Ldev/voir/areca/window/FoldState;
+	public static final field HalfOpened Ldev/voir/areca/window/FoldState;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/window/FoldState;
+	public static fun values ()[Ldev/voir/areca/window/FoldState;
+}
+
 public final class dev/voir/areca/window/HeightClass : java/lang/Enum {
 	public static final field Compact Ldev/voir/areca/window/HeightClass;
 	public static final field Companion Ldev/voir/areca/window/HeightClass$Companion;
@@ -7086,8 +7248,13 @@ public final class dev/voir/areca/window/WidthClass$Companion {
 
 public final class dev/voir/areca/window/WindowClass {
 	public static final field $stable I
-	public synthetic fun <init> (JLdev/voir/areca/window/InputMode;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public static final field Companion Ldev/voir/areca/window/WindowClass$Companion;
+	public static final field WideAspectRatio F
+	public synthetic fun <init> (JLdev/voir/areca/window/InputMode;Ldev/voir/areca/window/WindowFold;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (JLdev/voir/areca/window/InputMode;Ldev/voir/areca/window/WindowFold;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun getActionReach ()Ldev/voir/areca/window/ActionReach;
+	public final fun getFold ()Ldev/voir/areca/window/WindowFold;
 	public final fun getHeight ()Ldev/voir/areca/window/HeightClass;
 	public final fun getInput ()Ldev/voir/areca/window/InputMode;
 	public final fun getProfile ()Ldev/voir/areca/window/WindowProfile;
@@ -7098,11 +7265,35 @@ public final class dev/voir/areca/window/WindowClass {
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class dev/voir/areca/window/WindowClass$Companion {
+}
+
 public final class dev/voir/areca/window/WindowClassComposablesKt {
 	public static final fun AdaptiveContent (Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
 	public static final fun ProvideWindowClass (Ldev/voir/areca/window/WindowClass;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
 	public static final fun WindowClassBox (Landroidx/compose/ui/Modifier;Landroidx/compose/ui/Alignment;ZLkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
 	public static final fun adaptive (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Landroidx/compose/runtime/Composer;II)Ljava/lang/Object;
+}
+
+public final class dev/voir/areca/window/WindowFold {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/window/WindowFold$Companion;
+	public fun <init> (Ldev/voir/areca/window/FoldOrientation;Landroidx/compose/ui/unit/DpRect;Ldev/voir/areca/window/FoldState;Z)V
+	public synthetic fun <init> (Ldev/voir/areca/window/FoldOrientation;Landroidx/compose/ui/unit/DpRect;Ldev/voir/areca/window/FoldState;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBounds ()Landroidx/compose/ui/unit/DpRect;
+	public final fun getOrientation ()Ldev/voir/areca/window/FoldOrientation;
+	public final fun getState ()Ldev/voir/areca/window/FoldState;
+	public fun hashCode ()I
+	public final fun isSeparating ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/window/WindowFold$Companion {
+	public final fun horizontal-Md-fbLM (FFLdev/voir/areca/window/FoldState;)Ldev/voir/areca/window/WindowFold;
+	public static synthetic fun horizontal-Md-fbLM$default (Ldev/voir/areca/window/WindowFold$Companion;FFLdev/voir/areca/window/FoldState;ILjava/lang/Object;)Ldev/voir/areca/window/WindowFold;
+	public final fun vertical-Md-fbLM (FFLdev/voir/areca/window/FoldState;)Ldev/voir/areca/window/WindowFold;
+	public static synthetic fun vertical-Md-fbLM$default (Ldev/voir/areca/window/WindowFold$Companion;FFLdev/voir/areca/window/FoldState;ILjava/lang/Object;)Ldev/voir/areca/window/WindowFold;
 }
 
 public final class dev/voir/areca/window/WindowProfile : java/lang/Enum {
