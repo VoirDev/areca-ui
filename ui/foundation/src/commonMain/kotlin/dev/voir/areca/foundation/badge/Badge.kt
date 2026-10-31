@@ -258,7 +258,9 @@ public data class BadgeStyle(
  * @property textStyle Style provided to the label through [LocalTextStyle].
  * @property minWidth Smallest width the badge will shrink to.
  * @property touchTarget Smallest width and height a pressable badge reserves in layout, centred on
- *   its drawn capsule, so a finger can hit it. A static badge reserves nothing.
+ *   its drawn capsule, so a finger can hit it. The named steps reserve the sizing's touch target
+ *   ([dev.voir.areca.theme.ArecaSizing.touchTarget]): 48dp under touch, none under a pointer. A
+ *   static badge reserves nothing.
  */
 @Immutable
 public data class BadgeSize(
@@ -275,32 +277,42 @@ public data class BadgeSize(
         /** Inline with small text, such as a count beside a list header. */
         public val ExtraSmall: BadgeSize
             @Composable
-            get() = BadgeSize(
-                borderWidth = 1.dp,
-                padding = PaddingValues(
-                    vertical = ArecaTheme.spacing.xs2,
-                    horizontal = ArecaTheme.spacing.md,
-                ),
-                gap = ArecaTheme.spacing.xs,
-                icon = IconSize.ExtraSmall,
-                textStyle = ArecaTheme.typography.bodyExtraSmall,
-                minWidth = 36.dp,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                val spacing = ArecaTheme.spacing
+                return BadgeSize(
+                    borderWidth = 1.dp,
+                    padding = PaddingValues(
+                        vertical = spacing.xs2,
+                        horizontal = spacing.md,
+                    ),
+                    gap = spacing.xs,
+                    icon = IconSize.ExtraSmall,
+                    textStyle = ArecaTheme.typography.bodyExtraSmall,
+                    minWidth = 36.dp,
+                    touchTarget = sizing.touchTarget,
+                )
+            }
 
         /** Inside a dense row or a table cell. */
         public val Small: BadgeSize
             @Composable
-            get() = BadgeSize(
-                borderWidth = 1.dp,
-                padding = PaddingValues(
-                    vertical = ArecaTheme.spacing.xs,
-                    horizontal = ArecaTheme.spacing.lg,
-                ),
-                gap = ArecaTheme.spacing.sm,
-                icon = IconSize.ExtraSmall,
-                textStyle = ArecaTheme.typography.bodySmall,
-                minWidth = 48.dp,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                val spacing = ArecaTheme.spacing
+                return BadgeSize(
+                    borderWidth = 1.dp,
+                    padding = PaddingValues(
+                        vertical = spacing.xs,
+                        horizontal = spacing.lg,
+                    ),
+                    gap = spacing.sm,
+                    icon = IconSize.ExtraSmall,
+                    textStyle = ArecaTheme.typography.bodySmall,
+                    minWidth = 48.dp,
+                    touchTarget = sizing.touchTarget,
+                )
+            }
 
         /** The default: beside body copy, or as a standalone status. */
         public val Medium: BadgeSize
@@ -335,7 +347,7 @@ public data class BadgeSize(
             icon: Dp = IconSize.Small,
             textStyle: TextStyle = ArecaTheme.typography.bodyMedium,
             minWidth: Dp = 64.dp,
-            touchTarget: Dp = MinimumTouchTarget,
+            touchTarget: Dp = ArecaTheme.sizing.touchTarget,
         ): BadgeSize = BadgeSize(
             borderWidth = borderWidth,
             padding = padding,
@@ -349,17 +361,22 @@ public data class BadgeSize(
         /** A badge that is the subject of its own row, such as a filter chip. */
         public val Large: BadgeSize
             @Composable
-            get() = BadgeSize(
-                borderWidth = 1.dp,
-                padding = PaddingValues(
-                    vertical = ArecaTheme.spacing.md,
-                    horizontal = ArecaTheme.spacing.xl2,
-                ),
-                gap = ArecaTheme.spacing.lg,
-                icon = IconSize.Medium,
-                textStyle = ArecaTheme.typography.bodyLarge,
-                minWidth = 96.dp,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                val spacing = ArecaTheme.spacing
+                return BadgeSize(
+                    borderWidth = 1.dp,
+                    padding = PaddingValues(
+                        vertical = spacing.md,
+                        horizontal = spacing.xl2,
+                    ),
+                    gap = spacing.lg,
+                    icon = IconSize.Medium,
+                    textStyle = ArecaTheme.typography.bodyLarge,
+                    minWidth = 96.dp,
+                    touchTarget = sizing.touchTarget,
+                )
+            }
 
         /**
          * One choice in a row of filter chips — the metrics every control on such a row shares, so
@@ -372,17 +389,22 @@ public data class BadgeSize(
          */
         public val Chip: BadgeSize
             @Composable
-            get() = BadgeSize(
-                borderWidth = 1.dp,
-                padding = PaddingValues(
-                    vertical = ArecaTheme.spacing.md,
-                    horizontal = ArecaTheme.spacing.lg,
-                ),
-                gap = ArecaTheme.spacing.xs,
-                icon = IconSize.Medium,
-                textStyle = ArecaTheme.typography.labelMedium,
-                minWidth = Dp.Unspecified,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                val spacing = ArecaTheme.spacing
+                return BadgeSize(
+                    borderWidth = 1.dp,
+                    padding = PaddingValues(
+                        vertical = spacing.md,
+                        horizontal = spacing.lg,
+                    ),
+                    gap = spacing.xs,
+                    icon = IconSize.Medium,
+                    textStyle = ArecaTheme.typography.labelMedium,
+                    minWidth = Dp.Unspecified,
+                    touchTarget = sizing.touchTarget,
+                )
+            }
     }
 }
 

@@ -38,6 +38,7 @@ viewer that swipes through them.
 | Confirm a final removal | foundation `ConfirmSheet` (the module ships none) | — |
 | A record's files full screen, one at a time, always dark | `AttachmentViewer(items, onDismiss, initialKey = …)` | `AttachmentViewerStyle` |
 | One file in the viewer (zoomable picture, PDF pages, or the file stated) | `AttachmentViewerPage(item)` | — |
+| A record's files beside it on a tablet or desktop, in a sheet below 920dp | foundation `SupportingPane` — record as `main`, `AttachmentTile`s in a `FlowRow` as `supporting` (recipe below) | — |
 
 A library that grows without limit is a foundation `LazyList` / `PagedContentList` of `ListItem`s, not
 `AttachmentRow`s in a `Section`.
@@ -246,6 +247,11 @@ interface AttachmentPdfDocument : AutoCloseable {
   `format == AttachmentFormat.Image`), open the app's crop screen, and replace the pending file's
   `model` with the crop. Hide the pending sheet while cropping (`file = pending.takeIf { editing == null }`).
 - `AttachmentOptionsSheet` lists only what applies: no share or save unless `state == Ready`.
+- **Wide windows:** every module sheet (source, pending, options, rename) is a `FlowModal` on a phone
+  and a centred foundation `Dialog` where `AdaptiveDefaults.usesDialog(ArecaTheme.hostWindow)` —
+  expanded width and up, not a phone on its side. Same heading, content and foot; heading and foot
+  pinned, content scrolls; scrim / Escape / back arrive as `onDismiss`. Nothing to pass, and it reads
+  the whole window, not the pane it was opened from. `ConfirmSheet` does the same.
 - **Removal:** a saved record removes at once and confirms first with foundation `ConfirmSheet`; a form
   saves nothing until it is saved, so removing there asks nothing.
 - **Viewer:** compose it while a file is being viewed (`if (viewing != null) AttachmentViewer(…)`); it
@@ -253,6 +259,9 @@ interface AttachmentPdfDocument : AutoCloseable {
   confirm sheets in its `sheets` slot so they open above the file. It calls `onRequest` once per
   landing on a `Remote` file; report `Downloading`, `Waiting`, then `Ready` with a `model`. It closes
   itself when the last file is removed. Clear `notice` through `onNoticeDismiss`.
+  On a tablet or desktop it still takes the whole window (no details pane inside it): a picture fills
+  the page, a PDF's pages and a stated file stay centred at most `AdaptiveDefaults.ReadableWidth`
+  wide, and its `sheets` open as dialogs. Put a file's details on the record, beside the files.
 - **Pictures and PDFs:** implement media's `MediaImageLoader` once (decode no larger than asked;
   `loadSquare` must cover the square) and provide `LocalMediaImageLoader` — never the deprecated
   `LocalAttachmentImageLoader`. Provide a platform
@@ -409,6 +418,56 @@ Settings {
 }
 AttachmentSheets(files, actions, confirmRemoval = true)
 ```
+
+### On a tablet or desktop: the record beside its files
+
+```kotlin
+var filesOpen by remember { mutableStateOf(false) }   // read only below 920dp
+SupportingPane(
+    supportingVisible = filesOpen,
+    onSupportingDismissRequest = { filesOpen = false },
+    modifier = Modifier.fillMaxSize().background(ArecaTheme.colors.bgCanvas).windowInsetsPadding(WindowInsets.systemBars),
+    supportingHeader = {
+        TopBar(title = attachmentsTitle, subtitle = countOfLimit, size = TopBarSize.Compact, windowInsets = FlowModalHeaderInsets)
+    },
+    main = {
+        Column(   // the record at a readable width, centred
+            Modifier.fillMaxSize().verticalScroll(rememberScrollState())
+                .wrapContentWidth().widthIn(max = AdaptiveDefaults.ReadableWidth).fillMaxWidth(),
+        ) {
+            RecordHeading(expense)                       // amount and summary, on the sections' 16dp gutter
+            Settings {
+                Section {
+                    SettingsRow(title = { Text(categoryLabel) }, value = { Text(expense.category) })
+                    SettingsRow(title = { Text(accountLabel) }, value = { Text(expense.account) })
+                }
+                if (!isSupportingInline) {               // no pane: this row opens the files in a sheet
+                    Section {
+                        SettingsRow(title = { Text(attachmentsTitle) }, leading = { SettingsRowIcon(ArecaIcons.Paperclip) },
+                            value = { Text(files.items.size.toString()) }, onClick = { filesOpen = true })
+                    }
+                }
+            }
+        }
+    },
+    supporting = {
+        FlowRow(   // squares that wrap: the pane is tall and narrow
+            Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).horizontalContentInsets()
+                .padding(top = ArecaTheme.spacing.sm, bottom = ArecaTheme.spacing.xl3),
+            horizontalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md),
+            verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg),
+        ) {
+            files.items.forEach { item -> key(item.key) { AttachmentTile(item, onClick = { actions.open(item) }, detail = item.size) } }
+            if (files.items.size < files.limit) AttachmentAddTile(onClick = actions::add, caption = addWord)
+        }
+    },
+)
+AttachmentSheets(files, actions, confirmRemoval = true)   // unchanged: its sheets become dialogs here
+```
+
+From a 920dp container the files are a 340/360dp pane at the end and the record has no row for them;
+below it they open in a sheet (a dialog on an expanded window) from the row. To keep a phone's files on
+the page, draw the details strip in `main` while `!isSupportingInline` instead of the row.
 
 ### Documents: rows grouped by tag
 

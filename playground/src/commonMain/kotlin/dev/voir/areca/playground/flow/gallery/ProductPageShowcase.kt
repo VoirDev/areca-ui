@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -21,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import dev.voir.areca.flow.gallery.part.GalleryCaption
 import dev.voir.areca.flow.gallery.part.GalleryPrimaryAction
+import dev.voir.areca.foundation.adaptive.AdaptiveDefaults
 import dev.voir.areca.foundation.button.Button
 import dev.voir.areca.foundation.navigation.PageCounter
 import dev.voir.areca.foundation.navigation.PageCounterStyle
@@ -53,37 +55,77 @@ import dev.voir.areca.playground.media.SampleProductPictures
 import dev.voir.areca.playground.media.SampleScene
 import dev.voir.areca.playground.showcase.FlowShowcase
 import dev.voir.areca.playground.showcase.ShowcaseStatus
-import dev.voir.areca.playground.showcase.canvas.DeviceFrame
-import dev.voir.areca.playground.showcase.canvas.DeviceSize
+import dev.voir.areca.playground.showcase.canvas.WindowPreset
 import dev.voir.areca.playground.showcase.canvas.windowInsets
+import dev.voir.areca.playground.showcase.chrome.ChromeText
+import dev.voir.areca.playground.showcase.chrome.ChromeTextRole
+import dev.voir.areca.playground.showcase.chrome.ChromeTone
 import dev.voir.areca.theme.ArecaTheme
+import dev.voir.areca.theme.horizontalContentInsets
+import dev.voir.areca.window.AdaptiveContent
+import dev.voir.areca.window.adaptive
 
-/** Screen page: a product page whose pictures open a detail gallery. */
+/** Screen page: a product page whose pictures open a detail gallery, at every window. */
 @Composable
 fun ProductPageShowcase() = FlowShowcase(
     title = "Product page",
     summary = "A product's pictures in a hero carousel that opens a detail gallery, the picture growing out of the hero " +
-        "and the hero landing on the last picture seen.",
+        "and the hero landing on the last picture seen; from 840dp, the desktop product page.",
     module = "flow-gallery",
     status = ShowcaseStatus.Beta,
+    notes = {
+        ChromeText(text = "On a tablet or desktop", role = ChromeTextRole.Label)
+        ChromeText(
+            text = "AdaptiveProductPageRecipe is the assembly to copy: the phone page under 840dp and the desktop " +
+                "product page from 840dp — a tablet on its side, a phone on its side, a laptop. An unfolded " +
+                "foldable or a tablet held upright keeps the phone page, touch-first, with its hero turned " +
+                "landscape so the price and the button stay above the fold; the desktop arrangement would leave " +
+                "the picture smaller there than on the phone. Because the two narrow steps share one layout, " +
+                "unfolding keeps the hero on the picture it was on.",
+            role = ChromeTextRole.SectionDescription,
+            tone = ChromeTone.Muted,
+        )
+    },
 ) {
+    val preset by enumControl(
+        key = "window",
+        default = WindowPreset.Phone,
+        options = WindowPreset.entries,
+        optionLabel = { it.label },
+    )
     val many by booleanControl("24 pictures", default = false)
     val light by booleanControl("light viewer", default = false)
 
     preview {
-        DeviceFrame(size = DeviceSize.Regular) {
-            ProductPageRecipe(
+        GalleryWindowFrame(preset) {
+            AdaptiveProductPageRecipe(
                 pictures = if (many) SampleManyPictures else SampleProductPictures,
                 lightViewer = light,
-                windowInsets = DeviceSize.Regular.windowInsets,
+                windowInsets = preset.windowInsets,
             )
         }
     }
 }
 
 /**
- * The recipe: a product page's hero carousel, dots and a counter over it, opening a gallery with a
- * bar, a caption, thumbnails and the page's one action.
+ * The recipe to copy: the phone product page, or from an expanded window the desktop one.
+ *
+ * @param pictures The product's pictures.
+ * @param lightViewer Whether the gallery stands the pictures on white.
+ * @param windowInsets The screen's insets.
+ */
+@Composable
+private fun AdaptiveProductPageRecipe(pictures: List<SamplePicture>, lightViewer: Boolean, windowInsets: WindowInsets) {
+    AdaptiveContent(
+        compact = { ProductPageRecipe(pictures, lightViewer, windowInsets) },
+        expanded = { DesktopProductRecipe(pictures, lightViewer, windowInsets) },
+    )
+}
+
+/**
+ * The phone page: a product page's hero carousel, dots and a counter over it, opening a gallery with
+ * a bar, a caption, thumbnails and the page's one action. Also drawn on a medium window, where the
+ * hero turns landscape and the foot of the gallery stops at a readable width.
  *
  * @param pictures The product's pictures.
  * @param lightViewer Whether the gallery stands the pictures on white.
@@ -109,7 +151,7 @@ private fun ProductPageRecipe(pictures: List<SamplePicture>, lightViewer: Boolea
                 MediaFrame(
                     model = picture,
                     contentDescription = picture.title,
-                    aspectRatio = 1f,
+                    aspectRatio = adaptive(compact = 1f, medium = 4f / 3f),
                     fit = if (picture.scene == SampleScene.Product) MediaFit.Whole else MediaFit.Fill,
                     zoom = ZoomBehavior.Peek,
                     onClick = { open = index },
@@ -140,7 +182,7 @@ private fun ProductPageRecipe(pictures: List<SamplePicture>, lightViewer: Boolea
             )
         }
         Column(
-            Modifier.padding(ArecaTheme.spacing.horizontalContentInsets),
+            Modifier.horizontalContentInsets().padding(vertical = ArecaTheme.spacing.xl),
             verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md),
         ) {
             Text("Northbound", style = ArecaTheme.typography.bodySmall, color = ArecaTheme.colors.fgMuted)
@@ -175,7 +217,10 @@ private fun ProductPageRecipe(pictures: List<SamplePicture>, lightViewer: Boolea
                 )
             },
             footer = { viewer ->
-                Column(verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg)) {
+                Column(
+                    Modifier.widthIn(max = AdaptiveDefaults.ReadableWidth).align(Alignment.CenterHorizontally),
+                    verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg),
+                ) {
                     GalleryCaption(title = pictures[viewer.currentIndex].title, kicker = "From the brand")
                     ThumbnailStrip(
                         count = viewer.itemCount,

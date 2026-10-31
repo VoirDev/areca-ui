@@ -1,5 +1,6 @@
 package dev.voir.areca.foundation.list
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
@@ -25,6 +26,7 @@ import dev.voir.areca.foundation.layout.DividerSize
 import dev.voir.areca.foundation.layout.DividerStyle
 import dev.voir.areca.foundation.layout.LocalDividerSize
 import dev.voir.areca.foundation.layout.LocalDividerStyle
+import dev.voir.areca.foundation.layout.VerticalScrollbarOverlay
 import dev.voir.areca.modifier.thenIf
 import dev.voir.areca.theme.ArecaTheme
 
@@ -310,37 +312,42 @@ public fun LazyList(
     CompositionLocalProvider(
         LocalListEnabled provides (enabled && LocalListEnabled.current),
     ) {
-        LazyColumn(
-            // Rows scroll under the rounded edge, so the viewport clips to the list's shape.
+        // Rows scroll under the rounded edge, so the viewport clips to the list's shape.
+        Box(
             modifier = modifier
                 .clip(listSize.shape)
                 .listSurface(listStyle = listStyle, listSize = listSize),
-            state = state,
-            contentPadding = contentPadding,
+            propagateMinConstraints = true,
         ) {
-            items(count = entries.size, key = { index -> entries[index].key }) { index ->
-                val entry = entries[index]
-                // A divider entry is already a line; a hairline above it would double it up.
-                val drawSeparator = separated &&
-                    index > 0 &&
-                    entry is ListEntry.Item &&
-                    entries[index - 1] is ListEntry.Item
+            LazyColumn(
+                state = state,
+                contentPadding = contentPadding,
+            ) {
+                items(count = entries.size, key = { index -> entries[index].key }) { index ->
+                    val entry = entries[index]
+                    // A divider entry is already a line; a hairline above it would double it up.
+                    val drawSeparator = separated &&
+                        index > 0 &&
+                        entry is ListEntry.Item &&
+                        entries[index - 1] is ListEntry.Item
 
-                ListEntryContent(
-                    entry = entry,
-                    itemStyle = itemStyle,
-                    itemSize = itemSize,
-                    dividerStyle = dividerStyle,
-                    dividerSize = dividerSize,
-                    modifier = Modifier.thenIf(drawSeparator) {
-                        topSeparator(
-                            color = listStyle.separator,
-                            thickness = listSize.separatorThickness,
-                            inset = listSize.separatorInset,
-                        )
-                    },
-                )
+                    ListEntryContent(
+                        entry = entry,
+                        itemStyle = itemStyle,
+                        itemSize = itemSize,
+                        dividerStyle = dividerStyle,
+                        dividerSize = dividerSize,
+                        modifier = Modifier.thenIf(drawSeparator) {
+                            topSeparator(
+                                color = listStyle.separator,
+                                thickness = listSize.separatorThickness,
+                                inset = listSize.separatorInset,
+                            )
+                        },
+                    )
+                }
             }
+            VerticalScrollbarOverlay(state)
         }
     }
 }

@@ -93,7 +93,7 @@ fun SignIn(
 
 | Part | Use it for | Package |
 | --- | --- | --- |
-| `AuthScaffold` | The screen: window and keyboard insets, scrolling, the gutter, artwork, an optional `topBar`, a `footer` pinned to the bottom edge, an `overlay` slot | `dev.voir.areca.flow.auth.part` |
+| `AuthScaffold` | The screen: window and keyboard insets, scrolling, the gutter, artwork, an optional `topBar`, a `footer` pinned to the bottom edge, an `overlay` slot, a column capped at `maxWidth` on larger windows | `dev.voir.areca.flow.auth.part` |
 | `AuthHeader` | Title (with the heading role), subtitle and an optional mark above them | `dev.voir.areca.flow.auth.part` |
 | `AuthNameField` | A full name, with autofill and keyboard set | `dev.voir.areca.flow.auth.part` |
 | `AuthEmailField` | An email address, with autofill and keyboard set; `newAccount` for registration | `dev.voir.areca.flow.auth.part` |
@@ -113,7 +113,8 @@ fun SignIn(
 
 The types the parts take live in `dev.voir.areca.flow.auth`: `AuthBranding` (wordmark, hero,
 layout), `AuthLayout`, `AuthProvider` (`Apple`, `Google`, `Facebook`, `Email`) and
-`AuthLegalLinks`. `SsoLayout` is in `dev.voir.areca.flow.auth.sso`.
+`AuthLegalLinks`. `SsoLayout` is in `dev.voir.areca.flow.auth.sso`, and `AuthScaffoldDefaults`
+beside the scaffold in `dev.voir.areca.flow.auth.part`.
 
 `AuthCodeField` and `AuthPasswordRequirements` are built on foundation's `OtpField`
 (`foundation.field`) and `RequirementList` (`foundation.feedback`), which work outside
@@ -232,6 +233,110 @@ fun submit() {
     }
 }
 ```
+
+### On a tablet or desktop
+
+The same sign-in screen, made for every window an application runs in by one value:
+`AuthLayout.Split()`. From an expanded width (840dp) up, while the height is not compact — a tablet
+on its side, a laptop, a desktop monitor — the artwork is a panel down the start side and the form
+sits centred beside it. Anywhere smaller the screen draws the layout's `fallback`, `HeroTop()`
+unless you name another. Nothing in the screen branches on the window; the scaffold reads
+`ArecaTheme.window`. The playground's
+[`SignInSplitShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/auth/SignInSplitShowcase.kt)
+draws it at every window:
+
+```kotlin
+@Composable
+fun SignInScreen(
+    state: SignInState,
+    onStateChange: (SignInState) -> Unit,
+    onSubmit: () -> Unit,
+    onForgotPassword: () -> Unit,
+    onProviderClick: (AuthProvider) -> Unit,
+    onSignUp: () -> Unit,
+) {
+    val passwordFocus = remember { FocusRequester() }
+
+    AuthScaffold(
+        branding = AuthBranding(
+            wordmark = { Wordmark() },
+            hero = { Artwork() },
+            layout = AuthLayout.Split(),
+        ),
+        footer = {
+            AuthFooterPrompt(
+                prompt = stringResource(Res.string.sign_up_prompt),
+                linkText = stringResource(Res.string.sign_up_link),
+                onLinkClick = onSignUp,
+            )
+        },
+    ) {
+        AuthHeader(title = stringResource(Res.string.sign_in_title), subtitle = stringResource(Res.string.sign_in_subtitle))
+
+        Spacer(Modifier.height(ArecaTheme.spacing.xl6))
+
+        AuthEmailField(
+            value = state.email,
+            onValueChange = { onStateChange(state.copy(email = it, emailError = null)) },
+            error = state.emailError,
+            enabled = !state.busy,
+            imeAction = ImeAction.Next,
+            onImeAction = { passwordFocus.requestFocus() },
+        )
+
+        Spacer(Modifier.height(ArecaTheme.spacing.xl))
+
+        AuthPasswordField(
+            value = state.password,
+            onValueChange = { onStateChange(state.copy(password = it, passwordError = null)) },
+            error = state.passwordError,
+            enabled = !state.busy,
+            focusRequester = passwordFocus,
+            imeAction = ImeAction.Done,
+            onImeAction = onSubmit,
+        )
+
+        Spacer(Modifier.height(ArecaTheme.spacing.lg))
+
+        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
+            AuthTextLink(stringResource(Res.string.forgot_password), onForgotPassword, enabled = !state.busy)
+        }
+
+        Spacer(Modifier.height(ArecaTheme.spacing.xl2))
+
+        AuthBanner(message = state.formError)
+
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            enabled = !state.busy,
+            loading = state.submitting,
+            onClick = onSubmit,
+        ) {
+            Text(stringResource(Res.string.sign_in_submit))
+        }
+
+        Spacer(Modifier.height(ArecaTheme.spacing.xl2))
+
+        SsoGroup(
+            providers = listOf(AuthProvider.Apple, AuthProvider.Google),
+            onProviderClick = onProviderClick,
+            enabled = !state.busy,
+            busyProvider = state.busyProvider,
+            dividerText = stringResource(Res.string.or_continue_with),
+        )
+    }
+}
+```
+
+- The artwork fills a tall panel on a large window and a wide band on a phone, so pass something
+  that crops to any shape — `Image(…, contentScale = ContentScale.Crop, modifier =
+  Modifier.fillMaxSize())`.
+- `Split(fraction = …)` is the panel's share of the window width, 0.42 by default.
+  `Split(fallback = AuthLayout.Plain)` drops the artwork on phones and the foldable;
+  `AuthLayout.FullBleed` puts it behind the form there.
+- On every window wider than a phone the column stops at `AuthScaffoldDefaults.MaxWidth` (480dp,
+  gutters included), whatever the layout. Pass `maxWidth` to `AuthScaffold` to change it.
+- A bar in `topBar` sits above the form, beside the panel, with its controls on the column's edge.
 
 ### Providers only, no form
 
@@ -624,18 +729,28 @@ Pass `footer = null` for no bottom edge at all.
 
 ## Layouts
 
-`AuthBranding(wordmark, hero, layout)` places the artwork; `AuthLayout` has five values:
+`AuthBranding(wordmark, hero, layout)` places the artwork; `AuthLayout` has six values:
 
-| Layout | Draws |
-| --- | --- |
-| `Plain` | No artwork; the whole viewport for the form |
-| `HeroTop(fraction)` | Artwork across the top, scrolling away with the content |
-| `HeroBottom(fraction)` | Content on top, artwork below; buttons within thumb reach |
-| `HeroInline` | Artwork sized by its own slot, above the heading — for an illustration |
-| `FullBleed` | Artwork behind everything, content against the bottom edge |
+| Layout | On a phone | On a wider window |
+| --- | --- | --- |
+| `Plain` | No artwork; the whole viewport for the form | The column centred across the window and down the space above the footer |
+| `HeroTop(fraction)` | Artwork across the top, scrolling away with the content | The band still spans the window; the column under it is centred across it |
+| `HeroBottom(fraction)` | Content on top, artwork below; buttons within thumb reach | The band still spans the window; the column above it is centred across it |
+| `HeroInline` | Artwork sized by its own slot, above the heading — for an illustration | As `Plain`, the illustration inside the column |
+| `FullBleed` | Artwork behind everything, content against the bottom edge | Artwork fills the window; the column is centred across it, still against the bottom edge |
+| `Split(fraction, fallback)` | `fallback` — `HeroTop()` unless you name another | From 840dp wide, when the height is not compact: artwork as a panel down the start side, full height, the column centred in the rest. Narrower or shorter: `fallback` |
 
-`fraction` defaults to `AuthLayout.DefaultHeroFraction` (0.42) and is held between
-`MinHeroFraction` and `MaxHeroFraction`.
+"A phone" is the compact width class — under 600dp, read from `ArecaTheme.window` — and draws every
+layout exactly as it always has. On anything wider the column (wordmark, body and footer) stops at
+`AuthScaffold`'s `maxWidth`, `AuthScaffoldDefaults.MaxWidth` (480dp with its gutters: a large
+phone's form, not a page's) and the bar's controls line up with it. A form taller than the window
+still starts at the top and scrolls. A phone on its side is wider than compact but too short for
+`Split`, so it draws the capped column of the fallback.
+
+`fraction` — the artwork's share of the height for `HeroTop` and `HeroBottom`, of the width for
+`Split` — defaults to `AuthLayout.DefaultHeroFraction` (0.42) and is held between `MinHeroFraction`
+and `MaxHeroFraction`. On a wide window a `HeroTop` band is a letterbox; `Split` usually suits the
+same artwork better there.
 
 `FullBleed` draws every foreground the parts put straight onto the background — headings, labels,
 links, the rule, the legal line — in `fgOnContrast`. Use artwork dark enough to carry it, or put a
@@ -746,6 +861,8 @@ What the parts already do, and what to pass. General guidance:
   **Screens**, as compiled code in
   [`playground/flow/auth`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/auth):
   [`SignInShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/auth/SignInShowcase.kt),
+  [`SignInSplitShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/auth/SignInSplitShowcase.kt)
+  (drawn in a window of each size),
   [`EmailFirstShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/auth/EmailFirstShowcase.kt),
   [`VerifyCodeShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/auth/VerifyCodeShowcase.kt),
   [`EmailLinkShowcase`](../../playground/src/commonMain/kotlin/dev/voir/areca/playground/flow/auth/EmailLinkShowcase.kt),

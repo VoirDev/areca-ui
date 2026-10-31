@@ -4,6 +4,7 @@ import androidx.compose.foundation.OverscrollEffect
 import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -25,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
+import dev.voir.areca.foundation.layout.VerticalScrollbarOverlay
 import dev.voir.areca.theme.ArecaTheme
 
 /**
@@ -109,42 +111,45 @@ public fun <Group, Item> LazyVerticalGroupedGrid(
 ) {
     val rows: List<GroupedGridItem<Group, Item>> = remember(data) { flattenGroupedGrid(data) }
 
-    LazyVerticalGrid(
-        columns = columns,
-        modifier = modifier,
-        contentPadding = contentPadding,
-        horizontalArrangement = horizontalArrangement,
-        verticalArrangement = verticalArrangement,
-        state = state,
-        flingBehavior = flingBehavior,
-        reverseLayout = reverseLayout,
-        overscrollEffect = overscrollEffect,
-        userScrollEnabled = userScrollEnabled,
-    ) {
-        header?.let {
-            it()
-        }
+    Box(modifier = modifier, propagateMinConstraints = true) {
+        LazyVerticalGrid(
+            columns = columns,
+            contentPadding = contentPadding,
+            horizontalArrangement = horizontalArrangement,
+            verticalArrangement = verticalArrangement,
+            state = state,
+            flingBehavior = flingBehavior,
+            reverseLayout = reverseLayout,
+            overscrollEffect = overscrollEffect,
+            userScrollEnabled = userScrollEnabled,
+        ) {
+            header?.let {
+                it()
+            }
 
-        items(
-            items = rows,
-            span = { row ->
-                when (row) {
-                    is GroupedGridItem.Header -> GridItemSpan(maxLineSpan)
-                    is GroupedGridItem.Entry -> GridItemSpan(1)
-                }
-            },
-            key = key,
-            itemContent = { row ->
-                when (row) {
-                    is GroupedGridItem.Header -> group(row.group)
-                    is GroupedGridItem.Entry -> item(row.item)
-                }
-            },
-        )
+            items(
+                items = rows,
+                span = { row ->
+                    when (row) {
+                        is GroupedGridItem.Header -> GridItemSpan(maxLineSpan)
+                        is GroupedGridItem.Entry -> GridItemSpan(1)
+                    }
+                },
+                key = key,
+                itemContent = { row ->
+                    when (row) {
+                        is GroupedGridItem.Header -> group(row.group)
+                        is GroupedGridItem.Entry -> item(row.item)
+                    }
+                },
+            )
 
-        footer?.let {
-            it()
+            footer?.let {
+                it()
+            }
         }
+        // The scrollbar's thumb runs top to bottom; a reversed grid would drive it backwards.
+        if (!reverseLayout) VerticalScrollbarOverlay(state)
     }
 }
 

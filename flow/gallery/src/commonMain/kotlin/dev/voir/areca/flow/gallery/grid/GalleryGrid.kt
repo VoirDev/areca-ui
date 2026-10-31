@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.Dp
 import dev.voir.areca.foundation.badge.Badge
 import dev.voir.areca.foundation.badge.BadgeSize
 import dev.voir.areca.foundation.badge.BadgeStyle
@@ -24,22 +25,29 @@ import dev.voir.areca.theme.ArecaTheme
  * A group's heading on a gallery's grid page — "From the house", "Readers' photos" — with how many
  * pictures it holds at its end.
  *
+ * It keeps the screen's gutter at its sides, as a heading across a column does. Inside a grid that
+ * keeps the gutter itself — foundation's `AdaptiveGrid`, the heading spanning a whole line — give it
+ * a [horizontalPadding] of `0.dp`, so it lines up with the tiles under it.
+ *
  * @param title The group's name. Read as a heading.
  * @param modifier Modifier applied to the heading.
  * @param count How many pictures it holds, worded — "12" — or `null` for none.
+ * @param horizontalPadding Space at its start and end: the screen's gutter by default, `0.dp` inside
+ *   a grid that has one.
  */
 @Composable
 public fun GalleryGroupHeader(
     title: String,
     modifier: Modifier = Modifier,
     count: String? = null,
+    horizontalPadding: Dp = ArecaTheme.spacing.horizontalContentInsets,
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
             .padding(
-                start = ArecaTheme.spacing.horizontalContentInsets,
-                end = ArecaTheme.spacing.horizontalContentInsets,
+                start = horizontalPadding,
+                end = horizontalPadding,
                 top = ArecaTheme.spacing.xl2,
                 bottom = ArecaTheme.spacing.md,
             ),
@@ -59,13 +67,16 @@ public fun GalleryGroupHeader(
  * One square of a gallery's grid page: the picture whole on the fill, a reader's photo labelled with
  * whose it is, pressed to open the viewer at it.
  *
+ * It takes the width it is given, so how many sit across is the grid's: in foundation's
+ * `AdaptiveGrid` it is a cell, three across on a phone and more as the window widens.
+ *
  * Give it the viewer's [transition] and the picture's [transitionKey] so the picture grows out of
  * the tile.
  *
  * @param model The picture's model.
  * @param contentDescription What the picture shows.
  * @param onClick Called when pressed — opens the viewer at this picture.
- * @param modifier Modifier applied to the tile; give it its share of the row.
+ * @param modifier Modifier applied to the tile; in a row of your own, give it its share of the row.
  * @param label Whose photo it is, or another short word, in the tile's corner, or `null`.
  * @param fit How the picture fills the tile: whole, as products stand, by default.
  * @param onClickLabel What pressing does, read out.

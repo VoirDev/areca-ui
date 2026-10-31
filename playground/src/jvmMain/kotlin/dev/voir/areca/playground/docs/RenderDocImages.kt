@@ -25,6 +25,7 @@ import dev.voir.areca.playground.flow.attachments.SampleAttachmentPdfRenderer
 import dev.voir.areca.playground.flow.profile.SampleAvatarLoader
 import dev.voir.areca.theme.ArecaTheme
 import dev.voir.areca.theme.ArecaThemeProvider
+import dev.voir.areca.window.InputMode
 import org.jetbrains.skia.EncodedImageFormat
 import org.jetbrains.skia.Image
 import org.jetbrains.skia.Surface
@@ -161,7 +162,7 @@ private fun renderPanel(panel: DocPanel, height: Dp?, dark: Boolean): RenderedPa
  */
 @Composable
 private fun DocFrame(dark: Boolean, content: @Composable () -> Unit) {
-    ArecaThemeProvider(darkTheme = dark) {
+    ArecaThemeProvider(darkTheme = dark, inputMode = InputMode.Touch) {
         CompositionLocalProvider(
             LocalAvatarImageLoader provides SampleAvatarLoader,
             LocalMediaImageLoader provides SampleAttachmentImageLoader,

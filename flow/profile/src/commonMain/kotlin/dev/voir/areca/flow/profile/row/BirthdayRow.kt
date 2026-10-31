@@ -18,6 +18,8 @@ import dev.voir.areca.datetime.calendar.CalendarSelection
 import dev.voir.areca.datetime.calendar.rememberCalendarState
 import dev.voir.areca.flow.profile.icon.BundledIcons
 import dev.voir.areca.flow.profile.icon.Gift
+import dev.voir.areca.foundation.adaptive.AdaptiveDefaults
+import dev.voir.areca.foundation.overlay.Dialog
 import dev.voir.areca.foundation.overlay.FlowModal
 import dev.voir.areca.foundation.overlay.FlowModalActionBar
 import dev.voir.areca.foundation.overlay.FlowModalController
@@ -31,6 +33,7 @@ import dev.voir.areca.foundation.topbar.TopBar
 import dev.voir.areca.foundation.topbar.TopBarSize
 import dev.voir.areca.foundation.topbar.TopBarStyle
 import dev.voir.areca.foundation.topbar.TopBarTitleAlignment
+import dev.voir.areca.theme.ArecaTheme
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -44,7 +47,9 @@ import kotlinx.datetime.yearMonth
  *
  * Chosen from a calendar rather than typed: typing a date means parsing one, and every format
  * somebody might reasonably type is ambiguous in some locale. Pressing the row opens the calendar
- * sheet, and the sheet is also where a birthday set by accident is removed.
+ * sheet, and the sheet is also where a birthday set by accident is removed. From an expanded window
+ * up — a tablet on its side, a desktop — the same calendar opens as a centred dialog
+ * ([AdaptiveDefaults.usesDialog] on [ArecaTheme.hostWindow]).
  *
  * With no date set, the row invites one ("Add birthday") rather than stating an absence.
  *
@@ -98,6 +103,18 @@ public fun BirthdayRow(
 ) {
     val sheet = rememberFlowModal(autoHeight = true)
 
+    // From an expanded window up the calendar is a centred dialog, and whether it is open is plain
+    // state; below that it is the sheet, driven by its controller as on a phone.
+    val asDialog = AdaptiveDefaults.usesDialog(ArecaTheme.hostWindow)
+    var dialogOpen by remember { mutableStateOf(false) }
+    val close: () -> Unit = {
+        if (asDialog) {
+            dialogOpen = false
+        } else {
+            sheet.hide()
+        }
+    }
+
     SettingsRow(
         title = { Text(value?.let(formatDate) ?: placeholder) },
         subtitle = { Text(label) },
@@ -105,12 +122,21 @@ public fun BirthdayRow(
         leading = { SettingsRowIcon(BundledIcons.Gift) },
         status = status,
         enabled = enabled,
-        onClick = { sheet.show() },
+        onClick = {
+            if (asDialog) {
+                dialogOpen = true
+            } else {
+                sheet.show()
+            }
+        },
         onClickLabel = sheetTitle,
     )
 
     BirthdaySheet(
         controller = sheet,
+        asDialog = asDialog,
+        visible = if (asDialog) dialogOpen else sheet.isVisible,
+        onDismiss = close,
         date = value,
         minDate = minDate,
         maxDate = maxDate,
@@ -121,12 +147,12 @@ public fun BirthdayRow(
         calendarLabels = calendarLabels,
         startDayOfWeek = startDayOfWeek,
         onDateSelected = { date ->
-            sheet.hide()
+            close()
             onValueChange(date)
         },
         onRemove = if (removable) {
             {
-                sheet.hide()
+                close()
                 onValueChange(null)
             }
         } else {
@@ -151,7 +177,14 @@ public fun BirthdayRow(
  * month past them cannot even be paged to. The month label opens the month-and-year picker, which is
  * how a birthday decades back is reached without paging through every month in between.
  *
- * @param controller Sheet's visibility.
+ * On a phone it is a [FlowModal] driven by [controller]. From an expanded window up
+ * ([AdaptiveDefaults.usesDialog]) it is a centred [Dialog] with the same heading, calendar and foot,
+ * shown while [visible]; the scrim and back dismiss it, as a drag dismisses the sheet.
+ *
+ * @param controller Sheet's visibility, in the sheet form.
+ * @param asDialog Whether to draw the centred dialog rather than the sheet.
+ * @param visible Whether the sheet or the dialog is open: what resets the mark on opening.
+ * @param onDismiss Closes the sheet or the dialog without an answer.
  * @param date Date currently in force, which is what the sheet opens on.
  * @param minDate Earliest day offered, or `null` for the calendar's own earliest.
  * @param maxDate Latest day offered, or `null` for the calendar's own latest.
@@ -168,6 +201,9 @@ public fun BirthdayRow(
 @Composable
 private fun BirthdaySheet(
     controller: FlowModalController,
+    asDialog: Boolean,
+    visible: Boolean,
+    onDismiss: () -> Unit,
     date: LocalDate?,
     minDate: LocalDate?,
     maxDate: LocalDate?,
@@ -189,7 +225,6 @@ private fun BirthdaySheet(
     // close animation, so keying on the date too would re-run this the instant a date is committed
     // and scroll the calendar on its way out.
     val inForce by rememberUpdatedState(date)
-    val visible = controller.isVisible
     LaunchedEffect(visible) {
         if (!visible) return@LaunchedEffect
         val opening = BirthdaySheetOpening.of(date = inForce, today = calendar.today, bounds = bounds)
@@ -199,34 +234,32 @@ private fun BirthdaySheet(
 
     val removable = date != null && onRemove != null
 
-    FlowModal(
-        controller = controller,
-        header = {
-            TopBar(
-                title = title,
-                modifier = Modifier.fillMaxWidth(),
-                size = TopBarSize.Modal,
-                style = TopBarStyle.Modal,
-                windowInsets = FlowModalHeaderInsets,
-                titleAlignment = TopBarTitleAlignment.Center,
-            )
-        },
-        footer = {
-            FlowModalActionBar(
-                confirmText = applyLabel,
-                onConfirm = { marked?.let(onDateSelected) },
-                enabled = marked != null,
-                leading = {
-                    // Only a date in force can be removed; an unsaved mark is simply not saved.
-                    if (removable) {
-                        FlowModalSecondaryAction(text = removeLabel, onClick = { onRemove?.invoke() })
-                    } else {
-                        FlowModalSecondaryAction(text = cancelLabel, onClick = { controller.hide() })
-                    }
-                },
-            )
-        },
-    ) {
+    val header: @Composable () -> Unit = {
+        TopBar(
+            title = title,
+            modifier = Modifier.fillMaxWidth(),
+            size = TopBarSize.Modal,
+            style = TopBarStyle.Modal,
+            windowInsets = FlowModalHeaderInsets,
+            titleAlignment = TopBarTitleAlignment.Center,
+        )
+    }
+    val footer: @Composable () -> Unit = {
+        FlowModalActionBar(
+            confirmText = applyLabel,
+            onConfirm = { marked?.let(onDateSelected) },
+            enabled = marked != null,
+            leading = {
+                // Only a date in force can be removed; an unsaved mark is simply not saved.
+                if (removable) {
+                    FlowModalSecondaryAction(text = removeLabel, onClick = { onRemove?.invoke() })
+                } else {
+                    FlowModalSecondaryAction(text = cancelLabel, onClick = onDismiss)
+                }
+            },
+        )
+    }
+    val content: @Composable () -> Unit = {
         Calendar(
             state = calendar,
             selection = CalendarSelection.Single(marked),
@@ -234,6 +267,14 @@ private fun BirthdaySheet(
             startDayOfWeek = startDayOfWeek,
             labels = calendarLabels,
         )
+    }
+
+    if (asDialog) {
+        if (visible) {
+            Dialog(onDismissRequest = onDismiss, header = header, footer = footer, content = content)
+        }
+    } else {
+        FlowModal(controller = controller, header = header, footer = footer, content = content)
     }
 }
 

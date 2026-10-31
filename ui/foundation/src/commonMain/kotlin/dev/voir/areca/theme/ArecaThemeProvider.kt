@@ -11,6 +11,10 @@ import androidx.compose.ui.unit.dp
 import dev.voir.areca.ExperimentalArecaApi
 import dev.voir.areca.foundation.LocalContentColor
 import dev.voir.areca.foundation.LocalTextStyle
+import dev.voir.areca.foundation.adaptive.LocalNavRailSize
+import dev.voir.areca.foundation.adaptive.LocalNavRailStyle
+import dev.voir.areca.foundation.adaptive.NavRailSize
+import dev.voir.areca.foundation.adaptive.NavRailStyle
 import dev.voir.areca.foundation.avatar.AvatarSize
 import dev.voir.areca.foundation.avatar.AvatarStyle
 import dev.voir.areca.foundation.avatar.LocalAvatarSize
@@ -212,6 +216,9 @@ import dev.voir.areca.foundation.wheel.LocalWheelPickerSize
 import dev.voir.areca.foundation.wheel.LocalWheelPickerStyle
 import dev.voir.areca.foundation.wheel.WheelPickerSize
 import dev.voir.areca.foundation.wheel.WheelPickerStyle
+import dev.voir.areca.window.InputMode
+import dev.voir.areca.window.ProvideThemeWindowClass
+import dev.voir.areca.window.currentInputMode
 
 /**
  * Puts the Areca design tokens and component defaults in scope for [content].
@@ -236,7 +243,14 @@ import dev.voir.areca.foundation.wheel.WheelPickerStyle
  * @param motion Animation duration and easing tokens.
  * @param fonts Font families the type scale is rendered with.
  * @param baseTypography Raw type scale. Defaults to the scale rendered with [fonts].
- * @param typography Named text styles. Defaults to styles built on [baseTypography].
+ * @param inputMode What presses the controls, reported through [ArecaTheme.window]. `null` keeps the
+ *   outer provider's; at the root it is the platform's — touch on Android and iOS, a pointer on the
+ *   desktop. Pass one for a device that breaks the rule, such as a tablet with a trackpad. The
+ *   window's size is always read, never passed: a nested provider keeps the size above it.
+ * @param sizing Control heights and touch target. Defaults to [ArecaSizing.touch] under touch and
+ *   [ArecaSizing.pointer] under a pointer; pass one to force a density whatever the input.
+ * @param typography Named text styles. Defaults to styles built on [baseTypography], a step smaller
+ *   for body copy and control labels when [sizing] is dense.
  * @param content Content composed with the provided tokens.
  */
 @OptIn(ExperimentalArecaApi::class)
@@ -256,7 +270,9 @@ public fun ArecaThemeProvider(
     motion: ArecaMotion = ArecaMotion(),
     fonts: ArecaFonts = ArecaFonts(),
     baseTypography: ArecaBaseTypography = ArecaBaseTypography.from(fonts),
-    typography: ArecaTypography = ArecaTypography.from(baseTypography),
+    inputMode: InputMode? = null,
+    sizing: ArecaSizing = ArecaSizing.forInput(inputMode ?: currentInputMode()),
+    typography: ArecaTypography = ArecaTypography.from(baseTypography, dense = sizing.dense),
     content: @Composable () -> Unit,
 ) {
     CompositionLocalProvider(
@@ -266,6 +282,7 @@ public fun ArecaThemeProvider(
         LocalRadius provides radius,
         LocalShapes provides shapes,
         LocalSpacing provides spacing,
+        LocalSizing provides sizing,
         LocalElevation provides elevation,
         LocalMotion provides motion,
         LocalFonts provides fonts,
@@ -275,7 +292,7 @@ public fun ArecaThemeProvider(
         CompositionLocalProvider(
             // Component defaults. Each is overridable on its own for a subtree.
             LocalContentColor provides colors.fgBase,
-            LocalTextStyle provides baseTypography.md.merge(
+            LocalTextStyle provides typography.bodyMedium.merge(
                 fontWeight = FontWeight.Normal,
                 fontStyle = FontStyle.Normal,
                 letterSpacing = TextUnit.Unspecified,
@@ -380,6 +397,8 @@ public fun ArecaThemeProvider(
             LocalNavItemSize provides NavItemSize.Default,
             LocalNavItemStyle provides NavItemStyle.Default,
             LocalNavListSize provides NavListSize.Default,
+            LocalNavRailSize provides NavRailSize.Default,
+            LocalNavRailStyle provides NavRailStyle.Default,
             LocalDropdownPopupSize provides DropdownPopupSize.Default,
             LocalConfirmationDialogSize provides ConfirmationDialogSize.Default,
             LocalConfirmationDialogStyle provides ConfirmationDialogStyle.Default,
@@ -389,7 +408,8 @@ public fun ArecaThemeProvider(
             // sheet builds its default where it is drawn, from the flow modal defaults in scope.
             LocalConfirmSheetSize provides null,
             LocalConfirmSheetStyle provides null,
-            content = content,
-        )
+        ) {
+            ProvideThemeWindowClass(inputMode = inputMode, content = content)
+        }
     }
 }

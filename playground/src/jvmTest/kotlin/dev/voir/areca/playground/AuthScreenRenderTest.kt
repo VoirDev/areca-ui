@@ -38,6 +38,7 @@ import dev.voir.areca.theme.ArecaTheme
 import dev.voir.areca.theme.ArecaThemeProvider
 import dev.voir.areca.playground.flow.auth.AuthSamples
 import dev.voir.areca.playground.flow.auth.SignInScreenState
+import dev.voir.areca.window.InputMode
 import org.jetbrains.skia.EncodedImageFormat
 import java.io.File
 import kotlin.test.Test
@@ -69,7 +70,7 @@ private fun render(name: String, dark: Boolean = false, content: @Composable () 
         height = (HEIGHT * DENSITY).toInt(),
         density = Density(DENSITY),
     ) {
-        ArecaThemeProvider(darkTheme = dark) {
+        ArecaThemeProvider(darkTheme = dark, inputMode = InputMode.Touch) {
             Box(Modifier.fillMaxSize().background(ArecaTheme.colors.bgCanvas)) { content() }
         }
     }.let { scene ->

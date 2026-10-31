@@ -41,8 +41,10 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.dp
 import dev.voir.areca.flow.attachments.AttachmentPdfDocument
 import dev.voir.areca.flow.attachments.LocalAttachmentPdfRenderer
+import dev.voir.areca.foundation.adaptive.AdaptiveDefaults
 import dev.voir.areca.foundation.feedback.Spinner
 import dev.voir.areca.foundation.feedback.SpinnerSize
 import dev.voir.areca.foundation.feedback.SpinnerStyle
@@ -68,7 +70,9 @@ import kotlinx.coroutines.launch
  *
  * Opened through [LocalAttachmentPdfRenderer] and closed when it leaves the screen. Each page is
  * drawn when it scrolls into view, at the column's width, with a blank sheet of A4's proportions in
- * its place meanwhile so the column does not jump as pages arrive. Where the renderer cannot open
+ * its place meanwhile so the column does not jump as pages arrive. The column is the page's width
+ * less a gutter, up to [AdaptiveDefaults.ReadableWidth] and centred beyond it, so on a wide window a
+ * page is read, not scrolled past like a poster. Where the renderer cannot open
  * the file — none is provided, the platform has none, or it is not really a PDF — [fallback] takes
  * the page instead.
  *
@@ -202,7 +206,12 @@ private fun PdfPages(
                 }
             },
     ) {
-        val columnWidth = with(LocalDensity.current) { (maxWidth - gutter * 2).roundToPx() }
+        // The window's width less the gutters, up to a readable width: on a phone that is the
+        // whole page, and on a tablet or a desktop an A4 page stays the height of a page a person
+        // reads rather than a poster scrolled through a screen at a time.
+        val column = (maxWidth - gutter * 2).coerceIn(0.dp, AdaptiveDefaults.ReadableWidth)
+        val side = (maxWidth - column) / 2
+        val columnWidth = with(LocalDensity.current) { column.roundToPx() }
         val widthPx = if (sharp) columnWidth * SHARP_SCALE else columnWidth
 
         LazyColumn(
@@ -215,7 +224,7 @@ private fun PdfPages(
                     translationY = zoom.offset.y
                 },
             state = listState,
-            contentPadding = PaddingValues(horizontal = gutter, vertical = ArecaTheme.spacing.lg),
+            contentPadding = PaddingValues(horizontal = side, vertical = ArecaTheme.spacing.lg),
             verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg),
         ) {
             items(count = count) { index ->

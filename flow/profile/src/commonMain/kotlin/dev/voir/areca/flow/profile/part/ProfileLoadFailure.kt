@@ -1,8 +1,11 @@
 package dev.voir.areca.flow.profile.part
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import dev.voir.areca.foundation.adaptive.AdaptiveDefaults
 import dev.voir.areca.foundation.status.StatusScene
 import dev.voir.areca.foundation.status.StatusSceneActions
 import dev.voir.areca.theme.ArecaTheme
@@ -15,7 +18,9 @@ import dev.voir.areca.theme.ArecaTheme
  * device list, say — reports it inside that section and leaves the rest of the screen working.
  *
  * A foundation `StatusScene` with no mark: the heading, the message under it and the retry button,
- * centred on the space it is given and inset by the page's widest gutter.
+ * centred on the space it is given and inset by the page's widest gutter. It is the whole screen, so
+ * it owns its width: on a tablet or a desktop it stops at [AdaptiveDefaults.ReadableWidth], centred,
+ * so the message keeps a readable line instead of running across the window.
  *
  * @param message What went wrong, already worded.
  * @param onRetry Called to try again.
@@ -36,7 +41,11 @@ public fun ProfileLoadFailure(
 ) {
     StatusScene(
         title = title,
-        modifier = modifier.padding(ArecaTheme.spacing.xl3),
+        modifier = modifier
+            .padding(ArecaTheme.spacing.xl3)
+            // Narrower than this on a phone, where it changes nothing.
+            .wrapContentWidth()
+            .widthIn(max = AdaptiveDefaults.ReadableWidth),
         message = message,
         actions = {
             StatusSceneActions(

@@ -1,26 +1,29 @@
 package dev.voir.areca.playground.flow.gallery
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import dev.voir.areca.flow.gallery.grid.GalleryGroupHeader
 import dev.voir.areca.flow.gallery.grid.GalleryTile
 import dev.voir.areca.flow.gallery.part.GalleryAuthor
 import dev.voir.areca.flow.gallery.part.GalleryCaption
+import dev.voir.areca.foundation.adaptive.AdaptiveDefaults
+import dev.voir.areca.foundation.adaptive.AdaptiveGrid
 import dev.voir.areca.foundation.navigation.PageIndicator
 import dev.voir.areca.foundation.navigation.PageIndicatorStyle
 import dev.voir.areca.foundation.navigation.PageIndicatorVariant
@@ -39,10 +42,13 @@ import dev.voir.areca.playground.media.SampleScene
 import dev.voir.areca.playground.media.SampleShape
 import dev.voir.areca.playground.showcase.FlowShowcase
 import dev.voir.areca.playground.showcase.ShowcaseStatus
-import dev.voir.areca.playground.showcase.canvas.DeviceFrame
-import dev.voir.areca.playground.showcase.canvas.DeviceSize
+import dev.voir.areca.playground.showcase.canvas.WindowPreset
 import dev.voir.areca.playground.showcase.canvas.windowInsets
+import dev.voir.areca.playground.showcase.chrome.ChromeText
+import dev.voir.areca.playground.showcase.chrome.ChromeTextRole
+import dev.voir.areca.playground.showcase.chrome.ChromeTone
 import dev.voir.areca.theme.ArecaTheme
+import dev.voir.areca.window.adaptive
 
 /** A group of a gallery's pictures, and whose photographs they are. */
 private data class SampleGroup(val title: String, val pictures: List<Pair<SamplePicture, String?>>)
@@ -68,62 +74,80 @@ private val SampleGroups = listOf(
 @Composable
 fun GridPageShowcase() = FlowShowcase(
     title = "Grid page",
-    summary = "Every picture of a product in its group, three across, readers' photos labelled with whose they are; " +
-        "a tile opens the viewer at that picture among all of them.",
+    summary = "Every picture of a product in its group, three across on a phone and more as the window widens, " +
+        "readers' photos labelled with whose they are; a tile opens the viewer at that picture among all of them.",
     module = "flow-gallery",
     status = ShowcaseStatus.Beta,
+    notes = {
+        ChromeText(text = "On a tablet or desktop", role = ChromeTextRole.Label)
+        ChromeText(
+            text = "GridPageRecipe lays the tiles in AdaptiveGrid: three across on a phone, four on an unfolded " +
+                "foldable or a tablet held upright, six from 840dp, the cells stopping at the content width on a " +
+                "monitor. The group headers span a line and leave the gutter to the grid. A tile opens the " +
+                "full-window viewer at every size, its footer kept to a readable width.",
+            role = ChromeTextRole.SectionDescription,
+            tone = ChromeTone.Muted,
+        )
+    },
 ) {
-    val columns by enumControl("columns", 3, listOf(2, 3, 4))
+    val preset by enumControl(
+        key = "window",
+        default = WindowPreset.Phone,
+        options = WindowPreset.entries,
+        optionLabel = { it.label },
+    )
 
     preview {
-        DeviceFrame(size = DeviceSize.Regular) {
-            GridPageRecipe(groups = SampleGroups, columns = columns, windowInsets = DeviceSize.Regular.windowInsets)
+        GalleryWindowFrame(preset) {
+            GridPageRecipe(groups = SampleGroups, windowInsets = preset.windowInsets)
         }
     }
 }
 
 /**
- * The recipe: the groups, each headed with its count, tiles in rows, and the viewer over all of them
- * with a caption or an author under each picture.
+ * The recipe: the groups, each headed with its count, tiles in an adaptive grid, and the viewer over
+ * all of them with a caption or an author under each picture.
  *
  * @param groups The groups.
- * @param columns Tiles across.
  * @param windowInsets The screen's insets.
  */
 @Composable
-private fun GridPageRecipe(groups: List<SampleGroup>, columns: Int, windowInsets: WindowInsets) {
+private fun GridPageRecipe(groups: List<SampleGroup>, windowInsets: WindowInsets) {
     val all = groups.flatMap { group -> group.pictures.map { (picture, author) -> Triple(picture, author, group.title) } }
     val transition = rememberMediaTransitionState()
     var open by remember { mutableStateOf<Int?>(null) }
 
-    LazyColumn(
+    AdaptiveGrid(
         modifier = Modifier.fillMaxSize().background(ArecaTheme.colors.bgCanvas),
+        minCellWidth = 88.dp,
+        maxColumns = adaptive(compact = 3, medium = 4, expanded = 6),
         contentPadding = windowInsets.asPaddingValues(),
+        horizontalSpacing = ArecaTheme.spacing.sm,
+        verticalSpacing = ArecaTheme.spacing.none,
     ) {
-        item { Text("Runner 2", style = ArecaTheme.typography.headingSmall, modifier = Modifier.padding(ArecaTheme.spacing.horizontalContentInsets)) }
+        item(span = { GridItemSpan(maxLineSpan) }) {
+            Text(
+                "Runner 2",
+                style = ArecaTheme.typography.headingSmall,
+                modifier = Modifier.padding(vertical = ArecaTheme.spacing.horizontalContentInsets),
+            )
+        }
         var first = 0
         groups.forEach { group ->
             val start = first
-            item(key = group.title) { GalleryGroupHeader(title = group.title, count = group.pictures.size.toString()) }
-            items(group.pictures.indices.chunked(columns)) { row ->
-                Row(
-                    Modifier.padding(horizontal = ArecaTheme.spacing.horizontalContentInsets, vertical = ArecaTheme.spacing.xs),
-                    horizontalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.sm),
-                ) {
-                    row.forEach { place ->
-                        val (picture, author) = group.pictures[place]
-                        GalleryTile(
-                            model = picture,
-                            contentDescription = picture.title,
-                            onClick = { open = start + place },
-                            modifier = Modifier.weight(1f),
-                            label = author,
-                            transition = transition,
-                            transitionKey = picture.id,
-                        )
-                    }
-                    repeat(columns - row.size) { Spacer(Modifier.weight(1f)) }
-                }
+            item(key = group.title, span = { GridItemSpan(maxLineSpan) }) {
+                GalleryGroupHeader(title = group.title, count = group.pictures.size.toString(), horizontalPadding = 0.dp)
+            }
+            itemsIndexed(group.pictures, key = { _, (picture, _) -> picture.id }) { place, (picture, author) ->
+                GalleryTile(
+                    model = picture,
+                    contentDescription = picture.title,
+                    onClick = { open = start + place },
+                    modifier = Modifier.padding(vertical = ArecaTheme.spacing.xs),
+                    label = author,
+                    transition = transition,
+                    transitionKey = picture.id,
+                )
             }
             first += group.pictures.size
         }
@@ -145,20 +169,23 @@ private fun GridPageRecipe(groups: List<SampleGroup>, columns: Int, windowInsets
                 )
             },
             footer = { viewer ->
-                val (picture, author, group) = all[viewer.currentIndex]
-                if (author != null) {
-                    GalleryAuthor(name = "Photo by $author", letters = author.take(1), detail = "12 October 2026", caption = picture.title)
-                } else {
-                    GalleryCaption(title = picture.title, kicker = group)
+                // Under the picture at a readable width, not stretched across a desktop window.
+                Column(Modifier.widthIn(max = AdaptiveDefaults.ReadableWidth).align(Alignment.CenterHorizontally)) {
+                    val (picture, author, group) = all[viewer.currentIndex]
+                    if (author != null) {
+                        GalleryAuthor(name = "Photo by $author", letters = author.take(1), detail = "12 October 2026", caption = picture.title)
+                    } else {
+                        GalleryCaption(title = picture.title, kicker = group)
+                    }
+                    PageIndicator(
+                        pageCount = viewer.itemCount,
+                        currentPage = viewer.currentIndex,
+                        currentPageOffset = viewer.currentIndexOffset,
+                        variant = PageIndicatorVariant.Shrinking(),
+                        style = PageIndicatorStyle.onImage(capsule = null),
+                        modifier = Modifier.padding(PaddingValues(top = ArecaTheme.spacing.lg)).align(Alignment.CenterHorizontally),
+                    )
                 }
-                PageIndicator(
-                    pageCount = viewer.itemCount,
-                    currentPage = viewer.currentIndex,
-                    currentPageOffset = viewer.currentIndexOffset,
-                    variant = PageIndicatorVariant.Shrinking(),
-                    style = PageIndicatorStyle.onImage(capsule = null),
-                    modifier = Modifier.padding(PaddingValues(top = ArecaTheme.spacing.lg)).align(androidx.compose.ui.Alignment.CenterHorizontally),
-                )
             },
         ) { index -> MediaViewerImage(model = all[index].first, contentDescription = all[index].first.title) }
     }

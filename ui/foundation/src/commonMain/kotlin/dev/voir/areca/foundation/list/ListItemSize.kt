@@ -114,92 +114,112 @@ public data class ListItemSize(
             @Composable
             get() = Medium
 
-        /** Dense rows for menus, pickers and secondary lists. */
+        /**
+         * 32dp under touch, 28dp under a pointer. Dense rows for menus, pickers and secondary lists.
+         */
         public val Compact: ListItemSize
             @Composable
-            get() = ListItemSize(
-                minHeight = 32.dp,
-                contentPadding = PaddingValues(
-                    horizontal = ArecaTheme.spacing.lg,
-                    vertical = ArecaTheme.spacing.sm,
-                ),
-                leadingGap = ArecaTheme.spacing.md,
-                trailingGap = ArecaTheme.spacing.md,
-                valueGap = ArecaTheme.spacing.sm,
-                textGap = ArecaTheme.spacing.xs2,
-                bottomGap = ArecaTheme.spacing.sm,
-                nestedLevelOffset = ArecaTheme.spacing.lg,
-                selectedRailWidth = 2.5.dp,
-                selectedRailInset = 4.dp,
-                selectedRailRadius = 2.dp,
-                selectedContentOffset = 3.dp,
-                icon = 18.dp,
-                chevron = ChevronSize.Small,
-                stateAnimation = ListItemStateAnimation.Default,
-                overlineTextStyle = ArecaTheme.typography.labelSmall,
-                titleTextStyle = ArecaTheme.typography.bodySmall,
-                subtitleTextStyle = ArecaTheme.typography.bodyExtraSmall,
-                valueTextStyle = ArecaTheme.typography.bodyExtraSmall,
-                captionTextStyle = ArecaTheme.typography.bodyExtraSmall,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                val spacing = ArecaTheme.spacing
+                return ListItemSize(
+                    minHeight = sizing.rowCompact,
+                    contentPadding = PaddingValues(
+                        horizontal = sizing.select(touch = spacing.lg, pointer = spacing.md),
+                        vertical = sizing.select(touch = spacing.sm, pointer = spacing.xs),
+                    ),
+                    leadingGap = sizing.select(touch = spacing.md, pointer = spacing.sm),
+                    trailingGap = sizing.select(touch = spacing.md, pointer = spacing.sm),
+                    valueGap = sizing.select(touch = spacing.sm, pointer = spacing.xs),
+                    textGap = spacing.xs2,
+                    bottomGap = sizing.select(touch = spacing.sm, pointer = spacing.xs),
+                    nestedLevelOffset = sizing.select(touch = spacing.lg, pointer = spacing.md),
+                    selectedRailWidth = 2.5.dp,
+                    selectedRailInset = 4.dp,
+                    selectedRailRadius = 2.dp,
+                    selectedContentOffset = 3.dp,
+                    icon = sizing.select(touch = 18.dp, pointer = 16.dp),
+                    chevron = ChevronSize.Small,
+                    stateAnimation = ListItemStateAnimation.Default,
+                    overlineTextStyle = ArecaTheme.typography.labelSmall,
+                    titleTextStyle = ArecaTheme.typography.bodySmall,
+                    subtitleTextStyle = ArecaTheme.typography.bodyExtraSmall,
+                    valueTextStyle = ArecaTheme.typography.bodyExtraSmall,
+                    captionTextStyle = ArecaTheme.typography.bodyExtraSmall,
+                )
+            }
 
-        /** The default row density, tall enough to be a comfortable touch target. */
+        /**
+         * 44dp under touch, 36dp under a pointer. The default row density, tall enough to be a
+         * comfortable touch target.
+         */
         public val Medium: ListItemSize
             @Composable
-            get() = ListItemSize(
-                minHeight = 44.dp,
-                contentPadding = PaddingValues(
-                    horizontal = ArecaTheme.spacing.xl,
-                    vertical = ArecaTheme.spacing.md,
-                ),
-                leadingGap = ArecaTheme.spacing.lg,
-                trailingGap = ArecaTheme.spacing.lg,
-                valueGap = ArecaTheme.spacing.md,
-                textGap = ArecaTheme.spacing.xs2,
-                bottomGap = ArecaTheme.spacing.md,
-                nestedLevelOffset = ArecaTheme.spacing.xl,
-                selectedRailWidth = 3.dp,
-                selectedRailInset = 6.dp,
-                selectedRailRadius = 2.dp,
-                selectedContentOffset = 4.dp,
-                icon = 20.dp,
-                chevron = ChevronSize.Medium,
-                stateAnimation = ListItemStateAnimation.Default,
-                overlineTextStyle = ArecaTheme.typography.labelSmall,
-                titleTextStyle = ArecaTheme.typography.bodyMedium,
-                subtitleTextStyle = ArecaTheme.typography.bodySmall,
-                valueTextStyle = ArecaTheme.typography.bodySmall,
-                captionTextStyle = ArecaTheme.typography.bodyExtraSmall,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                val spacing = ArecaTheme.spacing
+                return ListItemSize(
+                    minHeight = sizing.rowMedium,
+                    contentPadding = PaddingValues(
+                        horizontal = sizing.select(touch = spacing.xl, pointer = spacing.lg),
+                        vertical = sizing.select(touch = spacing.md, pointer = spacing.sm),
+                    ),
+                    leadingGap = sizing.select(touch = spacing.lg, pointer = spacing.md),
+                    trailingGap = sizing.select(touch = spacing.lg, pointer = spacing.md),
+                    valueGap = sizing.select(touch = spacing.md, pointer = spacing.sm),
+                    textGap = spacing.xs2,
+                    bottomGap = sizing.select(touch = spacing.md, pointer = spacing.sm),
+                    nestedLevelOffset = sizing.select(touch = spacing.xl, pointer = spacing.lg),
+                    selectedRailWidth = 3.dp,
+                    selectedRailInset = 6.dp,
+                    selectedRailRadius = 2.dp,
+                    selectedContentOffset = 4.dp,
+                    icon = sizing.select(touch = 20.dp, pointer = 18.dp),
+                    chevron = sizing.select(touch = ChevronSize.Medium, pointer = ChevronSize.Small),
+                    stateAnimation = ListItemStateAnimation.Default,
+                    overlineTextStyle = ArecaTheme.typography.labelSmall,
+                    titleTextStyle = ArecaTheme.typography.bodyMedium,
+                    subtitleTextStyle = ArecaTheme.typography.bodySmall,
+                    valueTextStyle = ArecaTheme.typography.bodySmall,
+                    captionTextStyle = ArecaTheme.typography.bodyExtraSmall,
+                )
+            }
 
-        /** Roomy rows for primary content — contacts, conversations, media. */
+        /**
+         * 56dp under touch, 44dp under a pointer. Roomy rows for primary content — contacts,
+         * conversations, media.
+         */
         public val Comfortable: ListItemSize
             @Composable
-            get() = ListItemSize(
-                minHeight = 56.dp,
-                contentPadding = PaddingValues(
-                    horizontal = ArecaTheme.spacing.xl,
-                    vertical = ArecaTheme.spacing.lg,
-                ),
-                leadingGap = ArecaTheme.spacing.xl,
-                trailingGap = ArecaTheme.spacing.lg,
-                valueGap = ArecaTheme.spacing.lg,
-                textGap = ArecaTheme.spacing.xs,
-                bottomGap = ArecaTheme.spacing.lg,
-                nestedLevelOffset = ArecaTheme.spacing.xl2,
-                selectedRailWidth = 3.dp,
-                selectedRailInset = 8.dp,
-                selectedRailRadius = 2.dp,
-                selectedContentOffset = 6.dp,
-                icon = 24.dp,
-                chevron = ChevronSize.Large,
-                stateAnimation = ListItemStateAnimation.Default,
-                overlineTextStyle = ArecaTheme.typography.labelMedium,
-                titleTextStyle = ArecaTheme.typography.bodyLarge,
-                subtitleTextStyle = ArecaTheme.typography.bodyMedium,
-                valueTextStyle = ArecaTheme.typography.bodySmall,
-                captionTextStyle = ArecaTheme.typography.bodySmall,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                val spacing = ArecaTheme.spacing
+                return ListItemSize(
+                    minHeight = sizing.rowComfortable,
+                    contentPadding = PaddingValues(
+                        horizontal = sizing.select(touch = spacing.xl, pointer = spacing.lg),
+                        vertical = sizing.select(touch = spacing.lg, pointer = spacing.md),
+                    ),
+                    leadingGap = sizing.select(touch = spacing.xl, pointer = spacing.lg),
+                    trailingGap = sizing.select(touch = spacing.lg, pointer = spacing.md),
+                    valueGap = sizing.select(touch = spacing.lg, pointer = spacing.md),
+                    textGap = spacing.xs,
+                    bottomGap = sizing.select(touch = spacing.lg, pointer = spacing.md),
+                    nestedLevelOffset = sizing.select(touch = spacing.xl2, pointer = spacing.xl),
+                    selectedRailWidth = 3.dp,
+                    selectedRailInset = 8.dp,
+                    selectedRailRadius = 2.dp,
+                    selectedContentOffset = 6.dp,
+                    icon = sizing.select(touch = 24.dp, pointer = 20.dp),
+                    chevron = sizing.select(touch = ChevronSize.Large, pointer = ChevronSize.Medium),
+                    stateAnimation = ListItemStateAnimation.Default,
+                    overlineTextStyle = ArecaTheme.typography.labelMedium,
+                    titleTextStyle = ArecaTheme.typography.bodyLarge,
+                    subtitleTextStyle = ArecaTheme.typography.bodyMedium,
+                    valueTextStyle = ArecaTheme.typography.bodySmall,
+                    captionTextStyle = ArecaTheme.typography.bodySmall,
+                )
+            }
     }
 }
 

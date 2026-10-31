@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.Constraints
 import dev.voir.areca.foundation.list.LocalListItemState
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.indication.FadeIndication
-import dev.voir.areca.modifier.MinimumTouchTarget
 import dev.voir.areca.modifier.clickCursor
 import dev.voir.areca.theme.ArecaTheme
 
@@ -24,10 +23,11 @@ import dev.voir.areca.theme.ArecaTheme
  *
  * The row itself is the main action — pressing an address row changes the address — so the link is
  * set apart from the row's value by an underline rather than by color: it is in the row's own ink,
- * like every other piece of copy on the card. Its target is at least [MinimumTouchTarget] each way
- * however short its word, because the row around it is pressable too and a near miss would land on
- * the row; the target overhangs the line rather than making the row taller, so the link lines up
- * with the title like any other trailing content.
+ * like every other piece of copy on the card. Its target is at least the sizing's
+ * [touch target][dev.voir.areca.theme.ArecaSizing.touchTarget] each way — 48dp under touch, none
+ * under a pointer — however short its word, because the row around it is pressable too and a near
+ * miss would land on the row; the target overhangs the line rather than making the row taller, so
+ * the link lines up with the title like any other trailing content.
  *
  * Put it in the row's `trailing` slot. When the row has only one action, make the row the action and
  * name it in the row's `value` instead — "Link", "Download" — rather than adding a link.
@@ -50,7 +50,7 @@ public fun SettingsRowLink(
     val rowEnabled = enabled && LocalListItemState.current.enabled
     val style = SettingsTheme.styles.row
     val shape = ArecaTheme.shapes.md
-    val minTarget = MinimumTouchTarget
+    val minTarget = ArecaTheme.sizing.touchTarget
 
     Layout(
         modifier = modifier,

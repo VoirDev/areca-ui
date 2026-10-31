@@ -255,26 +255,30 @@ public data class TabsSize(
 ) {
     /** Theme-backed presets and builders. */
     public companion object {
-        /** Theme default. */
+        /** 36dp under touch, 30dp under a pointer. Theme default. */
         public val Default: TabsSize
             @Composable
             get() = default()
 
         /**
-         * Metrics for [TabsVariant.Segmented]: capsule tabs a hairline inside their track, with a
-         * thumb raised one elevation step.
+         * 32dp under touch, 28dp under a pointer. Metrics for [TabsVariant.Segmented]: capsule tabs
+         * a hairline inside their track, with a thumb raised one elevation step.
          */
         public val Segmented: TabsSize
             @Composable
-            get() = default(
-                gap = ArecaTheme.spacing.xs2,
-                itemPaddingHorizontal = ArecaTheme.spacing.lg,
-                itemPaddingVertical = ArecaTheme.spacing.xs,
-                itemMinHeight = 32.dp,
-                itemShape = ArecaTheme.shapes.full,
-                trackPadding = ArecaTheme.spacing.xs2,
-                thumbElevation = ArecaTheme.elevation.xs,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                val spacing = ArecaTheme.spacing
+                return default(
+                    gap = spacing.xs2,
+                    itemPaddingHorizontal = sizing.select(touch = spacing.lg, pointer = spacing.md),
+                    itemPaddingVertical = spacing.xs,
+                    itemMinHeight = sizing.controlXs,
+                    itemShape = ArecaTheme.shapes.full,
+                    trackPadding = spacing.xs2,
+                    thumbElevation = ArecaTheme.elevation.xs,
+                )
+            }
 
         /**
          * Builds a size from the current theme.
@@ -297,11 +301,20 @@ public data class TabsSize(
          */
         @Composable
         public fun default(
-            gap: Dp = ArecaTheme.spacing.xs,
-            itemPaddingHorizontal: Dp = ArecaTheme.spacing.md,
-            itemPaddingVertical: Dp = ArecaTheme.spacing.sm,
-            itemMinHeight: Dp = 36.dp,
-            itemMinWidth: Dp = 36.dp,
+            gap: Dp = ArecaTheme.sizing.select(
+                touch = ArecaTheme.spacing.xs,
+                pointer = ArecaTheme.spacing.xs2,
+            ),
+            itemPaddingHorizontal: Dp = ArecaTheme.sizing.select(
+                touch = ArecaTheme.spacing.md,
+                pointer = ArecaTheme.spacing.sm,
+            ),
+            itemPaddingVertical: Dp = ArecaTheme.sizing.select(
+                touch = ArecaTheme.spacing.sm,
+                pointer = ArecaTheme.spacing.xs,
+            ),
+            itemMinHeight: Dp = ArecaTheme.sizing.select(touch = 36.dp, pointer = 30.dp),
+            itemMinWidth: Dp = ArecaTheme.sizing.select(touch = 36.dp, pointer = 30.dp),
             itemShape: Shape = ArecaTheme.shapes.md,
             dividerThickness: Dp = 1.dp,
             indicatorThickness: Dp = 2.dp,

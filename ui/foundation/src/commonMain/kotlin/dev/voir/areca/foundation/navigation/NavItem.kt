@@ -133,7 +133,8 @@ public data class NavItemStyle(
  * @property verticalPadding Space above and below the content.
  * @property gap Space between the leading slot, the content and the trailing slot.
  * @property minHeight Smallest height of the row; 48dp by default, the minimum a finger reliably
- *   hits.
+ *   hits. [NavItemSize.default] takes the sizing's medium control height instead: 48dp under touch,
+ *   36dp under a pointer.
  */
 @Immutable
 public data class NavItemSize(
@@ -147,7 +148,7 @@ public data class NavItemSize(
 ) {
     /** The theme's default size, and a builder for overriding it. */
     public companion object {
-        /** Theme default. */
+        /** 48dp under touch, 36dp under a pointer. Theme default. */
         public val Default: NavItemSize
             @Composable
             get() = default()
@@ -166,13 +167,22 @@ public data class NavItemSize(
          */
         @Composable
         public fun default(
-            icon: Dp = IconSize.Medium,
+            icon: Dp = ArecaTheme.sizing.select(touch = IconSize.Medium, pointer = IconSize.Small),
             chevron: ChevronSize = ChevronSize.Small,
             textStyle: TextStyle = ArecaTheme.typography.labelMedium,
-            horizontalPadding: Dp = ArecaTheme.spacing.lg,
-            verticalPadding: Dp = ArecaTheme.spacing.md,
-            gap: Dp = ArecaTheme.spacing.md,
-            minHeight: Dp = MinimumTouchTarget,
+            horizontalPadding: Dp = ArecaTheme.sizing.select(
+                touch = ArecaTheme.spacing.lg,
+                pointer = ArecaTheme.spacing.md,
+            ),
+            verticalPadding: Dp = ArecaTheme.sizing.select(
+                touch = ArecaTheme.spacing.md,
+                pointer = ArecaTheme.spacing.sm,
+            ),
+            gap: Dp = ArecaTheme.sizing.select(
+                touch = ArecaTheme.spacing.md,
+                pointer = ArecaTheme.spacing.sm,
+            ),
+            minHeight: Dp = ArecaTheme.sizing.controlMd,
         ): NavItemSize = NavItemSize(
             icon = icon,
             chevron = chevron,

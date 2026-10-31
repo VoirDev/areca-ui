@@ -128,152 +128,200 @@ public data class FieldSize(
         )
 
         /**
-         * The tightest size on the ramp, 32dp tall.
+         * The tightest size on the ramp, 32dp tall under touch, 28dp under a pointer.
          *
          * Below the 44dp comfortable touch target, so keep it to pointer-driven density —
          * toolbars, table cells, filter bars — rather than a form somebody fills in on a phone.
          */
         public val ExtraSmall: FieldSize
             @Composable
-            get() = FieldSize(
-                borderWidth = 1.dp,
-                focusRing = 3.dp,
-                padding = PaddingValues(
-                    horizontal = ArecaTheme.spacing.md,
-                    vertical = ArecaTheme.spacing.sm,
-                ),
-                gap = ArecaTheme.spacing.sm,
-                icon = 14.dp,
-                textStyle = ArecaTheme.baseTypography.sm,
-                minHeight = 32.dp,
-                spinner = SpinnerSize(container = 12.dp, stroke = 1.dp),
-                iconButton = IconButtonSize(
+            get() {
+                val sizing = ArecaTheme.sizing
+                val spacing = ArecaTheme.spacing
+                return FieldSize(
                     borderWidth = 1.dp,
-                    container = 16.dp,
-                    icon = 14.dp,
+                    focusRing = 3.dp,
+                    padding = PaddingValues(
+                        horizontal = sizing.select(touch = spacing.md, pointer = spacing.sm),
+                        vertical = sizing.select(touch = spacing.sm, pointer = spacing.xs),
+                    ),
+                    gap = sizing.select(touch = spacing.sm, pointer = spacing.xs),
+                    icon = sizing.select(touch = 14.dp, pointer = 12.dp),
+                    textStyle = ArecaTheme.baseTypography.sm,
+                    minHeight = sizing.controlXs,
                     spinner = SpinnerSize(container = 12.dp, stroke = 1.dp),
-                ),
-                label = defaultLabel(),
-                message = defaultMessage(),
-                chevron = ChevronSize.ExtraSmall,
-            )
+                    iconButton = IconButtonSize(
+                        borderWidth = 1.dp,
+                        container = sizing.select(touch = 16.dp, pointer = 14.dp),
+                        icon = sizing.select(touch = 14.dp, pointer = 12.dp),
+                        spinner = SpinnerSize(container = 12.dp, stroke = 1.dp),
+                    ),
+                    label = defaultLabel(),
+                    message = defaultMessage(),
+                    chevron = ChevronSize.ExtraSmall,
+                )
+            }
 
         /**
-         * A compact size, 40dp tall — dense forms and search fields.
+         * A compact size, 40dp tall under touch, 32dp under a pointer — dense forms and search
+         * fields.
          */
         public val Small: FieldSize
             @Composable
-            get() = FieldSize(
-                borderWidth = 1.dp,
-                focusRing = 3.dp,
-                padding = PaddingValues(
-                    horizontal = ArecaTheme.spacing.lg,
-                    vertical = ArecaTheme.spacing.md,
-                ),
-                gap = ArecaTheme.spacing.md,
-                icon = 20.dp,
-                textStyle = ArecaTheme.baseTypography.md,
-                minHeight = 40.dp,
-                spinner = SpinnerSize(container = 18.dp, stroke = 2.dp),
-                iconButton = IconButtonSize(
+            get() {
+                val sizing = ArecaTheme.sizing
+                val spacing = ArecaTheme.spacing
+                return FieldSize(
                     borderWidth = 1.dp,
-                    container = 20.dp,
-                    icon = 16.dp,
-                    spinner = SpinnerSize(container = 16.dp, stroke = 1.dp),
-                ),
-                label = defaultLabel(),
-                message = defaultMessage(),
-                chevron = ChevronSize.Small,
-            )
+                    focusRing = 3.dp,
+                    padding = PaddingValues(
+                        horizontal = sizing.select(touch = spacing.lg, pointer = spacing.md),
+                        vertical = sizing.select(touch = spacing.md, pointer = spacing.sm),
+                    ),
+                    gap = sizing.select(touch = spacing.md, pointer = spacing.sm),
+                    icon = sizing.select(touch = 20.dp, pointer = 16.dp),
+                    textStyle = sizing.select(touch = ArecaTheme.baseTypography.md, pointer = ArecaTheme.baseTypography.sm),
+                    minHeight = sizing.controlSm,
+                    spinner = sizing.select(
+                        touch = SpinnerSize(container = 18.dp, stroke = 2.dp),
+                        pointer = SpinnerSize(container = 14.dp, stroke = 1.dp),
+                    ),
+                    iconButton = IconButtonSize(
+                        borderWidth = 1.dp,
+                        container = sizing.select(touch = 20.dp, pointer = 18.dp),
+                        icon = sizing.select(touch = 16.dp, pointer = 14.dp),
+                        spinner = sizing.select(
+                            touch = SpinnerSize(container = 16.dp, stroke = 1.dp),
+                            pointer = SpinnerSize(container = 14.dp, stroke = 1.dp),
+                        ),
+                    ),
+                    label = defaultLabel(),
+                    message = defaultMessage(),
+                    chevron = ChevronSize.Small,
+                )
+            }
 
         /**
-         * The default size, 48dp tall — comfortable to hit on a touch screen.
+         * The default size, 48dp tall under touch, 36dp under a pointer — comfortable to hit on a
+         * touch screen.
          */
         public val Medium: FieldSize
             @Composable
-            get() = FieldSize(
-                borderWidth = 1.dp,
-                focusRing = 3.dp,
-                padding = PaddingValues(
-                    horizontal = ArecaTheme.spacing.xl,
-                    vertical = ArecaTheme.spacing.lg,
-                ),
-                gap = ArecaTheme.spacing.lg,
-                icon = 22.dp,
-                textStyle = ArecaTheme.baseTypography.md,
-                minHeight = 48.dp,
-                spinner = SpinnerSize(18.dp),
-                iconButton = IconButtonSize(
+            get() {
+                val sizing = ArecaTheme.sizing
+                val spacing = ArecaTheme.spacing
+                return FieldSize(
                     borderWidth = 1.dp,
-                    container = 22.dp,
-                    icon = 18.dp,
-                    spinner = SpinnerSize(container = 18.dp, stroke = 1.dp),
-                ),
-                label = defaultLabel(),
-                message = defaultMessage(),
-                chevron = ChevronSize.Small,
-            )
+                    focusRing = 3.dp,
+                    padding = PaddingValues(
+                        horizontal = sizing.select(touch = spacing.xl, pointer = spacing.lg),
+                        vertical = sizing.select(touch = spacing.lg, pointer = spacing.md),
+                    ),
+                    gap = sizing.select(touch = spacing.lg, pointer = spacing.md),
+                    icon = sizing.select(touch = 22.dp, pointer = 18.dp),
+                    textStyle = sizing.select(touch = ArecaTheme.baseTypography.md, pointer = ArecaTheme.baseTypography.sm),
+                    minHeight = sizing.controlMd,
+                    spinner = sizing.select(
+                        touch = SpinnerSize(18.dp),
+                        pointer = SpinnerSize(16.dp),
+                    ),
+                    iconButton = IconButtonSize(
+                        borderWidth = 1.dp,
+                        container = sizing.select(touch = 22.dp, pointer = 20.dp),
+                        icon = sizing.select(touch = 18.dp, pointer = 16.dp),
+                        spinner = sizing.select(
+                            touch = SpinnerSize(container = 18.dp, stroke = 1.dp),
+                            pointer = SpinnerSize(container = 16.dp, stroke = 1.dp),
+                        ),
+                    ),
+                    label = defaultLabel(),
+                    message = defaultMessage(),
+                    chevron = ChevronSize.Small,
+                )
+            }
 
         /**
-         * A roomy size, 56dp tall — a short form that is the whole screen.
+         * A roomy size, 56dp tall under touch, 44dp under a pointer — a short form that is the
+         * whole screen.
          *
          * Matches [dev.voir.areca.foundation.button.ButtonSize.Large], so a field and the button that
          * submits it line up when they sit side by side.
          */
         public val Large: FieldSize
             @Composable
-            get() = FieldSize(
-                borderWidth = 1.dp,
-                focusRing = 3.dp,
-                padding = PaddingValues(
-                    horizontal = ArecaTheme.spacing.xl2,
-                    vertical = ArecaTheme.spacing.xl,
-                ),
-                gap = ArecaTheme.spacing.lg,
-                icon = 24.dp,
-                textStyle = ArecaTheme.baseTypography.md,
-                minHeight = 56.dp,
-                spinner = SpinnerSize(20.dp),
-                iconButton = IconButtonSize(
+            get() {
+                val sizing = ArecaTheme.sizing
+                val spacing = ArecaTheme.spacing
+                return FieldSize(
                     borderWidth = 1.dp,
-                    container = 24.dp,
-                    icon = 20.dp,
-                    spinner = SpinnerSize(container = 20.dp, stroke = 2.dp),
-                ),
-                label = defaultLabel(),
-                message = defaultMessage(),
-                chevron = ChevronSize.Medium,
-            )
+                    focusRing = 3.dp,
+                    padding = PaddingValues(
+                        horizontal = sizing.select(touch = spacing.xl2, pointer = spacing.xl),
+                        vertical = sizing.select(touch = spacing.xl, pointer = spacing.lg),
+                    ),
+                    gap = sizing.select(touch = spacing.lg, pointer = spacing.md),
+                    icon = sizing.select(touch = 24.dp, pointer = 20.dp),
+                    textStyle = ArecaTheme.baseTypography.md,
+                    minHeight = sizing.controlLg,
+                    spinner = sizing.select(
+                        touch = SpinnerSize(20.dp),
+                        pointer = SpinnerSize(18.dp),
+                    ),
+                    iconButton = IconButtonSize(
+                        borderWidth = 1.dp,
+                        container = sizing.select(touch = 24.dp, pointer = 22.dp),
+                        icon = sizing.select(touch = 20.dp, pointer = 18.dp),
+                        spinner = sizing.select(
+                            touch = SpinnerSize(container = 20.dp, stroke = 2.dp),
+                            pointer = SpinnerSize(container = 18.dp, stroke = 1.dp),
+                        ),
+                    ),
+                    label = defaultLabel(),
+                    message = defaultMessage(),
+                    chevron = ChevronSize.Medium,
+                )
+            }
 
         /**
-         * The largest size on the ramp, 64dp tall, and the only one whose value type grows.
+         * The largest size on the ramp, 64dp tall under touch, 52dp under a pointer, and the only
+         * one whose value type grows.
          *
          * For the single field a screen exists for — an amount, a one-time code, a sign-in email.
          * In a form of several fields it reads as a mistake rather than as emphasis.
          */
         public val ExtraLarge: FieldSize
             @Composable
-            get() = FieldSize(
-                borderWidth = 1.dp,
-                focusRing = 4.dp,
-                padding = PaddingValues(
-                    horizontal = ArecaTheme.spacing.xl3,
-                    vertical = ArecaTheme.spacing.xl2,
-                ),
-                gap = ArecaTheme.spacing.xl,
-                icon = 24.dp,
-                textStyle = ArecaTheme.baseTypography.lg,
-                minHeight = 64.dp,
-                spinner = SpinnerSize(24.dp),
-                iconButton = IconButtonSize(
+            get() {
+                val sizing = ArecaTheme.sizing
+                val spacing = ArecaTheme.spacing
+                return FieldSize(
                     borderWidth = 1.dp,
-                    container = 28.dp,
-                    icon = 22.dp,
-                    spinner = SpinnerSize(container = 22.dp, stroke = 2.dp),
-                ),
-                label = defaultLabel(),
-                message = defaultMessage(),
-                chevron = ChevronSize.Medium,
-            )
+                    focusRing = 4.dp,
+                    padding = PaddingValues(
+                        horizontal = sizing.select(touch = spacing.xl3, pointer = spacing.xl2),
+                        vertical = sizing.select(touch = spacing.xl2, pointer = spacing.lg),
+                    ),
+                    gap = sizing.select(touch = spacing.xl, pointer = spacing.lg),
+                    icon = sizing.select(touch = 24.dp, pointer = 22.dp),
+                    textStyle = ArecaTheme.baseTypography.lg,
+                    minHeight = sizing.controlXl,
+                    spinner = sizing.select(
+                        touch = SpinnerSize(24.dp),
+                        pointer = SpinnerSize(20.dp),
+                    ),
+                    iconButton = IconButtonSize(
+                        borderWidth = 1.dp,
+                        container = sizing.select(touch = 28.dp, pointer = 24.dp),
+                        icon = sizing.select(touch = 22.dp, pointer = 20.dp),
+                        spinner = sizing.select(
+                            touch = SpinnerSize(container = 22.dp, stroke = 2.dp),
+                            pointer = SpinnerSize(container = 20.dp, stroke = 2.dp),
+                        ),
+                    ),
+                    label = defaultLabel(),
+                    message = defaultMessage(),
+                    chevron = ChevronSize.Medium,
+                )
+            }
     }
 }

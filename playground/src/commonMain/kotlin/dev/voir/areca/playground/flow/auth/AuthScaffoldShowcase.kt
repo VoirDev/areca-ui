@@ -392,6 +392,19 @@ fun AuthScaffoldShowcase() = ShowcaseScaffold(
             )
         }
         case(
+            name = "Split on a phone",
+            expectation = "Split() falls back to HeroTop() below an expanded width: the panel " +
+                "becomes the band. See the tablet and desktop sign-in page for the split itself.",
+        ) {
+            ScaffoldSample(
+                branding = AuthBranding(
+                    wordmark = { AuthSamples.Wordmark() },
+                    hero = { AuthSamples.Hero() },
+                    layout = AuthLayout.Split(),
+                ),
+            )
+        }
+        case(
             name = "Fraction above the range",
             expectation = "HeroTop(0.95f) is clamped to 0.8; the form keeps a fifth of the viewport.",
         ) {
@@ -562,4 +575,5 @@ private val AuthLayout.code: String
         is AuthLayout.HeroBottom -> "AuthLayout.HeroBottom()"
         AuthLayout.HeroInline -> "AuthLayout.HeroInline"
         AuthLayout.FullBleed -> "AuthLayout.FullBleed"
+        is AuthLayout.Split -> "AuthLayout.Split()"
     }

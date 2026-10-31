@@ -5,8 +5,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -20,16 +23,17 @@ import dev.voir.areca.flow.profile.part.ProfileLoadFailure
 import dev.voir.areca.flow.profile.part.StaleDetailsNotice
 import dev.voir.areca.flow.profile.row.EmailRow
 import dev.voir.areca.flow.profile.row.ProfileInfoRow
+import dev.voir.areca.foundation.adaptive.AdaptiveDefaults
+import dev.voir.areca.foundation.button.ActionColor
 import dev.voir.areca.foundation.button.Button
 import dev.voir.areca.foundation.button.ButtonSize
 import dev.voir.areca.foundation.button.ButtonStyle
-import dev.voir.areca.foundation.button.ActionColor
-import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.foundation.list.ListItemChevron
 import dev.voir.areca.foundation.settings.Section
 import dev.voir.areca.foundation.settings.Settings
 import dev.voir.areca.foundation.settings.SettingsRow
 import dev.voir.areca.foundation.settings.SettingsRowIcon
+import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.icons.ArecaIcons
 import dev.voir.areca.icons.AtSign
 import dev.voir.areca.icons.Edit
@@ -167,7 +171,11 @@ private fun ProfileRecipe(
             .fillMaxSize()
             .background(ArecaTheme.colors.bgCanvas)
             .verticalScroll(rememberScrollState())
-            .windowInsetsPadding(windowInsets),
+            .windowInsetsPadding(windowInsets)
+            // On a tablet or a desktop the column stops at a readable width, centred; a phone is narrower.
+            .wrapContentWidth()
+            .widthIn(max = AdaptiveDefaults.ReadableWidth)
+            .fillMaxWidth(),
     ) {
         Spacer(Modifier.height(ArecaTheme.spacing.lg))
 

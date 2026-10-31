@@ -29,6 +29,7 @@ public fun ArecaDarkTheme(content: @Composable () -> Unit) {
         radius = ArecaTheme.radius,
         shapes = ArecaTheme.shapes,
         spacing = ArecaTheme.spacing,
+        sizing = ArecaTheme.sizing,
         elevation = ArecaTheme.elevation,
         motion = ArecaTheme.motion,
         fonts = ArecaTheme.fonts,

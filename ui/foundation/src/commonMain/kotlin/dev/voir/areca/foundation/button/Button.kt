@@ -27,6 +27,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -48,7 +49,6 @@ import dev.voir.areca.indication.FocusOutline
 import dev.voir.areca.indication.StrokeIndication
 import dev.voir.areca.indication.TouchIndication
 import dev.voir.areca.indication.reshapedTo
-import dev.voir.areca.modifier.MinimumTouchTarget
 import dev.voir.areca.modifier.clickCursor
 import dev.voir.areca.modifier.minimumTouchTarget
 import dev.voir.areca.modifier.thenIf
@@ -241,7 +241,8 @@ public data class ButtonStyle(
  * @property spinner Size of the loading spinner, which replaces the trailing slot.
  * @property touchTarget Smallest width and height an interactive button occupies in layout. The
  *   button draws at its own size, centred in the slot, and the band around it still answers a touch.
- *   Every named step reserves 48dp, the minimum a finger reliably hits. [Dp.Unspecified] — the
+ *   Every named step reserves [dev.voir.areca.theme.ArecaSizing.touchTarget]: 48dp, the minimum a
+ *   finger reliably hits, under touch, and nothing under a pointer. [Dp.Unspecified] — the
  *   constructor's default — reserves nothing beyond the button's own bounds, for a size built
  *   around a layout that already provides the target, such as a bar or a field.
  */
@@ -257,97 +258,126 @@ public data class ButtonSize(
     public val spinner: SpinnerSize,
     public val touchTarget: Dp = Dp.Unspecified,
 ) {
-    /** The named steps, smallest first. */
+    /**
+     * The named steps, smallest first.
+     *
+     * Each step's height is a step of [ArecaTheme.sizing], so it follows the input: the dp in each
+     * step's summary is touch, then pointer. Paddings shrink with the height so the label still sits
+     * centred, and the touch target is the sizing's — 48dp under touch, none under a pointer.
+     */
     public companion object {
-        /** 32dp tall. Inside a dense row or a table cell. */
+        /** 32dp tall under touch, 28dp under a pointer. Inside a dense row or a table cell. */
         public val ExtraSmall: ButtonSize
             @Composable
-            get() = ButtonSize(
-                borderWidth = 1.dp,
-                padding = PaddingValues(
-                    horizontal = ArecaTheme.spacing.lg,
-                    vertical = ArecaTheme.spacing.sm,
-                ),
-                gap = ArecaTheme.spacing.sm,
-                icon = IconSize.ExtraSmall,
-                textStyle = ArecaTheme.typography.labelSmall,
-                minWidth = 64.dp,
-                minHeight = 32.dp,
-                spinner = SpinnerSize.ExtraSmall,
-                touchTarget = MinimumTouchTarget,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                val spacing = ArecaTheme.spacing
+                return ButtonSize(
+                    borderWidth = 1.dp,
+                    padding = PaddingValues(
+                        horizontal = sizing.select(touch = spacing.lg, pointer = spacing.md),
+                        vertical = sizing.select(touch = spacing.sm, pointer = spacing.xs),
+                    ),
+                    gap = sizing.select(touch = spacing.sm, pointer = spacing.xs),
+                    icon = IconSize.ExtraSmall,
+                    textStyle = ArecaTheme.typography.labelSmall,
+                    minWidth = sizing.select(touch = 64.dp, pointer = 56.dp),
+                    minHeight = sizing.controlXs,
+                    spinner = SpinnerSize.ExtraSmall,
+                    touchTarget = sizing.touchTarget,
+                )
+            }
 
-        /** 40dp tall. Beside a field, or as a secondary action in a toolbar. */
+        /** 40dp tall under touch, 32dp under a pointer. Beside a field, or in a toolbar. */
         public val Small: ButtonSize
             @Composable
-            get() = ButtonSize(
-                borderWidth = 1.dp,
-                padding = PaddingValues(
-                    horizontal = ArecaTheme.spacing.xl,
-                    vertical = ArecaTheme.spacing.md,
-                ),
-                gap = ArecaTheme.spacing.md,
-                icon = IconSize.Small,
-                textStyle = ArecaTheme.typography.labelMedium,
-                minWidth = 72.dp,
-                minHeight = 40.dp,
-                spinner = SpinnerSize.Small,
-                touchTarget = MinimumTouchTarget,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                val spacing = ArecaTheme.spacing
+                return ButtonSize(
+                    borderWidth = 1.dp,
+                    padding = PaddingValues(
+                        horizontal = sizing.select(touch = spacing.xl, pointer = spacing.lg),
+                        vertical = sizing.select(touch = spacing.md, pointer = spacing.sm),
+                    ),
+                    gap = sizing.select(touch = spacing.md, pointer = spacing.sm),
+                    icon = sizing.select(touch = IconSize.Small, pointer = IconSize.ExtraSmall),
+                    textStyle = ArecaTheme.typography.labelMedium,
+                    minWidth = sizing.select(touch = 72.dp, pointer = 64.dp),
+                    minHeight = sizing.controlSm,
+                    spinner = sizing.select(touch = SpinnerSize.Small, pointer = SpinnerSize.ExtraSmall),
+                    touchTarget = sizing.touchTarget,
+                )
+            }
 
-        /** 48dp tall. The default, and a comfortable touch target. */
+        /** 48dp tall under touch, 36dp under a pointer. The default. */
         public val Medium: ButtonSize
             @Composable
-            get() = ButtonSize(
-                borderWidth = 1.dp,
-                padding = PaddingValues(
-                    horizontal = ArecaTheme.spacing.xl2,
-                    vertical = ArecaTheme.spacing.lg,
-                ),
-                gap = ArecaTheme.spacing.lg,
-                icon = IconSize.Medium,
-                textStyle = ArecaTheme.typography.labelLarge,
-                minWidth = 96.dp,
-                minHeight = 48.dp,
-                spinner = SpinnerSize.Small,
-                touchTarget = MinimumTouchTarget,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                val spacing = ArecaTheme.spacing
+                return ButtonSize(
+                    borderWidth = 1.dp,
+                    padding = PaddingValues(
+                        horizontal = sizing.select(touch = spacing.xl2, pointer = spacing.xl),
+                        vertical = sizing.select(touch = spacing.lg, pointer = spacing.md),
+                    ),
+                    gap = sizing.select(touch = spacing.lg, pointer = spacing.md),
+                    icon = sizing.select(touch = IconSize.Medium, pointer = IconSize.Small),
+                    textStyle = ArecaTheme.typography.labelLarge,
+                    minWidth = sizing.select(touch = 96.dp, pointer = 80.dp),
+                    minHeight = sizing.controlMd,
+                    spinner = SpinnerSize.Small,
+                    touchTarget = sizing.touchTarget,
+                )
+            }
 
-        /** 56dp tall. A screen's primary action, alone at the bottom. */
+        /** 56dp tall under touch, 44dp under a pointer. A screen's primary action, alone at the bottom. */
         public val Large: ButtonSize
             @Composable
-            get() = ButtonSize(
-                borderWidth = 1.dp,
-                padding = PaddingValues(
-                    horizontal = ArecaTheme.spacing.xl4,
-                    vertical = ArecaTheme.spacing.xl,
-                ),
-                gap = ArecaTheme.spacing.lg,
-                icon = IconSize.Medium,
-                textStyle = ArecaTheme.typography.labelLarge,
-                minWidth = 112.dp,
-                minHeight = 56.dp,
-                spinner = SpinnerSize.Medium,
-                touchTarget = MinimumTouchTarget,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                val spacing = ArecaTheme.spacing
+                return ButtonSize(
+                    borderWidth = 1.dp,
+                    padding = PaddingValues(
+                        horizontal = sizing.select(touch = spacing.xl4, pointer = spacing.xl3),
+                        vertical = sizing.select(touch = spacing.xl, pointer = spacing.lg),
+                    ),
+                    gap = sizing.select(touch = spacing.lg, pointer = spacing.md),
+                    icon = IconSize.Medium,
+                    textStyle = ArecaTheme.typography.labelLarge,
+                    minWidth = sizing.select(touch = 112.dp, pointer = 96.dp),
+                    minHeight = sizing.controlLg,
+                    spinner = sizing.select(touch = SpinnerSize.Medium, pointer = SpinnerSize.Small),
+                    touchTarget = sizing.touchTarget,
+                )
+            }
 
-        /** 64dp tall. An onboarding or landing screen's single call to action. */
+        /** 64dp tall under touch, 52dp under a pointer. An onboarding or landing screen's single call to action. */
         public val ExtraLarge: ButtonSize
             @Composable
-            get() = ButtonSize(
-                borderWidth = 1.dp,
-                padding = PaddingValues(
-                    horizontal = ArecaTheme.spacing.xl5,
-                    vertical = ArecaTheme.spacing.xl2,
-                ),
-                gap = ArecaTheme.spacing.xl,
-                icon = IconSize.Large,
-                textStyle = ArecaTheme.typography.bodyExtraLarge,
-                minWidth = 118.dp,
-                minHeight = 64.dp,
-                spinner = SpinnerSize.Medium,
-                touchTarget = MinimumTouchTarget,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                val spacing = ArecaTheme.spacing
+                return ButtonSize(
+                    borderWidth = 1.dp,
+                    padding = PaddingValues(
+                        horizontal = sizing.select(touch = spacing.xl5, pointer = spacing.xl4),
+                        vertical = sizing.select(touch = spacing.xl2, pointer = spacing.lg),
+                    ),
+                    gap = sizing.select(touch = spacing.xl, pointer = spacing.lg),
+                    icon = sizing.select(touch = IconSize.Large, pointer = IconSize.Medium),
+                    textStyle = sizing.select(
+                        touch = ArecaTheme.typography.bodyExtraLarge,
+                        pointer = ArecaTheme.typography.bodyLarge.merge(fontWeight = FontWeight.Medium),
+                    ),
+                    minWidth = sizing.select(touch = 118.dp, pointer = 104.dp),
+                    minHeight = sizing.controlXl,
+                    spinner = SpinnerSize.Medium,
+                    touchTarget = sizing.touchTarget,
+                )
+            }
     }
 }
 

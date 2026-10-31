@@ -10,6 +10,165 @@ public final class dev/voir/areca/foundation/ContentLocalsKt {
 	public static final fun getLocalTextStyle ()Landroidx/compose/runtime/ProvidableCompositionLocal;
 }
 
+public final class dev/voir/areca/foundation/adaptive/AdaptiveDefaults {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/voir/areca/foundation/adaptive/AdaptiveDefaults;
+	public final fun getContentWidth-D9Ej5fM ()F
+	public final fun getDetailPaneMinWidth-D9Ej5fM ()F
+	public final fun getGridMinCellWidth-D9Ej5fM ()F
+	public final fun getListPaneMinWidth-D9Ej5fM ()F
+	public final fun getReadableWidth-D9Ej5fM ()F
+	public final fun getSidebarWidth-D9Ej5fM ()F
+	public final fun getSupportingPaneMinWidth-D9Ej5fM ()F
+	public final fun getTwoPaneMinWidth-D9Ej5fM ()F
+	public final fun listPaneWidth-5rwHm24 (F)F
+	public final fun supportingPaneWidth-5rwHm24 (F)F
+	public final fun usesDialog (Ldev/voir/areca/window/WindowClass;)Z
+}
+
+public final class dev/voir/areca/foundation/adaptive/AdaptiveGridKt {
+	public static final fun AdaptiveGrid-bbpEF2o (Landroidx/compose/ui/Modifier;FIFLandroidx/compose/foundation/lazy/grid/LazyGridState;Landroidx/compose/foundation/layout/PaddingValues;FFLkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class dev/voir/areca/foundation/adaptive/AdaptiveMenuItem {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;ZZLkotlin/jvm/functions/Function0;)V
+	public synthetic fun <init> (Ljava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;ZZLkotlin/jvm/functions/Function0;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getDestructive ()Z
+	public final fun getEnabled ()Z
+	public final fun getIcon ()Landroidx/compose/ui/graphics/vector/ImageVector;
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getOnClick ()Lkotlin/jvm/functions/Function0;
+}
+
+public final class dev/voir/areca/foundation/adaptive/AdaptiveMenuKt {
+	public static final fun AdaptiveMenu (Ldev/voir/areca/foundation/overlay/DropdownPopupState;Ljava/util/List;Landroidx/compose/ui/Modifier;Ljava/lang/String;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class dev/voir/areca/foundation/adaptive/AdaptiveNavigationKt {
+	public static final fun AdaptiveNavigation (Ljava/util/List;Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;ZLkotlin/jvm/functions/Function1;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class dev/voir/areca/foundation/adaptive/AdaptiveNavigationLayout : java/lang/Enum {
+	public static final field BottomBar Ldev/voir/areca/foundation/adaptive/AdaptiveNavigationLayout;
+	public static final field Rail Ldev/voir/areca/foundation/adaptive/AdaptiveNavigationLayout;
+	public static final field Sidebar Ldev/voir/areca/foundation/adaptive/AdaptiveNavigationLayout;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/foundation/adaptive/AdaptiveNavigationLayout;
+	public static fun values ()[Ldev/voir/areca/foundation/adaptive/AdaptiveNavigationLayout;
+}
+
+public abstract interface class dev/voir/areca/foundation/adaptive/AdaptiveNavigationScope {
+	public abstract fun getLayout ()Ldev/voir/areca/foundation/adaptive/AdaptiveNavigationLayout;
+}
+
+public final class dev/voir/areca/foundation/adaptive/AdaptiveSheetKt {
+	public static final fun AdaptiveSheet (ZLkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class dev/voir/areca/foundation/adaptive/ContentColumnKt {
+	public static final fun ContentColumn-EUb7tLY (Landroidx/compose/ui/Modifier;FLandroidx/compose/foundation/layout/Arrangement$Vertical;Landroidx/compose/ui/Alignment$Horizontal;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class dev/voir/areca/foundation/adaptive/ContextMenuKt {
+	public static final fun contextMenu (Landroidx/compose/ui/Modifier;Ldev/voir/areca/foundation/overlay/DropdownPopupState;ZLjava/lang/String;)Landroidx/compose/ui/Modifier;
+	public static synthetic fun contextMenu$default (Landroidx/compose/ui/Modifier;Ldev/voir/areca/foundation/overlay/DropdownPopupState;ZLjava/lang/String;ILjava/lang/Object;)Landroidx/compose/ui/Modifier;
+}
+
+public final class dev/voir/areca/foundation/adaptive/ListDetailKt {
+	public static final fun ListDetail-AFY4PWA (ZLandroidx/compose/ui/Modifier;FZLkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+}
+
+public abstract interface class dev/voir/areca/foundation/adaptive/ListDetailScope {
+	public abstract fun isTwoPane ()Z
+}
+
+public final class dev/voir/areca/foundation/adaptive/NavDestination {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/Object;Ljava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;Z)V
+	public synthetic fun <init> (Ljava/lang/Object;Ljava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getEnabled ()Z
+	public final fun getIcon ()Landroidx/compose/ui/graphics/vector/ImageVector;
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getValue ()Ljava/lang/Object;
+}
+
+public final class dev/voir/areca/foundation/adaptive/NavRailKt {
+	public static final fun NavRail (Ljava/util/List;Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Ldev/voir/areca/foundation/adaptive/NavRailStyle;Ldev/voir/areca/foundation/adaptive/NavRailSize;ZLandroidx/compose/foundation/layout/WindowInsets;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+	public static final fun getLocalNavRailSize ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+	public static final fun getLocalNavRailStyle ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
+public final class dev/voir/areca/foundation/adaptive/NavRailSize {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/foundation/adaptive/NavRailSize$Companion;
+	public synthetic fun <init> (FFFFFFFFLandroidx/compose/ui/text/TextStyle;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-D9Ej5fM ()F
+	public final fun component2-D9Ej5fM ()F
+	public final fun component3-D9Ej5fM ()F
+	public final fun component4-D9Ej5fM ()F
+	public final fun component5-D9Ej5fM ()F
+	public final fun component6-D9Ej5fM ()F
+	public final fun component7-D9Ej5fM ()F
+	public final fun component8-D9Ej5fM ()F
+	public final fun component9 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun copy-IzGr3o8 (FFFFFFFFLandroidx/compose/ui/text/TextStyle;)Ldev/voir/areca/foundation/adaptive/NavRailSize;
+	public static synthetic fun copy-IzGr3o8$default (Ldev/voir/areca/foundation/adaptive/NavRailSize;FFFFFFFFLandroidx/compose/ui/text/TextStyle;ILjava/lang/Object;)Ldev/voir/areca/foundation/adaptive/NavRailSize;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getHeaderGap-D9Ej5fM ()F
+	public final fun getIcon-D9Ej5fM ()F
+	public final fun getIndicatorHeight-D9Ej5fM ()F
+	public final fun getIndicatorWidth-D9Ej5fM ()F
+	public final fun getItemSpacing-D9Ej5fM ()F
+	public final fun getLabelGap-D9Ej5fM ()F
+	public final fun getLabelStyle ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getVerticalPadding-D9Ej5fM ()F
+	public final fun getWidth-D9Ej5fM ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/foundation/adaptive/NavRailSize$Companion {
+	public final fun default-_91dsBw (FFFFFFFFLandroidx/compose/ui/text/TextStyle;Landroidx/compose/runtime/Composer;II)Ldev/voir/areca/foundation/adaptive/NavRailSize;
+	public final fun getDefault (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/foundation/adaptive/NavRailSize;
+}
+
+public final class dev/voir/areca/foundation/adaptive/NavRailStyle {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/foundation/adaptive/NavRailStyle$Companion;
+	public synthetic fun <init> (JJJJJLandroidx/compose/ui/graphics/Shape;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-0d7_KjU ()J
+	public final fun component5-0d7_KjU ()J
+	public final fun component6 ()Landroidx/compose/ui/graphics/Shape;
+	public final fun copy-EXAOFh0 (JJJJJLandroidx/compose/ui/graphics/Shape;)Ldev/voir/areca/foundation/adaptive/NavRailStyle;
+	public static synthetic fun copy-EXAOFh0$default (Ldev/voir/areca/foundation/adaptive/NavRailStyle;JJJJJLandroidx/compose/ui/graphics/Shape;ILjava/lang/Object;)Ldev/voir/areca/foundation/adaptive/NavRailStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBg-0d7_KjU ()J
+	public final fun getContent-0d7_KjU ()J
+	public final fun getContentDisabled-0d7_KjU ()J
+	public final fun getContentSelected-0d7_KjU ()J
+	public final fun getIndicator-0d7_KjU ()J
+	public final fun getIndicatorShape ()Landroidx/compose/ui/graphics/Shape;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/foundation/adaptive/NavRailStyle$Companion {
+	public final fun default-O8qE4YA (JJJJJLandroidx/compose/ui/graphics/Shape;Landroidx/compose/runtime/Composer;II)Ldev/voir/areca/foundation/adaptive/NavRailStyle;
+	public final fun getDefault (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/foundation/adaptive/NavRailStyle;
+}
+
+public final class dev/voir/areca/foundation/adaptive/SupportingPaneKt {
+	public static final fun SupportingPane (ZLkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+}
+
+public abstract interface class dev/voir/areca/foundation/adaptive/SupportingPaneScope {
+	public abstract fun isSupportingInline ()Z
+}
+
 public final class dev/voir/areca/foundation/avatar/AvatarKt {
 	public static final fun Avatar (Landroidx/compose/ui/Modifier;Ldev/voir/areca/foundation/avatar/AvatarStyle;Ldev/voir/areca/foundation/avatar/AvatarSize;Landroidx/compose/ui/graphics/Shape;Ljava/lang/String;Ljava/lang/String;ZLkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
 	public static final fun getLocalAvatarSize ()Landroidx/compose/runtime/ProvidableCompositionLocal;
@@ -351,7 +510,7 @@ public final class dev/voir/areca/foundation/button/ComposableSingletons$ButtonK
 public final class dev/voir/areca/foundation/button/ComposableSingletons$IconButtonKt {
 	public static final field INSTANCE Ldev/voir/areca/foundation/button/ComposableSingletons$IconButtonKt;
 	public fun <init> ()V
-	public final fun getLambda$651011870$foundation ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1762422689$foundation ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class dev/voir/areca/foundation/button/IconButtonKt {
@@ -2217,6 +2376,14 @@ public final class dev/voir/areca/foundation/layout/RelativePositionLayoutKt {
 	public static final fun RelativePositionLayout-TN_CM5M (Ldev/voir/areca/foundation/layout/RelativePosition;Landroidx/compose/ui/Modifier;FLkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
 }
 
+public final class dev/voir/areca/foundation/layout/ScrollbarKt {
+	public static final fun HorizontalScrollbar (Landroidx/compose/foundation/ScrollState;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun HorizontalScrollbar (Landroidx/compose/foundation/lazy/LazyListState;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun VerticalScrollbar (Landroidx/compose/foundation/ScrollState;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun VerticalScrollbar (Landroidx/compose/foundation/lazy/LazyListState;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun VerticalScrollbar (Landroidx/compose/foundation/lazy/grid/LazyGridState;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+}
+
 public final class dev/voir/areca/foundation/list/CheckboxListItemKt {
 	public static final fun CheckboxListItem (ZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;ZZZILdev/voir/areca/foundation/list/ListItemControlPlacement;Ldev/voir/areca/foundation/list/ListItemStyle;Ldev/voir/areca/foundation/list/ListItemSize;Ldev/voir/areca/foundation/slot/SlotRowLayout;Ldev/voir/areca/foundation/selection/CheckboxStyle;Ldev/voir/areca/foundation/selection/CheckboxSize;Landroidx/compose/foundation/interaction/MutableInteractionSource;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;IIII)V
 }
@@ -3626,6 +3793,10 @@ public final class dev/voir/areca/foundation/overlay/ModalStyle {
 public final class dev/voir/areca/foundation/overlay/ModalStyle$Companion {
 	public final fun default-g9RBwZg (JJJLandroidx/compose/ui/graphics/Shape;Landroidx/compose/runtime/Composer;II)Ldev/voir/areca/foundation/overlay/ModalStyle;
 	public final fun getDefault (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/foundation/overlay/ModalStyle;
+}
+
+public final class dev/voir/areca/foundation/overlay/TooltipKt {
+	public static final fun TooltipBox (Ljava/lang/String;Landroidx/compose/ui/Modifier;Ldev/voir/areca/foundation/overlay/AnchoredPlacement;ZLkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class dev/voir/areca/foundation/selection/CheckboxKt {
@@ -6704,10 +6875,49 @@ public final class dev/voir/areca/theme/ArecaShapes$Companion {
 	public static synthetic fun from$default (Ldev/voir/areca/theme/ArecaShapes$Companion;Ldev/voir/areca/theme/ArecaRadius;ILjava/lang/Object;)Ldev/voir/areca/theme/ArecaShapes;
 }
 
+public final class dev/voir/areca/theme/ArecaSizing {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/theme/ArecaSizing$Companion;
+	public synthetic fun <init> (FFFFFFFFFZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (FFFFFFFFFZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-D9Ej5fM ()F
+	public final fun component10 ()Z
+	public final fun component2-D9Ej5fM ()F
+	public final fun component3-D9Ej5fM ()F
+	public final fun component4-D9Ej5fM ()F
+	public final fun component5-D9Ej5fM ()F
+	public final fun component6-D9Ej5fM ()F
+	public final fun component7-D9Ej5fM ()F
+	public final fun component8-D9Ej5fM ()F
+	public final fun component9-D9Ej5fM ()F
+	public final fun copy-uMfSwxs (FFFFFFFFFZ)Ldev/voir/areca/theme/ArecaSizing;
+	public static synthetic fun copy-uMfSwxs$default (Ldev/voir/areca/theme/ArecaSizing;FFFFFFFFFZILjava/lang/Object;)Ldev/voir/areca/theme/ArecaSizing;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getControlLg-D9Ej5fM ()F
+	public final fun getControlMd-D9Ej5fM ()F
+	public final fun getControlSm-D9Ej5fM ()F
+	public final fun getControlXl-D9Ej5fM ()F
+	public final fun getControlXs-D9Ej5fM ()F
+	public final fun getDense ()Z
+	public final fun getRowComfortable-D9Ej5fM ()F
+	public final fun getRowCompact-D9Ej5fM ()F
+	public final fun getRowMedium-D9Ej5fM ()F
+	public final fun getTouchTarget-D9Ej5fM ()F
+	public fun hashCode ()I
+	public final fun select (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/theme/ArecaSizing$Companion {
+	public final fun forInput (Ldev/voir/areca/window/InputMode;)Ldev/voir/areca/theme/ArecaSizing;
+	public final fun pointer ()Ldev/voir/areca/theme/ArecaSizing;
+	public final fun touch ()Ldev/voir/areca/theme/ArecaSizing;
+}
+
 public final class dev/voir/areca/theme/ArecaSpacing {
 	public static final field $stable I
-	public synthetic fun <init> (FFFFFFFFFFFFFFFFFILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (FFFFFFFFFFFFFFFFFLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (FFFFFFFFFFFFFFFFFFFILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (FFFFFFFFFFFFFFFFFFFLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1-D9Ej5fM ()F
 	public final fun component10-D9Ej5fM ()F
 	public final fun component11-D9Ej5fM ()F
@@ -6717,6 +6927,8 @@ public final class dev/voir/areca/theme/ArecaSpacing {
 	public final fun component15-D9Ej5fM ()F
 	public final fun component16-D9Ej5fM ()F
 	public final fun component17-D9Ej5fM ()F
+	public final fun component18-D9Ej5fM ()F
+	public final fun component19-D9Ej5fM ()F
 	public final fun component2-D9Ej5fM ()F
 	public final fun component3-D9Ej5fM ()F
 	public final fun component4-D9Ej5fM ()F
@@ -6725,12 +6937,14 @@ public final class dev/voir/areca/theme/ArecaSpacing {
 	public final fun component7-D9Ej5fM ()F
 	public final fun component8-D9Ej5fM ()F
 	public final fun component9-D9Ej5fM ()F
-	public final fun copy-QxOmQu8 (FFFFFFFFFFFFFFFFF)Ldev/voir/areca/theme/ArecaSpacing;
-	public static synthetic fun copy-QxOmQu8$default (Ldev/voir/areca/theme/ArecaSpacing;FFFFFFFFFFFFFFFFFILjava/lang/Object;)Ldev/voir/areca/theme/ArecaSpacing;
+	public final fun copy-3cAl3GE (FFFFFFFFFFFFFFFFFFF)Ldev/voir/areca/theme/ArecaSpacing;
+	public static synthetic fun copy-3cAl3GE$default (Ldev/voir/areca/theme/ArecaSpacing;FFFFFFFFFFFFFFFFFFFILjava/lang/Object;)Ldev/voir/areca/theme/ArecaSpacing;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun getExpandedHorizontalContentInsets-D9Ej5fM ()F
 	public final fun getHorizontalContentInsets-D9Ej5fM ()F
 	public final fun getLg-D9Ej5fM ()F
 	public final fun getMd-D9Ej5fM ()F
+	public final fun getMediumHorizontalContentInsets-D9Ej5fM ()F
 	public final fun getNone-D9Ej5fM ()F
 	public final fun getSm-D9Ej5fM ()F
 	public final fun getVerticalContentInsets-D9Ej5fM ()F
@@ -6758,16 +6972,19 @@ public final class dev/voir/areca/theme/ArecaTheme {
 	public final fun getDarkColors (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/theme/ArecaColors;
 	public final fun getElevation (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/theme/ArecaElevation;
 	public final fun getFonts (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/theme/ArecaFonts;
+	public final fun getHostWindow (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/window/WindowClass;
 	public final fun getMotion (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/theme/ArecaMotion;
 	public final fun getRadius (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/theme/ArecaRadius;
 	public final fun getShapes (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/theme/ArecaShapes;
+	public final fun getSizing (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/theme/ArecaSizing;
 	public final fun getSpacing (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/theme/ArecaSpacing;
 	public final fun getTypography (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/theme/ArecaTypography;
+	public final fun getWindow (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/window/WindowClass;
 	public final fun isDark (Landroidx/compose/runtime/Composer;I)Z
 }
 
 public final class dev/voir/areca/theme/ArecaThemeProviderKt {
-	public static final fun ArecaThemeProvider (ZLdev/voir/areca/theme/ArecaBaseColors;Ldev/voir/areca/theme/ArecaColors;Ldev/voir/areca/theme/ArecaRadius;Ldev/voir/areca/theme/ArecaShapes;Ldev/voir/areca/theme/ArecaSpacing;Ldev/voir/areca/theme/ArecaElevation;Ldev/voir/areca/theme/ArecaMotion;Ldev/voir/areca/theme/ArecaFonts;Ldev/voir/areca/theme/ArecaBaseTypography;Ldev/voir/areca/theme/ArecaTypography;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;III)V
+	public static final fun ArecaThemeProvider (ZLdev/voir/areca/theme/ArecaBaseColors;Ldev/voir/areca/theme/ArecaColors;Ldev/voir/areca/theme/ArecaRadius;Ldev/voir/areca/theme/ArecaShapes;Ldev/voir/areca/theme/ArecaSpacing;Ldev/voir/areca/theme/ArecaElevation;Ldev/voir/areca/theme/ArecaMotion;Ldev/voir/areca/theme/ArecaFonts;Ldev/voir/areca/theme/ArecaBaseTypography;Ldev/voir/areca/window/InputMode;Ldev/voir/areca/theme/ArecaSizing;Ldev/voir/areca/theme/ArecaTypography;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;III)V
 }
 
 public final class dev/voir/areca/theme/ArecaTypography {
@@ -6812,13 +7029,89 @@ public final class dev/voir/areca/theme/ArecaTypography {
 }
 
 public final class dev/voir/areca/theme/ArecaTypography$Companion {
-	public final fun from (Ldev/voir/areca/theme/ArecaBaseTypography;)Ldev/voir/areca/theme/ArecaTypography;
-	public static synthetic fun from$default (Ldev/voir/areca/theme/ArecaTypography$Companion;Ldev/voir/areca/theme/ArecaBaseTypography;ILjava/lang/Object;)Ldev/voir/areca/theme/ArecaTypography;
+	public final fun from (Ldev/voir/areca/theme/ArecaBaseTypography;Z)Ldev/voir/areca/theme/ArecaTypography;
+	public static synthetic fun from$default (Ldev/voir/areca/theme/ArecaTypography$Companion;Ldev/voir/areca/theme/ArecaBaseTypography;ZILjava/lang/Object;)Ldev/voir/areca/theme/ArecaTypography;
 }
 
 public final class dev/voir/areca/theme/ContentInsetsKt {
 	public static final fun contentInsets (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/Modifier;
 	public static final fun horizontalContentInsets (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/Modifier;
 	public static final fun verticalContentInsets (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/Modifier;
+}
+
+public final class dev/voir/areca/window/HeightClass : java/lang/Enum {
+	public static final field Compact Ldev/voir/areca/window/HeightClass;
+	public static final field Companion Ldev/voir/areca/window/HeightClass$Companion;
+	public static final field Expanded Ldev/voir/areca/window/HeightClass;
+	public static final field Medium Ldev/voir/areca/window/HeightClass;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getMinHeight-D9Ej5fM ()F
+	public final fun select (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public static synthetic fun select$default (Ldev/voir/areca/window/HeightClass;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;ILjava/lang/Object;)Ljava/lang/Object;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/window/HeightClass;
+	public static fun values ()[Ldev/voir/areca/window/HeightClass;
+}
+
+public final class dev/voir/areca/window/HeightClass$Companion {
+	public final fun of-0680j_4 (F)Ldev/voir/areca/window/HeightClass;
+}
+
+public final class dev/voir/areca/window/InputMode : java/lang/Enum {
+	public static final field Pointer Ldev/voir/areca/window/InputMode;
+	public static final field Touch Ldev/voir/areca/window/InputMode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/window/InputMode;
+	public static fun values ()[Ldev/voir/areca/window/InputMode;
+}
+
+public final class dev/voir/areca/window/WidthClass : java/lang/Enum {
+	public static final field Compact Ldev/voir/areca/window/WidthClass;
+	public static final field Companion Ldev/voir/areca/window/WidthClass$Companion;
+	public static final field Expanded Ldev/voir/areca/window/WidthClass;
+	public static final field ExtraLarge Ldev/voir/areca/window/WidthClass;
+	public static final field Large Ldev/voir/areca/window/WidthClass;
+	public static final field Medium Ldev/voir/areca/window/WidthClass;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getMinWidth-D9Ej5fM ()F
+	public final fun select (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public static synthetic fun select$default (Ldev/voir/areca/window/WidthClass;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;ILjava/lang/Object;)Ljava/lang/Object;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/window/WidthClass;
+	public static fun values ()[Ldev/voir/areca/window/WidthClass;
+}
+
+public final class dev/voir/areca/window/WidthClass$Companion {
+	public final fun of-0680j_4 (F)Ldev/voir/areca/window/WidthClass;
+}
+
+public final class dev/voir/areca/window/WindowClass {
+	public static final field $stable I
+	public synthetic fun <init> (JLdev/voir/areca/window/InputMode;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getHeight ()Ldev/voir/areca/window/HeightClass;
+	public final fun getInput ()Ldev/voir/areca/window/InputMode;
+	public final fun getProfile ()Ldev/voir/areca/window/WindowProfile;
+	public final fun getSize-MYxV2XQ ()J
+	public final fun getWidth ()Ldev/voir/areca/window/WidthClass;
+	public fun hashCode ()I
+	public final fun isLandscape ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/window/WindowClassComposablesKt {
+	public static final fun AdaptiveContent (Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+	public static final fun ProvideWindowClass (Ldev/voir/areca/window/WindowClass;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
+	public static final fun WindowClassBox (Landroidx/compose/ui/Modifier;Landroidx/compose/ui/Alignment;ZLkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+	public static final fun adaptive (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Landroidx/compose/runtime/Composer;II)Ljava/lang/Object;
+}
+
+public final class dev/voir/areca/window/WindowProfile : java/lang/Enum {
+	public static final field Desktop Ldev/voir/areca/window/WindowProfile;
+	public static final field PhoneLandscape Ldev/voir/areca/window/WindowProfile;
+	public static final field PhonePortrait Ldev/voir/areca/window/WindowProfile;
+	public static final field TabletLandscape Ldev/voir/areca/window/WindowProfile;
+	public static final field TabletPortrait Ldev/voir/areca/window/WindowProfile;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/window/WindowProfile;
+	public static fun values ()[Ldev/voir/areca/window/WindowProfile;
 }
 

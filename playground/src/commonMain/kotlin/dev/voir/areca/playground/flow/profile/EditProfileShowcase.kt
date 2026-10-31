@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -31,6 +33,7 @@ import dev.voir.areca.flow.profile.sheet.AvatarSourceOption
 import dev.voir.areca.flow.profile.sheet.AvatarSourceOptions
 import dev.voir.areca.flow.profile.sheet.AvatarSourceSheet
 import dev.voir.areca.flow.profile.sheet.DeleteAccountSheet
+import dev.voir.areca.foundation.adaptive.AdaptiveDefaults
 import dev.voir.areca.foundation.button.Button
 import dev.voir.areca.foundation.list.ListItemChevron
 import dev.voir.areca.foundation.settings.Section
@@ -163,6 +166,8 @@ fun EditProfileShowcase() = FlowShowcase(
 /**
  * The recipe: an edit-profile screen built from `flow-profile` parts on the foundation settings list.
  *
+ * Internal so [AccountSettingsShowcase] can open it in its detail pane, as an application would.
+ *
  * @param summary Who is signed in.
  * @param fields The form's values, and the application's complaint about the name.
  * @param onFieldsChange Called with the next values.
@@ -180,7 +185,7 @@ fun EditProfileShowcase() = FlowShowcase(
  * @param windowInsets Regions the system occupies.
  */
 @Composable
-private fun EditProfileRecipe(
+internal fun EditProfileRecipe(
     summary: ProfileSummary,
     fields: ProfileFields,
     onFieldsChange: (ProfileFields) -> Unit,
@@ -205,7 +210,11 @@ private fun EditProfileRecipe(
             .verticalScroll(rememberScrollState())
             .windowInsetsPadding(windowInsets)
             // The fields are low on the page; the keyboard has to lift them, not cover them.
-            .imePadding(),
+            .imePadding()
+            // On a tablet or a desktop the column stops at a readable width, centred; a phone is narrower.
+            .wrapContentWidth()
+            .widthIn(max = AdaptiveDefaults.ReadableWidth)
+            .fillMaxWidth(),
     ) {
         Spacer(Modifier.height(ArecaTheme.spacing.xl3))
 
@@ -348,7 +357,7 @@ private fun EditProfileRecipe(
  * @property birthday Chosen birthday, or `null`.
  * @property firstNameError The application's complaint about the first name, already worded.
  */
-private data class ProfileFields(
+internal data class ProfileFields(
     val firstName: String,
     val lastName: String,
     val bio: String,

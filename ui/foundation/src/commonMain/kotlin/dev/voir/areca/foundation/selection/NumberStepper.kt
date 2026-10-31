@@ -35,15 +35,15 @@ import dev.voir.areca.foundation.button.Button
 import dev.voir.areca.foundation.button.ButtonSize
 import dev.voir.areca.foundation.button.ButtonStyle
 import dev.voir.areca.foundation.text.Text
-import dev.voir.areca.modifier.MinimumTouchTarget
 import dev.voir.areca.theme.ArecaTheme
 import kotlin.math.roundToInt
 
 /**
  * Metrics of a [NumberStepper].
  *
- * @property minHeight Smallest height of the stepper. The buttons reserve their own touch band, so
- *   a smaller value only takes effect with a [button] size that reserves less.
+ * @property minHeight Smallest height of the stepper. The buttons reserve the sizing's touch target
+ *   (48dp under touch, none under a pointer), so under touch a smaller value only takes effect with
+ *   a [button] size that reserves less.
  * @property minWidth Smallest width of the stepper; it grows to fit a long value.
  * @property button Size of the decrease and increase buttons.
  * @property borderWidth Width of the outline.
@@ -63,7 +63,10 @@ public data class NumberStepperSize(
 ) {
     /** The theme default and the factory for variations on it. */
     public companion object {
-        /** Theme default: compact buttons around a medium-weight value. */
+        /**
+         * Theme default: compact buttons around a medium-weight value, 48dp tall under touch, 36dp
+         * under a pointer.
+         */
         public val Default: NumberStepperSize
             @Composable
             get() = default()
@@ -71,7 +74,8 @@ public data class NumberStepperSize(
         /**
          * Builds a size from the current theme.
          *
-         * @param minHeight Smallest height of the stepper.
+         * @param minHeight Smallest height of the stepper. The sizing's default control height by
+         *   default, so the stepper lines up with a medium field or button.
          * @param minWidth Smallest width of the stepper.
          * @param button Size of the decrease and increase buttons. The default is the extra-small
          *   button without its minimum width, so a one-character symbol makes a square button.
@@ -83,12 +87,20 @@ public data class NumberStepperSize(
          */
         @Composable
         public fun default(
-            minHeight: Dp = MinimumTouchTarget,
-            minWidth: Dp = 120.dp,
+            minHeight: Dp = ArecaTheme.sizing.controlMd,
+            minWidth: Dp = ArecaTheme.sizing.select(touch = 120.dp, pointer = 96.dp),
             button: ButtonSize = ButtonSize.ExtraSmall.copy(minWidth = Dp.Unspecified),
             borderWidth: Dp = 1.dp,
-            contentPadding: PaddingValues = PaddingValues(horizontal = ArecaTheme.spacing.sm),
-            gap: Dp = ArecaTheme.spacing.sm,
+            contentPadding: PaddingValues = PaddingValues(
+                horizontal = ArecaTheme.sizing.select(
+                    touch = ArecaTheme.spacing.sm,
+                    pointer = ArecaTheme.spacing.xs,
+                ),
+            ),
+            gap: Dp = ArecaTheme.sizing.select(
+                touch = ArecaTheme.spacing.sm,
+                pointer = ArecaTheme.spacing.xs,
+            ),
             textStyle: TextStyle = ArecaTheme.typography.labelLarge,
         ): NumberStepperSize = NumberStepperSize(
             minHeight = minHeight,

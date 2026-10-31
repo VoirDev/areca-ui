@@ -18,6 +18,7 @@ import dev.voir.areca.playground.flow.auth.EmailFirstShowcase
 import dev.voir.areca.playground.flow.auth.EmailLinkShowcase
 import dev.voir.areca.playground.flow.auth.LegalConsentShowcase
 import dev.voir.areca.playground.flow.auth.SignInShowcase
+import dev.voir.areca.playground.flow.auth.SignInSplitShowcase
 import dev.voir.areca.playground.flow.auth.SignUpShowcase
 import dev.voir.areca.playground.flow.auth.SsoButtonShowcase
 import dev.voir.areca.playground.flow.auth.SsoGroupShowcase
@@ -43,6 +44,19 @@ internal val AuthFlowShowcases: List<ShowcaseEntry> = listOf(
             "auth", "sign in", "login", "log in", "password", "sso", "oauth", "screen",
         ),
         content = { SignInShowcase() },
+    ),
+    ShowcaseEntry(
+        id = "flow-auth/sign-in-split",
+        group = ShowcaseGroup.AuthFlow,
+        section = ShowcaseSection.AuthScreens,
+        title = "Sign in on tablet and desktop",
+        summary = "A sign-in screen with the artwork beside the form on a large window and above it on a phone.",
+        status = ShowcaseStatus.Beta,
+        keywords = listOf(
+            "auth", "sign in", "split", "tablet", "desktop", "foldable", "adaptive", "large screen",
+            "side panel", "AuthLayout.Split", "screen",
+        ),
+        content = { SignInSplitShowcase() },
     ),
     ShowcaseEntry(
         id = "flow-auth/sign-up",

@@ -20,8 +20,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import dev.voir.areca.theme.ArecaTheme
+import dev.voir.areca.window.InputMode
+import dev.voir.areca.window.ProvideWindowClass
+import dev.voir.areca.window.WindowClass
 
 /**
  * Phone sizes a screen showcase can be checked at.
@@ -86,7 +90,8 @@ val LocalDeviceScale = compositionLocalOf { 1f }
  *
  * The screen always lays out at the device's real dimensions. [scale] shrinks the drawn result
  * afterwards, so a row of phones fits in a variant cell without any of them reflowing into a shape
- * no phone has — which would make the comparison meaningless.
+ * no phone has — which would make the comparison meaningless. The screen reads the phone's size as
+ * its window class, under touch. A screen that changes with the window is checked in [WindowFrame].
  *
  * @param modifier Modifier applied to the frame.
  * @param size Device shape to render at.
@@ -124,7 +129,11 @@ fun DeviceFrame(
                 .background(ArecaTheme.colors.bgCanvas)
                 .border(1.dp, ArecaTheme.colors.borderStrong, shape),
         ) {
-            content()
+            // The screen asks the window class what it is drawn in, and the answer is this phone,
+            // not the desktop window the playground runs in — touched, whatever the page is sized for.
+            ProvideWindowClass(WindowClass(DpSize(size.width, size.height), InputMode.Touch)) {
+                ProvideFrameInput(InputMode.Touch, content)
+            }
 
             if (showInsetGuides) {
                 InsetGuide(

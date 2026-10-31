@@ -43,6 +43,7 @@ the nearest provider put in scope:
 | `ArecaTheme.colors` | `ArecaColors` | Semantic colours — the ones to use |
 | `ArecaTheme.typography` | `ArecaTypography` | Named text styles |
 | `ArecaTheme.spacing` | `ArecaSpacing` | The spacing scale and the screen gutters |
+| `ArecaTheme.sizing` | `ArecaSizing` | Control heights and the touch target, for touch or a pointer |
 | `ArecaTheme.shapes` | `ArecaShapes` | Corner shapes |
 | `ArecaTheme.radius` | `ArecaRadius` | Corner lengths, as raw `Dp`; prefer `shapes` |
 | `ArecaTheme.elevation` | `ArecaElevation` | Shadow depths |
@@ -52,6 +53,8 @@ the nearest provider put in scope:
 | `ArecaTheme.baseColors` | `ArecaBaseColors` | The raw palette, for when no semantic colour says what you mean |
 | `ArecaTheme.baseTypography` | `ArecaBaseTypography` | The raw type scale |
 | `ArecaTheme.fonts` | `ArecaFonts` | The font families |
+| `ArecaTheme.hostWindow` | `WindowClass` | The whole window's class, ignoring panes: for choosing how an overlay opens |
+| `ArecaTheme.window` | `WindowClass` | Not a token: the width and height classes and input mode of the window or pane in scope — see [Window classes](../ui/foundation/README.md#window-classes) |
 
 ```kotlin
 Column(
@@ -197,7 +200,7 @@ single styles into a second voice.
 
 ## Spacing
 
-`ArecaTheme.spacing` is an `ArecaSpacing`, one ordered ramp plus two gutters:
+`ArecaTheme.spacing` is an `ArecaSpacing`, one ordered ramp plus the screen gutters:
 
 | Token | Dp | Use it for |
 | --- | --- | --- |
@@ -216,11 +219,38 @@ single styles into a second voice.
 | `xl7` | 64 | Rhythm for sparse, full-height layouts |
 | `xl8` | 80 | Empty states and onboarding |
 | `xl9` | 96 | Hero and splash layouts |
-| `horizontalContentInsets` | 16 | The gutter between screen content and the window's sides |
+| `horizontalContentInsets` | 16 | The gutter between screen content and the window's sides, on a compact window |
+| `mediumHorizontalContentInsets` | 24 | The side gutter on a medium window (600dp to 839dp) |
+| `expandedHorizontalContentInsets` | 32 | The side gutter from an expanded window (840dp) up |
 | `verticalContentInsets` | 24 | The gutter at the top and bottom of a screen |
 
 Apply the gutters with the modifiers rather than reading them: `Modifier.horizontalContentInsets()`,
-`Modifier.verticalContentInsets()` and `Modifier.contentInsets()` for both.
+`Modifier.verticalContentInsets()` and `Modifier.contentInsets()` for both. The modifiers pick the
+side gutter for the window class in scope, so a screen gets wider margins on a tablet without asking.
+
+## Sizing
+
+`ArecaTheme.sizing` is an `ArecaSizing`: how tall controls are, for the way they are pressed. The
+provider picks `ArecaSizing.touch()` under touch and `ArecaSizing.pointer()` under a pointer — the
+input mode it reports through `ArecaTheme.window` — and every component size preset reads its height
+from it.
+
+| Token | Touch | Pointer | Use it for |
+| --- | --- | --- | --- |
+| `controlXs` | 32 | 28 | Controls inside a dense row or a table cell |
+| `controlSm` | 40 | 32 | Controls beside a field, in a toolbar |
+| `controlMd` | 48 | 36 | The default control |
+| `controlLg` | 56 | 44 | A screen's primary action |
+| `controlXl` | 64 | 52 | A landing screen's single call to action |
+| `rowCompact` | 32 | 28 | A dense list row |
+| `rowMedium` | 44 | 36 | A one-line list row |
+| `rowComfortable` | 56 | 44 | A list row with a supporting line |
+| `touchTarget` | 48 | 0 | The space an interactive control reserves around itself |
+
+`dense` is `true` for the pointer set, and `sizing.select(touch = …, pointer = …)` picks a value by
+it. Under a pointer the typography is a step denser too: `bodyMedium` and `labelLarge` are 14sp
+rather than 16sp. Force a density with `ArecaThemeProvider(sizing = ArecaSizing.pointer())`, or
+retune a step with `copy`.
 
 ## Corners
 

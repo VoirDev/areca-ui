@@ -17,7 +17,7 @@ Every foundation symbol is imported from its family's package. Extension composa
 
 | Package | Holds |
 | --- | --- |
-| `dev.voir.areca.theme` | `ArecaThemeProvider`, `ArecaDarkTheme`, `ArecaTheme`, `contentInsets`, `horizontalContentInsets`, `verticalContentInsets`, `tween` |
+| `dev.voir.areca.theme` | `ArecaThemeProvider`, `ArecaDarkTheme`, `ArecaTheme`, `ArecaSizing`, `contentInsets`, `horizontalContentInsets`, `verticalContentInsets`, `tween` |
 | `dev.voir.areca.foundation` | `LocalContentColor`, `LocalTextStyle`, `AnnounceOnChange` |
 | `….foundation.button` | `Button`, `IconButton`, `ButtonStyle`, `ButtonSize`, `IconButtonStyle`, `IconButtonSize`, `ActionColor`, `LocalButtonStyle`, `LocalButtonSize` |
 | `….foundation.text` | `Text`, `TextVariant`, `TextColor`, `Heading`, `TextLink`, `TextLinkPrompt`, `SensitiveText` |
@@ -27,10 +27,10 @@ Every foundation symbol is imported from its family's package. Extension composa
 | `….foundation.selection` | `Checkbox`, `Radio`, `Toggle`, `ToggleState`, `BinaryToggleCycle`, `TriStateToggleCycle`, `NumberStepper`, `NumberStepperLabels`, `SlidingSelector`, `SelectorItem`, `SelectorItemScope`, `SelectorMode`, `SelectorLayout`, `SelectorOrientation`, `SelectorThumbKind`, `SelectorEdge`, `SlidingSelectorStyle`, `SlidingSelectorSize`, `Swatch`, `SwatchPicker`, `ColorShade`, `ColorItem` |
 | `….foundation.list` | `List`, `LazyList`, `ListItem`, `NavigationListItem`, `CheckboxListItem`, `RadioListItem`, `ToggleListItem`, `CheckmarkListItem`, `ExpandableListItem`, `ExpandableListItemContainer`, `ListItemColumn`, `ListItemSkeleton`, `ListItemChevron`, `ListItemCheckmark`, `ListItemStyle`, `ListItemSize` |
 | `….foundation.settings` | `Settings`, `Section`, `SettingsRow`, `SettingsToggleRow`, `SettingsSelectRow`, `SettingsTextFieldRow`, `SettingsOptionRow`, `SettingsBlock`, `SettingsRowIcon`, `SettingsRowTile`, `SettingsRowLink`, `SettingsRowStatus`, `SettingsRowTone`, `SettingsRowSkeleton`, `SettingsDefaults` |
-| `….foundation.layout` | `BaseLayout`, `Card`, `CardStyle`, `CardSize`, `CardFooterStyle`, `HorizontalDivider`, `VerticalDivider`, `Expandable`, `rememberExpandableState`, `PullToRefreshLayout`, `PullToRefreshIndicator`, `rememberPullToRefreshState`, `CollapsingHeaderLayout`, `CollapsingHeaderState`, `rememberCollapsingHeaderState`, `Overlay`, `RelativePositionLayout`, `RelativePosition` |
+| `….foundation.layout` | `BaseLayout`, `Card`, `CardStyle`, `CardSize`, `CardFooterStyle`, `HorizontalDivider`, `VerticalDivider`, `Expandable`, `rememberExpandableState`, `PullToRefreshLayout`, `PullToRefreshIndicator`, `rememberPullToRefreshState`, `CollapsingHeaderLayout`, `CollapsingHeaderState`, `rememberCollapsingHeaderState`, `Overlay`, `RelativePositionLayout`, `RelativePosition`, `VerticalScrollbar`, `HorizontalScrollbar` |
 | `….foundation.topbar` | `TopBar`, `LargeTopBar`, `rememberTopBarScrollState`, `TopBarScrollBehavior`, `TopBarStyle`, `TopBarSize`, `TopBarActionStyle`, the `…Action` controls, `TopBarProgress` |
 | `….foundation.tabbar`, `….foundation.tabs` | `TabBar`, `FloatingTabBar`, `FloatingTabBarItemContent`, `TabBarItem`, `rememberTabBarState`; `Tabs`, `TabItem`, `TabsVariant`, `TabsStyle`, `TabsSize`, `rememberTabsState` |
-| `….foundation.overlay` | `Dialog`, `ModalDefaults`, `ConfirmationDialog`, `ConfirmSheet`, `FlowModal`, `rememberFlowModal`, `FlowModalController`, `FlowModalActionBar`, `FlowModalActionBarLayout`, `FlowModalSecondaryAction`, `DropdownPopup`, `rememberDropdownPopup`, `anchored`, `AnchoredPlacement`, `edgeToEdgeDialogProperties` |
+| `….foundation.overlay` | `Dialog`, `ModalDefaults`, `ConfirmationDialog`, `ConfirmSheet`, `FlowModal`, `rememberFlowModal`, `FlowModalController`, `FlowModalActionBar`, `FlowModalActionBarLayout`, `FlowModalSecondaryAction`, `DropdownPopup`, `rememberDropdownPopup`, `anchored`, `AnchoredPlacement`, `TooltipBox`, `edgeToEdgeDialogProperties` |
 | `….foundation.feedback` | `ToastHost`, `rememberToastState`, `Toast`, `Fallback`, `Skeleton`, `Spinner`, `ProgressBar`, `StepIndicator`, `RequirementList`, `Requirement`, `RequirementState` |
 | `….foundation.notice`, `….foundation.status` | `Notice`, `NoticeText`, `NoticeTone`, `NoticeEmphasis`, `AnimatedNotice`; `StatusScene`, `StatusSceneActions`, `StatusMark`, `StatusMarkState` |
 | `….foundation.badge`, `….foundation.avatar` | `Badge`, `BadgeStyle`, `BadgeSize`, `NotificationBadge`, `IndicatorDot`, `BadgeSelect`, `LazyBadgeSelect`, `FlowBadgeSelect`, `BadgeOption`, `BadgeSelectionMode`; `Avatar` |
@@ -38,12 +38,97 @@ Every foundation symbol is imported from its family's package. Extension composa
 | `….foundation.collection`, `….foundation.table` | `ContentList`, `PagedContentList`, `GroupedContentList`, `GroupedPagedContentList`, `LimitedContentListState`, `PagedContentListState`, `ContentListGroup`, `ContentListLabels`, `ContentListDefaults`, `LazyVerticalGroupedGrid`, `LazyHorizontalGroupedGrid`, `GroupedGridData`; `Table`, `LazyTable`, `TableColumn` |
 | `….foundation.navigation`, `….foundation.wheel`, `….foundation.slot` | `NavList`, `NavNode`, `NavData`, `NavItem`, `SwipePager`, `PagerControls`, `PageIndicator`, `PageIndicatorVariant`, `PageIndicatorStyle`, `PageIndicatorSize`, `PageCounter`, `PageCounterStyle`, `PageCounterSize`, `rememberPagerController`; `WheelPicker`, `WheelPickerColumn`, `WheelPickerItem`, `WheelPickerHighlight`, `WheelPickerEdgeFade`, `rememberWheelPickerColumnState`; `SlotRow`, `SlotRowLayout` (`Default`, `Auto`, `Center`, `Top`, `FirstLine`, `Centered`, `Fill`, `wrap(…)`), `SlotRowAlignment`, `Modifier.firstLineCenter(textStyle)`, `FirstLineCenter` |
 | `dev.voir.areca.indication`, `.modifier`, `.platform`, `.shape` | `TouchIndication`, `FadeIndication`, `StrokeIndication`, `LiquidSweepIndication`, `FocusOutline`; `clickCursor`, `minimumTouchTarget`, `thenIf`; `SystemBars`; `SquircleShape` |
+| `….foundation.adaptive` | `AdaptiveNavigation`, `AdaptiveNavigationLayout`, `AdaptiveNavigationScope`, `NavRail`, `NavDestination`, `NavRailStyle`, `NavRailSize`, `ListDetail`, `ListDetailScope`, `SupportingPane`, `SupportingPaneScope`, `ContentColumn`, `AdaptiveGrid`, `AdaptiveSheet`, `AdaptiveMenu`, `AdaptiveMenuItem`, `contextMenu`, `AdaptiveDefaults` |
+| `dev.voir.areca.window` | `WindowClass`, `WidthClass`, `HeightClass`, `InputMode`, `WindowProfile`, `adaptive`, `AdaptiveContent`, `WindowClassBox`, `ProvideWindowClass` |
 | `dev.voir.areca` | `ExperimentalArecaApi` |
 
 ## Theme and helpers
 
 `ArecaThemeProvider(darkTheme, baseColors, colors, radius, shapes, spacing, elevation, motion,
-fonts, baseTypography, typography, content)` and every token: [theme.md](theme.md).
+fonts, baseTypography, inputMode, sizing, typography, content)` and every token, `ArecaSizing`
+included: [theme.md](theme.md).
+
+```kotlin
+// dev.voir.areca.window — read the one in scope as ArecaTheme.window
+class WindowClass(val size: DpSize, val input: InputMode) // + width: WidthClass, height: HeightClass,
+                                                          //   profile: WindowProfile, isLandscape
+enum class WidthClass(val minWidth: Dp) { Compact, Medium, Expanded, Large, ExtraLarge }
+    // 0, 600, 840, 1200, 1600dp; WidthClass.of(width); select(compact, medium = compact, …)
+enum class HeightClass(val minHeight: Dp) { Compact, Medium, Expanded } // 0, 480, 900dp
+enum class InputMode { Touch, Pointer }
+enum class WindowProfile { PhonePortrait, PhoneLandscape, TabletPortrait, TabletLandscape, Desktop }
+
+fun <T> adaptive(compact: T, medium: T = compact, expanded: T = medium, large: T = expanded,
+    extraLarge: T = large): T
+fun AdaptiveContent(compact: @Composable () -> Unit, medium: @Composable () -> Unit = compact,
+    expanded: @Composable () -> Unit = medium, large: @Composable () -> Unit = expanded,
+    extraLarge: @Composable () -> Unit = large)
+fun WindowClassBox(modifier: Modifier = Modifier, contentAlignment: Alignment = Alignment.TopStart,
+    content: @Composable BoxScope.() -> Unit)
+fun ProvideWindowClass(windowClass: WindowClass, content: @Composable () -> Unit)
+
+// dev.voir.areca.foundation.adaptive
+class NavDestination<T : Any>(val value: T, val label: String, val icon: ImageVector,
+    val enabled: Boolean = true)
+fun <T : Any> AdaptiveNavigation(destinations: List<NavDestination<T>>, selectedValue: T?,
+    onValueSelected: (T) -> Unit, modifier: Modifier = Modifier, sidebarCollapsed: Boolean = false,
+    onSidebarCollapsedChange: ((Boolean) -> Unit)? = null,
+    sidebarToggleDescription: String = if (sidebarCollapsed) "Expand navigation" else "Collapse navigation",
+    header: (@Composable AdaptiveNavigationScope.() -> Unit)? = null,
+    content: @Composable AdaptiveNavigationScope.() -> Unit)
+// AdaptiveNavigationScope.layout: AdaptiveNavigationLayout.BottomBar (compact, not short) |
+// Rail (medium, expanded, short, or collapsed sidebar) | Sidebar (large and up). The header shows
+// on the rail and the sidebar only. Content sits in a WindowClassBox.
+fun <T : Any> NavRail(destinations: List<NavDestination<T>>, selectedValue: T?,
+    onValueSelected: (T) -> Unit, modifier: Modifier = Modifier,
+    style: NavRailStyle = LocalNavRailStyle.current ?: NavRailStyle.Default,
+    size: NavRailSize = LocalNavRailSize.current ?: NavRailSize.Default, showLabels: Boolean = true,
+    windowInsets: WindowInsets = WindowInsets.safeDrawing.only(Vertical + Start),
+    header: (@Composable ColumnScope.() -> Unit)? = null,
+    footer: (@Composable ColumnScope.() -> Unit)? = null)
+fun ListDetail(showDetail: Boolean, modifier: Modifier = Modifier,
+    listWidth: Dp = Dp.Unspecified, resizable: Boolean = true,
+    detailPlaceholder: (@Composable ListDetailScope.() -> Unit)? = null,
+    list: @Composable ListDetailScope.() -> Unit, detail: @Composable ListDetailScope.() -> Unit)
+// Two panes from a 600dp container (ListDetailScope.isTwoPane), else the detail replaces the list.
+// Under a pointer and resizable, the divider drags (ListPaneMinWidth 240 to leaving
+// DetailPaneMinWidth 320); a double-click resets it.
+fun SupportingPane(supportingVisible: Boolean, onSupportingDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier, supportingHeader: (@Composable () -> Unit)? = null,
+    main: @Composable SupportingPaneScope.() -> Unit,
+    supporting: @Composable SupportingPaneScope.() -> Unit)
+// Inline pane from a 920dp container (SupportingPaneScope.isSupportingInline), else an AdaptiveSheet.
+fun ContentColumn(modifier: Modifier = Modifier, maxWidth: Dp = AdaptiveDefaults.ReadableWidth,
+    verticalArrangement: Arrangement.Vertical = Arrangement.Top,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    content: @Composable ColumnScope.() -> Unit)
+fun AdaptiveGrid(modifier: Modifier = Modifier, minCellWidth: Dp = AdaptiveDefaults.GridMinCellWidth,
+    maxColumns: Int = Int.MAX_VALUE, maxWidth: Dp = AdaptiveDefaults.ContentWidth,
+    state: LazyGridState = rememberLazyGridState(), contentPadding: PaddingValues = PaddingValues(),
+    horizontalSpacing: Dp = ArecaTheme.spacing.lg, verticalSpacing: Dp = ArecaTheme.spacing.xl,
+    content: LazyGridScope.() -> Unit)
+fun AdaptiveSheet(visible: Boolean, onDismissRequest: () -> Unit, modifier: Modifier = Modifier,
+    header: (@Composable () -> Unit)? = null, footer: (@Composable () -> Unit)? = null,
+    content: @Composable () -> Unit)
+// FlowModal (capped at 640dp) below an expanded window or on a short one; Dialog otherwise.
+class AdaptiveMenuItem(val label: String, val icon: ImageVector? = null, val destructive: Boolean = false,
+    val enabled: Boolean = true, val onClick: () -> Unit)
+fun AdaptiveMenu(state: DropdownPopupState, actions: List<AdaptiveMenuItem>, modifier: Modifier = Modifier,
+    title: String? = null)
+// Trigger: Modifier.anchored(state.anchorState) and state.show(). DropdownPopup under a pointer or
+// from an expanded window up; a sheet with `title` at its head under touch on narrower windows.
+fun Modifier.contextMenu(state: DropdownPopupState, enabled: Boolean = true,
+    label: String = "Show actions"): Modifier
+// On the row, before its clickable: right-click (menu at the pointer), long press under touch, Menu
+// key or Shift+F10, and the accessibility long-click (named `label`) open state's AdaptiveMenu; the
+// gesture that opens it never also clicks.
+// AdaptiveDefaults: ReadableWidth 640, ContentWidth 1200, TwoPaneMinWidth 600,
+// SupportingPaneMinWidth 920, SidebarWidth 256, GridMinCellWidth 160, ListPaneMinWidth 240,
+// DetailPaneMinWidth 320 (dp); listPaneWidth(container),
+// supportingPaneWidth(container); usesDialog(window) — true from an expanded width up unless the
+// window is short. A sheet of your own: if (AdaptiveDefaults.usesDialog(ArecaTheme.hostWindow))
+// Dialog(…) else FlowModal(…). ConfirmSheet already does this.
+```
 
 ```kotlin
 fun ArecaDarkTheme(content: @Composable () -> Unit)
@@ -81,6 +166,7 @@ fun IconButton(imageVector: ImageVector, contentDescription: String?, onClick: (
     size: IconButtonSize = LocalIconButtonSize.current ?: IconButtonSize.Medium,
     enabled: Boolean = true, loading: Boolean = false, loadingStateDescription: String = "Busy",
     interactionSource: MutableInteractionSource? = null)
+// Under a pointer the icon overloads show contentDescription as a tooltip.
 // Overloads: `imageBitmap: ImageBitmap` or `painter: Painter` in place of `imageVector`; or no
 // image and no `contentDescription`, with a trailing `content: @Composable BoxScope.() -> Unit`.
 // IconButtonSize.Tiny | ExtraSmall | Small | Medium | Large | ExtraLarge
@@ -674,6 +760,12 @@ fun Card(modifier: Modifier = Modifier,
 // solid(color: ActionColor = Brand), of(bg, content, divider, button) for a color of your own. The footer
 // hands its `content` color and its `button` style to what is inside it.
 
+fun VerticalScrollbar(state: ScrollState, modifier: Modifier = Modifier)
+// Overloads: state: LazyListState, state: LazyGridState. HorizontalScrollbar(state: ScrollState |
+// LazyListState, modifier). Drawn under a pointer only; place it in a Box beside the scrolling
+// element: VerticalScrollbar(scroll, Modifier.align(Alignment.CenterEnd).fillMaxHeight()).
+// List, ContentList, AdaptiveGrid, GroupedGrid, NavList, Table and LazyTable draw their own.
+
 fun HorizontalDivider(modifier: Modifier = Modifier,
     style: DividerStyle = LocalDividerStyle.current ?: DividerStyle.Default,
     size: DividerSize = LocalDividerSize.current ?: DividerSize.Default, text: String? = null,
@@ -1062,6 +1154,12 @@ fun DropdownPopup(state: DropdownPopupState, onDismissRequest: () -> Unit,
 fun Modifier.anchored(state: AnchoredState): Modifier // on the trigger: state.anchorState
 // AnchoredPlacement.BelowStart (default) | BelowCenter | BelowEnd | AboveStart | AboveCenter |
 // AboveEnd; it flips to the other side when it would run off screen.
+
+fun TooltipBox(text: String, modifier: Modifier = Modifier,
+    placement: AnchoredPlacement = AnchoredPlacement.BelowCenter, enabled: Boolean = true,
+    content: @Composable BoxScope.() -> Unit)
+// Under a pointer only: shows after the pointer rests 500ms, or at once on keyboard focus; hides on
+// exit or press. The label is visual only — give the content its own description too.
 ```
 
 `LocalConfirmSheetStyle` and `LocalConfirmSheetSize` stay `null` unless provided: a confirm sheet

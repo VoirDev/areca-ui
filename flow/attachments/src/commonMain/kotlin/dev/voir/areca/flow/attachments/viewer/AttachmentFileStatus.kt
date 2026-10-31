@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,6 +26,7 @@ import dev.voir.areca.flow.attachments.icon.CloudOff
 import dev.voir.areca.flow.attachments.icon.Download
 import dev.voir.areca.flow.attachments.icon.LinkExternal
 import dev.voir.areca.flow.attachments.part.icon
+import dev.voir.areca.foundation.adaptive.AdaptiveDefaults
 import dev.voir.areca.foundation.button.ActionColor
 import dev.voir.areca.foundation.button.Button
 import dev.voir.areca.foundation.button.ButtonStyle
@@ -45,7 +47,8 @@ import dev.voir.areca.theme.ArecaTheme
  *
  * One layout for every such case — arriving, unreachable, gone, or a kind of file only another
  * application can open — so moving between them changes what is under the file and nothing above
- * it. [AttachmentViewerPage] fills it, inside its own dark scope.
+ * it. [AttachmentViewerPage] fills it, inside its own dark scope. Centred, and no wider than
+ * [AdaptiveDefaults.ReadableWidth], so on a wide window it stays a column rather than a banner.
  *
  * @param item The file.
  * @param detail Line under the name — what the file is and how large — or `null` for none.
@@ -67,8 +70,12 @@ internal fun AttachmentFileStatus(
             .padding(horizontal = ArecaTheme.spacing.xl3),
         contentAlignment = Alignment.Center,
     ) {
+        // Capped where a phone never reaches, so on a tablet or a desktop the notice and the
+        // buttons under the file keep a readable width rather than spanning the window.
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .widthIn(max = AdaptiveDefaults.ReadableWidth)
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Box(

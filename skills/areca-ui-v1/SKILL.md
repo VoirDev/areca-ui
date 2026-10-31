@@ -265,6 +265,44 @@ bars; the content must apply `padding` (a lazy list's `contentPadding`, or `Modi
 the status-bar inset to the top bar's `windowInsets` and the rest to `contentWindowInsets`; the two
 add up. `TabBar` applies the bottom inset itself. Put `ToastHost` in `overlay`.
 
+### Lay out by window class, never by device
+
+Branch a screen on `ArecaTheme.window` (`dev.voir.areca.window`), never on a platform, a screen
+size in pixels or an `isTablet` flag: a tablet in a narrow split view is a compact window. Width
+decides layout (`WidthClass.Compact` under 600dp, `Medium` from 600, `Expanded` from 840, `Large`
+from 1200, `ExtraLarge` from 1600); `HeightClass.Compact` (under 480dp) is a phone on its side;
+`InputMode` (`Touch` or `Pointer`) decides only what depends on how controls are pressed.
+
+- One value: `adaptive(compact = 2, medium = 3, expanded = 4)`. Name only `compact` and the steps
+  where the value changes; each wider step falls back to the one below.
+- One of several layouts: `AdaptiveContent(compact = { … }, medium = { … })`.
+- Panes: wrap each pane of a multi-pane layout in `WindowClassBox(modifier) { … }` so what is inside
+  reads the pane's class, not the window's.
+- Previews and tests at a chosen window: `ProvideWindowClass(WindowClass(DpSize(820.dp, 1180.dp),
+  InputMode.Touch)) { … }`. It changes the class only; to draw at another input's sizes too, nest
+  `ArecaThemeProvider(inputMode = …)`.
+- Use the adaptive layouts (`dev.voir.areca.foundation.adaptive`) before branching by hand:
+  `AdaptiveNavigation` for the app shell (bottom bar, rail, sidebar), `ListDetail`,
+  `SupportingPane`, `ContentColumn` for forms and auth, `AdaptiveGrid`, `AdaptiveSheet` instead of a
+  bare `FlowModal` for forms (`ConfirmSheet` is already a dialog on wide windows), `AdaptiveMenu`
+  for a row's actions. Their slots say which form they are in (`layout`, `isTwoPane`,
+  `isSupportingInline`): draw a back action only when `!isTwoPane`, a "Filters" button only when
+  `!isSupportingInline`. Signatures: reference/signatures.md.
+- Desktop affordances come with the components; do not build them by hand. Put
+  `Modifier.contextMenu(menu)` on a row that has an `AdaptiveMenu`, ahead of its `clickable`: it
+  opens the menu on a right-click, a long press, the Menu key and the accessibility long-click, and
+  a long press then does not also click. `IconButton` shows its `contentDescription` as a tooltip
+  under a pointer; wrap anything else a pointer user cannot read off — an icon alone, a truncated
+  title — in `TooltipBox(text)`, and still give it a description for assistive technology. Areca's
+  lists, grids and tables draw a scrollbar under a pointer; beside a `verticalScroll` or a
+  `LazyColumn` of your own add `VerticalScrollbar(state, Modifier.align(Alignment.CenterEnd)
+  .fillMaxHeight())` in a `Box`. `ListDetail`'s divider drags under a pointer
+  (`resizable = false` pins it). None of these draws or reacts under touch.
+- Size presets already follow the input: `ButtonSize.Medium` is 48dp under touch and 36dp under a
+  pointer, read from `ArecaTheme.sizing`, and screen gutters widen with the window. Never hard-code a
+  control or row height; in a size of your own use `ArecaTheme.sizing.controlMd` and
+  `sizing.select(touch = …, pointer = …)`.
+
 ### Regions that are always dark
 
 Wrap a photo viewer, camera or editor in `ArecaDarkTheme { … }`, which keeps the app's palette,

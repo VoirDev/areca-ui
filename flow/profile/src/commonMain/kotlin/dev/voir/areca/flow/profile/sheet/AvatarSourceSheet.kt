@@ -30,9 +30,11 @@ import dev.voir.areca.flow.profile.icon.BundledIcons
 import dev.voir.areca.flow.profile.icon.Camera
 import dev.voir.areca.flow.profile.icon.Image
 import dev.voir.areca.flow.profile.icon.Trash
+import dev.voir.areca.foundation.adaptive.AdaptiveDefaults
 import dev.voir.areca.foundation.icon.Icon
 import dev.voir.areca.foundation.layout.DividerStyle
 import dev.voir.areca.foundation.layout.HorizontalDivider
+import dev.voir.areca.foundation.overlay.Dialog
 import dev.voir.areca.foundation.overlay.FlowModal
 import dev.voir.areca.foundation.overlay.FlowModalHeaderInsets
 import dev.voir.areca.foundation.overlay.rememberFlowModal
@@ -112,6 +114,11 @@ public object AvatarSourceOptions {
  * out is the close control in its heading, a foundation [TopBar] in the modal style, which keeps
  * the sheet's gutter so the title lines up with the choices under it.
  *
+ * On a phone, a folded foldable or a tablet held upright it is a sheet rising from the bottom edge.
+ * From an expanded window up — a tablet on its side, a desktop — it is a centred [Dialog] with the
+ * same heading and choices, decided by [AdaptiveDefaults.usesDialog] on the whole window
+ * ([ArecaTheme.hostWindow]), so a sheet opened from a narrow pane is a dialog too.
+ *
  * @param visible Whether the sheet is shown.
  * @param options Choices to offer, in order.
  * @param onDismiss Called when the sheet is dismissed without a choice.
@@ -128,31 +135,23 @@ public fun AvatarSourceSheet(
     subtitle: String? = null,
     closeLabel: String = "Close",
 ) {
-    val controller = rememberFlowModal(autoHeight = true)
-
-    LaunchedEffect(visible) {
-        if (visible) controller.show() else controller.hide()
+    val header: @Composable () -> Unit = {
+        TopBar(
+            title = title,
+            modifier = Modifier.fillMaxWidth(),
+            size = TopBarSize.Modal.copy(
+                padding = PaddingValues(
+                    horizontal = ArecaTheme.spacing.xl3,
+                    vertical = ArecaTheme.spacing.md,
+                ),
+            ),
+            style = TopBarStyle.Modal,
+            windowInsets = FlowModalHeaderInsets,
+            trailing = { CloseAction(onClick = onDismiss, contentDescription = closeLabel) },
+        )
     }
 
-    FlowModal(
-        controller = controller,
-        onDismissRequest = onDismiss,
-        header = {
-            TopBar(
-                title = title,
-                modifier = Modifier.fillMaxWidth(),
-                size = TopBarSize.Modal.copy(
-                    padding = PaddingValues(
-                        horizontal = ArecaTheme.spacing.xl3,
-                        vertical = ArecaTheme.spacing.md,
-                    ),
-                ),
-                style = TopBarStyle.Modal,
-                windowInsets = FlowModalHeaderInsets,
-                trailing = { CloseAction(onClick = onDismiss, contentDescription = closeLabel) },
-            )
-        },
-    ) {
+    val body: @Composable () -> Unit = {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -209,6 +208,45 @@ public fun AvatarSourceSheet(
             }
         }
     }
+
+    if (AdaptiveDefaults.usesDialog(ArecaTheme.hostWindow)) {
+        // The same heading and choices, centred: on a wide window the bottom edge is far from where
+        // the person is looking. The window decides, not the pane that opened the sheet.
+        if (visible) {
+            Dialog(onDismissRequest = onDismiss, header = header, content = body)
+        }
+    } else {
+        AvatarSourceFlowModal(visible = visible, onDismiss = onDismiss, header = header, body = body)
+    }
+}
+
+/**
+ * The sheet form of [AvatarSourceSheet]: a [FlowModal] rising from the bottom edge, as on a phone.
+ *
+ * @param visible Whether the sheet is shown.
+ * @param onDismiss Called when the sheet is dismissed without a choice.
+ * @param header The heading with its close control.
+ * @param body The subtitle and the choices.
+ */
+@Composable
+private fun AvatarSourceFlowModal(
+    visible: Boolean,
+    onDismiss: () -> Unit,
+    header: @Composable () -> Unit,
+    body: @Composable () -> Unit,
+) {
+    val controller = rememberFlowModal(autoHeight = true)
+
+    LaunchedEffect(visible) {
+        if (visible) controller.show() else controller.hide()
+    }
+
+    FlowModal(
+        controller = controller,
+        onDismissRequest = onDismiss,
+        header = header,
+        content = body,
+    )
 }
 
 /**

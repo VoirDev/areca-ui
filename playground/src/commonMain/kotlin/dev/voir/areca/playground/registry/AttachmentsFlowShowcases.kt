@@ -16,6 +16,7 @@ import dev.voir.areca.playground.flow.attachments.AttachmentThumbnailShowcase
 import dev.voir.areca.playground.flow.attachments.AttachmentTileShowcase
 import dev.voir.areca.playground.flow.attachments.AttachmentViewerPageShowcase
 import dev.voir.areca.playground.flow.attachments.AttachmentViewerShowcase
+import dev.voir.areca.playground.flow.attachments.AttachmentWideDetailsShowcase
 import dev.voir.areca.playground.flow.attachments.PendingAttachmentSheetShowcase
 import dev.voir.areca.playground.showcase.ShowcaseStatus
 
@@ -54,6 +55,18 @@ internal val AttachmentsFlowShowcases: List<ShowcaseEntry> = listOf(
         status = ShowcaseStatus.Beta,
         keywords = listOf("attachments details", "record", "transaction", "receipt", "screen", "recipe"),
         content = { AttachmentDetailsShowcase() },
+    ),
+    ShowcaseEntry(
+        id = "flow-attachments/tablet-desktop",
+        group = ShowcaseGroup.AttachmentsFlow,
+        section = ShowcaseSection.AttachmentsScreens,
+        title = "Tablet and desktop",
+        summary = "A saved expense's details with its files in a pane beside them on a wide window, and in a sheet on a narrow one.",
+        status = ShowcaseStatus.Beta,
+        keywords = listOf(
+            "attachments tablet", "desktop", "adaptive", "supporting pane", "wide window", "dialog", "screen", "recipe",
+        ),
+        content = { AttachmentWideDetailsShowcase() },
     ),
     ShowcaseEntry(
         id = "flow-attachments/documents",

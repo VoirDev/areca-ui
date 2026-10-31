@@ -1,5 +1,12 @@
 package dev.voir.areca.playground.registry
 
+import dev.voir.areca.playground.foundation.adaptive.AdaptiveGridShowcase
+import dev.voir.areca.playground.foundation.adaptive.AdaptiveMenuShowcase
+import dev.voir.areca.playground.foundation.adaptive.AdaptiveNavigationShowcase
+import dev.voir.areca.playground.foundation.adaptive.AdaptiveSheetShowcase
+import dev.voir.areca.playground.foundation.adaptive.ContentColumnShowcase
+import dev.voir.areca.playground.foundation.adaptive.ListDetailShowcase
+import dev.voir.areca.playground.foundation.adaptive.SupportingPaneShowcase
 import dev.voir.areca.playground.foundation.avatar.AvatarShowcase
 import dev.voir.areca.playground.foundation.badge.BadgeShowcase
 import dev.voir.areca.playground.foundation.button.ButtonShowcase
@@ -25,6 +32,7 @@ import dev.voir.areca.playground.foundation.layout.CollapsingHeaderLayoutShowcas
 import dev.voir.areca.playground.foundation.layout.DividerShowcase
 import dev.voir.areca.playground.foundation.layout.ExpandableShowcase
 import dev.voir.areca.playground.foundation.layout.PullToRefreshShowcase
+import dev.voir.areca.playground.foundation.layout.ScrollbarShowcase
 import dev.voir.areca.playground.foundation.list.ListItemShowcase
 import dev.voir.areca.playground.foundation.list.ListShowcase
 import dev.voir.areca.playground.foundation.navigation.NavListShowcase
@@ -35,6 +43,7 @@ import dev.voir.areca.playground.foundation.overlay.ConfirmSheetShowcase
 import dev.voir.areca.playground.foundation.overlay.ConfirmationDialogShowcase
 import dev.voir.areca.playground.foundation.overlay.DialogShowcase
 import dev.voir.areca.playground.foundation.overlay.FlowModalShowcase
+import dev.voir.areca.playground.foundation.overlay.TooltipShowcase
 import dev.voir.areca.playground.foundation.selection.CheckboxShowcase
 import dev.voir.areca.playground.foundation.selection.NumberStepperShowcase
 import dev.voir.areca.playground.foundation.selection.RadioShowcase
@@ -57,6 +66,7 @@ import dev.voir.areca.playground.foundation.topbar.LargeTopBarShowcase
 import dev.voir.areca.playground.foundation.topbar.TopBarActionsShowcase
 import dev.voir.areca.playground.foundation.topbar.TopBarShowcase
 import dev.voir.areca.playground.foundation.wheel.WheelPickerShowcase
+import dev.voir.areca.playground.foundation.window.WindowClassShowcase
 import dev.voir.areca.playground.showcase.ShowcaseStatus
 
 /**
@@ -440,6 +450,32 @@ internal val ComponentShowcases: List<ShowcaseEntry> = listOf(
         content = { ToastShowcase() },
     ),
     ShowcaseEntry(
+        id = "foundation/adaptive-sheet",
+        group = ShowcaseGroup.Components,
+        section = ShowcaseSection.Overlays,
+        title = "Adaptive sheet",
+        summary = "A form or a short task over the screen, as a bottom sheet on a phone and a dialog on a tablet or desktop.",
+        status = ShowcaseStatus.Beta,
+        keywords = listOf(
+            "adaptive", "responsive", "bottom sheet", "dialog", "modal", "form", "tablet", "desktop",
+            "foldable", "AdaptiveSheet",
+        ),
+        content = { AdaptiveSheetShowcase() },
+    ),
+    ShowcaseEntry(
+        id = "foundation/adaptive-menu",
+        group = ShowcaseGroup.Components,
+        section = ShowcaseSection.Overlays,
+        title = "Adaptive menu",
+        summary = "The actions for one row or card, as a dropdown under a pointer and a bottom sheet under a finger.",
+        status = ShowcaseStatus.Beta,
+        keywords = listOf(
+            "adaptive", "responsive", "overflow", "more", "context menu", "action sheet", "dropdown",
+            "kebab", "AdaptiveMenuItem", "contextMenu", "right-click", "long press", "tablet", "desktop",
+        ),
+        content = { AdaptiveMenuShowcase() },
+    ),
+    ShowcaseEntry(
         id = "foundation/confirmation-dialog",
         group = ShowcaseGroup.Components,
         section = ShowcaseSection.Overlays,
@@ -447,6 +483,16 @@ internal val ComponentShowcases: List<ShowcaseEntry> = listOf(
         summary = "Blocking prompt for an action that cannot easily be undone.",
         keywords = listOf("alert", "modal", "confirm", "destructive", "prompt"),
         content = { ConfirmationDialogShowcase() },
+    ),
+    ShowcaseEntry(
+        id = "foundation/tooltip",
+        group = ShowcaseGroup.Components,
+        section = ShowcaseSection.Overlays,
+        title = "Tooltip",
+        summary = "A short label naming a control when the pointer rests on it or keyboard focus reaches it.",
+        status = ShowcaseStatus.Beta,
+        keywords = listOf("tooltip", "hint", "hover", "label", "icon button", "desktop", "pointer", "TooltipBox"),
+        content = { TooltipShowcase() },
     ),
     ShowcaseEntry(
         id = "foundation/confirm-sheet",
@@ -478,6 +524,19 @@ internal val ComponentShowcases: List<ShowcaseEntry> = listOf(
         summary = "Bottom sheet that moves between hidden, partial and expanded heights.",
         keywords = listOf("modal", "sheet", "dialog", "bottom sheet", "drag"),
         content = { FlowModalShowcase() },
+    ),
+    ShowcaseEntry(
+        id = "foundation/adaptive-navigation",
+        group = ShowcaseGroup.Components,
+        section = ShowcaseSection.Navigation,
+        title = "Adaptive navigation",
+        summary = "An app's top-level destinations as a bottom bar, a rail or a sidebar, whichever the window calls for.",
+        status = ShowcaseStatus.Beta,
+        keywords = listOf(
+            "adaptive", "responsive", "navigation rail", "rail", "NavRail", "sidebar", "drawer",
+            "bottom bar", "tab bar", "tablet", "desktop", "foldable", "NavDestination",
+        ),
+        content = { AdaptiveNavigationShowcase() },
     ),
     ShowcaseEntry(
         id = "foundation/floating-tab-bar",
@@ -608,6 +667,83 @@ internal val ComponentShowcases: List<ShowcaseEntry> = listOf(
         summary = "Reveals and hides content under a trigger the caller draws.",
         keywords = listOf("accordion", "collapse", "disclosure", "faq", "reveal"),
         content = { ExpandableShowcase() },
+    ),
+    ShowcaseEntry(
+        id = "foundation/list-detail",
+        group = ShowcaseGroup.Components,
+        section = ShowcaseSection.Layout,
+        title = "List detail",
+        summary = "A list and the item that is open, side by side when there is room and one at a time when there is not.",
+        status = ShowcaseStatus.Beta,
+        keywords = listOf(
+            "adaptive", "responsive", "two pane", "master detail", "split view", "inbox", "tablet",
+            "desktop", "foldable", "pane", "ListDetail",
+        ),
+        content = { ListDetailShowcase() },
+    ),
+    ShowcaseEntry(
+        id = "foundation/supporting-pane",
+        group = ShowcaseGroup.Components,
+        section = ShowcaseSection.Layout,
+        title = "Supporting pane",
+        summary = "Main content with supporting content beside it when there is room, and in a sheet when there is not.",
+        status = ShowcaseStatus.Beta,
+        keywords = listOf(
+            "adaptive", "responsive", "filters", "side panel", "inspector", "two pane", "split view",
+            "tablet", "desktop", "foldable", "pane", "SupportingPane",
+        ),
+        content = { SupportingPaneShowcase() },
+    ),
+    ShowcaseEntry(
+        id = "foundation/content-column",
+        group = ShowcaseGroup.Components,
+        section = ShowcaseSection.Layout,
+        title = "Content column",
+        summary = "Keeps a form or a page of reading at a readable width, centred, on a window of any size.",
+        status = ShowcaseStatus.Beta,
+        keywords = listOf(
+            "adaptive", "responsive", "max width", "readable width", "centered", "centred", "container",
+            "form", "tablet", "desktop", "ContentColumn",
+        ),
+        content = { ContentColumnShowcase() },
+    ),
+    ShowcaseEntry(
+        id = "foundation/scrollbar",
+        group = ShowcaseGroup.Components,
+        section = ShowcaseSection.Layout,
+        title = "Scrollbar",
+        summary = "A draggable scrollbar beside a scrolling page, drawn under a pointer and never under touch.",
+        status = ShowcaseStatus.Beta,
+        keywords = listOf(
+            "scrollbar", "scroll", "thumb", "desktop", "pointer", "mouse", "VerticalScrollbar", "HorizontalScrollbar",
+        ),
+        content = { ScrollbarShowcase() },
+    ),
+    ShowcaseEntry(
+        id = "foundation/adaptive-grid",
+        group = ShowcaseGroup.Components,
+        section = ShowcaseSection.Layout,
+        title = "Adaptive grid",
+        summary = "A scrolling grid of cards whose column count follows the width it is given.",
+        status = ShowcaseStatus.Beta,
+        keywords = listOf(
+            "adaptive", "responsive", "grid", "columns", "cards", "catalogue", "catalog", "gallery",
+            "tablet", "desktop", "foldable", "AdaptiveGrid",
+        ),
+        content = { AdaptiveGridShowcase() },
+    ),
+    ShowcaseEntry(
+        id = "foundation/window-class",
+        group = ShowcaseGroup.Components,
+        section = ShowcaseSection.Layout,
+        title = "Window class",
+        summary = "The width and height classes and input mode a screen is laid out for, read per window or per pane.",
+        status = ShowcaseStatus.Beta,
+        keywords = listOf(
+            "adaptive", "responsive", "breakpoint", "size class", "tablet", "desktop", "foldable", "landscape",
+            "WindowClassBox", "AdaptiveContent", "pane",
+        ),
+        content = { WindowClassShowcase() },
     ),
     ShowcaseEntry(
         id = "foundation/pull-to-refresh",

@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,6 +22,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import dev.voir.areca.flow.profile.row.UsernameCheck
 import dev.voir.areca.flow.profile.row.UsernameCheckFooter
+import dev.voir.areca.foundation.adaptive.AdaptiveDefaults
 import dev.voir.areca.foundation.button.Button
 import dev.voir.areca.foundation.settings.Section
 import dev.voir.areca.foundation.settings.Settings
@@ -117,7 +120,11 @@ private fun UsernameRecipe(
             .fillMaxSize()
             .background(ArecaTheme.colors.bgCanvas)
             .windowInsetsPadding(windowInsets)
-            .imePadding(),
+            .imePadding()
+            // On a tablet or a desktop the column stops at a readable width, centred; a phone is narrower.
+            .wrapContentWidth()
+            .widthIn(max = AdaptiveDefaults.ReadableWidth)
+            .fillMaxWidth(),
     ) {
         Spacer(Modifier.height(ArecaTheme.spacing.xl3))
 

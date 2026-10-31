@@ -74,48 +74,63 @@ public data class TopBarSize(
 ) {
     /** Theme-backed presets and builders. */
     public companion object {
-        /** Theme default. A 56dp bar with 24dp glyphs on 40dp targets. */
+        /**
+         * Theme default. A 56dp bar with 24dp glyphs on 40dp targets under touch, a 44dp bar with
+         * 20dp glyphs on 32dp targets under a pointer.
+         */
         public val Default: TopBarSize
             @Composable
             get() = default()
 
         /**
-         * A tighter bar, for a dense screen or a secondary header inside a panel.
+         * A tighter bar, 48dp under touch and 36dp under a pointer, for a dense screen or a
+         * secondary header inside a panel.
          *
          * Shrinks the glyph as well as the bar, rather than leaving a full-size icon in a short
          * row, because the two together are what read as "compact".
          */
         public val Compact: TopBarSize
             @Composable
-            get() = default(
-                padding = PaddingValues(
-                    horizontal = ArecaTheme.spacing.horizontalContentInsets,
-                    vertical = ArecaTheme.spacing.sm,
-                ),
-                icon = IconSize.Medium,
-                action = 32.dp,
-                containedIcon = IconSize.Small,
-                containedPadding = ArecaTheme.spacing.md,
-                minHeight = 48.dp,
-                largeMinHeight = 84.dp,
-                textStyle = ArecaTheme.typography.labelLarge,
-                largeTextStyle = ArecaTheme.typography.headingMedium,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                val spacing = ArecaTheme.spacing
+                return default(
+                    padding = PaddingValues(
+                        horizontal = spacing.horizontalContentInsets,
+                        vertical = sizing.select(touch = spacing.sm, pointer = spacing.xs),
+                    ),
+                    icon = sizing.select(touch = IconSize.Medium, pointer = IconSize.Small),
+                    action = sizing.controlXs,
+                    containedIcon = IconSize.Small,
+                    containedPadding = sizing.select(touch = spacing.md, pointer = spacing.sm),
+                    minHeight = sizing.controlMd,
+                    largeMinHeight = sizing.select(touch = 84.dp, pointer = 72.dp),
+                    textStyle = ArecaTheme.typography.labelLarge,
+                    largeTextStyle = ArecaTheme.typography.headingMedium,
+                )
+            }
 
-        /** A roomier bar, for a screen whose header is the main thing on it. */
+        /**
+         * A roomier bar, 64dp under touch and 52dp under a pointer, for a screen whose header is the
+         * main thing on it.
+         */
         public val Comfortable: TopBarSize
             @Composable
-            get() = default(
-                padding = PaddingValues(
-                    horizontal = ArecaTheme.spacing.horizontalContentInsets,
-                    vertical = ArecaTheme.spacing.lg,
-                ),
-                action = 44.dp,
-                minHeight = 64.dp,
-                largeMinHeight = 120.dp,
-                textStyle = ArecaTheme.typography.headingSmall,
-                largeTextStyle = ArecaTheme.typography.headingExtraLarge,
-            )
+            get() {
+                val sizing = ArecaTheme.sizing
+                val spacing = ArecaTheme.spacing
+                return default(
+                    padding = PaddingValues(
+                        horizontal = spacing.horizontalContentInsets,
+                        vertical = sizing.select(touch = spacing.lg, pointer = spacing.md),
+                    ),
+                    action = sizing.select(touch = 44.dp, pointer = 36.dp),
+                    minHeight = sizing.controlXl,
+                    largeMinHeight = sizing.select(touch = 120.dp, pointer = 108.dp),
+                    textStyle = ArecaTheme.typography.headingSmall,
+                    largeTextStyle = ArecaTheme.typography.headingExtraLarge,
+                )
+            }
 
         /**
          * The bar as a sheet's or dialog's header.
@@ -128,7 +143,10 @@ public data class TopBarSize(
             get() = default(
                 padding = PaddingValues(
                     horizontal = ArecaTheme.spacing.xl,
-                    vertical = ArecaTheme.spacing.md,
+                    vertical = ArecaTheme.sizing.select(
+                        touch = ArecaTheme.spacing.md,
+                        pointer = ArecaTheme.spacing.sm,
+                    ),
                 ),
             )
 
@@ -158,18 +176,24 @@ public data class TopBarSize(
         public fun default(
             padding: PaddingValues = PaddingValues(
                 horizontal = ArecaTheme.spacing.horizontalContentInsets,
-                vertical = ArecaTheme.spacing.md,
+                vertical = ArecaTheme.sizing.select(
+                    touch = ArecaTheme.spacing.md,
+                    pointer = ArecaTheme.spacing.sm,
+                ),
             ),
             gap: Dp = ArecaTheme.spacing.md,
             actionGap: Dp = ArecaTheme.spacing.xs,
             titleGap: Dp = ArecaTheme.spacing.xs2,
-            icon: Dp = IconSize.Large,
-            action: Dp = 40.dp,
-            containedIcon: Dp = IconSize.Medium,
+            icon: Dp = ArecaTheme.sizing.select(touch = IconSize.Large, pointer = IconSize.Medium),
+            action: Dp = ArecaTheme.sizing.controlSm,
+            containedIcon: Dp = ArecaTheme.sizing.select(touch = IconSize.Medium, pointer = IconSize.Small),
             containedGap: Dp = ArecaTheme.spacing.sm,
-            containedPadding: Dp = ArecaTheme.spacing.lg,
-            minHeight: Dp = 56.dp,
-            largeMinHeight: Dp = 104.dp,
+            containedPadding: Dp = ArecaTheme.sizing.select(
+                touch = ArecaTheme.spacing.lg,
+                pointer = ArecaTheme.spacing.md,
+            ),
+            minHeight: Dp = ArecaTheme.sizing.controlLg,
+            largeMinHeight: Dp = ArecaTheme.sizing.select(touch = 104.dp, pointer = 92.dp),
             bottomPadding: PaddingValues = PaddingValues(bottom = ArecaTheme.spacing.md),
             borderWidth: Dp = 1.dp,
             textStyle: TextStyle = ArecaTheme.typography.headingExtraSmall,

@@ -14,8 +14,9 @@ import androidx.compose.runtime.Immutable
  * @property wordmark Brand mark above the heading, or `null` to draw none. Given the width of the
  *   content column and left to size itself vertically.
  * @property hero Artwork placed according to [layout], or `null` to draw none. Given a fixed box
- *   to fill, so it should normally be a `ContentScale.Crop` image or something else that tolerates
- *   any aspect ratio.
+ *   to fill — a wide band on a phone, a tall panel beside the form under [AuthLayout.Split] — so it
+ *   should normally be a `ContentScale.Crop` image or something else that tolerates any aspect
+ *   ratio.
  * @property layout Where [hero] sits relative to the form. Has no visible effect when [hero] is
  *   `null`.
  */

@@ -24,6 +24,7 @@ import dev.voir.areca.foundation.topbar.TopBarSize
 import dev.voir.areca.foundation.topbar.TopBarTitleAlignment
 import dev.voir.areca.playground.flow.auth.AuthSamples
 import dev.voir.areca.theme.ArecaThemeProvider
+import dev.voir.areca.window.InputMode
 import org.jetbrains.skia.EncodedImageFormat
 import java.io.File
 import kotlin.test.Test
@@ -53,7 +54,7 @@ private fun render(name: String, screen: @Composable () -> Unit) {
         height = (HEIGHT * DENSITY).toInt(),
         density = Density(DENSITY),
     ) {
-        ArecaThemeProvider(darkTheme = false) { screen() }
+        ArecaThemeProvider(darkTheme = false, inputMode = InputMode.Touch) { screen() }
     }
 
     try {

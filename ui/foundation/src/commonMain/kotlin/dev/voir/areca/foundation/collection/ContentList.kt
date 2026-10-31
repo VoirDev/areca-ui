@@ -42,6 +42,7 @@ import dev.voir.areca.foundation.feedback.Spinner
 import dev.voir.areca.foundation.feedback.SpinnerStyle
 import dev.voir.areca.foundation.layout.PullToRefreshIndicator
 import dev.voir.areca.foundation.layout.PullToRefreshLayout
+import dev.voir.areca.foundation.layout.VerticalScrollbarOverlay
 import dev.voir.areca.foundation.layout.rememberPullToRefreshState
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.theme.ArecaTheme
@@ -795,34 +796,37 @@ public fun <T> PagedContentList(
                 onRefresh = onRefresh,
                 indicatorTopInset = contentPadding.calculateTopPadding(),
             ) {
-                LazyColumn(
-                    state = listState,
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = padding,
-                    verticalArrangement = Arrangement.spacedBy(size.itemSpacing),
-                ) {
-                    item(key = TopSpacingKey) {
-                        Spacer(Modifier.height(size.topSpacing))
-                    }
+                Box(modifier = Modifier.fillMaxSize()) {
+                    LazyColumn(
+                        state = listState,
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = padding,
+                        verticalArrangement = Arrangement.spacedBy(size.itemSpacing),
+                    ) {
+                        item(key = TopSpacingKey) {
+                            Spacer(Modifier.height(size.topSpacing))
+                        }
 
-                    items(
-                        items = state.items,
-                        key = itemKey,
-                    ) { item ->
-                        itemContent(item)
-                    }
+                        items(
+                            items = state.items,
+                            key = itemKey,
+                        ) { item ->
+                            itemContent(item)
+                        }
 
-                    appendPagingItems(
-                        state = state,
-                        onRetryLoadMore = onRetryLoadMore,
-                        loadMoreContent = loadMoreContent,
-                        loadMoreErrorContent = loadMoreErrorContent,
-                        endReachedContent = endReachedContent,
-                    )
+                        appendPagingItems(
+                            state = state,
+                            onRetryLoadMore = onRetryLoadMore,
+                            loadMoreContent = loadMoreContent,
+                            loadMoreErrorContent = loadMoreErrorContent,
+                            endReachedContent = endReachedContent,
+                        )
 
-                    item(key = BottomSpacingKey) {
-                        Spacer(Modifier.height(size.bottomSpacing))
+                        item(key = BottomSpacingKey) {
+                            Spacer(Modifier.height(size.bottomSpacing))
+                        }
                     }
+                    VerticalScrollbarOverlay(listState)
                 }
             }
         }
@@ -935,40 +939,43 @@ public fun <G, T> GroupedPagedContentList(
                 onRefresh = onRefresh,
                 indicatorTopInset = contentPadding.calculateTopPadding(),
             ) {
-                LazyColumn(
-                    state = listState,
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = padding,
-                    verticalArrangement = Arrangement.spacedBy(size.itemSpacing),
-                ) {
-                    item(key = TopSpacingKey) {
-                        Spacer(Modifier.height(size.topSpacing))
-                    }
-
-                    state.items.forEach { group ->
-                        stickyHeader(key = "group-header:${group.key}") {
-                            groupHeaderContent(group.group)
+                Box(modifier = Modifier.fillMaxSize()) {
+                    LazyColumn(
+                        state = listState,
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = padding,
+                        verticalArrangement = Arrangement.spacedBy(size.itemSpacing),
+                    ) {
+                        item(key = TopSpacingKey) {
+                            Spacer(Modifier.height(size.topSpacing))
                         }
 
-                        items(
-                            items = group.items,
-                            key = itemKey,
-                        ) { item ->
-                            itemContent(item)
+                        state.items.forEach { group ->
+                            stickyHeader(key = "group-header:${group.key}") {
+                                groupHeaderContent(group.group)
+                            }
+
+                            items(
+                                items = group.items,
+                                key = itemKey,
+                            ) { item ->
+                                itemContent(item)
+                            }
+                        }
+
+                        appendPagingItems(
+                            state = state,
+                            onRetryLoadMore = onRetryLoadMore,
+                            loadMoreContent = loadMoreContent,
+                            loadMoreErrorContent = loadMoreErrorContent,
+                            endReachedContent = endReachedContent,
+                        )
+
+                        item(key = BottomSpacingKey) {
+                            Spacer(Modifier.height(size.bottomSpacing))
                         }
                     }
-
-                    appendPagingItems(
-                        state = state,
-                        onRetryLoadMore = onRetryLoadMore,
-                        loadMoreContent = loadMoreContent,
-                        loadMoreErrorContent = loadMoreErrorContent,
-                        endReachedContent = endReachedContent,
-                    )
-
-                    item(key = BottomSpacingKey) {
-                        Spacer(Modifier.height(size.bottomSpacing))
-                    }
+                    VerticalScrollbarOverlay(listState)
                 }
             }
         }

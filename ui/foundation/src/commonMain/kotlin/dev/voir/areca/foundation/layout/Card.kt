@@ -30,7 +30,6 @@ import dev.voir.areca.foundation.button.ButtonSize
 import dev.voir.areca.indication.FadeIndication
 import dev.voir.areca.indication.StrokeIndication
 import dev.voir.areca.indication.TouchIndication
-import dev.voir.areca.modifier.MinimumTouchTarget
 import dev.voir.areca.modifier.clickCursor
 import dev.voir.areca.modifier.thenIf
 import dev.voir.areca.theme.ArecaTheme
@@ -267,11 +266,12 @@ public data class CardSize(
         /**
          * Builds a size from the current theme.
          *
-         * The footer's line is one touch target tall, with or without a button in it, so footers
-         * of every kind are the same height. A footer that only states — a date on a band, never a
-         * button — can drop [footerMinHeight] to `0.dp` and pad itself as tightly as it likes. It is inset like the body at the start and barely at
-         * the end, because a footer's button is borderless and carries its own padding: its label
-         * then ends about where the body's copy would.
+         * The footer's line is one touch target tall under touch and one small control tall under a
+         * pointer, with or without a button in it, so footers of every kind are the same height. A
+         * footer that only states — a date on a band, never a button — can drop [footerMinHeight]
+         * to `0.dp` and pad itself as tightly as it likes. It is inset like the body at the start
+         * and barely at the end, because a footer's button is borderless and carries its own
+         * padding: its label then ends about where the body's copy would.
          *
          * @param padding Inner spacing offered to the content.
          * @param borderWidth Width of the border.
@@ -293,7 +293,10 @@ public data class CardSize(
             ),
             footerTextStyle: TextStyle = ArecaTheme.typography.bodySmall,
             footerButton: ButtonSize = ButtonSize.Small,
-            footerMinHeight: Dp = MinimumTouchTarget,
+            footerMinHeight: Dp = ArecaTheme.sizing.select(
+                touch = ArecaTheme.sizing.touchTarget,
+                pointer = ArecaTheme.sizing.controlSm,
+            ),
         ): CardSize = CardSize(
             padding = padding,
             borderWidth = borderWidth,

@@ -1,6 +1,7 @@
 package dev.voir.areca.playground.registry
 
 import dev.voir.areca.playground.flow.profile.AccountRowShowcase
+import dev.voir.areca.playground.flow.profile.AccountSettingsShowcase
 import dev.voir.areca.playground.flow.profile.AccountShowcase
 import dev.voir.areca.playground.flow.profile.ActiveSessionsSectionsShowcase
 import dev.voir.areca.playground.flow.profile.AvatarSourceSheetShowcase
@@ -51,6 +52,20 @@ internal val ProfileFlowShowcases: List<ShowcaseEntry> = listOf(
             "switch account", "delete account", "screen",
         ),
         content = { AccountShowcase() },
+    ),
+    ShowcaseEntry(
+        id = "flow-profile/account-settings",
+        group = ShowcaseGroup.ProfileFlow,
+        section = ShowcaseSection.ProfileScreens,
+        title = "Account settings",
+        summary = "The account menu and the page it opens, side by side on a tablet or a desktop and " +
+            "one at a time on a phone.",
+        status = ShowcaseStatus.Beta,
+        keywords = listOf(
+            "account", "settings", "list detail", "two pane", "tablet", "desktop", "foldable",
+            "adaptive", "window", "edit profile", "devices", "screen",
+        ),
+        content = { AccountSettingsShowcase() },
     ),
     ShowcaseEntry(
         id = "flow-profile/devices",
