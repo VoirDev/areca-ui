@@ -75,7 +75,12 @@ fun <T : Any> AdaptiveNavigation(destinations: List<NavDestination<T>>, selected
     onSidebarCollapsedChange: ((Boolean) -> Unit)? = null,
     sidebarToggleDescription: String = if (sidebarCollapsed) "Expand navigation" else "Collapse navigation",
     header: (@Composable AdaptiveNavigationScope.() -> Unit)? = null,
+    footer: (@Composable AdaptiveNavigationScope.() -> Unit)? = null,
+    bottomBar: (@Composable AdaptiveNavigationScope.() -> Unit)? = null,
     content: @Composable AdaptiveNavigationScope.() -> Unit)
+// bottomBar replaces the TabBar on a compact window and floats over the content, which keeps the full
+// height and reads the bar's height as AdaptiveNavigationScope.contentPadding (zero in every other
+// form). footer sits at the foot of the rail and the sidebar, above the collapse toggle.
 // AdaptiveNavigationScope.layout: AdaptiveNavigationLayout.BottomBar (compact, not short) |
 // Rail (medium, expanded, short, or collapsed sidebar) | Sidebar (large and up). The header shows
 // on the rail and the sidebar only. Content sits in a WindowClassBox.

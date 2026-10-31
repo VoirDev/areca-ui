@@ -1115,6 +1115,24 @@ AdaptiveNavigation(
 }
 ```
 
+An app whose phone bar is its own — a floating bar, a bar with an action in its middle — passes it as
+`bottomBar`. It replaces the `TabBar` on a compact window and is drawn over the bottom of the screen,
+which keeps its full height and reads what the bar covers from `contentPadding`, to end its scroll
+with. `footer` sits at the foot of the rail and the sidebar, above the collapse toggle — an account,
+a sync state.
+
+```kotlin
+AdaptiveNavigation(
+    destinations = destinations,
+    selectedValue = tab,
+    onValueSelected = { tab = it },
+    footer = { AccountAvatar() },
+    bottomBar = { FloatingTabBar(items = destinations.map { it.toItem() }, selectedValue = tab, onValueSelected = { tab = it }) },
+) {
+    Screen(bottomPadding = contentPadding.calculateBottomPadding())
+}
+```
+
 The slots of `AdaptiveNavigation`, `ListDetail` and `SupportingPane` know which form they are in —
 `layout`, `isTwoPane`, `isSupportingInline` — so a screen draws a back action or a "Filters" button
 only when the layout needs it. `ListDetail` and `SupportingPane` keep each part's saved state, such as

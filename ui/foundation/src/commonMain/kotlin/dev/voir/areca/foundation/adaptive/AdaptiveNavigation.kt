@@ -3,6 +3,7 @@ package dev.voir.areca.foundation.adaptive
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -27,6 +28,7 @@ import dev.voir.areca.foundation.button.ActionColor
 import dev.voir.areca.foundation.button.IconButton
 import dev.voir.areca.foundation.button.IconButtonStyle
 import dev.voir.areca.foundation.icon.Icon
+import dev.voir.areca.foundation.layout.BaseLayout
 import dev.voir.areca.foundation.layout.VerticalDivider
 import dev.voir.areca.foundation.navigation.NavItem
 import dev.voir.areca.foundation.tabbar.TabBar
@@ -42,7 +44,10 @@ import dev.voir.areca.window.WindowClassBox
 
 /** Which navigation an [AdaptiveNavigation] draws for the window it is in. */
 public enum class AdaptiveNavigationLayout {
-    /** A [TabBar] along the bottom edge: a compact window that is not too short for it. */
+    /**
+     * A [TabBar] along the bottom edge, or the app's own `bottomBar`: a compact window that is not
+     * too short for it.
+     */
     BottomBar,
 
     /** A [NavRail] along the start edge: a medium or expanded window, a phone on its side, or a sidebar the person collapsed. */
@@ -57,6 +62,13 @@ public enum class AdaptiveNavigationLayout {
 public interface AdaptiveNavigationScope {
     /** The navigation drawn, so the screen can place what the bar or rail does not hold. */
     public val layout: AdaptiveNavigationLayout
+
+    /**
+     * What the navigation covers of the content: the height of an app's own `bottomBar`, which is
+     * drawn over the screen, and zero in every other form. Scrolling content ends with it, so its
+     * last row can be scrolled clear of the bar.
+     */
+    public val contentPadding: PaddingValues
 }
 
 /**
@@ -70,6 +82,15 @@ public interface AdaptiveNavigationScope {
  * The destinations and the selection are the same in every form, so a window that is resized or a
  * foldable that is opened keeps its place. [content] is drawn in a [WindowClassBox] beside or above
  * the navigation, so a screen lays itself out for the space it has left.
+ *
+ * [bottomBar] replaces the [TabBar] on a compact window, for an app whose bar is its own — a floating
+ * bar, a bar with an action in its middle. It is drawn over the bottom of the content rather than
+ * under it, so the screen keeps the full height and paints beneath a bar that floats; its height
+ * reaches the screen as [AdaptiveNavigationScope.contentPadding]. Build it from the same
+ * destinations, so the bar and the rail never disagree about where the app can go.
+ *
+ * [footer] sits at the foot of the rail and the sidebar — an account, a sync state — above the
+ * collapse toggle. Like [header], the bottom bar has no room for it.
  *
  * [header] sits above the destinations of the rail and the sidebar — the screen's primary action,
  * as a compact icon button on the rail and a labelled button in the sidebar. The bottom bar has no
@@ -102,6 +123,9 @@ public interface AdaptiveNavigationScope {
  *   sidebar. `null` draws no toggle and keeps [sidebarCollapsed] as given.
  * @param sidebarToggleDescription What the toggle is announced as.
  * @param header Content above the destinations of the rail and the sidebar.
+ * @param footer Content at the foot of the rail and the sidebar.
+ * @param bottomBar The bar a compact window draws in place of the [TabBar], over the bottom of the
+ *   content. `null` draws the [TabBar].
  * @param content The selected destination's screen.
  */
 @Composable
@@ -114,6 +138,8 @@ public fun <T : Any> AdaptiveNavigation(
     onSidebarCollapsedChange: ((Boolean) -> Unit)? = null,
     sidebarToggleDescription: String = if (sidebarCollapsed) "Expand navigation" else "Collapse navigation",
     header: (@Composable AdaptiveNavigationScope.() -> Unit)? = null,
+    footer: (@Composable AdaptiveNavigationScope.() -> Unit)? = null,
+    bottomBar: (@Composable AdaptiveNavigationScope.() -> Unit)? = null,
     content: @Composable AdaptiveNavigationScope.() -> Unit,
 ) {
     val window = ArecaTheme.window
@@ -122,7 +148,7 @@ public fun <T : Any> AdaptiveNavigation(
         window.width >= WidthClass.Large && !sidebarCollapsed -> AdaptiveNavigationLayout.Sidebar
         else -> AdaptiveNavigationLayout.Rail
     }
-    val scope = remember(layout) { AdaptiveNavigationScopeImpl(layout) }
+    val scope = remember(layout) { AdaptiveNavigationScopeImpl(layout, NoPadding) }
     val toggle: (@Composable () -> Unit)? = if (onSidebarCollapsedChange != null && window.width >= WidthClass.Large) {
         {
             IconButton(
@@ -136,8 +162,28 @@ public fun <T : Any> AdaptiveNavigation(
         null
     }
 
+    // The foot of the rail and the sidebar: the app's own footer, then the toggle under it.
+    val foot: (@Composable () -> Unit)? = if (footer != null || toggle != null) {
+        {
+            if (footer != null) scope.footer()
+            if (toggle != null) toggle()
+        }
+    } else {
+        null
+    }
+
     when (layout) {
-        AdaptiveNavigationLayout.BottomBar -> Column(modifier = modifier.fillMaxSize()) {
+        AdaptiveNavigationLayout.BottomBar -> if (bottomBar != null) {
+            // Over the content rather than under it, measured first, so a floating bar keeps the
+            // screen's full height and the screen learns what the bar covers.
+            BaseLayout(
+                modifier = modifier,
+                bottomBar = { scope.bottomBar() },
+            ) { padding ->
+                val padded = remember(padding) { AdaptiveNavigationScopeImpl(layout, padding) }
+                WindowClassBox(modifier = Modifier.fillMaxSize()) { padded.content() }
+            }
+        } else Column(modifier = modifier.fillMaxSize()) {
             WindowClassBox(modifier = Modifier.weight(1f).fillMaxWidth()) { scope.content() }
             TabBar(
                 items = destinations.map { destination ->
@@ -167,7 +213,7 @@ public fun <T : Any> AdaptiveNavigation(
                 // A phone on its side has no height for labels under five icons.
                 showLabels = window.height > HeightClass.Compact,
                 header = if (header != null) { { scope.header() } } else null,
-                footer = if (toggle != null) { { toggle() } } else null,
+                footer = if (foot != null) { { foot() } } else null,
             )
             WindowClassBox(modifier = Modifier.weight(1f).fillMaxHeight()) { scope.content() }
         }
@@ -178,7 +224,7 @@ public fun <T : Any> AdaptiveNavigation(
                 selectedValue = selectedValue,
                 onValueSelected = onValueSelected,
                 header = if (header != null) { { scope.header() } } else null,
-                toggle = toggle,
+                footer = foot,
             )
             WindowClassBox(modifier = Modifier.weight(1f).fillMaxHeight()) { scope.content() }
         }
@@ -186,14 +232,14 @@ public fun <T : Any> AdaptiveNavigation(
 }
 
 /**
- * The large-window form: labelled rows down the start edge, the header above them and the toggle at
- * the foot.
+ * The large-window form: labelled rows down the start edge, the header above them and the footer —
+ * the app's own and the toggle — at the foot.
  *
  * @param destinations The destinations.
  * @param selectedValue Value of the selected destination.
  * @param onValueSelected Called when a destination is chosen.
  * @param header Content above the rows.
- * @param toggle The collapse toggle, or `null`.
+ * @param footer What sits at the foot, or `null`.
  */
 @Composable
 private fun <T : Any> Sidebar(
@@ -201,7 +247,7 @@ private fun <T : Any> Sidebar(
     selectedValue: T?,
     onValueSelected: (T) -> Unit,
     header: (@Composable () -> Unit)?,
-    toggle: (@Composable () -> Unit)?,
+    footer: (@Composable () -> Unit)?,
 ) {
     val spacing = ArecaTheme.spacing
     Row(modifier = Modifier.fillMaxHeight().background(ArecaTheme.colors.bgCanvas)) {
@@ -232,13 +278,19 @@ private fun <T : Any> Sidebar(
                     }
                 }
             }
-            if (toggle != null) {
+            if (footer != null) {
                 Spacer(Modifier.weight(1f))
-                toggle()
+                footer()
             }
         }
         VerticalDivider()
     }
 }
 
-private class AdaptiveNavigationScopeImpl(override val layout: AdaptiveNavigationLayout) : AdaptiveNavigationScope
+private class AdaptiveNavigationScopeImpl(
+    override val layout: AdaptiveNavigationLayout,
+    override val contentPadding: PaddingValues,
+) : AdaptiveNavigationScope
+
+/** What a navigation that does not cover the content hands it. */
+private val NoPadding = PaddingValues()
