@@ -49,6 +49,16 @@ import dev.voir.areca.foundation.settings.SettingsRowTile
 import dev.voir.areca.foundation.settings.SettingsRowTone
 import dev.voir.areca.foundation.settings.SettingsSelectRow
 import dev.voir.areca.foundation.settings.SettingsTextFieldRow
+import dev.voir.areca.foundation.settings.SettingsTextFieldSuffix
+import dev.voir.areca.foundation.list.CheckmarkListItem
+import dev.voir.areca.foundation.list.ListItemSize
+import dev.voir.areca.foundation.list.ListItemStyle
+import dev.voir.areca.foundation.overlay.AnchoredPlacement
+import dev.voir.areca.foundation.overlay.DropdownPopup
+import dev.voir.areca.foundation.overlay.anchored
+import dev.voir.areca.foundation.overlay.rememberDropdownPopup
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.KeyboardType
 import dev.voir.areca.foundation.settings.SettingsToggleRow
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.icons.ArecaIcons
@@ -617,6 +627,72 @@ fun SettingsShowcase() = ShowcaseScaffold(
                 }
             }
         }
+        variant(
+            name = "SettingsTextFieldRow(title, suffix)",
+            detail = "A labelled form row: label at the start, input at the end, a unit that can be changed",
+        ) {
+            var model by remember { mutableStateOf("ThinkPad X1") }
+            var serial by remember { mutableStateOf("") }
+            var width by remember { mutableStateOf("80") }
+            var weight by remember { mutableStateOf("1.2") }
+            var unit by remember { mutableStateOf("cm") }
+            val units = rememberDropdownPopup(placement = AnchoredPlacement.BelowEnd)
+            Settings(modifier = Modifier.fillMaxWidth()) {
+                Section(header = { Text("Item") }) {
+                    SettingsTextFieldRow(
+                        value = model,
+                        onValueChange = { model = it },
+                        title = "Model",
+                        placeholder = "Required",
+                    )
+                    SettingsTextFieldRow(
+                        value = serial,
+                        onValueChange = { serial = it },
+                        title = "Serial number",
+                        placeholder = "Optional",
+                    )
+                    SettingsTextFieldRow(
+                        value = width,
+                        onValueChange = { width = it },
+                        title = "Width",
+                        placeholder = "0",
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                        suffix = {
+                            SettingsTextFieldSuffix(
+                                text = unit,
+                                modifier = Modifier.anchored(units.anchorState),
+                                onClick = { units.show() },
+                                onClickLabel = "Change unit",
+                            )
+                            DropdownPopup(state = units, onDismissRequest = { units.dismiss() }) {
+                                Column {
+                                    listOf("mm", "cm", "m", "in").forEach { option ->
+                                        CheckmarkListItem(
+                                            selected = option == unit,
+                                            onClick = {
+                                                unit = option
+                                                units.dismiss()
+                                            },
+                                            title = { Text(option) },
+                                            style = ListItemStyle.ghost(),
+                                            size = ListItemSize.Compact,
+                                        )
+                                    }
+                                }
+                            }
+                        },
+                    )
+                    SettingsTextFieldRow(
+                        value = weight,
+                        onValueChange = { weight = it },
+                        title = "Weight",
+                        placeholder = "0",
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                        suffix = { SettingsTextFieldSuffix(text = "kg") },
+                    )
+                }
+            }
+        }
         variant(name = "Tones", detail = "SettingsRowTone.Brand and .Danger: the only colored copy by default") {
             Settings(modifier = Modifier.fillMaxWidth()) {
                 Section {
@@ -836,6 +912,22 @@ fun SettingsShowcase() = ShowcaseScaffold(
                             listOf(HoverInteraction.Enter(), PressInteraction.Press(Offset.Zero)),
                         ),
                         onClick = {},
+                    )
+                }
+            }
+        }
+        case(
+            name = "Labelled row with a long label",
+            expectation = "The label ellipsises at half the row; the input keeps the other half.",
+        ) {
+            var text by remember { mutableStateOf("Bosch") }
+            Settings(modifier = Modifier.fillMaxWidth()) {
+                Section {
+                    SettingsTextFieldRow(
+                        value = text,
+                        onValueChange = { text = it },
+                        title = "Manufacturer as printed on the warranty card",
+                        placeholder = "Brand",
                     )
                 }
             }

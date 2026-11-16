@@ -351,17 +351,19 @@ Every foundation family, by intent. Signatures, overloads and packages:
 | Password and its rules; search; amount with unit | `PasswordField` + `RequirementList`; `SearchField`; `AffixTextField` |
 | One-time code; compound input | `OtpField`; `FieldRow { SelectSegment(…); TextSegment(…) }` |
 | A custom control drawn as a field; label and message around it without wiring | `Field(onClick = …) { … }`; `FieldGroupLayout` (prefer `FieldGroup`) |
-| Pick from a short list; a long or searchable one | `SelectField`; `SelectFlowModal` |
+| Pick from a short list; a long or searchable one; grouped ("Yours", "Popular", "All" by letter) with "add your own" | `SelectField`; `SelectFlowModal`; `SelectFlowModal(sections = listOf(SelectOptionSection(…)), onCreateOption = …)` |
 | Filter chips; colour; small integer | `BadgeSelect` / `FlowBadgeSelect` / `LazyBadgeSelect` with `BadgeStyle.Chip` (`FilledChip` to fill the unchosen ones) + `BadgeSize.Chip`; `SwatchPicker` (one chip `Swatch`); `NumberStepper` |
 | On/off setting; tick in a form; one of many | `Toggle`; `Checkbox`; `Radio`, each inside its row: `ToggleListItem`, `CheckboxListItem`, `RadioListItem`, `CheckmarkListItem` (a tick, `ListItemCheckmark` by hand), or the settings rows |
 | Settings screen; a short, bounded group of rows | `Settings { Section { SettingsToggleRow / SettingsSelectRow / SettingsRow / SettingsTextFieldRow / SettingsOptionRow } }`; leading `SettingsRowIcon` / `SettingsRowTile`; loading row `SettingsRowSkeleton`; free content `SettingsBlock` |
+| Form of "label … value" rows, with units | `Section { SettingsTextFieldRow(title = "Width", suffix = { SettingsTextFieldSuffix("cm", onClick = …) }) }` |
 | Second action in a pressable row; line of detail under a subtitle | `trailing = { SettingsRowLink("Verify", onVerify) }`; the row's `caption` slot |
 | Grouped rows on one surface | `List { item(…) }` (eager), `LazyList` (lazy), `ListItemColumn` (hand-composed `ListItem`s) |
 | Row that navigates; row that expands | `NavigationListItem`; `ExpandableListItem` (`container = ExpandableListItemContainer.Soft` for one soft ground with what it reveals) |
-| Remote list with loading, empty and error faces | `ContentList` (one load), `PagedContentList` (pages, pull-to-refresh); with group headers `GroupedContentList`, `GroupedPagedContentList` |
+| Remote list with loading, empty and error faces | `ContentList` (one load), `PagedContentList` (pages, pull-to-refresh); with group headers `GroupedContentList`, `GroupedPagedContentList` (`groupLayout = ContentListGroupLayout.Inset` for a card per group, header inside) |
 | Grid with group headers; tabular data | `LazyVerticalGroupedGrid` / `LazyHorizontalGroupedGrid`; `Table` / `LazyTable` |
 | Grouping surface; with status and actions along its bottom | `Card` (expandable overload); `Card(footer = { … }, footerStyle = CardFooterStyle.soft(ActionColor.Brand))` |
 | Show and hide a region; separator | `Expandable`; `HorizontalDivider` / `VerticalDivider` |
+| Screen's primary action pinned to the bottom; with a count; disabled with a reason | `BaseLayout(bottomBar = { BottomActionBar(…) })` — `leading = { Text("3 selected") }`; `enabled = false, hint = "…"`. Not `FlowModalActionBar`, which is for sheets |
 | Screen frame; title bar; large collapsing title | `BaseLayout`; `TopBar` with `BackAction` and the named controls (`CloseAction`, `OverflowAction`, `DoneAction`, `IconAction`, `TextAction`, `AvatarAction`, … or `Action` for custom content); `LargeTopBar` + `rememberTopBarScrollState(TopBarScrollBehavior.ExitUntilCollapsed)` |
 | Progress under the bar; collapsing hero | `TopBarProgress` in the bar's `bottom`; `CollapsingHeaderLayout` (`collapsed = { … }` for a compact band that stays) |
 | App destinations; views within a screen; sidebar | `TabBar` / `FloatingTabBar` (items drawn with `FloatingTabBarItemContent`); `Tabs` (`TabsVariant.Underline`); `NavList` (one custom row `NavItem`) |

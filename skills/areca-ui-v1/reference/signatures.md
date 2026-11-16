@@ -23,10 +23,10 @@ Every foundation symbol is imported from its family's package. Extension composa
 | `….foundation.text` | `Text`, `TextVariant`, `TextColor`, `Heading`, `TextLink`, `TextLinkPrompt`, `SensitiveText` |
 | `….foundation.icon` | `Icon`, `IconSize`, `LocalIconSize`, `FeaturedIcon`, `FeaturedIconStyle`, `FeaturedIconSize`, `Chevron`, `ChevronDirection` |
 | `….foundation.field` | `TextField`, `PasswordField`, `SearchField`, `AffixTextField`, `OtpField`, `FieldGroup`, `FieldGroupLayout`, `FieldRow`, `TextSegment`, `Field`, `FieldScope`, `FieldStatus`, `FieldStyle`, `FieldSize`, `FieldDefaults`, `LocalFieldStyle`, `LocalFieldSize`, `FieldLabelPlacement` |
-| `….foundation.field.select` | `SelectField`, `SelectOption`, `SelectSelectionMode`, `SelectFieldLabels`, `SelectFlowModal`, `rememberSelectFlowModalState`, `SelectFlowModalDefaults`, `SelectSegment` |
+| `….foundation.field.select` | `SelectField`, `SelectOption`, `SelectSelectionMode`, `SelectFieldLabels`, `SelectFlowModal`, `SelectOptionSection`, `SelectFlowModalLabels`, `rememberSelectFlowModalState`, `SelectFlowModalDefaults`, `SelectSegment` |
 | `….foundation.selection` | `Checkbox`, `Radio`, `Toggle`, `ToggleState`, `BinaryToggleCycle`, `TriStateToggleCycle`, `NumberStepper`, `NumberStepperLabels`, `SlidingSelector`, `SelectorItem`, `SelectorItemScope`, `SelectorMode`, `SelectorLayout`, `SelectorOrientation`, `SelectorThumbKind`, `SelectorEdge`, `SlidingSelectorStyle`, `SlidingSelectorSize`, `Swatch`, `SwatchPicker`, `ColorShade`, `ColorItem` |
 | `….foundation.list` | `List`, `LazyList`, `ListItem`, `NavigationListItem`, `CheckboxListItem`, `RadioListItem`, `ToggleListItem`, `CheckmarkListItem`, `ExpandableListItem`, `ExpandableListItemContainer`, `ListItemColumn`, `ListItemSkeleton`, `ListItemChevron`, `ListItemCheckmark`, `ListItemStyle`, `ListItemSize` |
-| `….foundation.settings` | `Settings`, `Section`, `SettingsRow`, `SettingsToggleRow`, `SettingsSelectRow`, `SettingsTextFieldRow`, `SettingsOptionRow`, `SettingsBlock`, `SettingsRowIcon`, `SettingsRowTile`, `SettingsRowLink`, `SettingsRowStatus`, `SettingsRowTone`, `SettingsRowSkeleton`, `SettingsDefaults` |
+| `….foundation.settings` | `Settings`, `Section`, `SettingsRow`, `SettingsToggleRow`, `SettingsSelectRow`, `SettingsTextFieldRow`, `SettingsTextFieldSuffix`, `SettingsOptionRow`, `SettingsBlock`, `SettingsRowIcon`, `SettingsRowTile`, `SettingsRowLink`, `SettingsRowStatus`, `SettingsRowTone`, `SettingsRowSkeleton`, `SettingsDefaults` |
 | `….foundation.layout` | `BaseLayout`, `Card`, `CardStyle`, `CardSize`, `CardFooterStyle`, `HorizontalDivider`, `VerticalDivider`, `Expandable`, `rememberExpandableState`, `PullToRefreshLayout`, `PullToRefreshIndicator`, `rememberPullToRefreshState`, `CollapsingHeaderLayout`, `CollapsingHeaderState`, `rememberCollapsingHeaderState`, `Overlay`, `RelativePositionLayout`, `RelativePosition`, `VerticalScrollbar`, `HorizontalScrollbar` |
 | `….foundation.topbar` | `TopBar`, `LargeTopBar`, `rememberTopBarScrollState`, `TopBarScrollBehavior`, `TopBarStyle`, `TopBarSize`, `TopBarActionStyle`, the `…Action` controls, `TopBarProgress` |
 | `….foundation.tabbar`, `….foundation.tabs` | `TabBar`, `FloatingTabBar`, `FloatingTabBarItemContent`, `TabBarItem`, `rememberTabBarState`; `Tabs`, `TabItem`, `TabsVariant`, `TabsStyle`, `TabsSize`, `rememberTabsState` |
@@ -35,7 +35,7 @@ Every foundation symbol is imported from its family's package. Extension composa
 | `….foundation.notice`, `….foundation.status` | `Notice`, `NoticeText`, `NoticeTone`, `NoticeEmphasis`, `AnimatedNotice`; `StatusScene`, `StatusSceneActions`, `StatusMark`, `StatusMarkState` |
 | `….foundation.badge`, `….foundation.avatar` | `Badge`, `BadgeStyle`, `BadgeSize`, `NotificationBadge`, `IndicatorDot`, `BadgeSelect`, `LazyBadgeSelect`, `FlowBadgeSelect`, `BadgeOption`, `BadgeSelectionMode`; `Avatar` |
 | `….foundation.stat` | `Stat`, `StatGrid`, `StatStyle`, `StatSize`, `LocalStatStyle`, `LocalStatSize` |
-| `….foundation.collection`, `….foundation.table` | `ContentList`, `PagedContentList`, `GroupedContentList`, `GroupedPagedContentList`, `LimitedContentListState`, `PagedContentListState`, `ContentListGroup`, `ContentListLabels`, `ContentListDefaults`, `LazyVerticalGroupedGrid`, `LazyHorizontalGroupedGrid`, `GroupedGridData`; `Table`, `LazyTable`, `TableColumn` |
+| `….foundation.collection`, `….foundation.table` | `ContentList`, `PagedContentList`, `GroupedContentList`, `GroupedPagedContentList`, `LimitedContentListState`, `PagedContentListState`, `ContentListGroup`, `ContentListGroupLayout`, `ContentListLabels`, `ContentListDefaults`, `LazyVerticalGroupedGrid`, `LazyHorizontalGroupedGrid`, `GroupedGridData`; `Table`, `LazyTable`, `TableColumn` |
 | `….foundation.navigation`, `….foundation.wheel`, `….foundation.slot` | `NavList`, `NavNode`, `NavData`, `NavItem`, `SwipePager`, `PagerControls`, `PageIndicator`, `PageIndicatorVariant`, `PageIndicatorStyle`, `PageIndicatorSize`, `PageCounter`, `PageCounterStyle`, `PageCounterSize`, `rememberPagerController`; `WheelPicker`, `WheelPickerColumn`, `WheelPickerItem`, `WheelPickerHighlight`, `WheelPickerEdgeFade`, `rememberWheelPickerColumnState`; `SlotRow`, `SlotRowLayout` (`Default`, `Auto`, `Center`, `Top`, `FirstLine`, `Centered`, `Fill`, `wrap(…)`), `SlotRowAlignment`, `Modifier.firstLineCenter(textStyle)`, `FirstLineCenter` |
 | `dev.voir.areca.indication`, `.modifier`, `.platform`, `.shape` | `TouchIndication`, `FadeIndication`, `StrokeIndication`, `LiquidSweepIndication`, `FocusOutline`; `clickCursor`, `minimumTouchTarget`, `thenIf`; `SystemBars`; `SquircleShape` |
 | `….foundation.adaptive` | `AdaptiveNavigation`, `AdaptiveNavigationStyle`, `AdaptiveNavigationLayout`, `AdaptiveNavigationScope`, `AdaptiveToolbar`, `AdaptiveToolbarAction`, `EdgeColumn`, `EdgeColumnSide`, `EdgeColumnStyle`, `EdgeColumnSize`, `EdgeButton`, `EdgeButtonEmphasis`, `VerticalTabBar`, `EdgeStatus`, `FloatingSidebar`, `NavRail`, `NavDestination`, `NavRailStyle`, `NavRailSize`, `ListDetail`, `ListDetailScope`, `SupportingPane`, `SupportingPaneScope`, `ContentColumn`, `AdaptiveGrid`, `AdaptiveSheet`, `AdaptiveMenu`, `AdaptiveMenuItem`, `contextMenu`, `AdaptiveDefaults` |
@@ -387,18 +387,47 @@ fun <Value> SelectFlowModal(controller: FlowModalController, values: Set<Value>,
     onChange: (Set<Value>) -> Unit = {},
     state: SelectFlowModalState = rememberSelectFlowModalState(),
     selectionMode: SelectSelectionMode = SelectSelectionMode.Single,
-    style: FlowModalStyle = …, size: FlowModalSize = …, header: (@Composable () -> Unit)? = null,
+    style: FlowModalStyle = …, size: FlowModalSize = …,
+    labels: SelectFlowModalLabels = SelectFlowModalLabels.English,
+    header: (@Composable () -> Unit)? = null,
     footer: (@Composable (draftValues: Set<Value>) -> Unit)? = null,
-    onQueryChange: ((String) -> Unit)? = null, searchPlaceholder: String = "Search",
-    emptyContent: (@Composable (query: String) -> Unit)? = { … EmptyContent(query) },
-    loadingContent: (@Composable (query: String) -> Unit)? = { … LoadingContent(query) },
+    onQueryChange: ((String) -> Unit)? = null, searchPlaceholder: String = labels.search,
+    emptyContent: (@Composable (query: String) -> Unit)? = { … EmptyContent(query, labels) },
+    loadingContent: (@Composable (query: String) -> Unit)? = { … LoadingContent(query, labels) },
     content: @Composable (options: List<SelectOption<Value>>, values: Set<Value>,
         onSelect: (SelectOption<Value>) -> Unit) -> Unit = { … SelectFlowModalDefaults.List(…) })
 // A picker in a sheet, opened with controller.show(). Search is opt-in and done by the caller:
 // pass `onQueryChange` to get a search field, then filter or fetch and pass the matching
 // `options`; set `state.isSearching` while results are outstanding. Without it, no search field.
-// `footer` receives the draft selection, which an apply button commits.
+// `footer` receives the draft selection, which an apply button commits. `labels` localizes the
+// search hint and the stock loading and empty faces.
 // rememberSelectFlowModalState(initialQuery: String = "")
+
+fun <Value> SelectFlowModal(controller: FlowModalController, values: Set<Value>,
+    sections: List<SelectOptionSection<Value>>, modifier: Modifier = Modifier,
+    onChange: (Set<Value>) -> Unit = {}, state: SelectFlowModalState = …,
+    selectionMode: SelectSelectionMode = SelectSelectionMode.Single,
+    style: FlowModalStyle = …, size: FlowModalSize = …,
+    labels: SelectFlowModalLabels = SelectFlowModalLabels.English,
+    header: (@Composable () -> Unit)? = null,
+    footer: (@Composable (draftValues: Set<Value>) -> Unit)? = null,
+    onQueryChange: ((String) -> Unit)? = null, onCreateOption: ((query: String) -> Unit)? = null,
+    emptyContent: … = { … }, loadingContent: … = { … },
+    content: @Composable (sections, values, onSelect, onCreate: (() -> Unit)?) -> Unit =
+        { … SelectFlowModalDefaults.SectionedList(…) })
+// The same picker with options grouped under titles: "Yours", "Popular", "Similar", "All".
+// SelectOptionSection(key: Any, title: String?, options: List<SelectOption<Value>>,
+//     indexed: Boolean = false) — `indexed` breaks the section under letter headers taken from
+//     each label's first letter; pass its options already sorted. Empty sections are skipped; an
+//     option may sit in several sections. Rows are keyed by the string form of the section and
+//     option keys, so keys must not print alike. The search hint is labels.search. With `onQueryChange` and `onCreateOption`, a non-blank
+//     query adds a last row "Add “query” as your own" (labels.createOption), shown even when
+//     nothing matched; pressing it hands over the trimmed query and does nothing else.
+// SelectFlowModalLabels(search, loading, searching: (String) -> String, empty,
+//     noResults: (String) -> String, createOption: (String) -> String, indexOther: String) —
+//     SelectFlowModalLabels.English. SelectFlowModalDefaults.SectionedList(sections, values,
+//     onSelect, modifier, labels, query = "", onCreateOption: (() -> Unit)? = null, state,
+//     contentPadding) and .CreateOptionRow(text, onClick) build a custom `content`.
 
 fun FieldRow(modifier: Modifier = Modifier, style: FieldStyle = FieldDefaults.style,
     size: FieldSize = FieldDefaults.size, field: FieldScope? = null,
@@ -759,11 +788,20 @@ fun <T> SettingsSelectRow(title: @Composable () -> Unit, options: List<T>, selec
 
 fun SettingsTextFieldRow(value: String, onValueChange: (String) -> Unit, placeholder: String,
     modifier: Modifier = Modifier, leading: (@Composable BoxScope.() -> Unit)? = null,
+    title: String? = null, suffix: (@Composable () -> Unit)? = null,
     maxLength: Int? = null, showCounter: Boolean = maxLength != null, singleLine: Boolean = true,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     status: SettingsRowStatus = SettingsRowStatus.Idle, enabled: Boolean = true,
     nestingLevel: Int = 0, keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default, …)
+// With `title`: a labelled form row — "Model ……… ThinkPad" — the label at the start (at most half
+// the row, tapping it focuses the field), the input aligned to the end, the title read as the
+// field's name. `suffix` sits after the input: its unit.
+
+fun SettingsTextFieldSuffix(text: String, modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null, onClickLabel: String? = null)
+// The unit in a text field row's `suffix`: quiet text, or with `onClick` the interactive value
+// colour and a chevron, announced as a dropdown. Anchor a unit menu to it through `modifier`.
 
 fun SettingsOptionRow(selected: Boolean, onClick: () -> Unit, title: @Composable () -> Unit,
     modifier: Modifier = Modifier, subtitle: (@Composable () -> Unit)? = null,
@@ -807,6 +845,19 @@ fun BaseLayout(modifier: Modifier = Modifier, bg: Color = Color.Transparent,
     topBar: @Composable () -> Unit = {}, bottomBar: @Composable () -> Unit = {},
     background: @Composable BoxScope.() -> Unit = {}, overlay: @Composable BoxScope.() -> Unit = {},
     content: @Composable (PaddingValues) -> Unit)
+
+fun BottomActionBar(actionText: String, onAction: () -> Unit, modifier: Modifier = Modifier,
+    enabled: Boolean = true, loading: Boolean = false, hint: String? = null,
+    style: BottomActionBarStyle = LocalBottomActionBarStyle.current ?: BottomActionBarStyle.Default,
+    size: BottomActionBarSize = LocalBottomActionBarSize.current ?: BottomActionBarSize.Default,
+    showDivider: Boolean = true,
+    windowInsets: WindowInsets = WindowInsets.safeDrawing.only(Horizontal + Bottom),
+    leading: (@Composable () -> Unit)? = null)
+// A screen's primary action as BaseLayout's `bottomBar`: opaque bgCanvas, hairline above, clears
+// the navigation bar and keyboard (insets default as TabBar's — keep the bottom insets out of
+// BaseLayout's contentWindowInsets, or they count twice). No `leading`: a full-width solid brand button. `leading`: a
+// count on the left ("3 selected"), the button at its own width. `enabled = false` + `hint`: the
+// reason under the button ("Add a name to save"). FlowModalActionBar is for sheets only.
 
 fun Card(modifier: Modifier = Modifier,
     style: CardStyle = LocalCardStyle.current ?: CardStyle.Default,
@@ -1399,6 +1450,13 @@ fun <G, T> GroupedPagedContentList(state: PagedContentListState<ContentListGroup
     header: (@Composable ColumnScope.() -> Unit)? = null,
     groupHeaderContent: @Composable (G) -> Unit, itemContent: @Composable (T) -> Unit)
 // ContentListGroup(key: Any, group: G, items: List<T>): a header ("Today") over its items.
+// Both take `groupLayout: ContentListGroupLayout = Plain` after `fillAvailableHeight`. `Inset`
+// draws each group on its own card, the header inside — a ListItemColumn with a heading. The card
+// is `style.group: ListStyle` (bg bgSubtle, separator borderOnSubtle; border not drawn) and
+// `size.group: ListSize` (shape shapes.lg, separators inset to a row's text); header in
+// style.groupHeader / size.groupHeaderTextStyle with size.groupHeaderPadding; cards
+// size.groupSpacing apart, inset by size.groupOuterPadding. A paged list stays lazy and its headers
+// stop sticking.
 
 fun <Group, Item> LazyVerticalGroupedGrid(data: GroupedGridData<Group, Item>, columns: GridCells,
     modifier: Modifier = Modifier, state: LazyGridState = rememberLazyGridState(), …,

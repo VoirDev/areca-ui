@@ -39,20 +39,23 @@ region that is always dark in `ArecaDarkTheme`, both in `dev.voir.areca.theme` �
 | Take an amount with a currency or a unit | `AffixTextField` |
 | Take a one-time code | `OtpField` |
 | Take a compound value — a dialling code and a number | `FieldRow` with `SelectSegment` and `TextSegment` |
-| Pick from a short list; from a long or searchable one | `SelectField`; `SelectFlowModal` |
+| Pick from a short list; from a long or searchable one | `SelectField`; `SelectFlowModal` (grouped under titles, with "add your own", via `sections` and `onCreateOption`) |
 | Pick from a scrolling wheel | `WheelPicker` with `WheelPickerColumn`; dates and times are in [datetime](../ui/datetime/README.md) |
 | Filter with chips | `BadgeSelect`, `LazyBadgeSelect` (scrolls) or `FlowBadgeSelect` (wraps) |
 | Pick a colour; nudge a small number | `SwatchPicker`; `NumberStepper` |
 | Switch a setting on; tick a box in a form; pick one of many | `Toggle`; `Checkbox`; `Radio` |
 | Put one of those controls in a row with a title | `ToggleListItem`, `CheckboxListItem`, `RadioListItem`, `CheckmarkListItem` |
 | Build a settings screen | `Settings` with `Section`s of `SettingsRow`, `SettingsToggleRow`, `SettingsSelectRow`, `SettingsTextFieldRow`, `SettingsOptionRow` |
+| Lay out a form as "label … value" rows, with units | `SettingsTextFieldRow(title = …, suffix = { SettingsTextFieldSuffix(…) })` in a `Section` |
 | Show grouped rows on one surface | `List` (eager), `LazyList` (lazy), `ListItemColumn` (rows you compose) |
 | Show a row that navigates; one that expands | `NavigationListItem`; `ExpandableListItem` |
 | Show a remote list with loading, empty and error faces | `ContentList`; paged, `PagedContentList` |
+| Show a long list grouped by date or category, a card per group | `GroupedContentList` or `GroupedPagedContentList` with `groupLayout = ContentListGroupLayout.Inset` |
 | Show a grid with group headers; tabular data | `LazyVerticalGroupedGrid`; `Table` or `LazyTable` |
 | Group content on a surface | `Card`; show and hide a region `Expandable` |
 | Separate two things | `HorizontalDivider`, `VerticalDivider` |
 | Frame a screen with bars | `BaseLayout` |
+| Pin a screen's primary action to the bottom; with a count; disabled with a reason | `BottomActionBar` as `BaseLayout`'s `bottomBar` (`FlowModalActionBar` is for sheets) |
 | Title a screen | `TopBar` with `BackAction`; a large title that collapses `LargeTopBar` |
 | Collapse a hero above content that stays | `CollapsingHeaderLayout` |
 | Show the application's destinations | `TabBar` (docked) or `FloatingTabBar` (floating) |
@@ -190,7 +193,7 @@ With a title and a row-wide tap target, use the list rows under
 | [`AffixTextField`](../ui/foundation/README.md#fields) | A value with a fixed prefix or suffix — a currency, a unit | `field` | `TextFieldShowcase` |
 | [`OtpField`](../ui/foundation/README.md#fields) | A one-time code, one character to a cell | `field` | `OtpFieldShowcase` |
 | [`SelectField`](../ui/foundation/README.md#fields) | A value chosen from a dropdown | `field.select` | `SelectFieldShowcase` |
-| [`SelectFlowModal`](../ui/foundation/README.md#fields) | A long or searchable list chosen from in a sheet | `field.select` | `SelectFlowModalShowcase` |
+| [`SelectFlowModal`](../ui/foundation/README.md#fields) | A long or searchable list chosen from in a sheet; with `sections`, grouped under titles and an "add your own" row | `field.select` | `SelectFlowModalShowcase` |
 | [`FieldRow`](../ui/foundation/README.md#fields) | Several parts sharing one border and one status | `field` | `FieldRowShowcase` |
 | [`TextSegment`](../ui/foundation/README.md#fields) | A typed part of a `FieldRow` | `field` | `FieldRowShowcase` |
 | [`SelectSegment`](../ui/foundation/README.md#fields) | A dropdown part of a `FieldRow` | `field.select` | `FieldRowShowcase` |
@@ -251,6 +254,7 @@ With a title and a row-wide tap target, use the list rows under
 | Component | Use it for | Package | Playground |
 | --- | --- | --- | --- |
 | [`BaseLayout`](../ui/foundation/README.md#layout-and-surfaces) | A screen's frame with top and bottom bars | `layout` | `BaseLayoutShowcase` |
+| [`BottomActionBar`](../ui/foundation/README.md#layout-and-surfaces) | A screen's bottom bar with its primary action, a count, or a hint why it is unavailable | `layout` | `BottomActionBarShowcase` |
 | [`CollapsingHeaderLayout`](../ui/foundation/README.md#layout-and-surfaces) | A header that scrolls away above a strip that stays | `layout` | `CollapsingHeaderLayoutShowcase` |
 | [`PullToRefreshLayout`](../ui/foundation/README.md#layout-and-surfaces) | Pull-to-refresh around scrolling content (experimental) | `layout` | `PullToRefreshShowcase` |
 | [`PullToRefreshIndicator`](../ui/foundation/README.md#layout-and-surfaces) | Its default indicator (experimental) | `layout` | `PullToRefreshShowcase` |
@@ -326,7 +330,8 @@ With a title and a row-wide tap target, use the list rows under
 | [`SettingsToggleRow`](../ui/foundation/README.md#lists-and-settings) | A settings row with a switch | `settings` | `SettingsShowcase` |
 | [`SettingsSelectRow`](../ui/foundation/README.md#lists-and-settings) | A settings row choosing from a dropdown | `settings` | `SettingsShowcase` |
 | [`SettingsOptionRow`](../ui/foundation/README.md#lists-and-settings) | One option of a set, as a settings row | `settings` | `SettingsShowcase` |
-| [`SettingsTextFieldRow`](../ui/foundation/README.md#lists-and-settings) | A field typed in place, as a settings row | `settings` | `SettingsShowcase` |
+| [`SettingsTextFieldRow`](../ui/foundation/README.md#lists-and-settings) | A field typed in place, as a settings row; with `title`, a "label … value" form row | `settings` | `SettingsShowcase` |
+| [`SettingsTextFieldSuffix`](../ui/foundation/README.md#lists-and-settings) | The unit after a text field row's input, pressable to change it | `settings` | `SettingsShowcase` |
 | [`SettingsRowIcon`](../ui/foundation/README.md#lists-and-settings) | A row's leading glyph on a tile | `settings` | `SettingsShowcase` |
 | [`SettingsRowTile`](../ui/foundation/README.md#lists-and-settings) | Any other leading visual, cropped to the tile | `settings` | `SettingsShowcase` |
 | [`SettingsRowLink`](../ui/foundation/README.md#lists-and-settings) | A second action at the end of a pressable row | `settings` | `SettingsShowcase` |
@@ -338,9 +343,9 @@ With a title and a row-wide tap target, use the list rows under
 | Component | Use it for | Package | Playground |
 | --- | --- | --- | --- |
 | [`ContentList`](../ui/foundation/README.md#collections) | A set loaded in one go, with loading, empty and error faces | `collection` | `ContentListShowcase` |
-| [`GroupedContentList`](../ui/foundation/README.md#collections) | The same, in labelled groups | `collection` | `ContentListShowcase` |
+| [`GroupedContentList`](../ui/foundation/README.md#collections) | The same, in labelled groups; `ContentListGroupLayout.Inset` puts each on a card | `collection` | `ContentListShowcase` |
 | [`PagedContentList`](../ui/foundation/README.md#collections) | A set loaded a page at a time, with pull-to-refresh | `collection` | `ContentListShowcase` |
-| [`GroupedPagedContentList`](../ui/foundation/README.md#collections) | The same, in labelled groups | `collection` | `ContentListShowcase` |
+| [`GroupedPagedContentList`](../ui/foundation/README.md#collections) | The same, in labelled groups; `ContentListGroupLayout.Inset` puts each on a card | `collection` | `ContentListShowcase` |
 | [`LazyVerticalGroupedGrid`](../ui/foundation/README.md#collections) | A vertical grid broken into labelled groups | `collection` | `GroupedGridShowcase` |
 | [`LazyHorizontalGroupedGrid`](../ui/foundation/README.md#collections) | A horizontal grid broken into labelled groups | `collection` | `GroupedGridShowcase` |
 

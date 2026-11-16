@@ -26,6 +26,7 @@ import dev.voir.areca.playground.foundation.field.SelectFlowModalShowcase
 import dev.voir.areca.playground.foundation.field.TextFieldShowcase
 import dev.voir.areca.playground.foundation.icon.ChevronShowcase
 import dev.voir.areca.playground.foundation.icon.FeaturedIconShowcase
+import dev.voir.areca.playground.foundation.layout.BottomActionBarShowcase
 import dev.voir.areca.playground.foundation.layout.BaseLayoutShowcase
 import dev.voir.areca.playground.foundation.layout.CardShowcase
 import dev.voir.areca.playground.foundation.layout.CollapsingHeaderLayoutShowcase
@@ -649,6 +650,15 @@ internal val ComponentShowcases: List<ShowcaseEntry> = listOf(
         summary = "Screen frame that measures top and bottom bars, then pads content around them.",
         keywords = listOf("scaffold", "screen", "frame", "structure"),
         content = { BaseLayoutShowcase() },
+    ),
+    ShowcaseEntry(
+        id = "foundation/bottom-action-bar",
+        group = ShowcaseGroup.Components,
+        section = ShowcaseSection.Layout,
+        title = "Bottom action bar",
+        summary = "A screen's bottom bar with its primary action, a count, or the reason it is not available yet.",
+        keywords = listOf("bottom bar", "footer", "save", "primary action", "selection", "cta", "sticky button"),
+        content = { BottomActionBarShowcase() },
     ),
     ShowcaseEntry(
         id = "foundation/collapsing-header",
