@@ -13,7 +13,7 @@ codes, a calculator, a phone pad — instead of the platform keyboard.
 | --- | --- |
 | `dev.voir.areca.keyboard` | `KeyboardHost`, `KeyboardController`, `rememberKeyboardController`, `LocalKeyboardController`, `KeyboardTarget`, `rememberKeyboardTarget`, `Modifier.keyboardTarget`, `Modifier.keyboardAnchor`, `KeyboardScrim`, `KeyboardAnimation` |
 | `dev.voir.areca.keyboard.layout` | `KeyboardLayout`, `KeyboardStyle`, `KeyboardSize`, `LocalKeyboardStyle`, `LocalKeyboardSize` |
-| `dev.voir.areca.keyboard.key` | `KeyboardKeys`, `Key`, `KeyContent`, `KeyRole`, `KeyStyle`, `KeyRow`, `KeyboardGrid`, `KeyboardGrids`, `KeyboardGridLabels`, `KeyAction`, `KeyOperation`, `toKeyAction` |
+| `dev.voir.areca.keyboard.key` | `KeyboardKeys`, `LocalKeyboardHaptics`, `Key`, `KeyContent`, `KeyRole`, `KeyStyle`, `KeyRow`, `KeyboardGrid`, `KeyboardGrids`, `KeyboardGridLabels`, `KeyAction`, `KeyOperation`, `toKeyAction` |
 
 ## Choose
 
@@ -89,6 +89,7 @@ fun Modifier.keyboardAnchor(              // for a text field: wires focus, scro
     style: KeyStyle = (LocalKeyboardStyle.current ?: KeyboardStyle.Default).keys,
     size: KeyboardSize = LocalKeyboardSize.current ?: KeyboardSize.Default,
 )
+val LocalKeyboardHaptics: ProvidableCompositionLocal<Boolean>  // true by default
 ```
 
 ## Controller, target, keys and actions
@@ -159,6 +160,19 @@ fun KeyEvent.toKeyAction(decimalSeparator: Char = '.'): KeyAction?   // null for
   (`@ExperimentalComposeUiApi`). `KeyboardOptions(showKeyboardOnFocus = false)` alone is not enough.
 - On desktop map hardware keys with `onPreviewKeyEvent { it.toKeyAction(',')?.let { a -> onKeyAction(a); true } ?: false }`.
 - Rows keep left-to-right order in right-to-left locales.
+- **Haptics are built in.** Every press of an enabled key — in `KeyboardKeys` and in
+  `KeyboardLayout(grid = …)`, which draws through it — plays the platform's keyboard tap
+  (`HapticFeedbackType.KeyboardTap`) through `LocalHapticFeedback`, before the key's action. It needs
+  no `VIBRATE` permission and follows the user's system setting for touch feedback. Never vibrate
+  from the app on a key press. To silence it — a screenshot test, a keyboard that must stay still —
+  `CompositionLocalProvider(LocalKeyboardHaptics provides false) { … }`.
+- **An app-wide "haptic feedback" setting** turns off more than keys: provide a silent
+  `LocalHapticFeedback` (a `HapticFeedback` whose `performHapticFeedback` does nothing) at the root
+  while the setting is off; the keys and every other gesture then stay still. On an Android phone
+  without a predefined key-click effect the tap may be silent — Areca does not fall back to the
+  vibrator, which would need the `VIBRATE` permission.
+- The keyboard surface defaults to the theme's bar surface (`ArecaTheme.surfaces.bar`), like the
+  other surfaces docked to the bottom edge.
 
 ## Accessibility and words
 

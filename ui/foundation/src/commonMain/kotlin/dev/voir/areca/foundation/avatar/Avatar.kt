@@ -32,6 +32,9 @@ import dev.voir.areca.foundation.icon.LocalIconSize
 import dev.voir.areca.foundation.layout.Overlay
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.theme.ArecaTheme
+import androidx.compose.foundation.text.TextAutoSize
+import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.layout.padding
 
 /**
  * Colors for [Avatar].
@@ -70,7 +73,7 @@ public data class AvatarStyle(
          */
         @Composable
         public fun default(
-            bg: Color = ArecaTheme.colors.bgMuted,
+            bg: Color = ArecaTheme.surface.well,
             content: Color = ArecaTheme.colors.fgSubtle,
             spinnerOverlay: Color = ArecaTheme.colors.bgOverlayDark,
             spinner: Color = ArecaTheme.colors.fgOnFill,
@@ -193,8 +196,10 @@ public data class AvatarSize(
  * @param size Container, icon, text, and spinner sizes. Defaults to the theme's, or
  *   [AvatarSize.Default].
  * @param shape Shape the avatar and its content are clipped to.
- * @param letters Initials to show when [content] is absent. Reduced to at most two characters — see
- *   [initialsOf].
+ * @param letters Initials to show when [content] is absent. Reduced to at most [maxLetters]
+ *   characters — see [initialsOf].
+ * @param maxLetters Most characters [letters] keeps from a single word: 2 for a person's initials,
+ *   more for a code that must stay whole — `USDT` beside `USDC`, a ticker, a currency.
  * @param contentDescription Who or what the avatar represents, read by assistive technology. `null`
  *   when the name is already shown beside it, which makes the initials decorative.
  * @param loading Whether to draw the loading scrim and spinner over the content.
@@ -207,6 +212,7 @@ public fun Avatar(
     size: AvatarSize = LocalAvatarSize.current ?: AvatarSize.Default,
     shape: Shape = ArecaTheme.shapes.full,
     letters: String? = null,
+    maxLetters: Int = 2,
     contentDescription: String? = null,
     loading: Boolean = false,
     content: (@Composable BoxScope.() -> Unit)? = null,
@@ -237,11 +243,20 @@ public fun Avatar(
             if (content != null) {
                 content()
             } else if (!letters.isNullOrBlank()) {
+                val initialsSize = LocalTextStyle.current.fontSize
                 Text(
-                    text = initialsOf(letters),
+                    text = initialsOf(letters, maxLetters),
                     // Decorative: the avatar's description, or the name beside it, says who it is.
-                    modifier = Modifier.clearAndSetSemantics {},
+                    modifier = Modifier.padding(horizontal = ArecaTheme.spacing.xs2).clearAndSetSemantics {},
                     maxLines = 1,
+                    softWrap = false,
+                    // A code of more than two letters shrinks to fit the tile rather than losing a
+                    // letter: "USDT" never reads "USD".
+                    autoSize = if (initialsSize.isSp) {
+                        TextAutoSize.StepBased(minFontSize = MinInitialsSize, maxFontSize = initialsSize)
+                    } else {
+                        null
+                    },
                 )
             }
 
@@ -279,18 +294,23 @@ public val LocalAvatarStyle: ProvidableCompositionLocal<AvatarStyle?> =
  * Characters outside the Basic Multilingual Plane are skipped along with the symbols, because a
  * `Char` holds only half of one.
  *
+ * A single word keeps up to [maxLetters] of its characters, so a code such as `USDT` can stay
+ * whole; a name of several words keeps its two initials whatever [maxLetters] is above one.
+ *
  * @param letters Name, username, or already-abbreviated initials.
- * @return One or two uppercase characters, or an empty string when [letters] has no letters or
- *   digits.
+ * @param maxLetters Most characters a single word keeps; at least one.
+ * @return Uppercase characters, or an empty string when [letters] has no letters or digits.
  */
-internal fun initialsOf(letters: String): String {
+internal fun initialsOf(letters: String, maxLetters: Int = 2): String {
+    val keep = maxLetters.coerceAtLeast(1)
     val words = letters
         .split(WHITESPACE)
         .map { word -> word.filter(Char::isLetterOrDigit) }
         .filter { it.isNotEmpty() }
     return when {
         words.isEmpty() -> ""
-        words.size == 1 -> words[0].take(2).uppercase().take(2)
+        words.size == 1 -> words[0].take(keep).uppercase().take(keep)
+        keep == 1 -> words.first().take(1).uppercase().take(1)
         // Each initial is cut to one character after uppercasing, since "ß" uppercases to "SS".
         else -> words.first().take(1).uppercase().take(1) + words.last().take(1).uppercase().take(1)
     }
@@ -298,3 +318,6 @@ internal fun initialsOf(letters: String): String {
 
 /** Runs of whitespace that separate the words of a name. */
 private val WHITESPACE = Regex("\\s+")
+
+/** The smallest size initials shrink to before a long code would be cut. */
+private val MinInitialsSize = 6.sp

@@ -66,7 +66,6 @@ fun MainScreen() {
     var destination by rememberSaveable { mutableStateOf(Destination.Home) }
 
     BaseLayout(
-        bg = ArecaTheme.colors.bgCanvas,
         topBar = {
             TopBar(
                 title = destination.label,
@@ -159,6 +158,37 @@ val state = rememberTabBarState(items, initialSelectedValue = Destination.Home)
 
 FloatingTabBar(items = items, state = state, modifier = Modifier.fillMaxWidth())
 ```
+
+**Back to the top on a second tap.** Tapping the selected tab again takes its screen back to the
+top. `AdaptiveNavigation` does the wiring; with a `TabBar` of your own, provide `LocalTabReselect`
+and emit when `onValueSelected` reports the destination already selected. Each scrolling screen
+calls `ScrollToTopOnTabReselect()` on its scroll state:
+
+```kotlin
+val reselects = remember { MutableSharedFlow<Unit>(extraBufferCapacity = 1) }
+
+CompositionLocalProvider(LocalTabReselect provides reselects) {
+    BaseLayout(
+        bottomBar = {
+            TabBar(
+                items = items,
+                selectedValue = destination,
+                onValueSelected = { value ->
+                    if (value == destination) reselects.tryEmit(Unit)
+                    destination = value
+                },
+            )
+        },
+    ) { padding -> CurrentDestination(destination, padding) }
+}
+
+// In a destination's screen
+val listState = rememberLazyListState()
+listState.ScrollToTopOnTabReselect()
+```
+
+`OnTabReselect { … }` runs anything else on that tap — a refresh. Switching destinations never
+emits.
 
 **A sidebar.** On a wide window, `NavList` lists the destinations down the side, with expandable
 sections.

@@ -34,7 +34,7 @@ public data class PageCounterStyle(
          */
         @Composable
         public fun default(
-            bg: Color = ArecaTheme.colors.bgSubtle,
+            bg: Color = ArecaTheme.surface.well,
             content: Color = ArecaTheme.colors.fgBase,
         ): PageCounterStyle = PageCounterStyle(bg = bg, content = content)
 

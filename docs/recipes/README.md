@@ -12,9 +12,9 @@ it — see [Getting started](../getting-started.md).
 | Recipe | Builds | Main components | Modules |
 | --- | --- | --- | --- |
 | [Settings screen](settings.md) | Sections of rows on cards: a toggle with a save status, a choice from a menu, a danger action | `Settings`, `Section`, `SettingsToggleRow`, `SettingsSelectRow`, `SettingsRow` | foundation, icons |
-| [Form with validation](form.md) | A sign-up form with labelled fields, errors after the first attempt, a server error banner and a submit button with progress | `FieldGroup`, `TextField`, `PasswordField`, `Notice`, `Button` | foundation |
-| [List screen](list.md) | A paged list with pull-to-refresh and loading, error, empty and end-of-list faces | `PagedContentList`, `NavigationListItem`, `Fallback` | foundation, icons |
-| [Confirmation flow](confirmation.md) | A destructive action confirmed in a sheet, with progress, a failure note and a toast | `ConfirmSheet`, `ToastHost`, `Button` | foundation, icons |
+| [Form with validation](form.md) | A sign-up form with labelled fields, errors after the first attempt, a server error banner and a submit button with progress; a variation with the action docked in a `BottomActionBar` | `FieldGroup`, `TextField`, `PasswordField`, `Notice`, `Button` | foundation |
+| [List screen](list.md) | A paged list with pull-to-refresh and loading, error, empty and end-of-list faces | `PagedContentList`, `NavigationListItem`, `Fallback` | foundation |
+| [Confirmation flow](confirmation.md) | A destructive action confirmed in a sheet, with progress, a failure note and a toast | `ConfirmSheet`, `BaseLayout(toastState)`, `Button` | foundation, icons |
 | [Tabbed screen](tabs.md) | Primary destinations in a bottom tab bar, and tabs inside one destination | `TabBar`, `Tabs`, `TopBar` | foundation, icons |
 | [Pickers](pickers.md) | A filter panel: a segmented level, an "all or any" pill switch and a three-state has / avoid toggle per note | `SlidingSelector`, `SelectorItem` | foundation |
 | [Analytics overview](analytics.md) | A period picker drawn as a column chart, the period's figures, and categories with meters that open | `ColumnChart`, `StackedBarChart`, `MeterBar`, `StatGrid`, `ExpandableListItem` | foundation, charts, icons |

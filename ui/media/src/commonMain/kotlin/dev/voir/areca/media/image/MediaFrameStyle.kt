@@ -42,7 +42,7 @@ public data class MediaFrameStyle(
          */
         @Composable
         public fun default(
-            bg: Color = ArecaTheme.colors.bgSubtle,
+            bg: Color = ArecaTheme.surface.well,
             shape: Shape = ArecaTheme.shapes.md,
             content: Color = ArecaTheme.colors.fgMuted,
             scrim: Color = ArecaTheme.baseColors.baseBlack.copy(alpha = SCRIM_ALPHA),
@@ -55,7 +55,7 @@ public data class MediaFrameStyle(
          * @return Style for a round frame.
          */
         @Composable
-        public fun circle(bg: Color = ArecaTheme.colors.bgSubtle): MediaFrameStyle = default(bg = bg, shape = CircleShape)
+        public fun circle(bg: Color = ArecaTheme.surface.well): MediaFrameStyle = default(bg = bg, shape = CircleShape)
 
         /**
          * A frame with no fill or corners, for a picture laid on a ground of its own — the viewer's.

@@ -144,9 +144,9 @@ internal val AttachmentsFlowShowcases: List<ShowcaseEntry> = listOf(
         group = ShowcaseGroup.AttachmentsFlow,
         section = ShowcaseSection.AttachmentsSheets,
         title = "Source sheet",
-        summary = "The sheet that asks where a new file comes from: camera, library, files, or the product's own.",
+        summary = "The sheet that asks where a new file comes from: camera, library, files, or the product's own, as rows or a bento.",
         status = ShowcaseStatus.Beta,
-        keywords = listOf("attachment source sheet", "picker", "camera", "gallery", "files", "add file"),
+        keywords = listOf("attachment source sheet", "picker", "camera", "gallery", "files", "add file", "bento", "cards"),
         content = { AttachmentSourceSheetShowcase() },
     ),
     ShowcaseEntry(

@@ -6,6 +6,8 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ProvidableCompositionLocal
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -13,6 +15,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.lerp
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dev.voir.areca.foundation.LocalContentColor
@@ -32,10 +35,16 @@ import dev.voir.areca.theme.tween
  * [ChevronDirection.Right] and [ChevronDirection.Left] are reading-order directions: the lean is a
  * layout-relative offset, so it follows the chevron when a right-to-left layout mirrors it.
  *
+ * Its color is the row's [ListItemStyle.chevron] for the row's state, which falls back to the
+ * trailing slot's color; [ListItemStyle.withChevronColor] sets it for a whole list of rows, and
+ * [color] for this one chevron.
+ *
  * @param modifier Modifier applied to the chevron.
  * @param direction Direction the chevron points toward.
  * @param size Size and stroke tokens of the chevron; defaults to the row's.
  * @param hoverOffset Distance the chevron travels while its row is reached for.
+ * @param color Color of the chevron. [Color.Unspecified], the default, takes the row's chevron
+ * color, then the content color it is drawn in.
  */
 @Composable
 public fun ListItemChevron(
@@ -43,6 +52,7 @@ public fun ListItemChevron(
     direction: ChevronDirection = ChevronDirection.Right,
     size: ChevronSize = currentListItemSize().chevron,
     hoverOffset: Dp = 2.dp,
+    color: Color = Color.Unspecified,
 ) {
     val state = LocalListItemState.current
     val animation = currentListItemSize().stateAnimation
@@ -71,9 +81,18 @@ public fun ListItemChevron(
     Chevron(
         direction = direction,
         size = size,
+        color = color.takeOrElse { LocalListItemChevronColor.current.takeOrElse { LocalContentColor.current } },
         modifier = modifier.offset(x = horizontal, y = vertical),
     )
 }
+
+/**
+ * Chevron color of the row being drawn, resolved for its state by [ListItem] from
+ * [ListItemStyle.chevron]; [Color.Unspecified] outside a row, where a chevron takes the content
+ * color.
+ */
+internal val LocalListItemChevronColor: ProvidableCompositionLocal<Color> =
+    compositionLocalOf { Color.Unspecified }
 
 /**
  * Check mark that draws itself in when its row becomes selected.

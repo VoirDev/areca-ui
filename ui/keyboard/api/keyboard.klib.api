@@ -496,6 +496,8 @@ final object dev.voir.areca.keyboard.key/KeyboardGrids { // dev.voir.areca.keybo
     final fun phone(kotlin/Function1<dev.voir.areca.keyboard.key/KeyAction, kotlin/Unit>, dev.voir.areca.keyboard.key/KeyboardGridLabels = ...): dev.voir.areca.keyboard.key/KeyboardGrid // dev.voir.areca.keyboard.key/KeyboardGrids.phone|phone(kotlin.Function1<dev.voir.areca.keyboard.key.KeyAction,kotlin.Unit>;dev.voir.areca.keyboard.key.KeyboardGridLabels){}[0]
 }
 
+final val dev.voir.areca.keyboard.key/LocalKeyboardHaptics // dev.voir.areca.keyboard.key/LocalKeyboardHaptics|{}LocalKeyboardHaptics[0]
+    final fun <get-LocalKeyboardHaptics>(): androidx.compose.runtime/ProvidableCompositionLocal<kotlin/Boolean> // dev.voir.areca.keyboard.key/LocalKeyboardHaptics.<get-LocalKeyboardHaptics>|<get-LocalKeyboardHaptics>(){}[0]
 final val dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_Key$stableprop // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_Key$stableprop|#static{}dev_voir_areca_keyboard_key_Key$stableprop[0]
 final val dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Backspace$stableprop // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Backspace$stableprop|#static{}dev_voir_areca_keyboard_key_KeyAction_Backspace$stableprop[0]
 final val dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Clear$stableprop // dev.voir.areca.keyboard.key/dev_voir_areca_keyboard_key_KeyAction_Clear$stableprop|#static{}dev_voir_areca_keyboard_key_KeyAction_Clear$stableprop[0]

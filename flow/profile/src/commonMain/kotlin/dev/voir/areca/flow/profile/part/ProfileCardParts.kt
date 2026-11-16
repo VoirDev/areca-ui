@@ -26,6 +26,9 @@ import dev.voir.areca.foundation.settings.SettingsTheme
 import dev.voir.areca.indication.FadeIndication
 import dev.voir.areca.modifier.clickCursor
 import dev.voir.areca.theme.ArecaTheme
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.takeOrElse
+import dev.voir.areca.theme.RaisedSurface
 
 /**
  * The surface every profile card is drawn on: a settings section's card.
@@ -54,12 +57,13 @@ internal fun ProfileCardSurface(
     content: @Composable BoxScope.() -> Unit,
 ) {
     val section = SettingsTheme.styles.section
+    val fill = profileCardFill()
     val click = onClick
 
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .background(section.bg, section.shape)
+            .background(fill, section.shape)
             .then(
                 if (click != null) {
                     Modifier
@@ -76,9 +80,19 @@ internal fun ProfileCardSurface(
                 },
             ),
     ) {
-        Box(modifier = Modifier.fillMaxWidth().clip(section.shape), content = content)
+        RaisedSurface {
+            Box(modifier = Modifier.fillMaxWidth().clip(section.shape), content = content)
+        }
     }
 }
+
+/**
+ * Fill of the profile cards: the settings section's, or — as a section draws it when its style
+ * leaves it unspecified — the raised fill of the surface the card is laid on.
+ */
+@Composable
+internal fun profileCardFill(): Color =
+    SettingsTheme.styles.section.bg.takeOrElse { ArecaTheme.surface.raised }
 
 /**
  * The account's avatar with the verified tick on its corner when [ProfileSummary.isVerified].
@@ -103,7 +117,7 @@ internal fun BadgedAvatar(
     modifier: Modifier = Modifier,
     ring: BorderStroke? = null,
 ) {
-    val cutout = SettingsTheme.styles.section.bg
+    val cutout = profileCardFill()
 
     Box(modifier = modifier) {
         ProfileAvatar(

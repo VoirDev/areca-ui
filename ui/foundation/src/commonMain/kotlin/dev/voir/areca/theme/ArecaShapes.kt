@@ -68,12 +68,19 @@ public data class ArecaShapes(
      * say — with one override instead of restating the shape at each call. Defaults to [md].
      */
     public val button: Shape,
+    /**
+     * A surface that groups content: every card preset, a settings section, a notice, a group of a
+     * content list. A role rather than a radius step, so the app's card corner is one decision —
+     * set it once and every surface of that kind follows. Defaults to [lg]; a surface nested in
+     * another steps down by hand.
+     */
+    public val surface: Shape = lg,
 ) {
     /** Factories for a complete shape scale. */
     public companion object {
         /**
          * Derives the shape scale from a radius scale. [tile] is a squircle and does not follow it;
-         * [button] is [md].
+         * [button] is [md] and [surface] is [lg].
          *
          * @param radius Corner lengths each shape is built from.
          * @return Complete shape scale.
@@ -89,6 +96,7 @@ public data class ArecaShapes(
             xl2 = RoundedCornerShape(radius.xl2),
             full = CircleShape,
             tile = SquircleShape(exponent = 2.8f),
+            surface = RoundedCornerShape(radius.lg),
         )
     }
 }

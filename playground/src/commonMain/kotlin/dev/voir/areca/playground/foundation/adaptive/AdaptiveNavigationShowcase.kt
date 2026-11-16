@@ -242,18 +242,18 @@ fun AdaptiveNavigationShowcase() = ShowcaseScaffold(
         layout = VariantLayout.Horizontal,
     ) {
         variant("Column, touch", detail = "48dp buttons in a 56dp column") {
-            ArecaThemeProvider(darkTheme = ArecaTheme.isDark, inputMode = InputMode.Touch) { TabsSample() }
+            ArecaThemeProvider(darkTheme = ArecaTheme.isDark, surfaceLayout = ArecaTheme.surfaces.layout, inputMode = InputMode.Touch) { TabsSample() }
         }
         variant("Column, pointer", detail = "40dp buttons in a 48dp column") {
-            ArecaThemeProvider(darkTheme = ArecaTheme.isDark, inputMode = InputMode.Pointer) { TabsSample() }
+            ArecaThemeProvider(darkTheme = ArecaTheme.isDark, surfaceLayout = ArecaTheme.surfaces.layout, inputMode = InputMode.Pointer) { TabsSample() }
         }
         variant("Rail, touch", detail = "80dp, 56 × 32dp pill") {
-            ArecaThemeProvider(darkTheme = ArecaTheme.isDark, inputMode = InputMode.Touch) {
+            ArecaThemeProvider(darkTheme = ArecaTheme.isDark, surfaceLayout = ArecaTheme.surfaces.layout, inputMode = InputMode.Touch) {
                 RailSample(showLabels = true)
             }
         }
         variant("Rail, pointer", detail = "72dp, 48 × 28dp pill") {
-            ArecaThemeProvider(darkTheme = ArecaTheme.isDark, inputMode = InputMode.Pointer) {
+            ArecaThemeProvider(darkTheme = ArecaTheme.isDark, surfaceLayout = ArecaTheme.surfaces.layout, inputMode = InputMode.Pointer) {
                 RailSample(showLabels = true)
             }
         }

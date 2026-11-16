@@ -29,6 +29,8 @@ import dev.voir.areca.foundation.layout.LocalDividerStyle
 import dev.voir.areca.foundation.layout.VerticalScrollbarOverlay
 import dev.voir.areca.modifier.thenIf
 import dev.voir.areca.theme.ArecaTheme
+import androidx.compose.ui.graphics.takeOrElse
+import dev.voir.areca.theme.surfaceFor
 
 /** Marks the receiver of the list DSL so its scope cannot be mixed up with another. */
 @DslMarker
@@ -309,6 +311,7 @@ public fun LazyList(
     enabled: Boolean = true,
     contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
+    val listSeparator = listStyle.separator.takeOrElse { surfaceFor(listStyle.bg).separator }
     CompositionLocalProvider(
         LocalListEnabled provides (enabled && LocalListEnabled.current),
     ) {
@@ -339,7 +342,7 @@ public fun LazyList(
                         dividerSize = dividerSize,
                         modifier = Modifier.thenIf(drawSeparator) {
                             topSeparator(
-                                color = listStyle.separator,
+                                color = listSeparator,
                                 thickness = listSize.separatorThickness,
                                 inset = listSize.separatorInset,
                             )

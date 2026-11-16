@@ -40,7 +40,7 @@ public fun <T> AttachmentTagChips(
     onSelect: (T) -> Unit,
     label: (T) -> String,
     modifier: Modifier = Modifier,
-    bg: Color = ArecaTheme.colors.bgSubtle,
+    bg: Color = ArecaTheme.surface.well,
     enabled: Boolean = true,
 ) {
     FlowBadgeSelect(

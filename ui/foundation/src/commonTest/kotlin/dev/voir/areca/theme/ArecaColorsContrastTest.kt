@@ -364,6 +364,22 @@ class ArecaColorsContrastTest {
         )
     }
 
+    @Test
+    fun `a light brand still gets a readable brand text on its soft fill`() {
+        val base = ArecaBaseColors()
+        // A yellow brand: its brand70 is too light to read on brand20.
+        val yellow = base.copy(
+            brand10 = base.yellow10, brand20 = base.yellow20, brand30 = base.yellow30,
+            brand40 = base.yellow40, brand50 = base.yellow50, brand60 = base.yellow60,
+            brand70 = base.yellow70, brand80 = base.yellow80, brand90 = base.yellow90,
+            brand100 = base.yellow100,
+        )
+        val colors = ArecaColors.light(yellow)
+        colors.assertContrast("light yellow", "fgBrandText on bgBrandMuted", colors.fgBrandText, colors.bgBrandMuted, 4.5)
+        // The default brand keeps its brand70.
+        assertTrue(ArecaColors.light().fgBrandText == base.brand70)
+    }
+
     private fun forEachTheme(block: (String, ArecaColors) -> Unit) {
         block("light", ArecaColors.light())
         block("dark", ArecaColors.dark())

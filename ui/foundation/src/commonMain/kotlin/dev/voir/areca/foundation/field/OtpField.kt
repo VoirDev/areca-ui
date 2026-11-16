@@ -321,7 +321,7 @@ private fun OtpCell(
 
     val colorSpec = fieldColorSpec()
     val background by animateColorAsState(
-        targetValue = resolveBackgroundColor(style, state),
+        targetValue = resolveBackgroundColor(style, state, ArecaTheme.surface),
         animationSpec = colorSpec,
         label = "otpCellBg",
     )

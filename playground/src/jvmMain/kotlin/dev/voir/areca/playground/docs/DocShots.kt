@@ -1,7 +1,7 @@
 package dev.voir.areca.playground.docs
 
 /**
- * Every documentation image, by the name `docs/plans/documentation-redesign.md` gives it.
+ * Every documentation image, by the name the docs reference it under.
  *
  * Add a shot here and reference its pair from the Markdown with a `<picture>` element.
  */

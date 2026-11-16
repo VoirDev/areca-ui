@@ -222,6 +222,11 @@ internal fun ProvideFrameInput(input: InputMode, content: @Composable () -> Unit
     if (ArecaTheme.sizing.dense == (input == InputMode.Pointer)) {
         content()
     } else {
-        ArecaThemeProvider(darkTheme = ArecaTheme.isDark, inputMode = input, content = content)
+        ArecaThemeProvider(
+            darkTheme = ArecaTheme.isDark,
+            surfaceLayout = ArecaTheme.surfaces.layout,
+            inputMode = input,
+            content = content,
+        )
     }
 }

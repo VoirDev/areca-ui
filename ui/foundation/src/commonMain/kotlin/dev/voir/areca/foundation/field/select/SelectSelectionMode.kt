@@ -46,3 +46,20 @@ internal fun <Value> SelectSelectionMode.applyTo(
         }
     }
 }
+
+/**
+ * Whether pressing [option] leaves [currentValues] as they are: under [SelectSelectionMode.Single],
+ * a choice that is not [clearable] keeps its option when it is pressed again, rather than being
+ * emptied — a theme, a language, a currency is never "none".
+ *
+ * @param currentValues Values selected before the press.
+ * @param option Option the user pressed.
+ * @param clearable Whether a single choice may be cleared by pressing its option.
+ * @return `true` when the press changes nothing.
+ */
+internal fun <Value> SelectSelectionMode.keepsChosen(
+    currentValues: Set<Value>,
+    option: SelectOption<Value>,
+    clearable: Boolean,
+): Boolean = this == SelectSelectionMode.Single && !clearable && currentValues.contains(option.value)
+

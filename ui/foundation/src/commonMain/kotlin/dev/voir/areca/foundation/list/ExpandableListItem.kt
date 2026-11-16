@@ -3,6 +3,7 @@ package dev.voir.areca.foundation.list
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -19,6 +20,9 @@ import dev.voir.areca.foundation.layout.ExpandableTransition
 import dev.voir.areca.foundation.slot.SlotRowLayout
 import dev.voir.areca.theme.ArecaTheme
 import dev.voir.areca.theme.tween
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.Alignment
 
 /**
  * A row that reveals content underneath it, with a chevron that turns to point at the state it is
@@ -52,6 +56,8 @@ import dev.voir.areca.theme.tween
  * @param onClickLabel Accessibility description of what the click does.
  * @param transition How the content opens and closes.
  * @param leading Slot before the text block, tinted with the `extra` colors.
+ * @param trailing A control of the row's own before the chevron — a checkbox that selects the whole
+ *   group while the row opens it. It takes its own input; a press elsewhere on the row expands it.
  * @param bottom Content below the row's text, inside the row and its hit area — a meter under a
  *   category's name — as opposed to [content], which is revealed under the row.
  * @param showChevron Whether the chevron is drawn at the row's end. Leave it on unless the row
@@ -78,18 +84,19 @@ public fun ExpandableListItem(
     onClickLabel: String? = null,
     transition: ExpandableTransition = ExpandableTransition.Default,
     leading: (@Composable BoxScope.() -> Unit)? = null,
+    trailing: (@Composable BoxScope.() -> Unit)? = null,
     bottom: (@Composable ColumnScope.() -> Unit)? = null,
     showChevron: Boolean = true,
     container: ExpandableListItemContainer = ExpandableListItemContainer.None,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val rowEnabled = enabled && LocalListEnabled.current
-    val containerShape = ArecaTheme.shapes.lg
+    val containerShape = ArecaTheme.shapes.surface
     val containerColor by animateColorAsState(
         targetValue = if (expanded && container == ExpandableListItemContainer.Soft) {
-            ArecaTheme.colors.bgSoft
+            ArecaTheme.surface.raised
         } else {
-            ArecaTheme.colors.bgSoft.copy(alpha = 0f)
+            ArecaTheme.surface.raised.copy(alpha = 0f)
         },
         animationSpec = ArecaTheme.motion.medium.tween(ArecaTheme.motion.standard),
         label = "ExpandableListItemContainer",
@@ -132,11 +139,19 @@ public fun ExpandableListItem(
             role = Role.Button,
             leading = leading,
             bottom = bottom,
-            trailing = if (showChevron) {
+            trailing = if (showChevron || trailing != null) {
                 {
-                    ListItemChevron(
-                        direction = if (expanded) ChevronDirection.Up else ChevronDirection.Down,
-                    )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(size.trailingGap),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        if (trailing != null) Box(contentAlignment = Alignment.Center, content = trailing)
+                        if (showChevron) {
+                            ListItemChevron(
+                                direction = if (expanded) ChevronDirection.Up else ChevronDirection.Down,
+                            )
+                        }
+                    }
                 }
             } else {
                 null
@@ -155,7 +170,7 @@ public enum class ExpandableListItemContainer {
     None,
 
     /**
-     * A [bgSoft][dev.voir.areca.theme.ArecaColors.bgSoft] block of the `lg` shape behind the row and
+     * A block in the surface's [raised][dev.voir.areca.theme.ArecaSurface.raised] fill and the `surface` shape, behind the row and
      * its content, fading in as it opens, so the open group reads as one object. Give the row a
      * transparent style, such as the default plain one, or its own fill covers the block.
      */

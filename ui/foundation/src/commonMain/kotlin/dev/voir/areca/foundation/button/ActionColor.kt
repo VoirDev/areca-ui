@@ -2,6 +2,9 @@ package dev.voir.areca.foundation.button
 
 import androidx.compose.ui.graphics.Color
 import dev.voir.areca.theme.ArecaColors
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
+import dev.voir.areca.theme.ArecaTheme
 
 /**
  * Semantic color family an action takes its colors from.
@@ -226,3 +229,15 @@ internal fun ActionColor.mutedOverlay(colors: ArecaColors): Color = when (this) 
  * @return Focus ring color.
  */
 internal fun ActionColor.focusRing(colors: ArecaColors): Color = filledBackground(colors)
+
+/**
+ * Tinted fill of a soft action where it is drawn: the family's muted step, except
+ * [ActionColor.Neutral], which takes the well of the surface it sits on so a neutral soft button
+ * reads on a white card, a grey one and a neutral notice alike.
+ *
+ * @return The fill.
+ */
+@Composable
+@ReadOnlyComposable
+internal fun ActionColor.softFill(): Color =
+    if (this == ActionColor.Neutral) ArecaTheme.surface.well else mutedBackground(ArecaTheme.colors)

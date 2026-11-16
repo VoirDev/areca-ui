@@ -10,11 +10,11 @@ Needs `dev.voir.areca:foundation`, and `dev.voir.areca:icons` for the sign-out g
 
 | Component | Role here |
 | --- | --- |
-| `BaseLayout` with an `overlay` | The screen's frame; the toast host sits in its overlay, above the content |
+| `BaseLayout` with a `toastState` | The screen's frame; it draws the toasts above the content and any bottom bar |
 | `TopBar` with `BackAction` | The title bar |
 | `Button` with `ButtonStyle.soft(ActionColor.Danger)` | The destructive action, as a secondary button |
 | `ConfirmSheet` | The yes-or-no question, answered with a thumb |
-| `rememberToastState` and `ToastHost` | The confirmation after the work succeeds |
+| `rememberToastState` | The confirmation after the work succeeds, shown by the frame |
 
 Every component is in the [catalogue](../components.md).
 
@@ -40,7 +40,6 @@ import androidx.compose.ui.Modifier
 import dev.voir.areca.foundation.button.ActionColor
 import dev.voir.areca.foundation.button.Button
 import dev.voir.areca.foundation.button.ButtonStyle
-import dev.voir.areca.foundation.feedback.ToastHost
 import dev.voir.areca.foundation.feedback.rememberToastState
 import dev.voir.areca.foundation.layout.BaseLayout
 import dev.voir.areca.foundation.overlay.ConfirmSheet
@@ -66,7 +65,6 @@ fun SecurityScreen(
     val toasts = rememberToastState()
 
     BaseLayout(
-        bg = ArecaTheme.colors.bgCanvas,
         contentWindowInsets = WindowInsets.safeDrawing.only(
             WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal,
         ),
@@ -79,7 +77,7 @@ fun SecurityScreen(
                 leading = { BackAction(onClick = onBack, contentDescription = "Back") },
             )
         },
-        overlay = { ToastHost(state = toasts) },
+        toastState = toasts,
     ) { padding ->
         Column(
             modifier = Modifier.padding(padding).contentInsets(),

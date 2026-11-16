@@ -2,6 +2,8 @@ package dev.voir.areca.foundation.selection
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.isSpecified
@@ -140,6 +142,9 @@ public data class SelectorItemScope(
  * [SelectorMode.Optional] a switch. Each enabled option is a focus stop; the arrow keys move focus
  * within the group and Enter or Space chooses.
  *
+ * Where one option is always chosen, the overload taking `onSelectedChange: (T) -> Unit` saves the
+ * caller unwrapping a `null` that never comes; this one is for [SelectorMode.Optional].
+ *
  * @param items Options to show, in order.
  * @param selected Value of the chosen option, or `null` for none (meaningful in
  *   [SelectorMode.Optional]).
@@ -192,6 +197,51 @@ public fun <T> SlidingSelector(
         val item = items[index]
         item.content(SelectorItemScope(selected = isSelected, enabled = item.enabled))
     }
+}
+
+/**
+ * A row of options with one thumb that slides to the chosen option, where exactly one option is
+ * always chosen — segments, a period switch, a pill under words.
+ *
+ * The [SelectorMode.Required] form of the selector above, for the common case: [selected] is never
+ * `null` and [onSelectedChange] is never called with `null`, so a caller does not unwrap a value
+ * that cannot be missing. Everything else — looks, motion, announcement — is the same. A selection
+ * that may be cleared takes the other overload with [SelectorMode.Optional].
+ *
+ * @param items Options to show, in order.
+ * @param selected Value of the chosen option.
+ * @param onSelectedChange Called with the tapped option's value when it differs from [selected].
+ *   Never called for a disabled option, nor for the chosen one.
+ * @param modifier Modifier applied to the selector.
+ * @param style Colours, shapes, thumb and motion. Defaults to the theme's segmented look.
+ * @param size Metrics of the options. Defaults to the theme's.
+ * @param layout How the options share the selector's length.
+ * @param orientation Which way the selector runs.
+ */
+@Composable
+public fun <T : Any> SlidingSelector(
+    items: List<SelectorItem<T>>,
+    selected: T,
+    onSelectedChange: (T) -> Unit,
+    modifier: Modifier = Modifier,
+    style: SlidingSelectorStyle = LocalSlidingSelectorStyle.current ?: SlidingSelectorStyle.Segmented,
+    size: SlidingSelectorSize = LocalSlidingSelectorSize.current ?: SlidingSelectorSize.Default,
+    layout: SelectorLayout = SelectorLayout.Fill,
+    orientation: SelectorOrientation = SelectorOrientation.Horizontal,
+) {
+    val currentOnSelectedChange by rememberUpdatedState(onSelectedChange)
+    SlidingSelector(
+        items = items,
+        selected = selected,
+        // Required mode never reports null; the guard only satisfies the type.
+        onSelect = { value -> if (value != null) currentOnSelectedChange(value) },
+        modifier = modifier,
+        mode = SelectorMode.Required,
+        style = style,
+        size = size,
+        layout = layout,
+        orientation = orientation,
+    )
 }
 
 /** What a tap on one option of a [SlidingSelector] does to its selection. */

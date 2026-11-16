@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.theme.ArecaTheme
+import androidx.compose.ui.graphics.lerp
 
 /**
  * One day of a heat-map calendar: a rounded tile shaded by how much the day held, with its number
@@ -302,9 +303,9 @@ public data class CalendarHeatStyle(
         @Composable
         public fun default(
             ramp: List<Color> = ArecaTheme.colors.accentScale,
-            empty: Color = ArecaTheme.colors.bgCanvas,
+            empty: Color = ArecaTheme.surface.ground,
             emptyRing: Color = ArecaTheme.colors.bgNeutralIntense,
-            future: Color = ArecaTheme.colors.bgSoft,
+            future: Color = lerp(ArecaTheme.surface.ground, ArecaTheme.surface.well, 0.5f),
             futureContent: Color = ArecaTheme.colors.fgDisabled,
             content: Color = ArecaTheme.colors.fgBase,
             inkOnLight: Color = ArecaTheme.baseColors.neutral100,

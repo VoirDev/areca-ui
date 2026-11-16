@@ -160,7 +160,6 @@ public fun AuthScaffold(
 
     BaseLayout(
         modifier = modifier,
-        bg = ArecaTheme.colors.bgCanvas,
         contentWindowInsets = windowInsets,
         // Full-bleed artwork is the page background, so it is painted below the insets rather than
         // inside them — otherwise it would stop short of the status bar and read as a banner.

@@ -46,6 +46,36 @@ public object ArecaTheme {
     public val baseColors: ArecaBaseColors
         @Composable @ReadOnlyComposable get() = LocalBaseColors.current
 
+    /**
+     * Every surface of the theme: the layout, a screen's ladder, a sheet's ladder and the bars.
+     */
+    public val surfaces: ArecaSurfaces
+        @Composable @ReadOnlyComposable get() = LocalSurfaces.current
+
+    /**
+     * The surface the content in scope is drawn on, by role: its [ground][ArecaSurface.ground],
+     * the [raised][ArecaSurface.raised] fill of a card laid on it, the [well][ArecaSurface.well] of a
+     * track or a filled field set into it, the [onWell][ArecaSurface.onWell] of a thumb, and its
+     * [separator][ArecaSurface.separator].
+     *
+     * Read a role rather than a ground token for anything drawn on a surface, so it is right on a
+     * grey page, inside a white card and in a sheet alike.
+     */
+    public val surface: ArecaSurface
+        @Composable @ReadOnlyComposable get() = currentSurface()
+
+    /** Where on its ladder the content in scope sits. */
+    public val surfaceLevel: SurfaceLevel
+        @Composable @ReadOnlyComposable get() = LocalSurfacePosition.current.level
+
+    /** The words components say on their own, in the app's language; see [ArecaLabels]. */
+    public val labels: ArecaLabels
+        @Composable @ReadOnlyComposable get() = LocalLabels.current
+
+    /** Categorical colours, one per kind of thing; see [ArecaHues]. */
+    public val hues: ArecaHues
+        @Composable @ReadOnlyComposable get() = LocalHues.current
+
     /** Semantic color tokens. */
     public val colors: ArecaColors
         @Composable @ReadOnlyComposable get() = LocalColors.current

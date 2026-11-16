@@ -50,7 +50,7 @@ public data class TabBarStyle(
         /**
          * Creates the default TabBar treatment.
          *
-         * @param bg Fill behind all tab items.
+         * @param bg Fill behind all tab items. Defaults to the theme's bar surface.
          * @param itemBg Fill of an enabled, unselected item.
          * @param itemBgSelected Fill of the selected item.
          * @param itemBgDisabled Fill of a disabled item.
@@ -63,7 +63,7 @@ public data class TabBarStyle(
          */
         @Composable
         public fun default(
-            bg: Color = ArecaTheme.colors.bgCanvas,
+            bg: Color = ArecaTheme.surfaces.bar,
             itemBg: Color = Color.Transparent,
             itemBgSelected: Color = itemBg,
             itemBgDisabled: Color = itemBg,

@@ -32,7 +32,7 @@ public data class ListStyle(
 ) {
     /** Theme-backed presets and builders. */
     public companion object {
-        /** Theme default: no surface of its own, with base-border hairlines when separated. */
+        /** Theme default: no surface of its own, with the hairlines of the surface it is drawn on. */
         public val Default: ListStyle
             @Composable
             get() = default()
@@ -42,14 +42,15 @@ public data class ListStyle(
          *
          * @param bg Background behind every row.
          * @param border Border around the whole list.
-         * @param separator Hairline drawn between rows.
+         * @param separator Hairline drawn between rows. [Color.Unspecified], the default, takes the
+         *   separator of the surface the list is drawn on.
          * @return A list style containing the supplied colors.
          */
         @Composable
         public fun default(
             bg: Color = Color.Unspecified,
             border: Color = Color.Unspecified,
-            separator: Color = ArecaTheme.colors.borderBase,
+            separator: Color = Color.Unspecified,
         ): ListStyle = ListStyle(bg = bg, border = border, separator = separator)
     }
 }

@@ -321,7 +321,7 @@ AvatarSourceOptions.remove(label: String = "Remove current photo", onClick: () -
 fun ProfileContent(summary: ProfileSummary, phone: String, staleReason: String?, deviceCount: Int,
     onEdit: () -> Unit, onShare: () -> Unit, onQr: () -> Unit, onDevices: () -> Unit) {
     Column(
-        Modifier.fillMaxSize().background(ArecaTheme.colors.bgCanvas)
+        Modifier.fillMaxSize().background(ArecaTheme.surface.ground)
             .verticalScroll(rememberScrollState()).windowInsetsPadding(WindowInsets.systemBars)
             // Readable width on a tablet or desktop, centred; a no-op on a phone.
             .wrapContentWidth().widthIn(max = AdaptiveDefaults.ReadableWidth).fillMaxWidth(),
@@ -380,7 +380,7 @@ when (val s = uiState) {
 
 ```kotlin
 Column(
-    Modifier.fillMaxSize().background(ArecaTheme.colors.bgCanvas).verticalScroll(rememberScrollState())
+    Modifier.fillMaxSize().background(ArecaTheme.surface.ground).verticalScroll(rememberScrollState())
         .windowInsetsPadding(WindowInsets.systemBars).imePadding()
         .wrapContentWidth().widthIn(max = AdaptiveDefaults.ReadableWidth).fillMaxWidth(),
 ) {
@@ -578,7 +578,7 @@ fun AccountSettings(summary: ProfileSummary, deviceCount: Int, confirmingSignOut
     var open by rememberSaveable { mutableStateOf<AccountPage?>(null) }       // the app's state
     ListDetail(
         showDetail = open != null,
-        modifier = Modifier.fillMaxSize().background(ArecaTheme.colors.bgCanvas).windowInsetsPadding(WindowInsets.systemBars),
+        modifier = Modifier.fillMaxSize().background(ArecaTheme.surface.ground).windowInsetsPadding(WindowInsets.systemBars),
         detailPlaceholder = {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { Fallback(heading = { Text(chooseASetting) }) }
         },

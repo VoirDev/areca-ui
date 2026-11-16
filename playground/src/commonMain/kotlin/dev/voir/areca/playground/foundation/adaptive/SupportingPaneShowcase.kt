@@ -248,8 +248,6 @@ private fun FamilyFilters(
             },
             selected = chosen.toList(),
             selectionMode = BadgeSelectionMode.Multiple,
-            horizontalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md),
-            verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md),
             style = BadgeStyle.Chip,
             size = BadgeSize.Chip,
         )

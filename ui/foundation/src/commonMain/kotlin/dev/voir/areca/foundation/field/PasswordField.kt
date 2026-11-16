@@ -87,8 +87,8 @@ public fun PasswordField(
     trailing: (@Composable RowScope.() -> Unit)? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
     keyboardActions: KeyboardActions = KeyboardActions.Default,
-    revealContentDescription: String = "Show password",
-    hideContentDescription: String = "Hide password",
+    revealContentDescription: String = ArecaTheme.labels.showPassword,
+    hideContentDescription: String = ArecaTheme.labels.hidePassword,
     cursorBrush: Brush = SolidColor(ArecaTheme.colors.accentBase),
     interactionSource: MutableInteractionSource? = null,
 ) {

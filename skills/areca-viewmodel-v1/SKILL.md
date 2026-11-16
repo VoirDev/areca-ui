@@ -123,7 +123,9 @@ ViewModel.
 ## State
 
 `BaseViewModel<A, E, S>` exposes `state: StateFlow<UiState<S>>` and `effects: Flow<E>`. It starts at
-`UiState.Display(initial)`, not `Initial`.
+`UiState.Display(initial)`, not `Initial`. A list ViewModel therefore shows `Display` before its
+first page: `pagingMeta.currentPage == 0` means nothing has loaded yet, so render the loading face
+for it, not the empty one (`ListState.isEmpty` is already false until a page has loaded).
 
 - Use `Display` for renderable data and `mutateDisplay` for immutable changes. `mutateDisplay`
   always publishes `Display`, even from a loading or error screen.

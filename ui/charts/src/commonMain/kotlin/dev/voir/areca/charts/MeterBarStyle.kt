@@ -37,7 +37,7 @@ public data class MeterBarStyle(
          */
         @Composable
         public fun default(
-            track: Color = ArecaTheme.colors.bgNeutralMuted,
+            track: Color = ArecaTheme.surface.well,
             fill: Color = ArecaTheme.colors.bgBrandBase,
             marker: Color = ArecaTheme.colors.fgBase,
         ): MeterBarStyle = MeterBarStyle(track = track, fill = fill, marker = marker)

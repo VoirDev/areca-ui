@@ -3,14 +3,39 @@
 Open work. Paths are relative to `ui/foundation/src/commonMain/kotlin/dev/voir/areca/` unless they
 start at the repository root.
 
-## Release
+## Missing pieces
 
-- [ ] GitHub setup (see README "Releasing"): give the `release` environment required reviewers (it
-      has none), and add a `main` ruleset requiring "Build and check whole repository" and "Build
-      release artifacts" (`main` has only classic protection with no required checks). Set each
-      published package's visibility in its package settings.
+- [ ] `AmountText` draws the symbol and the figures as separate texts. Check a long amount with an
+      RTL symbol, `maxLines = 1` and `autoSize` on an Android and an iOS device.
+- [ ] `PanelLayout` cannot hold a lazy list and has no sticky header; `GroupedContentList` (Inset)
+      composes every row at once and pins its header; a header and footer that scroll with the
+      groups.
+- [ ] A nested `BaseLayout` does not inherit the bottom inset of an outer floating bar.
+- [ ] `DateTile` without a weekday; datetime `DateTimeField` that opens two sheets instead of a
+      dropdown; a full-screen loading face; a field-fill resolver usable by custom field-like controls.
+- [ ] `ListScope.item` / `LazyList` rows take no per-item modifier from the lazy item scope, so a
+      row cannot `animateItem()` or carry drag-to-reorder; no reorderable list (drag, edge scroll,
+      move actions).
+- [ ] Selection: a `SelectOption` cannot hold a control of its own (a favourite star); no row with a
+      tri-state or ordered mark; `SelectFlowModal` cannot pin the chosen option first.
+- [ ] A settings `Section` header on a sheet is louder than the quiet labels above a sheet's other
+      controls.
+- [ ] `ExpandableListItemContainer.Soft` draws its block only while open; `ListItem`'s overline is
+      SemiBold, heavier than a quiet label.
+- [ ] Pickers: no always-on "create" row before anything is typed; a section header cannot hold an
+      action.
+- [ ] `ChoiceCard` has no style options (white with a hairline unselected, brand tint and tick
+      selected); its badge text is regular weight.
+- [ ] Not yet in Areca: an amount input on the keyboard module, income/expense tokens, `StarRating`,
+      `ExpandableText`, a localisable metadata line.
+- [ ] Android phones without a predefined key-click effect stay silent on a key tap; a vibrator
+      fallback would need `VIBRATE`.
 
 ## Foundation: components
+
+- [ ] Adaptive shell: the edge column's tooltips open below their anchor (`AnchoredPlacement` has no
+      side placement); the shell does not catch the platform's back gesture while the sidebar is
+      open (the app routes it to `onSidebarVisibleChange(false)`).
 
 - [ ] `LargeTopBar` announces the title as a heading twice while expanded (the hidden compact title
       stays in the semantics tree).
@@ -20,7 +45,6 @@ start at the repository root.
 - [ ] `FlowModal` on iOS/desktop: CMP's `animateTransition` also scales the full-window content in;
       the Android dim is cleared one frame after the window opens.
 - [ ] Segmented `Tabs` are 36dp tall, under the 48dp touch target, like the other `Tabs` variants.
-      `variant = TabsVariant.Segmented` does not pick `TabsSize.Segmented` by itself.
 - [ ] `CollapsingHeaderState` is not saved across configuration change.
 
 ## Charts

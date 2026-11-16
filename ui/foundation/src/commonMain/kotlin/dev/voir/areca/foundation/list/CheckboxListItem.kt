@@ -34,8 +34,8 @@ import dev.voir.areca.foundation.slot.SlotRowLayout
  * @param overline Small copy above [title].
  * @param value Inline value rendered at the end of the row.
  * @param enabled Whether the row accepts input and uses its enabled colors.
- * @param indeterminate Whether the checkbox shows the indeterminate mark instead of the check, and
- * reports the mixed state. Only meaningful while [checked].
+ * @param indeterminate Whether the checkbox shows the indeterminate dash and the row reports the
+ * mixed state, whatever [checked] is. A tap still asks for `!checked`.
  * @param highlightChecked Whether a checked row also wears the selected background and rail.
  * @param nestingLevel Indentation steps of [ListItemSize.nestedLevelOffset] to add.
  * @param placement Edge of the row the checkbox sits on.
@@ -87,7 +87,7 @@ public fun CheckboxListItem(
     }
     ControlListItem(
         control = control,
-        selected = checked,
+        selected = checked || indeterminate,
         action = ListItemAction.Toggle(
             state = checkboxToggleableState(checked = checked, indeterminate = indeterminate),
             role = Role.Checkbox,

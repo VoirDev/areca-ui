@@ -148,7 +148,7 @@ public data class ButtonStyle(
         ): ButtonStyle {
             val colors = ArecaTheme.colors
             return ButtonStyle(
-                bg = color.mutedBackground(colors),
+                bg = color.softFill(),
                 bgDisabled = colors.bgDisabled,
                 border = Color.Transparent,
                 content = color.onMuted(colors),
@@ -432,7 +432,7 @@ public fun Button(
     layout: SlotRowLayout = SlotRowLayout.wrap(startGap = size.gap, endGap = size.gap),
     enabled: Boolean = true,
     loading: Boolean = false,
-    loadingStateDescription: String = "Busy",
+    loadingStateDescription: String = ArecaTheme.labels.busy,
     interactionSource: MutableInteractionSource? = null,
     leading: (@Composable () -> Unit)? = null,
     trailing: (@Composable () -> Unit)? = null,
@@ -573,7 +573,7 @@ public fun Button(
     layout: SlotRowLayout = SlotRowLayout.wrap(startGap = size.gap, endGap = size.gap),
     enabled: Boolean = true,
     loading: Boolean = false,
-    loadingStateDescription: String = "Busy",
+    loadingStateDescription: String = ArecaTheme.labels.busy,
     interactionSource: MutableInteractionSource? = null,
     leading: (@Composable () -> Unit)? = null,
     trailing: (@Composable () -> Unit)? = null,

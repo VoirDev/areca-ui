@@ -92,7 +92,7 @@ public data class NavRailStyle(
         /**
          * Builds a rail style from the theme.
          *
-         * @param bg Fill behind the rail.
+         * @param bg Fill behind the rail. Defaults to the theme's bar surface.
          * @param indicator Fill of the selection pill.
          * @param content Colour of a destination at rest.
          * @param contentSelected Colour of the selected destination.
@@ -102,7 +102,7 @@ public data class NavRailStyle(
          */
         @Composable
         public fun default(
-            bg: Color = ArecaTheme.colors.bgCanvas,
+            bg: Color = ArecaTheme.surfaces.bar,
             indicator: Color = ArecaTheme.colors.bgBrandMuted,
             content: Color = ArecaTheme.colors.fgMuted,
             contentSelected: Color = ArecaTheme.colors.fgBrandText,

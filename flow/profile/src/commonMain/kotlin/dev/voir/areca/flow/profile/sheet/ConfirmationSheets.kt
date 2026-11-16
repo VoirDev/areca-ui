@@ -51,7 +51,7 @@ public fun SignOutSheet(
     title: String = "Sign out?",
     description: String? = null,
     confirmText: String = "Sign out",
-    cancelText: String = "Cancel",
+    cancelText: String = ArecaTheme.labels.cancel,
 ) {
     ConfirmSheet(
         visible = visible,
@@ -94,7 +94,7 @@ public fun SignOutOthersSheet(
     description: String? = null,
     note: String? = null,
     confirmText: String = "Sign out other devices",
-    cancelText: String = "Cancel",
+    cancelText: String = ArecaTheme.labels.cancel,
 ) {
     ConfirmSheet(
         visible = visible,
@@ -140,7 +140,7 @@ public fun RevokeSessionSheet(
     title: String = "Sign out this device?",
     note: String? = null,
     confirmText: String = "Sign out device",
-    cancelText: String = "Cancel",
+    cancelText: String = ArecaTheme.labels.cancel,
     description: @Composable (session: SessionItem) -> String? = { item ->
         listOfNotNull(item.name, item.client, item.seen).joinToString(" · ")
     },
@@ -202,7 +202,7 @@ public fun DeleteAccountSheet(
     title: String = "Delete this account?",
     note: String? = null,
     confirmText: String = "Delete account",
-    cancelText: String = "Cancel",
+    cancelText: String = ArecaTheme.labels.cancel,
     confirmationPrompt: @Composable (phrase: String) -> String = { "Type $it to confirm." },
 ) {
     var typed by remember { mutableStateOf("") }

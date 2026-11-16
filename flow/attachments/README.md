@@ -71,7 +71,7 @@ Pictures need an image loader provided once; see [Pictures](#pictures).
 | `AttachmentStrip` | A record's files as a sideways-scrolling row of squares, from none to many | `dev.voir.areca.flow.attachments.part` |
 | `AttachmentIndicator` | A paperclip, and optionally a count, on something that has files | `dev.voir.areca.flow.attachments.part` |
 | `AttachmentRow` | One file as a foundation `SettingsRow`, for lists read by name | `dev.voir.areca.flow.attachments.row` |
-| `AttachmentSourceSheet` | Where a new file comes from: camera, library, files, or your own choices | `dev.voir.areca.flow.attachments.sheet` |
+| `AttachmentSourceSheet` | Where a new file comes from: camera, library, files, or your own choices — as rows, or as a bento of cards | `dev.voir.areca.flow.attachments.sheet` |
 | `PendingAttachmentSheet` | Asked once a file is picked: the file, a question, and why it cannot be attached when it cannot | `dev.voir.areca.flow.attachments.sheet` |
 | `AttachmentTagChips` | What a file is, chosen in one tap from the product's tags | `dev.voir.areca.flow.attachments.sheet` |
 | `AttachmentOptionsSheet` | What can be done to one file: rename, share, save, open elsewhere, remove, retag | `dev.voir.areca.flow.attachments.sheet` |
@@ -89,7 +89,8 @@ The types the parts take:
 | `AttachmentImageLoader`, `AttachmentImageState`, `LocalAttachmentImageLoader` | Deprecated: pictures load through media's `LocalMediaImageLoader`; see [Pictures](#pictures) | `dev.voir.areca.flow.attachments` |
 | `AttachmentPdfRenderer`, `AttachmentPdfDocument`, `LocalAttachmentPdfRenderer` | How PDFs are drawn; see [PDFs](#pdfs) | `dev.voir.areca.flow.attachments` |
 | `AttachmentTileStyle`, `LocalAttachmentTileStyle` | Colours and shape of every square | `dev.voir.areca.flow.attachments.part` |
-| `AttachmentChoice`, `AttachmentSourceOptions`, `AttachmentOptions` | One choice on the source or options sheet; the ready-made ones | `dev.voir.areca.flow.attachments.sheet` |
+| `AttachmentChoice`, `AttachmentSourceOptions`, `AttachmentOptions` | One choice on the source or options sheet, with an optional description and hue for a bento card; the ready-made ones |
+| `AttachmentChoiceLayout` | How the source sheet lays its choices out: `Rows` (the default) or `Bento` | `dev.voir.areca.flow.attachments.sheet` |
 | `PendingAttachment` | The file a pick handed back, before it is attached | `dev.voir.areca.flow.attachments.sheet` |
 | `AttachmentViewerStyle`, `LocalAttachmentViewerStyle` | The viewer's ground and surfaces, dark whatever the theme | `dev.voir.areca.flow.attachments.viewer` |
 
@@ -234,7 +235,7 @@ The files of a record being written, in a strip under its fields, saved with the
 Column(
     modifier = Modifier
         .fillMaxSize()
-        .background(ArecaTheme.colors.bgCanvas)
+        .background(ArecaTheme.surface.ground)
         .verticalScroll(rememberScrollState())
         .windowInsetsPadding(WindowInsets.systemBars)
         .imePadding(),
@@ -324,7 +325,7 @@ SupportingPane(
     onSupportingDismissRequest = { filesOpen = false },
     modifier = Modifier
         .fillMaxSize()
-        .background(ArecaTheme.colors.bgCanvas)
+        .background(ArecaTheme.surface.ground)
         .windowInsetsPadding(WindowInsets.systemBars),
     supportingHeader = {
         TopBar(
@@ -538,9 +539,9 @@ AttachmentStrip(
 - Squares are captioned with `item.label` and read out with the file name, or with what
   `description` returns. To say a file is still being added, pass
   `caption = { item -> if (item.state == AttachmentState.Adding) adding else item.label }`.
-- The squares are the subtle page grey. On a grey sheet, pass
-  `style = AttachmentTileStyle.default(bg = ArecaTheme.colors.bgSurface)`, or provide it once; see
-  [Styles](#styles).
+- The squares take the well of the surface they are drawn on, so they read on a grey page, a white
+  card and a sheet alike; pass `style = AttachmentTileStyle.default(bg = …)` for another fill, or
+  provide it once; see [Styles](#styles).
 - For a strip of your own, `AttachmentTile` and `AttachmentAddTile` are its squares, and
   `AttachmentThumbnail` the bare square; `marks = false` hides the state marks.
 
@@ -592,6 +593,31 @@ AttachmentSourceSheet(
 
 List only the sources the platform can complete; with one left, skip the sheet. A choice of your
 own — scan a document, import from a drive — is an `AttachmentChoice(label, icon, onClick)`.
+
+**As a bento.** Where the sources are few and fixed and one leads — the camera, when a file is
+nearly always a receipt photographed at the till — pass `layout = AttachmentChoiceLayout.Bento`. The
+first choice becomes a full-width card and the rest share a row of equal-height cards under it (two
+choices share the row as halves). Each card is washed in its choice's `hue` over the sheet, with its
+glyph on a solid disc of that hue, its label and its `description`; the subtitle sits centred under
+the cards. The built-in sources default to blue, purple and orange from `ArecaTheme.hues` and carry
+English descriptions — pass your own words. It is still a sheet on a phone and a dialog on a wide
+window. Rows, the default, draw neither description nor hue.
+
+```kotlin
+AttachmentSourceSheet(
+    visible = choosingSource,
+    options = buildList {
+        if (picker.canCapture) {
+            add(AttachmentSourceOptions.camera(description = stringResource(Res.string.camera_hint)) { pick(Source.Camera) })
+        }
+        add(AttachmentSourceOptions.library(description = stringResource(Res.string.library_hint)) { pick(Source.Library) })
+        add(AttachmentSourceOptions.files(description = stringResource(Res.string.files_hint)) { pick(Source.Files) })
+    },
+    onDismiss = { choosingSource = false },
+    subtitle = stringResource(Res.string.attachment_limits, maxSize),
+    layout = AttachmentChoiceLayout.Bento,
+)
+```
 
 The pick copies the file in and hands back a `PendingAttachment`. The sheet is up while the copy
 runs (`isCopying`), and Attach shows its spinner and waits.
@@ -910,9 +936,9 @@ application that wants a different default:
 
 ```kotlin
 CompositionLocalProvider(
-    LocalAttachmentTileStyle provides AttachmentTileStyle.default(bg = ArecaTheme.colors.bgSurface),
+    LocalAttachmentTileStyle provides AttachmentTileStyle.default(bg = ArecaTheme.colors.bgBrandMuted),
 ) {
-    // every square in here sits on white
+    // every square in here is tinted with the brand
 }
 ```
 

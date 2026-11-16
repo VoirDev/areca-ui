@@ -68,7 +68,7 @@ public data class LineChartStyle(
             grid: Color = ArecaTheme.colors.bgNeutralMuted,
             label: Color = ArecaTheme.colors.fgMuted,
             rule: Color = ArecaTheme.colors.bgNeutralIntense,
-            markerRing: Color = ArecaTheme.colors.bgCanvas,
+            markerRing: Color = ArecaTheme.surface.ground,
             tooltipBg: Color = ArecaTheme.colors.bgContrast,
             tooltipContent: Color = ArecaTheme.colors.fgOnContrast,
             areaAlpha: Float = 0.22f,

@@ -44,7 +44,7 @@ public data class StackedBarChartStyle(
          */
         @Composable
         public fun default(
-            track: Color = ArecaTheme.colors.bgMuted,
+            track: Color = ArecaTheme.surface.well,
             palette: List<Color> = listOf(
                 ArecaTheme.colors.bgBrandBase,
                 ArecaTheme.colors.bgSuccessBase,

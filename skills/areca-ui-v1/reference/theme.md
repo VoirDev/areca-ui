@@ -1,7 +1,7 @@
 # Theme and tokens
 
-Open this when setting up `ArecaThemeProvider`, choosing a token (a colour, a type role, a gap, a
-corner, an elevation, a duration), re-theming an app for a brand, or building a region that is
+Open this when setting up `ArecaThemeProvider`, choosing a token (a surface role, a colour, a type
+role, a gap, a corner, an elevation, a duration), re-theming an app for a brand, or building a region that is
 always dark, at the latest `dev.voir.areca:foundation` release. Everything here lives in
 `dev.voir.areca.theme` unless a row names another package.
 
@@ -11,9 +11,7 @@ always dark, at the latest `dev.voir.areca:foundation` release. Everything here 
 @Composable
 fun App() {
     ArecaThemeProvider(darkTheme = isSystemInDarkTheme()) {
-        Box(Modifier.fillMaxSize().background(ArecaTheme.colors.bgCanvas)) {
-            AppNavigation()
-        }
+        AppNavigation()
     }
 }
 ```
@@ -22,6 +20,9 @@ fun App() {
 fun ArecaThemeProvider(darkTheme: Boolean = false, baseColors: ArecaBaseColors = ArecaBaseColors(),
     colors: ArecaColors =
         if (darkTheme) { ArecaColors.dark(baseColors) } else { ArecaColors.light(baseColors) },
+    surfaceLayout: SurfaceLayout = SurfaceLayout.Grouped,
+    surfaces: ArecaSurfaces = ArecaSurfaces.from(baseColors, surfaceLayout, darkTheme),
+    hues: ArecaHues = ArecaHues(),
     radius: ArecaRadius = ArecaRadius(),
     shapes: ArecaShapes = ArecaShapes.from(radius), spacing: ArecaSpacing = ArecaSpacing(),
     elevation: ArecaElevation = ArecaElevation(), motion: ArecaMotion = ArecaMotion(),
@@ -30,19 +31,37 @@ fun ArecaThemeProvider(darkTheme: Boolean = false, baseColors: ArecaBaseColors =
     inputMode: InputMode? = null,
     sizing: ArecaSizing = ArecaSizing.forInput(inputMode ?: /* outer or platform input */),
     typography: ArecaTypography = ArecaTypography.from(baseTypography, dense = sizing.dense),
+    componentDefaults: ComponentDefaults = ComponentDefaults.None,
     content: @Composable () -> Unit)
+
+fun interface ComponentDefaults {
+    @Composable fun provide(): Array<ProvidedValue<*>>
+    companion object { val None: ComponentDefaults }   // provides nothing
+}
 ```
 
 - Mount one provider at the root. It puts every token and every component default
   (`LocalButtonStyle`, `LocalCardStyle`, `LocalFieldStyle`, …) in scope; every Areca module reads
   them from there.
 - Each parameter defaults to a value derived from the one above it — `baseColors` → `colors`,
-  `radius` → `shapes`, `fonts` → `baseTypography` → `typography` — so override at the highest level
+  `baseColors` + `surfaceLayout` + `darkTheme` → `surfaces`, `radius` → `shapes`, `fonts` → `baseTypography` → `typography` — so override at the highest level
   that says what you mean, and everything below follows.
 - `darkTheme` is only an input: pass `isSystemInDarkTheme()` or the user's setting. Nothing follows
   the system on its own. An explicit `colors` wins over `darkTheme` for the colours, but
   `ArecaTheme.isDark` still reports `darkTheme`.
-- The provider paints nothing: give the root `bgCanvas`.
+- `surfaceLayout` picks the grounds: `SurfaceLayout.Grouped` (default) is a grey page with white
+  cards, `SurfaceLayout.Plain` a white page with grey cards. See [Surfaces](#surfaces).
+- The provider paints nothing, and the root needs no background: each screen's `BaseLayout` paints
+  its page in the layout's page ground.
+- `componentDefaults` holds the app's own component locals:
+  `ComponentDefaults { arrayOf(LocalButtonSize provides ButtonSize.Large, …) }`. It runs inside the
+  theme, after the theme's own seeds, so its styles read the theme's tokens; `ArecaDarkTheme` runs it
+  again in its dark region. Provide app-wide locals here rather than in a `CompositionLocalProvider`
+  around the content, which does not reach inside an `ArecaDarkTheme`.
+- The theme seeds `LocalAvatarStyle`, `LocalBadgeStyle`, `LocalProgressBarStyle`,
+  `LocalSkeletonStyle`, `LocalSlidingSelectorStyle`, `LocalTabsStyle`, `LocalWheelPickerStyle` and
+  `LocalPageCounterStyle` with `null`, so each component builds its style where it is drawn, from
+  the surface under it. `LocalCardStyle` is seeded with `CardStyle.Default`.
 - It also seeds `LocalContentColor` (`fgBase`), `LocalTextStyle` (`baseTypography.md`, normal
   weight) and `LocalIconSize` (`IconSize.Small`), which slot content and plain `Text` / `Icon`
   inherit.
@@ -66,7 +85,11 @@ Read through `ArecaTheme` inside composition; every accessor is `@Composable`.
 
 | Accessor | Type | Holds |
 | --- | --- | --- |
+| `ArecaTheme.surface` | `ArecaSurface` | Roles of the surface the content in scope is drawn on — `ground`, `raised`, `well`, `onWell`, `separator`, `field`; what components read for fills |
+| `ArecaTheme.surfaceLevel` | `SurfaceLevel` | `Page`, `Card` or `Inset`: where the content in scope sits |
+| `ArecaTheme.surfaces` | `ArecaSurfaces` | `layout`, the `screen` and `sheet` ladders, `bar` |
 | `ArecaTheme.colors` | `ArecaColors` | Semantic colours for the direction in scope — what components and screens read |
+| `ArecaTheme.hues` | `ArecaHues` | Categorical colours, one per kind of thing, for tiles that tell unrelated rows apart — see Hues |
 | `ArecaTheme.typography` | `ArecaTypography` | Named text styles (roles) |
 | `ArecaTheme.spacing` | `ArecaSpacing` | Spacing ramp and screen gutters |
 | `ArecaTheme.sizing` | `ArecaSizing` | Control heights and touch target for the input in scope — what every size preset reads |
@@ -96,18 +119,20 @@ of a brand ramp drives what.
 
 | Token | For | Light · Dark |
 | --- | --- | --- |
-| `bgCanvas` | The page; nothing sits behind it | `baseWhite` · `neutral100` |
-| `bgSoft` | Softest ground off the canvas: an expanded group, a highlighted row, a note block; `bgSubtle` controls still read on it | `neutral10` · between `neutral100` and `neutral90` |
-| `bgSubtle` | Settings sections and grouped regions (the section card's default) | `neutral15` · `neutral90` |
-| `bgMuted` | Tracks and inset wells inside a `bgSubtle` region; a disabled track | `neutral30` · `neutral80` |
-| `bgSurface` | Raised containers: cards, sheets, popovers | `baseWhite` · `neutral90` |
+| `bgCanvas` | The lightest ground in light, the darkest in dark | `baseWhite` · `neutral100` |
+| `bgSoft` | A step off `bgCanvas` | `neutral10` · between `neutral100` and `neutral90` |
+| `bgSubtle` | The grey of a grouped page or a plain card | `neutral15` · `neutral90` |
+| `bgMuted` | A step further back | `neutral30` · `neutral80` |
+| `bgSurface` | A raised container in a fixed colour | `baseWhite` · `neutral90` |
 | `bgContrast` | The inverted surface (dark in light, light in dark); pair with `fgOnContrast` | `neutral100` · `neutral10` |
 | `bgContrastMuted` | Content layered on `bgContrast` | `neutral60` · `neutral40` |
 | `bgOverlayDark` | Scrim darkening what is behind a modal | `neutral100` at 40% · 60% |
 | `bgOverlayLight` | Scrim lightening dark imagery | `baseWhite` at 40% · 20% |
 | `bgDisabled` | Fill of a control that cannot be used | `neutral20` · `neutral80` |
 
-Do not put a `bgSubtle` region on another `bgSubtle` region.
+These are fixed palette steps. No component reads them for a page, a card, a well or a hairline;
+components read the roles of `ArecaTheme.surface`, and screen code does the same for anything drawn
+on a surface. A ground token is right only for a fill that must stay one colour wherever it is.
 
 ### Tone fills
 
@@ -120,6 +145,8 @@ Six families — `Brand`, `Danger`, `Success`, `Warn`, `Info`, `Neutral` — eac
 | `bg{Family}Intense` | The solid fill under press or hover |
 
 `bgWarnBase` is light in both themes, so its content is `fgOnWarn`, not `fgOnFill`.
+In the dark theme every `bg{Family}Muted` and `accentMuted` is `neutral90` with 14% of the family's
+colour mixed in, and `bgNeutralBase` is `neutral80`.
 `bgNeutral*` is for a status with no sentiment.
 
 ### Foregrounds
@@ -128,7 +155,7 @@ Six families — `Brand`, `Danger`, `Success`, `Warn`, `Info`, `Neutral` — eac
 | --- | --- |
 | `fgBase` | Primary text and icons; 7:1 on every resting ground |
 | `fgSubtle` | Secondary text: supporting lines, inactive labels; 4.5:1 |
-| `fgMuted` | Tertiary text: placeholders, timestamps, decorative icons; only 3:1, so never the only carrier of meaning |
+| `fgMuted` | Tertiary text: placeholders, timestamps, decorative icons, section footers; never the only carrier of meaning. Light: a fifth of the way from `neutral60` to `neutral70`, 4.5:1 on the grey page of a grouped layout |
 | `fgDisabled` | Text and icons of a disabled control |
 | `fgOnContrast` | Content on `bgContrast` |
 | `fgOnFill` | Content on any solid tone fill except `bgWarnBase`; white in both themes |
@@ -145,7 +172,7 @@ Six families — `Brand`, `Danger`, `Success`, `Warn`, `Info`, `Neutral` — eac
 | `borderStrong` | A border that must separate more, such as a hovered control |
 | `borderIntense` | Strongest neutral border: a focused or pressed control |
 | `borderSubtle` | Barely visible divider between rows of one group |
-| `borderOnSubtle` | Hairline drawn on a `bgSubtle` region (between settings rows) |
+| `borderOnSubtle` | Hairline drawn on `bgSubtle`. Components draw hairlines in `ArecaTheme.surface.separator` |
 | `borderDisabled` | Border of a disabled control |
 | `borderDanger`, `borderSuccess`, `borderInfo`, `borderWarn` | Border of a control in that state |
 
@@ -176,29 +203,124 @@ where a raw `TextStyle` or `Color` is needed.
 reads them from the light end and `ArecaColors.dark` from the dark end, so replacing the palette
 re-themes both directions. Read a step directly only when no semantic colour expresses the intent.
 
+### Hues
+
+`ArecaHues` holds ten categorical colours: `blue`, `indigo`, `purple`, `pink`, `red`, `orange`,
+`yellow`, `green`, `teal`, `gray`, and `all`, the ten in that order for assigning one by index. Each
+is one colour in both themes, dark enough for a white glyph at 3:1 or more.
+
+```kotlin
+@Immutable
+data class ArecaHues(
+    val blue: Color = Color(0xFF0A69FA), val indigo: Color = Color(0xFF4F5BD5),
+    val purple: Color = Color(0xFF7C3AED), val pink: Color = Color(0xFFD6336C),
+    val red: Color = Color(0xFFDB340B), val orange: Color = Color(0xFFD9480F),
+    val yellow: Color = Color(0xFFB26205), val green: Color = Color(0xFF008557),
+    val teal: Color = Color(0xFF0C7C8C), val gray: Color = Color(0xFF727679),
+) { val all: List<Color> }
+```
+
+| Draw a hue with | Gives |
+| --- | --- |
+| `FeaturedIconStyle.solidHue(hue)` | The hue filled, the glyph `fgOnFill` |
+| `FeaturedIconStyle.softHue(hue)` | The hue mixed into the surface (`field` in light, `ground` in dark), the glyph a deeper step (a lighter one in dark) |
+| `SettingsRowIcon(imageVector, hue = …, soft = false)` | A settings row's leading tile, solid or soft |
+
+The rule: a hue means only "a different kind of thing" — the rows of a settings menu, categories of
+spending, tags. Pick one per concept and keep it wherever the concept appears. A colour that means
+something — brand, danger, success, warning, information — is an `ActionColor` or a tone token, never
+a hue. Replace the set with `ArecaThemeProvider(hues = ArecaHues(…))`; `ArecaDarkTheme` keeps it. Do
+not keep an app `SettingsTint` / `HueTint` palette, and do not recolour the `blue` ramp so `Info`
+reads as an accent.
+
+## Surfaces
+
+Every fill sits on a surface. A surface hands out colours by role, and every component reads the
+role of the surface it is drawn on, so one card, field or chip is right on a grey page, in a white
+card and in a sheet.
+
+```kotlin
+enum class SurfaceLayout { Grouped, Plain }
+enum class SurfaceLevel { Page, Card, Inset }
+enum class SurfaceRoot { Screen, Sheet }
+enum class SurfaceRole { Ground, Raised, Well, OnWell, Separator, Field }
+
+data class ArecaSurface(ground: Color, raised: Color, well: Color, onWell: Color,
+    separator: Color, field: Color) { operator fun get(role: SurfaceRole): Color }
+data class SurfaceLadder(page: ArecaSurface, card: ArecaSurface, inset: ArecaSurface) {
+    fun at(level: SurfaceLevel): ArecaSurface }
+data class ArecaSurfaces(layout: SurfaceLayout, screen: SurfaceLadder, sheet: SurfaceLadder,
+    bar: Color) {
+    fun ladder(root: SurfaceRoot): SurfaceLadder
+    companion object {
+        fun from(baseColors: ArecaBaseColors, layout: SurfaceLayout, darkTheme: Boolean): ArecaSurfaces
+    }
+}
+
+@Composable fun RaisedSurface(content: @Composable () -> Unit)
+@Composable fun ProvideSurface(level: SurfaceLevel,
+    root: SurfaceRoot = /* the current ladder */, content: @Composable () -> Unit)
+```
+
+| Role | For | Read by |
+| --- | --- | --- |
+| `ground` | The surface's own fill | `BaseLayout`'s page, `TopBar`, `Table` rows, `WheelPicker`, a skeleton's highlight, chart marker rings |
+| `raised` | A card laid on it | `Card` (default style), a settings `Section`, a subtle `Notice`, a `ContentList` inset group, `ExpandableListItemContainer.Soft` |
+| `well` | Something set into it | Filled, soft and solid-neutral fields; soft `Neutral` buttons, icon buttons and featured icons; `CardStyle.SoftNeutral`; a neutral card footer; a section's band; `SlidingSelector`, `Tabs` and `ProgressBar` tracks; `Skeleton`; `WheelPicker`'s highlight; empty `Avatar`; `PageCounter`; `BadgeStyle.FilledChip`; picture placeholders |
+| `onWell` | Something raised inside a well | `SlidingSelector` and `Tabs` thumbs |
+| `separator` | A hairline on it | Settings section, `List`, `ListItemColumn` and inset-group hairlines |
+| `field` | An outlined field or a stepper | `FieldStyle.outlined()`, a focused filled field, `NumberStepper`, a soft `Badge`; white anywhere in light |
+
+Grounds of each level:
+
+| Level | `Grouped` (light) | `Plain` (light) | Dark, both layouts |
+| --- | --- | --- | --- |
+| Screen page | `neutral15` | white | `neutral100` |
+| Card on it | white | `neutral15` | `neutral90` |
+| Inset in the card | `neutral10` | white | between `neutral90` and `neutral80` |
+| Sheet page | white | white | a step above the screen page |
+| `surfaces.bar` | white | white | `neutral90` |
+
+- Levels run Page → Card → Inset → Card …. `BaseLayout` puts its content on the page;
+  `FlowModal`, `Dialog` and `DropdownPopup` on the sheet ladder's page (white in light); `Card`,
+  `Section`, `Notice` and inset groups put theirs on the level whose ground is their fill, normally
+  one up. A transparent fill (`CardStyle.Outlined`, `GhostNeutral`) keeps the current surface.
+- On a sheet's ground a `Section` with no `bg` of its own draws flat — no fill, no corners, rows
+  edge to edge, hairlines from the text — because a sheet is already a segment. A `Card` there is
+  emphasis only.
+- A fill of your own: `Modifier.background(ArecaTheme.surface.raised, ArecaTheme.shapes.surface)`
+  and `RaisedSurface { … }` around what it holds. `ProvideSurface(SurfaceLevel.Card) { … }` puts
+  content at a chosen level — a white side panel across a grey page; pass
+  `root = SurfaceRoot.Sheet` for a sheet-like panel of your own.
+- `TabBar`, `BottomActionBar`, `NavRail` and the `AdaptiveNavigation` column take `surfaces.bar`.
+- `ArecaSurfaces.from` reads the palette's neutral ramp, so re-theming `baseColors` re-themes the
+  surfaces. Pass `surfaces = ArecaSurfaces(…)` to set every ground by hand, one value per direction.
+
 ## Typography
 
 | Role (`ArecaTheme.typography` / `TextVariant`) | Base step · size / line height · weight | For |
 | --- | --- | --- |
 | `display` / `Display` | `xl5` · 50/60 · Bold | Standalone display text; once per screen at most |
 | `headingExtraLarge` / `HeadingExtraLarge` | `xl4` · 40/48 · Bold | A screen whose title is its main content |
-| `headingLarge` / `HeadingLarge` | `xl3` · 32/38 · Bold | Page title |
-| `headingMedium` / `HeadingMedium` | `xl2` · 26/30 · SemiBold | Screen heading |
-| `headingSmall` / `HeadingSmall` | `xl` · 22/26 · SemiBold | Section heading |
-| `headingExtraSmall` / `HeadingExtraSmall` | `lg` · 18/24 · SemiBold | Subsection title inside a card or list group |
-| `bodyExtraLarge` / `BodyExtraLarge` | `xl` · 22/26 · Medium | Emphasised body copy that is not a heading: a summary line |
-| `bodyLarge` / `BodyLarge` | `lg` · 18/24 | Lead paragraph; body on a spacious screen |
-| `bodyMedium` / `BodyMedium` | `md` · 16/20 | Default body copy; a row's title |
-| `bodySmall` / `BodySmall` | `sm` · 14/17 | Compact body inside dense components; a row's subtitle |
-| `bodyExtraSmall` / `BodyExtraSmall` | `xs` · 12/14 | Supporting copy; a row's caption |
-| `labelLarge` / `LabelLarge` | `md` · 16/20 · Medium | Label on a large control |
-| `labelMedium` / `LabelMedium` | `sm` · 14/17 · Medium | Default control label: buttons, fields; a section header |
-| `labelSmall` / `LabelSmall` | `xs` · 12/14 · Medium | Label on a dense control: a badge, a chip |
-| `caption` / `Caption` | `sm` · 14/17 · Medium, 0.15sp tracking | Short explanation under a field or an image |
+| `headingLarge` / `HeadingLarge` | `xl3` · 32/40 · Bold | Page title |
+| `headingMedium` / `HeadingMedium` | `xl2` · 26/32 · SemiBold | Screen heading |
+| `headingSmall` / `HeadingSmall` | `xl` · 22/28 · SemiBold | Section heading |
+| `headingExtraSmall` / `HeadingExtraSmall` | `lg` · 18/26 · SemiBold | Subsection title inside a card or list group |
+| `bodyExtraLarge` / `BodyExtraLarge` | `xl` · 22/28 · Medium | Emphasised body copy that is not a heading: a summary line |
+| `bodyLarge` / `BodyLarge` | `lg` · 18/26 | Lead paragraph; body on a spacious screen |
+| `bodyMedium` / `BodyMedium` | `md` · 16/24 | Default body copy; a row's title |
+| `bodySmall` / `BodySmall` | `sm` · 14/20 | Compact body inside dense components; a row's subtitle |
+| `bodyExtraSmall` / `BodyExtraSmall` | `xs` · 12/16 | Supporting copy; a row's caption |
+| `labelLarge` / `LabelLarge` | `md` · 16/24 · Medium | Label on a large control |
+| `labelMedium` / `LabelMedium` | `sm` · 14/20 · Medium | Default control label: buttons, fields; a section header |
+| `labelSmall` / `LabelSmall` | `xs` · 12/16 · Medium | Label on a dense control: a badge, a chip |
+| `overline` / `Overline` | `xs` · 12/16 · Medium, 0.06em tracking | A small label above what it names: a group above its rows, an eyebrow above a title |
+| `caption` / `Caption` | `sm` · 14/20 · Medium, 0.15sp tracking | Short explanation under a field or an image |
 
-`ArecaBaseTypography` is the raw scale, size and line height only: `xxs` 10/12, `xs` 12/14, `sm`
-14/17, `md` 16/20, `lg` 18/24, `xl` 22/26, `xl2` 26/30, `xl3` 32/38, `xl4` 40/48, `xl5` 50/60,
-`xl6` 64/72, `xl7` 72/90 (sp).
+`ArecaBaseTypography` is the raw scale, size and line height only, line heights on a 4pt grid:
+`xxs` 10/12, `xs` 12/16, `sm` 14/20, `md` 16/24, `lg` 18/26, `xl` 22/28, `xl2` 26/32, `xl3` 32/40,
+`xl4` 40/48, `xl5` 50/60, `xl6` 64/72, `xl7` 72/80 (sp). Steps leave their text direction unset:
+Areca's `Text` lays a paragraph out in the interface's direction (`LocalLayoutDirection`) unless its style sets one, so an amount written `1 234,50 د.إ` keeps its order in an English interface. A symbol in another script *before* the figures (`د.إ 1 234,50`) is reordered by the bidi algorithm whatever the paragraph's direction — draw amounts with `AmountText`, which isolates each part. `ArecaTypography(overline = …)` defaults to `labelSmall` tracked out.
 
 `ArecaFonts(primary, secondary)`: `primary` sets every style; `secondary` is used by nothing by
 default, for opting single styles into a second voice. Both default to `FontFamily.Default`.
@@ -239,16 +361,18 @@ pick the side gutter for the window class in scope (inside a `WindowClassBox`, t
 | `xs` 2 | `xs` | Hairline elements: a progress track |
 | `sm` 4 | `sm` | Small controls: badges, chips, swatches |
 | `md` 8 | `md` | Interactive surfaces: inputs, list rows |
-| `lg` 16 | `lg` | Containers: cards, settings sections, notices, popovers |
+| `lg` 16 | `lg` | Containers: popovers |
 | `xl` 24 | `xl` | Sheets and modals |
 | `xl2` 32 | `xl2` | Full-bleed surfaces that still show a corner |
 | — | `full` | Fully rounded: a circle on a square, a pill on a wide element (people, capsules) |
 | — | `tile` | A squircle (`SquircleShape(exponent = 2.8f)`) for a small glyph tile: settings icons, a row's leading tile |
 | — | `button` | Every `ButtonStyle` factory's default and a plain bar control's press shape; `md` by default |
+| — | `surface` | Every surface that groups content: each `CardStyle` preset, a settings section, a `Notice`, a `ContentList` inset group, `ExpandableListItemContainer.Soft`; `lg` by default. `ArecaShapes(surface: Shape = lg)` |
 
 `ArecaShapes.from(radius)` builds the set; `SquircleShape(exponent = 4f, steps = 120)` is in
 `dev.voir.areca.shape`. Pick one corner per role for the whole app (see the card-corner rules in
-SKILL.md); never pass `shape =` to one card on a screen.
+SKILL.md) — `shapes = ArecaShapes.from(radius).copy(surface = …)` changes every card corner; never
+pass `shape =` to one card on a screen.
 
 ## Elevation
 
@@ -326,10 +450,14 @@ ArecaThemeProvider(
   role.
 - **Spacing, elevation, motion.** `ArecaSpacing(...)`, `ArecaElevation(...)` and `ArecaMotion(...)`
   have defaults for every field; pass the ones to change.
-- **Component defaults app-wide.** Provide the component's local just inside the provider:
-  `CompositionLocalProvider(LocalButtonStyle provides ButtonStyle.solid(shape = …),
-  LocalCardStyle provides CardStyle.SoftNeutral) { … }`. A nested `ArecaThemeProvider` or
-  `ArecaDarkTheme` reseeds every local, so overrides above it do not reach inside.
+- **Grounds.** `surfaceLayout = SurfaceLayout.Plain` for a white page with grey cards;
+  `surfaces = ArecaSurfaces(…)` to set every ground.
+- **Category colours.** `hues = ArecaHues(purple = …)` replaces one or all of the tile hues.
+- **Component defaults app-wide.** Pass them as `componentDefaults = ComponentDefaults {
+  arrayOf(LocalButtonStyle provides ButtonStyle.solid(shape = …), LocalCardStyle provides
+  CardStyle.Outlined) }`. `ArecaDarkTheme` applies them again inside; a local provided in a
+  `CompositionLocalProvider` above an `ArecaDarkTheme` does not reach inside, and a nested
+  `ArecaThemeProvider` reseeds every local.
 
 ## Dark regions and the system bars
 
@@ -339,7 +467,6 @@ fun PhotoViewer(photo: Painter, onClose: () -> Unit) {
     ArecaDarkTheme {
         SystemBars(color = ArecaTheme.colors.bgCanvas)
         BaseLayout(
-            bg = ArecaTheme.colors.bgCanvas,
             topBar = { TopBar("Photo", leading = { CloseAction(onClick = onClose) }) },
         ) { padding -> Image(photo, null, Modifier.padding(padding).fillMaxSize()) }
     }
@@ -347,8 +474,8 @@ fun PhotoViewer(photo: Painter, onClose: () -> Unit) {
 ```
 
 - `ArecaDarkTheme(content)` puts content in the dark theme whatever the theme around it, keeping the
-  app's palette, shapes, spacing, elevation, motion and type, and re-resolving component defaults
-  for dark. Inside an already-dark theme it changes nothing. A nested
+  app's palette, surface layout, hues, shapes, spacing, elevation, motion, type and `componentDefaults`,
+  and re-resolving component defaults and surfaces for dark. Inside an already-dark theme it changes nothing. A nested
   `ArecaThemeProvider(darkTheme = true)` instead resets everything to the library defaults.
 - `ArecaTheme.darkColors` names a dark colour before the `ArecaDarkTheme` scope begins, such as a
   style parameter's default resolved at the call site.
@@ -360,3 +487,11 @@ fun PhotoViewer(photo: Painter, onClose: () -> Unit) {
   `edgeToEdgeDialogProperties()` (`dev.voir.areca.foundation.overlay`).
 - Build styles (`CardStyle.Outlined`, `ButtonStyle.soft()`) inside the dark scope: presets and
   factories read the theme where they are called.
+
+## Labels
+
+`ArecaThemeProvider(labels = ArecaLabels(…))` gives the words components share in the app's
+language: `back`, `close`, `dismiss`, `busy`, `cancel`, `more`, `remove`, `search`, `clearSearch`,
+`showPassword`, `hidePassword`. Read them with `ArecaTheme.labels`. Every component and flow whose
+default is one of these words reads it from here; a value passed at the call site still wins, and
+`ArecaDarkTheme` keeps them. Component-specific copy stays in each component's `…Labels`.

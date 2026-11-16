@@ -17,6 +17,7 @@ import dev.voir.areca.foundation.icon.Icon
 import dev.voir.areca.icon.BundledIcons
 import dev.voir.areca.icon.Cross
 import dev.voir.areca.icon.Search
+import dev.voir.areca.theme.ArecaTheme
 
 /**
  * [TextField] shaped for a query: a magnifier in front of it, and a clear control that appears
@@ -75,8 +76,8 @@ public fun SearchField(
         keyboardType = KeyboardType.Text,
         imeAction = ImeAction.Search,
     ),
-    searchContentDescription: String = "Search",
-    clearContentDescription: String = "Clear search",
+    searchContentDescription: String = ArecaTheme.labels.search,
+    clearContentDescription: String = ArecaTheme.labels.clearSearch,
 ) {
     val focusRequester = remember { FocusRequester() }
 

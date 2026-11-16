@@ -15,6 +15,7 @@ import dev.voir.areca.flow.attachments.icon.Trash
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.foundation.topbar.CloseAction
 import dev.voir.areca.theme.ArecaTheme
+import androidx.compose.foundation.layout.Column
 
 /** The things most often done to an attached file, with the module's glyphs. */
 public object AttachmentOptions {
@@ -100,7 +101,7 @@ public fun AttachmentOptionsSheet(
     title: (AttachmentItem) -> String = { file -> file.fileName },
     subtitle: (AttachmentItem) -> String? = { file -> file.size },
     tagsTitle: String? = null,
-    closeLabel: String = "Close",
+    closeLabel: String = ArecaTheme.labels.close,
     tags: (@Composable ColumnScope.() -> Unit)? = null,
 ) {
     val shown = rememberLastNonNull(item)
@@ -116,6 +117,7 @@ public fun AttachmentOptionsSheet(
             if (tagsTitle != null) {
                 Text(
                     text = tagsTitle,
+                    modifier = Modifier.sheetGutter(),
                     style = ArecaTheme.typography.bodySmall,
                     color = ArecaTheme.colors.fgMuted,
                 )
@@ -123,9 +125,9 @@ public fun AttachmentOptionsSheet(
                 Spacer(Modifier.height(ArecaTheme.spacing.md))
             }
 
-            tags()
+            Column(Modifier.sheetGutter()) { tags() }
 
-            if (choices.isNotEmpty()) Spacer(Modifier.height(ArecaTheme.spacing.xl2))
+            if (choices.isNotEmpty()) Spacer(Modifier.height(ArecaTheme.spacing.lg))
         }
 
         AttachmentChoiceList(choices = choices)

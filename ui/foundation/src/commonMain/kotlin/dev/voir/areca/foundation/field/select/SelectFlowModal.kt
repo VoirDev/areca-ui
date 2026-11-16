@@ -1,6 +1,7 @@
 package dev.voir.areca.foundation.field.select
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
@@ -8,6 +9,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.getValue
 import dev.voir.areca.foundation.overlay.FlowModal
 import dev.voir.areca.foundation.overlay.FlowModalController
 import dev.voir.areca.foundation.overlay.FlowModalSize
@@ -15,6 +20,7 @@ import dev.voir.areca.foundation.overlay.FlowModalStyle
 import dev.voir.areca.foundation.overlay.LocalFlowModalSize
 import dev.voir.areca.foundation.overlay.LocalFlowModalStyle
 import dev.voir.areca.theme.ArecaTheme
+import dev.voir.areca.foundation.overlay.FlowModalTopBar
 
 /**
  * A sheet for choosing from a list, for when [SelectField]'s dropdown is not enough room.
@@ -48,11 +54,22 @@ import dev.voir.areca.theme.ArecaTheme
  * @param size Height and inset behavior for the sheet. Defaults to [LocalFlowModalSize], then
  *   [FlowModalSize.Default].
  * @param labels Copy of the search field and the stock loading and empty faces. Defaults to
- *   [SelectFlowModalLabels.English].
- * @param header Fixed content above the list, typically a
- *   [dev.voir.areca.foundation.topbar.TopBar] with a title and a close control.
+ *   [LocalSelectFlowModalLabels], then [SelectFlowModalLabels.English]: provide the app's once.
+ * @param title The sheet's title. With no [header], it is drawn as a
+ *   [dev.voir.areca.foundation.overlay.FlowModalTopBar] with a close cross.
+ * @param header Fixed content above the list, in place of the one built from [title].
+ * @param headerBottom Content under the title in the stock header, such as a pill naming the
+ *   region a catalogue is drawn from. It sits in the header's `bottom` slot, so it stays fixed while
+ *   the list scrolls and the stock close — which clears focus and hides the keyboard before the
+ *   sheet — is kept. Without it, an app that wants a line under the title has to rebuild the header
+ *   and that close. Ignored when [header] is passed or [title] is `null`.
  * @param footer Fixed content below the list. Receives the current draft, which is what an
  *   apply button should commit.
+ * @param closeOnSelect Whether choosing an option closes the sheet. By default a single choice
+ *   with no footer closes on the pick — the language, the theme.
+ * @param clearable Whether pressing the chosen option of a single choice clears it. By default a
+ *   single choice is required: pressing the chosen option keeps it (and closes the sheet when
+ *   [closeOnSelect]). Multiple choices always toggle.
  * @param onQueryChange Called with the new query as it is typed. Passing null leaves the sheet
  *   without a search field.
  * @param searchPlaceholder Hint shown in the search field while the query is empty. Defaults to
@@ -75,9 +92,13 @@ public fun <Value> SelectFlowModal(
     selectionMode: SelectSelectionMode = SelectSelectionMode.Single,
     style: FlowModalStyle = LocalFlowModalStyle.current ?: FlowModalStyle.Default,
     size: FlowModalSize = LocalFlowModalSize.current ?: FlowModalSize.Default,
-    labels: SelectFlowModalLabels = SelectFlowModalLabels.English,
+    labels: SelectFlowModalLabels = LocalSelectFlowModalLabels.current ?: SelectFlowModalLabels.English,
+    title: String? = null,
     header: (@Composable () -> Unit)? = null,
+    headerBottom: (@Composable () -> Unit)? = null,
     footer: (@Composable (draftValues: Set<Value>) -> Unit)? = null,
+    closeOnSelect: Boolean = selectionMode == SelectSelectionMode.Single && footer == null,
+    clearable: Boolean = false,
     onQueryChange: ((String) -> Unit)? = null,
     searchPlaceholder: String = labels.search,
     emptyContent: (@Composable (query: String) -> Unit)? = { query ->
@@ -107,8 +128,12 @@ public fun <Value> SelectFlowModal(
         selectionMode = selectionMode,
         style = style,
         size = size,
+        title = title,
         header = header,
+        headerBottom = headerBottom,
         footer = footer,
+        closeOnSelect = closeOnSelect,
+        clearable = clearable,
         onQueryChange = onQueryChange,
         searchPlaceholder = searchPlaceholder,
         isEmpty = options.isEmpty(),
@@ -150,12 +175,19 @@ public fun <Value> SelectFlowModal(
  * @param size Height and inset behavior for the sheet. Defaults to [LocalFlowModalSize], then
  *   [FlowModalSize.Default].
  * @param labels Copy of the search field, the stock faces, the letter index and the create row.
- *   Defaults to [SelectFlowModalLabels.English].
- * @param header Fixed content above the list, typically a
- *   [dev.voir.areca.foundation.topbar.TopBar] with a title and a close control.
+ *   Defaults to [LocalSelectFlowModalLabels], then [SelectFlowModalLabels.English].
+ * @param title The sheet's title. With no [header], it is drawn as a
+ *   [dev.voir.areca.foundation.overlay.FlowModalTopBar] with a close cross.
+ * @param header Fixed content above the list, in place of the one built from [title].
+ * @param headerBottom Content under the title in the stock header; see the flat overload.
  * @param footer Fixed content below the list. Receives the current draft.
+ * @param closeOnSelect Whether choosing an option closes the sheet; see the flat overload.
+ * @param clearable Whether pressing the chosen option of a single choice clears it; see the flat
+ *   overload.
  * @param onQueryChange Called with the new query as it is typed. Passing null leaves the sheet
  *   without a search field, and so without a create row.
+ * @param searchPlaceholder Hint shown in the search field while the query is empty. Defaults to
+ *   [SelectFlowModalLabels.search].
  * @param onCreateOption Called with the trimmed query when the create row is pressed. Passing null
  *   draws no create row.
  * @param emptyContent Body shown when every section is empty and no create row is offered, given the
@@ -177,10 +209,15 @@ public fun <Value> SelectFlowModal(
     selectionMode: SelectSelectionMode = SelectSelectionMode.Single,
     style: FlowModalStyle = LocalFlowModalStyle.current ?: FlowModalStyle.Default,
     size: FlowModalSize = LocalFlowModalSize.current ?: FlowModalSize.Default,
-    labels: SelectFlowModalLabels = SelectFlowModalLabels.English,
+    labels: SelectFlowModalLabels = LocalSelectFlowModalLabels.current ?: SelectFlowModalLabels.English,
+    title: String? = null,
     header: (@Composable () -> Unit)? = null,
+    headerBottom: (@Composable () -> Unit)? = null,
     footer: (@Composable (draftValues: Set<Value>) -> Unit)? = null,
+    closeOnSelect: Boolean = selectionMode == SelectSelectionMode.Single && footer == null,
+    clearable: Boolean = false,
     onQueryChange: ((String) -> Unit)? = null,
+    searchPlaceholder: String = labels.search,
     onCreateOption: ((query: String) -> Unit)? = null,
     emptyContent: (@Composable (query: String) -> Unit)? = { query ->
         SelectFlowModalDefaults.EmptyContent(query = query, labels = labels)
@@ -220,10 +257,14 @@ public fun <Value> SelectFlowModal(
         selectionMode = selectionMode,
         style = style,
         size = size,
+        title = title,
         header = header,
+        headerBottom = headerBottom,
         footer = footer,
+        closeOnSelect = closeOnSelect,
+        clearable = clearable,
         onQueryChange = onQueryChange,
-        searchPlaceholder = labels.search,
+        searchPlaceholder = searchPlaceholder,
         isEmpty = create == null && sections.all { section -> section.options.isEmpty() },
         emptyContent = emptyContent,
         loadingContent = loadingContent,
@@ -245,8 +286,12 @@ public fun <Value> SelectFlowModal(
  * @param selectionMode Whether one value or many can be held at once.
  * @param style Colors and shape for the sheet.
  * @param size Height and inset behavior for the sheet.
- * @param header Fixed content above the list.
+ * @param title Title of the stock header.
+ * @param header Fixed content above the list, in place of the stock header.
+ * @param headerBottom Content under the stock header's title.
  * @param footer Fixed content below the list, given the draft.
+ * @param closeOnSelect Whether a single choice closes the sheet.
+ * @param clearable Whether pressing the chosen option of a single choice clears it.
  * @param onQueryChange Query callback, or null for no search field.
  * @param searchPlaceholder Hint in the search field.
  * @param isEmpty Whether there is nothing to list, which shows [emptyContent].
@@ -264,8 +309,12 @@ private fun <Value> SelectFlowModalFrame(
     selectionMode: SelectSelectionMode,
     style: FlowModalStyle,
     size: FlowModalSize,
+    title: String?,
     header: (@Composable () -> Unit)?,
+    headerBottom: (@Composable () -> Unit)?,
     footer: (@Composable (draftValues: Set<Value>) -> Unit)?,
+    closeOnSelect: Boolean,
+    clearable: Boolean,
     onQueryChange: ((String) -> Unit)?,
     searchPlaceholder: String,
     isEmpty: Boolean,
@@ -281,21 +330,45 @@ private fun <Value> SelectFlowModalFrame(
     // The modal stays composed while the controller hides and shows the sheet, so closing is
     // watched explicitly: once the sheet is fully hidden, unapplied edits are dropped and the next
     // opening starts from the caller's values again.
-    LaunchedEffect(controller, draft) {
+    // A closed sheet also forgets its search, telling the caller so its filter widens again: the
+    // next opening shows every option, not the last query's leftovers.
+    val currentOnQueryChange by rememberUpdatedState(onQueryChange)
+    LaunchedEffect(controller, draft, state) {
         snapshotFlow { controller.isVisible }.collect { visible ->
-            if (!visible) draft.discard()
+            if (!visible) {
+                draft.discard()
+                if (state.query.isNotEmpty()) {
+                    state.query = ""
+                    currentOnQueryChange?.invoke("")
+                }
+            }
         }
+    }
+
+    // The keyboard of a focused search leaves with the sheet rather than staying over the screen.
+    val focusManager = LocalFocusManager.current
+    val keyboard = LocalSoftwareKeyboardController.current
+    val close: () -> Unit = {
+        focusManager.clearFocus()
+        keyboard?.hide()
+        controller.hide()
+    }
+
+    val stockHeader: (@Composable () -> Unit)? = header ?: title?.let { text ->
+        { FlowModalTopBar(title = text, onClose = close, bottom = headerBottom) }
     }
 
     FlowModal(
         controller = controller,
         modifier = modifier,
-        header = header,
+        header = stockHeader,
         style = style,
         size = size,
         footer = { footer?.invoke(draftValues) },
     ) {
-        Column {
+        // The sheet is as tall as the list, so a short one opens at its rows. A searchable one takes
+        // the whole sheet, so it does not jump while a search narrows it.
+        Column(modifier = if (onQueryChange != null) Modifier.fillMaxHeight() else Modifier) {
             if (onQueryChange != null) {
                 SelectFlowModalDefaults.Search(
                     value = state.query,
@@ -320,10 +393,17 @@ private fun <Value> SelectFlowModalFrame(
 
                 else -> {
                     body(draftValues) { option ->
-                        onChange(draft.select(option, selectionMode))
+                        val single = selectionMode == SelectSelectionMode.Single
+                        val keep = selectionMode.keepsChosen(draftValues, option, clearable)
+                        if (!keep) {
+                            val chosen = draft.select(option, selectionMode)
+                            onChange(chosen)
+                        }
+                        if (closeOnSelect && single && (keep || draft.values.isNotEmpty())) close()
                     }
                 }
             }
+            Spacer(Modifier.height(ArecaTheme.spacing.xl))
         }
     }
 }

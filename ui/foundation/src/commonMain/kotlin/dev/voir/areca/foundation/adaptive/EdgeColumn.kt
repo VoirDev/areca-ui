@@ -467,7 +467,7 @@ public fun <T : Any> VerticalTabBar(
     selectedValue: T?,
     onValueSelected: (T) -> Unit,
     modifier: Modifier = Modifier,
-    moreLabel: String = "More",
+    moreLabel: String = ArecaTheme.labels.more,
     style: EdgeColumnStyle = LocalEdgeColumnStyle.current ?: EdgeColumnStyle.Default,
     size: EdgeColumnSize = LocalEdgeColumnSize.current ?: EdgeColumnSize.Default,
 ) {

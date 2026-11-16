@@ -84,11 +84,12 @@ public enum class ListItemColor {
  * @property overlineDisabled Overline color while disabled.
  * @property value Inline value color at rest.
  * @property valueActive Inline value color while hovered or pressed.
- * @property valueSelected Inline value color while selected.
+ * @property valueSelected Inline value color while selected, which holds under hover and press.
  * @property valueDisabled Inline value color while disabled.
  * @property extra Leading and trailing slot color at rest.
  * @property extraActive Leading and trailing slot color while hovered or pressed.
- * @property extraSelected Leading and trailing slot color while selected.
+ * @property extraSelected Leading and trailing slot color while selected, which holds under hover
+ * and press.
  * @property extraDisabled Leading and trailing slot color while disabled.
  * @property border Border color; [Color.Unspecified] or a zero [borderWidth] draws no border.
  * @property borderSelected Border color while selected.
@@ -100,6 +101,25 @@ public enum class ListItemColor {
  * row's content is not clipped to it, so an [indication] drawn outside the row stays whole.
  * @property indication Optional indication layered on top of the row's own state drawing. `null`
  * by default, because the row already answers hover and press itself.
+ * @property chevron Color of a [ListItemChevron] in the row at rest. [Color.Unspecified], the
+ * default, draws it in the trailing slot's color ([extra] and its states), as before the chevron
+ * had a color of its own. Set it to quieten the chevron without also quietening the leading slot,
+ * which shares [extra].
+ * @property chevronActive Chevron color while hovered or pressed; defaults to [chevron].
+ * [Color.Unspecified] follows [extraActive].
+ * @property chevronSelected Chevron color while selected; defaults to [chevron].
+ * [Color.Unspecified] follows [extraSelected].
+ * @property chevronDisabled Chevron color while disabled. [Color.Unspecified], the default, follows
+ * [extraDisabled], so a chevron given a color still fades with its row.
+ *
+ * **Changing an ink that has states.** The `…Active` and `…Selected` defaults are taken from the
+ * rest color when a style is built, so `copy(value = x)` leaves the hovered and selected value in
+ * the old color. Use [withValueColor] and [withChevronColor], which move every state of that ink in
+ * one step.
+ *
+ * **Selection holds under the pointer.** A selected row keeps its selected title, value, slot and
+ * chevron colors while it is hovered or pressed; the hover and press tints still answer on top. On a
+ * row that [flood]s when selected, an active color would otherwise be laid on the fill.
  */
 @Immutable
 public data class ListItemStyle(
@@ -143,7 +163,66 @@ public data class ListItemStyle(
     public val shape: Shape = RectangleShape,
 
     public val indication: Indication? = null,
+
+    // Appended rather than grouped with the other inks, so a style built with positional arguments
+    // keeps compiling.
+    public val chevron: Color = Color.Unspecified,
+    public val chevronActive: Color = chevron,
+    public val chevronSelected: Color = chevron,
+    public val chevronDisabled: Color = Color.Unspecified,
 ) {
+    /**
+     * This style with the inline value in [color], in every state but disabled.
+     *
+     * `copy(value = …)` moves the rest color alone: [valueActive] and [valueSelected] were filled
+     * in from the old [value] when the style was built and keep it. This moves all three, which is
+     * what re-inking a value nearly always means.
+     *
+     * ```kotlin
+     * ListItemStyle.plain().withValueColor(ArecaTheme.colors.fgBase)
+     * ```
+     *
+     * @param color Value color at rest.
+     * @param active Value color while hovered or pressed.
+     * @param selected Value color while selected.
+     * @return The style with the value re-inked.
+     */
+    public fun withValueColor(
+        color: Color,
+        active: Color = color,
+        selected: Color = color,
+    ): ListItemStyle = copy(value = color, valueActive = active, valueSelected = selected)
+
+    /**
+     * This style with its [ListItemChevron] in [color] — a quieter chevron than the leading slot,
+     * which shares the trailing slot's [extra] ink — leaving the slots as they are.
+     *
+     * ```kotlin
+     * ListItemStyle.plain().withChevronColor(
+     *     color = ArecaTheme.colors.fgDisabled,
+     *     active = ArecaTheme.colors.fgMuted,
+     * )
+     * ```
+     *
+     * @param color Chevron color at rest.
+     * @param active Chevron color while hovered or pressed.
+     * @param selected Chevron color while selected.
+     * @param disabled Chevron color while disabled; [Color.Unspecified] fades it with the row's
+     * slots.
+     * @return The style with the chevron re-inked.
+     */
+    public fun withChevronColor(
+        color: Color,
+        active: Color = color,
+        selected: Color = color,
+        disabled: Color = Color.Unspecified,
+    ): ListItemStyle = copy(
+        chevron = color,
+        chevronActive = active,
+        chevronSelected = selected,
+        chevronDisabled = disabled,
+    )
+
     /** Theme-backed presets and builders. */
     public companion object {
         /** The default row style: a transparent, neutral row that tints on hover. */
@@ -195,9 +274,9 @@ public data class ListItemStyle(
             val tone = toneOf(color)
             return toneStyle(
                 tone = tone,
-                bg = ArecaTheme.colors.bgSurface,
+                bg = ArecaTheme.surface.raised,
                 bgSelected = tone.softBg,
-                bgDisabled = ArecaTheme.colors.bgSurface,
+                bgDisabled = ArecaTheme.surface.raised,
                 shape = shape,
             )
         }
@@ -220,9 +299,9 @@ public data class ListItemStyle(
             val tone = toneOf(color)
             return toneStyle(
                 tone = tone,
-                bg = ArecaTheme.colors.bgSurface,
+                bg = ArecaTheme.surface.ground,
                 bgSelected = tone.softBg,
-                bgDisabled = ArecaTheme.colors.bgSurface,
+                bgDisabled = ArecaTheme.surface.ground,
                 shape = shape,
                 border = tone.border,
                 borderSelected = tone.rail,
@@ -282,6 +361,48 @@ public data class ListItemStyle(
                 selectedRail = Color.Unspecified,
             )
         }
+
+        /**
+         * A row that floods with a solid [fill] when selected, its title, subtitle, value, slots and
+         * chevron reversed out in [content], and no rail.
+         *
+         * For a choice whose answer should read from across the sheet — the chosen subcategory in
+         * its category's colour, the active plan — where the soft wash and rail of [plain] are too
+         * quiet. At rest it is a [plain] row of [color]. The rail is dropped because the fill already
+         * says which row is chosen, and a rail on a solid band reads as a stripe of another colour.
+         * Selection holds its reversed ink while the row is hovered or pressed, so pressing the
+         * chosen row does not lay a dark ink on the fill.
+         *
+         * ```kotlin
+         * ListItemStyle.flood(fill = category.color)
+         * ```
+         *
+         * @param fill Background of the selected row. The product accent by default; pass a hue to
+         * flood in a category's colour.
+         * @param content Ink of the selected row's text, value, slots and chevron; it must read on
+         * [fill].
+         * @param color Tone of the row at rest.
+         * @param shape Shape the row draws its states and fill in. Square by default, so a flooded
+         * row runs edge to edge in its container like the rows around it.
+         * @return Colors of a row that floods when selected.
+         */
+        @Composable
+        public fun flood(
+            fill: Color = ArecaTheme.colors.bgBrandBase,
+            content: Color = ArecaTheme.colors.fgOnFill,
+            color: ListItemColor = ListItemColor.Neutral,
+            shape: Shape = RectangleShape,
+        ): ListItemStyle = plain(color = color, shape = shape).copy(
+            bgSelected = fill,
+            bgSelectedHovered = fill,
+            titleSelected = content,
+            subtitleSelected = content,
+            overlineSelected = content,
+            valueSelected = content,
+            extraSelected = content,
+            chevronSelected = content,
+            selectedRail = Color.Unspecified,
+        )
     }
 }
 

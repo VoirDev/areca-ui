@@ -30,7 +30,6 @@ fun App(onSignOut: () -> Unit) {
         var push by remember { mutableStateOf(true) }
 
         BaseLayout(
-            bg = ArecaTheme.colors.bgCanvas,
             contentWindowInsets = WindowInsets.safeDrawing,
             topBar = { TopBar("Account") },
         ) { padding ->
@@ -61,12 +60,39 @@ and `button`.
 ## Theme and customising
 
 - **[Theme](../../docs/theme.md)** — the tokens (colour, typography, spacing, radius, elevation,
-  motion), changing the theme through `ArecaThemeProvider`, regions that are always dark with
-  `ArecaDarkTheme` and `SystemBars` (in `dev.voir.areca.platform`) to colour the system bars around
-  them, and reading tokens through `ArecaTheme`.
+  motion), changing the theme through `ArecaThemeProvider`, the surfaces, app-wide component
+  defaults through `componentDefaults`, regions that are always dark with `ArecaDarkTheme` and
+  `SystemBars` (in `dev.voir.areca.platform`) to colour the system bars around them, and reading
+  tokens through `ArecaTheme`.
 - **[Customising components](../../docs/customising.md)** — every component's `style: XStyle` and
   `size: XSize`, the `Default` values, presets and `default(...)`, defaults provided for a subtree,
   `ActionColor`, parameter order, interaction and focus, and touch targets.
+
+## Surfaces
+
+Every fill sits on a surface, and components read the role of the surface they are drawn on —
+`ArecaTheme.surface.ground`, `raised`, `well`, `onWell`, `separator`, `field` — rather than a fixed
+ground token. `ArecaThemeProvider(surfaceLayout = …)` picks the grounds: `SurfaceLayout.Grouped`,
+the default, is a grey page with white cards; `SurfaceLayout.Plain` a white page with grey cards. A
+sheet, a dialog and a menu are white in both, and their content lies flat on them: a `Section`
+there draws no card, and a `Card` there is for emphasis only. `BaseLayout` puts its content
+on the page; `Card`, `Section`, `Notice` and `ContentList` inset groups put theirs one level up; so
+a field or a chip anywhere takes the right fill without being told.
+
+A container of your own, in `dev.voir.areca.theme`:
+
+| Composable | Use it for |
+| --- | --- |
+| `RaisedSurface` | Content drawn on a fill of your own in `ArecaTheme.surface.raised`: puts it one level up, as a card does |
+| `ProvideSurface(level, root)` | Content at a chosen `SurfaceLevel` (`Page`, `Card`, `Inset`) of the current ladder, or of a `SurfaceRoot` (`Screen`, `Sheet`) — a white panel across a grey page is `SurfaceLevel.Card` |
+
+```kotlin
+Box(Modifier.background(ArecaTheme.surface.raised, ArecaTheme.shapes.surface)) {
+    RaisedSurface { UsageSummary() }
+}
+```
+
+The roles, levels and the full ladder are in [Theme](../../docs/theme.md#surfaces).
 
 ## Window classes
 
@@ -163,6 +189,7 @@ map and the options that matter.
 | --- | --- |
 | `Button` | An action with a label, and optionally an icon either side |
 | `IconButton` | An action shown by an icon alone. Always give it a `contentDescription`; under a pointer it shows as a tooltip |
+| `IconToggleButton` | An icon that is on or off — a favourite, a pin, a mute — announced as a toggle with its state |
 
 ```kotlin
 Button("Continue", onClick = onContinue, modifier = Modifier.fillMaxWidth(), loading = saving)
@@ -173,7 +200,20 @@ IconButton(
     onClick = onDelete,
     style = IconButtonStyle.plain(ActionColor.Danger),
 )
+
+IconToggleButton(
+    checked = favourite,
+    onCheckedChange = { favourite = it },
+    imageVector = ArecaIcons.Heart,
+    checkedImageVector = ArecaIcons.HeartFill,
+    contentDescription = "Favourite",
+)
 ```
+
+`IconToggleButton` draws `checkedImageVector` in `checkedStyle` (`IconButtonStyle.plain(ActionColor.Brand)`)
+while `checked`, and `imageVector` in `style` (`plain(ActionColor.Neutral)`) otherwise.
+`contentDescription` names the thing toggled; assistive technology adds whether it is on, so do not
+switch the description with the state. In a top bar, use `FavoriteAction`.
 
 `enabled = false` says the action is unavailable. `loading = true` says it is under way: the press
 is blocked, a spinner replaces the trailing slot, and assistive technology hears
@@ -218,12 +258,13 @@ TopBar(
 
 | Component | Use it for |
 | --- | --- |
-| `Text` with a `TextVariant` | All text. The variant names a role — `HeadingSmall`, `BodyMedium`, `Caption`, `LabelLarge` — and `TextColor` a foreground: `Base`, `Subtle`, `Muted`, `Danger`, … |
+| `Text` with a `TextVariant` | All text. The variant names a role — `HeadingSmall`, `BodyMedium`, `Caption`, `LabelLarge`, `Overline` — and `TextColor` a foreground: `Base`, `Subtle`, `Muted`, `Danger`, … |
 | `Text` with a `TextStyle` | Text that inherits `LocalTextStyle` and `LocalContentColor` — inside a component's slot |
 | `Heading` | A section's title with an optional supporting line and trailing content, announced as a heading |
 | `TextLink` | A standalone pressable label — "Forgot password?" |
 | `TextLinkPrompt` | A sentence with one pressable part — "No account? Sign up" |
 | `SensitiveText` | A value hidden under a veil until revealed — a balance, a card number |
+| `AmountText` | A sum of money or a measured quantity the app has formatted: tabular figures, the minor units and the symbol a step smaller, never reordered by bidi |
 
 ```kotlin
 Text("Recent activity", variant = TextVariant.HeadingSmall)
@@ -238,6 +279,53 @@ SensitiveText("€4,210.50", revealed = revealed, onRevealedChange = { revealed 
 ```
 
 A plain `Text("…")` inside a component's slot takes the slot's type and colour; pass no style.
+
+Both `Text` overloads take `autoSize: TextAutoSize?` (`androidx.compose.foundation.text`), last,
+`null` by default. It shrinks the text to fit its box. For a figure that must stay on one line, pair
+it with `maxLines = 1`:
+
+```kotlin
+Text(
+    total,
+    variant = TextVariant.HeadingLarge,
+    maxLines = 1,
+    autoSize = TextAutoSize.StepBased(minFontSize = 12.sp, maxFontSize = 32.sp),
+)
+```
+
+**Amounts.** The app formats the figures for the user's locale — grouping, decimal mark, minus sign
+— and passes the parts as an `Amount`. `AmountText` only draws them.
+
+| `Amount` property | Holds |
+| --- | --- |
+| `whole` | The whole part with its grouping: `"1,284"`, `"1 284"` |
+| `fraction` | The minor units without the mark: `"50"`; `null` for none |
+| `decimalMark` | `"."` (default) or `","` |
+| `symbol` | A currency symbol or a unit: `"€"`, `"د.إ"`, `"kg"`; `null` for none |
+| `symbolPlacement` | `AmountSymbolPlacement.Before` (default) or `After` |
+| `sign` | A sign before everything: `"−"`, `"+"`; `null` for none |
+| `spokenText` | What a screen reader says — "minus 1,284 euros 50 cents"; `null` reads the parts as drawn |
+
+```kotlin
+AmountText(
+    Amount(whole = "1,284", fraction = "50", symbol = "€", sign = "−"),
+    style = ArecaTheme.typography.headingLarge,
+    color = TextColor.Danger.color,
+)
+
+AmountText(Amount(whole = "1 284", fraction = "50", decimalMark = ",", symbol = "د.إ"))
+
+AmountText(Amount(whole = "12", symbol = "kg", symbolPlacement = AmountSymbolPlacement.After))
+```
+
+Every digit has the same width (`tnum`), so a column of amounts lines up and a changing total does
+not jitter. `minorScale` (`0.7f` by default) sizes the fraction and the symbol against the figures;
+`1f` keeps them level. The symbol and the figures are separate texts laid out left to right, so
+`د.إ 1 284,50` keeps its order and no control characters are added; the amount is read as one
+phrase. With `autoSize` the figures shrink and the symbol keeps its size. `masked = true` draws `••••` in place of the figures and
+drops the fraction. An amount is one line (`maxLines = 1`); pass `autoSize` for a hero figure that
+shrinks rather than ellipsizes. `style` and `color` default to the ones in scope, so in a row's
+`value` or `trailing` slot the amount takes the slot's type.
 
 ### Icons
 
@@ -260,6 +348,11 @@ FeaturedIcon(
 Chevron(if (expanded) ChevronDirection.Up else ChevronDirection.Down)
 ```
 
+`FeaturedIconStyle.solidHue(hue)` and `FeaturedIconStyle.softHue(hue)` draw a tile in one of the
+categorical colours of `ArecaTheme.hues` — see [Hues](../../docs/theme.md#hues). Solid fills the hue
+under a white glyph; soft mixes the hue into the surface under a deeper glyph. Use a hue when the
+colour only tells unrelated things apart, and an `ActionColor` when it carries a meaning.
+
 Pass `contentDescription = null` when the icon repeats something already said beside it, and
 `tint = Color.Unspecified` for a multicolour mark. `IconSize` steps run `ExtraSmall` (12dp) to
 `ExtraLarge` (32dp).
@@ -272,6 +365,7 @@ Pass `contentDescription = null` when the icon repeats something already said be
 | `NotificationBadge` | A count, usually overlaid on something else |
 | `IndicatorDot` | A status carried by colour alone: presence, unread |
 | `BadgeSelect` / `LazyBadgeSelect` / `FlowBadgeSelect` | A group of chips that select something: one line, one scrolling line, or wrapping lines |
+| `Chip` | One chip on its own: a toggle announced with its state, a button (`onClick`) — a suggestion — or an applied filter that a press removes, with an optional mark before the label. `ChipStyle` / `ChipSize` (and `LocalChipStyle` / `LocalChipSize`) restyle it |
 | `Avatar` | A person or entity: an image, initials from `letters`, or an empty shape |
 
 ```kotlin
@@ -294,6 +388,23 @@ hold its selection: `onSelect` reports the chip pressed and the caller updates `
 `BadgeSelectionMode.Single` the chips are radio buttons, with `Multiple` checkboxes.
 
 ```kotlin
+Chip(label = "Saved only", selected = savedOnly, onSelectedChange = { savedOnly = it })
+
+Chip(
+    label = "Food",
+    onRemove = { remove(food) },
+    removeContentDescription = "Remove Food",
+    leading = { Box(Modifier.size(10.dp).background(ArecaTheme.hues.orange, ArecaTheme.shapes.full)) },
+)
+```
+
+`Chip` sits in the surface's `well` unchosen and fills with `bgContrast` when `selected`. With
+`onSelectedChange` it is a toggle; with only `onRemove` it is a label with a cross — the filters
+applied above a list. `removeContentDescription` defaults to the English "Remove"; pass a localized
+one naming the chip. A set of chips that select stays `BadgeSelect`, `FlowBadgeSelect` or
+`LazyBadgeSelect`.
+
+```kotlin
 Avatar(letters = "Ada Lovelace", contentDescription = "Ada Lovelace")
 
 Avatar(contentDescription = "Ada Lovelace", size = AvatarSize.Large) {
@@ -309,6 +420,25 @@ Avatar(contentDescription = "Ada Lovelace", size = AvatarSize.Large) {
 The avatar's slot takes any image loader's output and clips it. `letters` is reduced to at most two
 initials. Without a `contentDescription` the avatar is decorative — right when the name is printed
 beside it.
+
+**Logos and brand tiles.** A merchant's logo, a bank, a currency or a service is an `Avatar` in the
+tile shape. The initials show only when `content` is `null`, so pass the slot only when there is an
+image to draw; without one, `letters` gives the monogram on the surface's `well`:
+
+```kotlin
+val logo = merchant.logo
+Avatar(
+    shape = ArecaTheme.shapes.tile,
+    letters = merchant.name,
+    content = if (logo != null) {
+        { Image(logo, contentDescription = null, modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop) }
+    } else {
+        null
+    },
+)
+```
+
+In a settings row's leading slot, `SettingsRowTile { … }` crops any visual to the row's icon tile.
 
 ### Stats
 
@@ -349,7 +479,7 @@ every cell an equal width and every cell of a row the row's height; pass the sta
 
 | Component | Use it for |
 | --- | --- |
-| `Checkbox` | A value that is part of a form and saved later. `indeterminate` shows a checked parent of mixed children |
+| `Checkbox` | A value that is part of a form and saved later. `indeterminate` shows a parent of mixed children, whatever `checked` is |
 | `Radio` | One option of several. Put `Modifier.selectableGroup()` on the group |
 | `Toggle` | A setting that applies the moment it is flipped. `ToggleState` with `BinaryToggleCycle` or `TriStateToggleCycle` |
 | `NumberStepper` | A whole number nudged by one between bounds |
@@ -388,12 +518,12 @@ chosen option in view); `orientation` is `Horizontal` or `Vertical`.
 SlidingSelector(
     items = listOf("Any level", "Top", "Heart", "Base").map { SelectorItem(it) { Text(it) } },
     selected = level,
-    // Never null in the default SelectorMode.Required.
-    onSelect = { if (it != null) level = it },
+    onSelectedChange = { level = it },
 )
 ```
 
-`mode = SelectorMode.Optional` allows nothing chosen: tapping the chosen option calls `onSelect(null)`,
+Where one option is always chosen, `onSelectedChange` takes the value itself. The form with
+`onSelect: (T?) -> Unit` and `mode = SelectorMode.Optional` allows nothing chosen: tapping the chosen option calls `onSelect(null)`,
 and the options are announced as switches rather than radio buttons. A `SelectorItem` can give its
 own `thumb` and `contentSelected` colours, which the thumb cross-fades between as it moves, and a
 `contentDescription` for content that does not name it alone:
@@ -439,7 +569,7 @@ its label and its message.
 | `AffixTextField` | A value with a fixed prefix or suffix — a currency sign, a unit |
 | `OtpField` | A one-time code, one character to a cell, with `onComplete` when the last one lands |
 | `SelectField` | A value chosen from a dropdown anchored to the field |
-| `SelectFlowModal` | A long list chosen from in a sheet, with optional search and an apply button |
+| `SelectFlowModal` | A choice in a sheet, as tall as its options: a few at their rows' height, many up to the cap, a search over the whole sheet |
 | `FieldRow` | Several parts sharing one border and one status — a dialling code and a number |
 | `TextSegment` / `SelectSegment` | The parts of a `FieldRow`: one typed into, one chosen from a dropdown |
 | `FieldGroup` | The label above, beside or inside the control, and one assistive or error line |
@@ -471,7 +601,10 @@ inside the box, and works only through the scope. The group decides the status f
 **Looks.** Fields default to `FieldDefaults.style` and `FieldDefaults.size`, which read
 `LocalFieldStyle` and `LocalFieldSize`. The looks are factories: `outlined()` (the theme's default),
 `filled()`, `soft()`, `solidNeutral()`, `underlined()` and `inline()`, for a field inside a surface
-that already draws the boundary. Provide one look for a whole form:
+that already draws the boundary. Their backgrounds are left unspecified and take a role of the
+surface the field is drawn on: `FieldStyle.bgRole` is `SurfaceRole.Field` for `outlined()` (white
+in light) and `SurfaceRole.Well` for `filled()`, `soft()` and `solidNeutral()`; a filled field turns
+to `Field` while focused (`bgFocusedRole`). Provide one look for a whole form:
 
 ```kotlin
 CompositionLocalProvider(LocalFieldStyle provides FieldStyle.filled()) {
@@ -491,6 +624,39 @@ field, a last row offers to add the typed query as the user's own — "Add “Go
 and stays when nothing matched. `SelectFlowModalLabels` holds the sheet's copy — in either
 overload, so a picker is localized the same way with or without sections. The stock body is
 `SelectFlowModalDefaults.SectionedList`, and `CreateOptionRow` is there for a custom one.
+The search field above the options, `SelectFlowModalDefaults.Search`, takes the app's field style
+and size in scope (`FieldDefaults.style`, `FieldDefaults.size`), so it looks like every other field.
+
+Like every `FlowModal`, the sheet is as tall as what it holds: a theme or a language opens at the
+height of its rows, a long list stops at the cap and scrolls, and a picker with search takes the
+whole sheet so it does not jump while the search narrows the list. The options lie straight on the sheet as rows with hairlines, like a settings section's, each with its
+`SelectOption(description, leading)` line and mark and a brand-coloured tick; `title` adds the stock
+`FlowModalTopBar` with a close cross. A single choice with no `footer` closes the sheet once picked
+(`closeOnSelect`), so `onChange` only stores the value; pressing the chosen option keeps it rather
+than leaving the choice empty (`clearable = true` lets it clear). A closed sheet forgets its search
+and calls `onQueryChange("")`, and takes the keyboard with it. `SelectOption(detail = "$")` puts a
+short value at the row's end. `headerBottom = { … }` puts content under the stock title — a pill
+naming the region a list of banks is drawn from — and keeps the stock close, which clears focus and
+hides the keyboard; pass `header` only to replace the header outright. Provide the app's
+`SelectFlowModalLabels` once through
+`LocalSelectFlowModalLabels` in `componentDefaults`. The stock bodies are
+`SelectFlowModalDefaults.List` and `SectionedList`; `SelectField` and `SelectSegment` draw their
+dropdown with `SelectFlowModalDefaults.MenuList`, plain rows on the menu.
+
+```kotlin
+SelectFlowModal(
+    controller = themePicker,
+    title = "Appearance",
+    values = setOf(theme),
+    options = listOf(
+        SelectOption(System, System, "System", description = "Follows the device",
+            leading = { SettingsRowIcon(ArecaIcons.Monitor, hue = ArecaTheme.hues.gray) }),
+        SelectOption(Light, Light, "Light", leading = { SettingsRowIcon(ArecaIcons.Sun, hue = ArecaTheme.hues.orange) }),
+        SelectOption(Dark, Dark, "Dark", leading = { SettingsRowIcon(ArecaIcons.MoonStar, hue = ArecaTheme.hues.indigo) }),
+    ),
+    onChange = { picked -> picked.firstOrNull()?.let(onTheme) },
+)
+```
 
 ```kotlin
 SelectFlowModal(
@@ -501,7 +667,8 @@ SelectFlowModal(
         SelectOptionSection("popular", "Popular", popular),
         SelectOptionSection("all", "All", allSorted, indexed = true),
     ),
-    onChange = { picked -> picked.firstOrNull()?.let(onBrand); brandPicker.hide() },
+    title = "Brand",
+    onChange = { picked -> picked.firstOrNull()?.let(onBrand) },
     state = search,
     onQueryChange = onSearch,
     onCreateOption = { query -> onAddBrand(query); brandPicker.hide() },
@@ -556,8 +723,10 @@ FieldGroupLayout(
 | `ProgressBar` | Work with a known total; `progress = null` for indeterminate |
 | `StepIndicator` | Which of a handful of steps the user is on — the bar atop a setup flow |
 | `Skeleton` | Placeholder bars where content is still loading |
+| `SkeletonBlock` | One placeholder shape sized by its modifier — an avatar, a thumbnail, a chip, a card |
+| `SkeletonGroup` | A region of placeholders announced once, "Loading transactions" |
 | `RequirementList` | The rules a value must meet, each ticked off as it is met |
-| `Fallback` | Part of a screen standing in for missing content: empty, failed, offline |
+| `Fallback` | Part of a screen standing in for missing content: empty, failed, offline. The `Fallback(title, …, tone)` overload is the stock empty state and failure in words |
 | `ToastHost` / `Toast` | A brief message about something that just happened. `Toast` is one toast's surface, drawn by the host |
 | `AnnounceOnChange` | A sentence spoken by the screen reader when it appears or changes, without moving focus |
 
@@ -572,8 +741,74 @@ Fallback(
 )
 ```
 
+A `Fallback` is centred; `horizontalAlignment = Alignment.Start` sets it, text included, against
+the gutter, for a message that belongs to one section of a page.
+
+Most screens need one of two fallbacks: nothing is there, or reading it failed. The
+`Fallback(title, …)` overload draws both from words. `tone` picks the mark, the button and the room
+around the block:
+
+| `tone` | Mark (`icon` default) | Button | Room |
+| --- | --- | --- | --- |
+| `FallbackTone.Empty` (default) | A tray, neutral | Soft neutral: a way back — "Show all", "Clear filters" | Generous: `spacing.xl` across, `spacing.xl6` above and below |
+| `FallbackTone.Failure` | An alert circle, danger | Soft brand: "Try again" | `FallbackSize.Default` |
+
+```kotlin
+Fallback(
+    title = "No transactions yet",
+    body = "Transactions you add appear here.",
+    actionText = "Show all wallets",
+    onAction = onShowAll,
+)
+
+Fallback(
+    title = "Couldn't load transactions",
+    body = "Check your connection and try again.",
+    tone = FallbackTone.Failure,
+    actionText = "Try again",
+    onAction = onRetry,
+)
+```
+
+Both glyphs ship in foundation, so the overload needs no icons module. Pass `icon` to change the
+mark, `icon = null` for none. The button shows only when both `actionText` and `onAction` are set.
+The empty tone's button is never the screen's call to action; for "New invoice" use the slot form
+with a solid `Button`, or put the action in the top bar.
+
+`Skeleton` sizes its bars from a line of text. `SkeletonBlock` is one shape at exactly the size its
+modifier gives it, so it can match what replaces it. Placeholders are silent to assistive
+technology; wrap a region of them in `SkeletonGroup`, which reads its `contentDescription` once:
+
+```kotlin
+SkeletonGroup(contentDescription = "Loading wallets") {
+    Row(horizontalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg)) {
+        SkeletonBlock(Modifier.size(48.dp), shape = ArecaTheme.shapes.full)
+        SkeletonBlock(Modifier.weight(1f).height(48.dp))
+    }
+    SkeletonBlock(Modifier.fillMaxWidth().aspectRatio(2f), shape = ArecaTheme.shapes.surface)
+}
+```
+
+`shape` defaults to the skeleton size's shape; `animated = false` stops the shimmer and `reversed`
+runs it against the reading direction. `rememberSettledLoading(loading)` takes the flicker out of a
+loading face: a load that ends within `delay` (150ms) never shows one, and a face that does show
+stays at least `minimumDuration` (400ms):
+
+```kotlin
+val showSkeleton = rememberSettledLoading(state.loading)
+when {
+    showSkeleton -> SkeletonGroup(contentDescription = "Loading wallets") { repeat(3) { ListItemSkeleton() } }
+    state.loading -> Unit
+    else -> WalletRows(state.wallets)
+}
+```
+
+While `loading` is `true` but the face has not shown yet, draw nothing, not the empty state.
+
 Toasts queue in a `ToastState` and show one at a time in a `ToastHost`, which fills its parent and
-keeps clear of the window insets:
+keeps clear of the window insets. On a screen framed by `BaseLayout`, pass the state as
+`BaseLayout(toastState = toasts)` instead: the frame draws the host above its bottom bar and
+floating action. A host of your own:
 
 ```kotlin
 val toasts = rememberToastState()
@@ -614,7 +849,9 @@ StatusScene(
 ```
 
 A notice takes its colours from `tone` and `emphasis` through `NoticeStyle.of(...)`; a danger notice
-is filled by default, every other tone subtle. A style provided through `LocalNoticeStyle` replaces
+is filled by default, every other tone subtle. A subtle notice is on the `raised` fill of the
+surface it is drawn on, and its content one level up, so a neutral soft button inside it still
+reads. A style provided through `LocalNoticeStyle` replaces
 the tone's for every notice in the subtree. A status scene *is* the screen and stages its entrance;
 a `Fallback` stands in for part of one and appears at once. Their slots line up one for one.
 
@@ -630,7 +867,8 @@ a `Fallback` stands in for part of one and appears at once. Their slots line up 
 | `ConfirmSheet` | A yes-or-no question answered with a thumb: sign out, delete, discard. A centred dialog on a window from expanded up |
 | `ConfirmationDialog` | The same question as a centred dialog, with `suspend` handlers that show progress |
 | `Dialog` | A centred window for a short task — rename, pick one thing. End it with `ModalDefaults.Actions` |
-| `FlowModal` | A bottom sheet the user can drag between heights and away — a form, a picker, a filter |
+| `FlowModal` | A bottom sheet the user can drag between heights and away — a form, a picker, a filter. Shown by a `visible` flag, by an `item` it is about, or by a `FlowModalController` |
+| `FlowModalTopBar` | A sheet's header: its title centred, a close cross at the end, a search field pinned in `bottom` |
 | `FlowModalActionBar` | A sheet's footer: the commit button, and an optional secondary action in `leading` |
 | `FlowModalSecondaryAction` | The secondary button in a `FlowModalActionBar` — "Cancel", "Reset" |
 | `TooltipBox` | A short label naming its content when the pointer rests on it or keyboard focus reaches it. Never under touch |
@@ -652,7 +890,10 @@ ConfirmSheet(
 ```
 
 A `ConfirmSheet` is a `FlowModal` underneath, so the sheet defaults in scope — `LocalFlowModalStyle`,
-`LocalFlowModalSize`, an `ArecaDarkTheme` — reach it.
+`LocalFlowModalSize`, an `ArecaDarkTheme` — reach it. A question whose yes destroys something takes
+`style = ConfirmSheetStyle.Danger`: the tile and the confirming button in the danger family.
+`extra` sits inside the sheet's side padding, as the buttons do; wrap choice rows in
+`ConfirmSheetRows` so they run edge to edge, as rows do on any sheet.
 
 A sheet spans the window unless `FlowModalSize.maxWidth` caps it; a capped sheet is centred along
 the bottom edge and its scrim still covers the window. The sheet opens in its own window, so an app
@@ -667,29 +908,81 @@ CompositionLocalProvider(
 }
 ```
 
-A `FlowModal` is driven by a `FlowModalController` from `rememberFlowModal`. Give it a `TopBar` as
-`header` and a `FlowModalActionBar` as `footer`. The drag handle floats over the top of the sheet
-and the header starts at the sheet's top edge, so a header's fill runs under the handle; pass the
-`TopBar` `windowInsets = FlowModalHeaderInsets` to keep its title clear of the handle. Without a
-header, the body starts below the handle:
+A `FlowModal` has three forms. Each keeps the sheet composed, so it slides out rather than
+vanishing; never wrap one in `if`.
+
+| Form | Use it when |
+| --- | --- |
+| `FlowModal(visible, onDismissRequest)` | Screen or view model state says whether the sheet is open |
+| `FlowModal(item, onDismissRequest) { item -> }` | The sheet is about one thing — the transaction being edited, the file being renamed. It is open while `item` is not `null` |
+| `FlowModal(controller)` | Code opens and closes the sheet: `show()`, `hide()`, or `hideAndWait()` before navigating |
+
+`onDismissRequest` is called on back, a press on the scrim or a drag down; clear the state in it.
+The `visible` and `item` forms take the controller's heights and drag behaviour from a `controller`
+argument, `rememberFlowModal()` by default, and `partial` says whether the sheet opens at its partial
+height. The `item` form keeps drawing the last item while the sheet slides out, so the sheet leaves
+the way it came even when the item is gone at once — deleted from the list it came from.
+`rememberLastNonNull(value)` does the same for an overlay of your own.
+
+**Height.** Every sheet is as tall as its content, up to `maxHeightFraction` of the window (never
+past the status bar): a short form or three choices open at their own height, a long list stops at
+the cap and scrolls while the header and the footer stay. Content that should be tall whatever it
+holds fills its body — a lazy list, or `Modifier.fillMaxHeight()`. A sheet opens at its full height:
+a partial height — `partialMultiplier` of the cap — is opt-in, `rememberFlowModal(allowPartial =
+true)` for a long list that may peek first, and exists only when the content is taller than it;
+`show(partial = true)` on a shorter sheet opens it fully, and `state` reports `Expanded`. Partially
+open, the footer stays at the bottom and the body is cut off above it. A change of content moves the
+sheet to its new height — content that arrives while the sheet opens (data replacing a placeholder)
+bends the opening toward the new height in one motion — and the keyboard counts against the cap. `autoHeight` is deprecated and
+ignored.
+
+Give a sheet a `FlowModalTopBar` as `header` and a `FlowModalActionBar` as `footer`. The drag handle
+floats over the top of the sheet and the header starts at the sheet's top edge; `FlowModalTopBar`
+takes the modal top-bar style and size, centres the title and clears the handle with
+`FlowModalHeaderInsets`. Without a header, the body starts below the handle:
 
 ```kotlin
-val filters = rememberFlowModal(autoHeight = true)
+var filtering by rememberSaveable { mutableStateOf(false) }
 
-Button("Filters", onClick = { filters.show() })
+Button("Filters", onClick = { filtering = true })
 
 FlowModal(
-    filters,
-    header = {
-        TopBar(
-            "Filters",
-            windowInsets = FlowModalHeaderInsets,
-            trailing = { CloseAction(onClick = { filters.hide() }) },
-        )
-    },
-    footer = { FlowModalActionBar("Apply", onConfirm = { filters.hide() }) },
+    visible = filtering,
+    onDismissRequest = { filtering = false },
+    header = { FlowModalTopBar("Filters", onClose = { filtering = false }) },
+    footer = { FlowModalActionBar("Apply", onConfirm = { filtering = false }) },
 ) {
     FilterOptions()
+}
+
+FlowModal(
+    item = renaming,
+    onDismissRequest = { renaming = null },
+    header = { file -> FlowModalTopBar("Rename file", onClose = { renaming = null }) },
+) { file ->
+    RenameForm(file)
+}
+```
+
+`FlowModalTopBar` draws the cross only when `onClose` is set; a sheet whose footer has a Cancel
+passes none. `leading` holds a way back in a sheet that is a step of a flow, `trailing` replaces
+the cross, and `bottom` holds content under the title inside the header — a `SearchField` pinned
+above a list. Name the cross with `closeContentDescription`.
+
+To navigate once a sheet has left, not while it is still on screen, hide it from a coroutine with
+`hideAndWait()`, which returns when the sheet is hidden:
+
+```kotlin
+val picker = rememberFlowModal()
+val scope = rememberCoroutineScope()
+
+FlowModal(picker, header = { FlowModalTopBar("Choose a wallet", onClose = { picker.hide() }) }) {
+    WalletRows(onPick = { wallet ->
+        scope.launch {
+            picker.hideAndWait()
+            onOpenWallet(wallet)
+        }
+    })
 }
 ```
 
@@ -719,11 +1012,13 @@ Box {
 
 | Component | Use it for |
 | --- | --- |
-| `BaseLayout` | A screen's frame: top and bottom bars drawn over full-height content that is handed their height as padding |
-| `BottomActionBar` | A screen's bottom bar with its primary action: alone, beside a count ("3 selected · Move"), or disabled with a hint saying what is missing |
+| `BaseLayout` | A screen's frame: top and bottom bars drawn over full-height content that is handed their height as padding, with an optional floating action and toasts |
+| `BottomActionBar` | A screen's bottom bar with its primary action: alone, beside a count ("3 selected · Move"), under a caption, softened until a form is complete, or disabled with a hint saying what is missing |
+| `PanelLayout` | A page in two parts: a header on the page's ground over a rounded-top panel that runs to the bottom of the screen — a total over its breakdown |
 | `CollapsingHeaderLayout` | A header that scrolls away above a strip that stays — artwork over tabs — optionally into a compact band that stays |
 | `PullToRefreshLayout` / `PullToRefreshIndicator` | Pull-to-refresh around scrolling content, and its default indicator. [Experimental](#experimental-api) |
 | `Card` | A surface that groups content, optionally pressable or expandable, with an optional footer for its status and actions |
+| `ChoiceCard` | A card that is one answer of a choice — a plan, a delivery speed — with an accent ring when chosen, a radio or checkbox mark, a badge on its top edge, and radio or checkbox semantics |
 | `Expandable` | A section that opens and closes under a trigger you supply |
 | `HorizontalDivider` / `VerticalDivider` | A rule, optionally labelled — "or" between two choices |
 | `RelativePositionLayout` | A companion on one of eight sides of its content — a label above a bar |
@@ -742,13 +1037,70 @@ BaseLayout(
 ```
 
 The content is laid out under the bars and must apply the padding it is handed — normally as a lazy
-list's `contentPadding` — or the bars hide its first and last items.
+list's `contentPadding` — or the bars hide its first and last items. The frame paints the page — the
+page ground of the theme's surface layout, grey for `Grouped` and white for `Plain` — and puts its
+content on the page surface, so a screen stays opaque while navigation slides screens over each
+other. `bg` defaults to `Color.Unspecified`, which is that ground; give it a colour for a screen
+whose page differs, and `Color.Transparent` only to let something show through.
+
+A screen's floating primary action — a `Button` with a leading glyph — goes in `floatingAction`.
+The frame places it at the end edge above the bottom bar, or above the navigation bar when there is
+none, and adds its height to the bottom padding, so the last item scrolls clear of it. A
+`toastState` shows that state's toasts above the bottom bar and the floating action. Keep `overlay`
+for what floats over everything; it is composed outside the measuring pass and cannot see the bars.
+
+**Choice cards.** A plan picker or a paywall is a column of `ChoiceCard`s. Put the set in a column
+with `Modifier.selectableGroup()`:
+
+```kotlin
+Column(
+    modifier = Modifier.selectableGroup(),
+    verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg),
+) {
+    ChoiceCard(
+        selected = plan == Plan.Yearly,
+        onClick = { plan = Plan.Yearly },
+        badge = { Badge(style = BadgeStyle.Brand) { Text("Best value") } },
+        trailing = { AmountText(Amount(whole = "39", fraction = "99", symbol = "€")) },
+    ) {
+        Text("Yearly", variant = TextVariant.LabelLarge)
+        Text("€3.33 a month", variant = TextVariant.BodySmall, color = TextColor.Subtle)
+    }
+    ChoiceCard(selected = plan == Plan.Monthly, onClick = { plan = Plan.Monthly }) {
+        Text("Monthly", variant = TextVariant.LabelLarge)
+    }
+}
+```
+
+The card takes the surface's `raised` fill and `shapes.surface`; the chosen one wears an
+`accentBase` ring, the others a hairline in `borderBase`. `mode = ChoiceCardMode.Single` (default)
+marks it with a radio and gives it the radio button role; `ChoiceCardMode.Multiple` a checkbox and
+the checkbox role. `showMark = false` drops the mark and keeps the ring and the semantics. The whole
+card is the target and reports its state once.
+
+```kotlin
+val toasts = rememberToastState()
+
+BaseLayout(
+    topBar = { TopBar("Wallets") },
+    floatingAction = {
+        Button("Add", onClick = onAdd, leading = { Icon(ArecaIcons.Plus, contentDescription = null) })
+    },
+    toastState = toasts,
+) { padding ->
+    WalletList(contentPadding = padding)
+}
+```
 
 A screen's primary action goes in a `BottomActionBar` passed as `bottomBar`. It is opaque, draws a
 hairline above itself and, like `TabBar`, clears the navigation bar and the keyboard by default — so
 keep the bottom insets out of `BaseLayout`'s `contentWindowInsets`, or they are counted twice. A
 `leading` slot puts a count beside the button; `enabled = false` with a `hint` says why the action
-is not available yet. Keep `FlowModalActionBar` for sheets: it is transparent, adds no insets and has
+is not available yet. `caption` is a line above the button, something worth knowing before
+committing. `ready = false` softens the button to `BottomActionBarStyle.buttonNotReady` but keeps it
+pressable, so a press can run the form's validation and put each complaint under its field; keep
+`enabled = false` for an action that must not happen at all. `BottomActionBarStyle.caption` colours
+the caption. Keep `FlowModalActionBar` for sheets: it is transparent, adds no insets and has
 no hint line.
 
 ```kotlin
@@ -764,12 +1116,53 @@ BaseLayout(
         )
     },
 ) { padding -> ItemsList(contentPadding = padding) }
-``` A `Card`'s content is handed the
-card's padding the same way, so a full-bleed image can ignore it.
+
+BaseLayout(
+    topBar = { TopBar("New wallet") },
+    bottomBar = {
+        BottomActionBar(
+            actionText = "Create wallet",
+            onAction = { attempted = true; if (complete) onCreate() },
+            caption = "You can rename it later.",
+            ready = complete,
+        )
+    },
+) { padding -> WalletForm(attempted, contentPadding = padding) }
+```
+
+A `PanelLayout` puts a header block on the page's ground and the content proper on a panel with
+rounded top corners, filled with the page's `raised` role, that runs from under the header to the
+bottom of the screen even when the page is short. The whole page scrolls as one column, so the
+header and the panel hold no lazy list. Inside a `BaseLayout`, pass the padding it hands its
+content as `contentPadding`: the top goes above the header, the bottom at the foot of the panel.
+Both slots bring their own horizontal insets. The page scrolls back to its top when its destination
+is selected again:
+
+```kotlin
+BaseLayout(topBar = { TopBar("Analytics") }) { padding ->
+    PanelLayout(
+        contentPadding = padding,
+        header = { Stat("Spent in November", "€1,284.50", Modifier.contentInsets(), size = StatSize.Large) },
+        panel = { CategoryBreakdown(Modifier.contentInsets()) },
+    )
+}
+```
+
+`panelShape` defaults to the `xl` radius on the top corners; hoist `scrollState` to read or drive
+the scroll.
+
+A `Card`'s content is handed the card's padding the same way as `BaseLayout`'s, so a full-bleed
+image can ignore it.
+
+A card's default style, `CardStyle.Default` (the theme seeds `LocalCardStyle` with it), fills the
+card with the `raised` role of the surface it sits on — white on a grouped page, grey on a plain one
+or in a sheet — with no border, in `shapes.surface`. `CardStyle.Outlined` keeps the ground it sits
+on and separates by its outline alone; `CardStyle.SoftNeutral` is set into the surface, in its
+`well`. What the card holds is drawn on the card's surface.
 
 A card's status and actions go in its `footer`, a strip along the bottom filled by a
-`CardFooterStyle`: `plain()` with a hairline, `soft(ActionColor)` tinted, `solid(ActionColor)`
-filled, or `of(bg, content)` in colours of your own. Text and buttons in the footer take its ink and
+`CardFooterStyle`: `plain()` with a hairline, `soft(ActionColor)` tinted (`Neutral` takes the card's
+`well`), `solid(ActionColor)` filled, or `of(bg, content)` in colours of your own. Text and buttons in the footer take its ink and
 a matching borderless button style.
 
 ```kotlin
@@ -859,7 +1252,7 @@ title between two controls.
 | `Settings` / `Section` | A settings screen: sections of rows, each section on its own card |
 | `SettingsRow` | A settings row: a value, a navigation, or an action |
 | `SettingsToggleRow` / `SettingsSelectRow` / `SettingsOptionRow` / `SettingsTextFieldRow` | A row that is a switch, a choice from a dropdown, one option of a set, or a field typed in place |
-| `SettingsRowIcon` / `SettingsRowTile` | A row's leading glyph on a tile; any other leading visual cropped to the same tile |
+| `SettingsRowIcon` / `SettingsRowTile` | A row's leading glyph on a tile — in an `ActionColor`, a categorical hue (`SettingsRowIcon(imageVector, hue = …)`) or a style of your own; any other leading visual cropped to the same tile |
 | `SettingsRowLink` | A second action at the end of a pressable settings row — "Verify" beside an address |
 | `SettingsBlock` | Free content on a section card, inset like a row — a preview, a swatch picker |
 | `SettingsRowSkeleton` | A settings-row-shaped placeholder |
@@ -908,15 +1301,36 @@ Settings {
 ```
 
 A list owns the group's surface and the hairlines between its rows; never draw a divider between two
-rows by hand. A row is one accessibility node. `Settings` hands its rows the styles and sizes from
-`SettingsDefaults.styles()` and `SettingsDefaults.sizes()`; it does not scroll, so put it in a
-scrolling container.
+rows by hand. A row is one accessibility node. `Settings` hands its rows the styles and sizes in
+`LocalSettingsStyles` and `LocalSettingsSizes` — provide `SettingsDefaults.styles(…)` and
+`SettingsDefaults.sizes(…)` there once for the whole app — or, unprovided, the defaults; it does not
+scroll, so put it in a scrolling container.
+
+**Re-inking a row.** A row's inks come from its `ListItemStyle`, each with a state per row state.
+`style.withValueColor(ink)` re-inks the value in every state (a bare `copy(value = …)` leaves the
+hovered and selected value in the old ink, taken when the style was built), and
+`style.withChevronColor(rest, active = …)` gives `ListItemChevron` an ink of its own, quieter than
+the leading slot that shares the trailing slot's `extra`. `ListItemStyle.flood(fill = hue)` is a
+row that fills with a solid colour when selected — the chosen subcategory in its category's colour
+— with its text, slots and chevron reversed out in `content` and no rail. A selected row keeps its
+selected inks while hovered or pressed.
+
+```kotlin
+val categoryRow = ListItemStyle.plain()
+    .withChevronColor(ArecaTheme.colors.fgDisabled, active = ArecaTheme.colors.fgMuted)
+val chosenChild = ListItemStyle.flood(fill = category.color)
+```
 
 A row's slots are roles with one size and one ink each, so pass plain `Text`: the `title`, the
 `subtitle` under it, a `caption` under that for detail such as when a device was last seen, and the
 `value` at the end. Leading visuals in a section share one size and shape — glyphs on
-`SettingsRowIcon` tiles, anything else in `SettingsRowTile`. A section's closing action goes on its
-`band`, a strip at the bottom of the card in `bandColor`.
+`SettingsRowIcon` tiles, anything else in `SettingsRowTile`. In a menu where every row is a
+different thing — appearance, backup, export — give each tile a hue from `ArecaTheme.hues`:
+`SettingsRowIcon(ArecaIcons.Palette, hue = ArecaTheme.hues.purple)`, or `soft = true` for the quiet
+form. Keep one hue per concept. A section's closing action goes on its
+`band`, a strip at the bottom of the card in `bandColor`, by default the card's `well`. A section's
+card, hairlines and band follow the surface the list is drawn on, so provide its look once through
+`LocalSettingsStyles` rather than restyling sections per screen.
 
 A `SettingsTextFieldRow` given a `title` is a labelled form row — the label at the start, the input
 against the end — and a `suffix` names its unit. Make the suffix a `SettingsTextFieldSuffix`, with an
@@ -940,8 +1354,8 @@ SettingsTextFieldRow(
 )
 ```
 
-An `ExpandableListItem` with `container = ExpandableListItemContainer.Soft` sits on a `bgSoft` block
-while expanded, behind the row and what it reveals. `showChevron = false` drops the chevron when the
+An `ExpandableListItem` with `container = ExpandableListItemContainer.Soft` sits on a block in the
+surface's `raised` fill, in `shapes.surface`, while expanded, behind the row and what it reveals. `showChevron = false` drops the chevron when the
 row already says it opens. Its `bottom` slot holds content that belongs to the row itself — a meter
 under a category's name.
 
@@ -975,7 +1389,7 @@ insets the items, which scroll under the bars, and the loading, empty and error 
 [list recipe](../../docs/recipes/list.md).
 
 `groupLayout = ContentListGroupLayout.Inset` on a grouped list puts each group on a card of its own —
-`bgSubtle` in `shapes.lg`, the header inside it, hairlines between items, the header and the
+the surface's `raised` fill in `shapes.surface`, the header inside it, hairlines between items, the header and the
 hairlines in line with a row's text. The card is the same `ListStyle` / `ListSize` surface a
 `ListItemColumn` takes, given as `ContentListStyle.group` and `ContentListSize.group`; the header's
 colour, type and padding and the cards' spacing are the other `group…` properties. A paged list
@@ -1033,6 +1447,8 @@ table.
 | `NavItem` | One destination row, for a sidebar you compose yourself |
 | `SwipePager` / `PagerControls` / `PageIndicator` | Pages swiped sideways with their dots and a next button — an onboarding tour |
 | `PageCounter` | Where the page on screen sits among the rest as a count ("3 / 9") — a picture's corner, a viewer's bar |
+| `ScrollToTopOnTabReselect` | Back to the top of a column, list or grid when its destination's tab is tapped again |
+| `OnTabReselect` | Anything else on that tap — a refresh |
 
 The controls in a bar's `leading` and `trailing` slots are under
 [Buttons and actions](#buttons-and-actions).
@@ -1073,8 +1489,8 @@ Tabs(
 
 `TabsVariant.Underline`, the default, switches views within a screen. `Button` and `Segmented`
 switch a setting: `Segmented` sets the tabs in a track (`TabsStyle.track`) and slides a raised thumb
-(`TabsStyle.thumb`) to the selected one; `Button` slides a flat fill (`TabsStyle.bgSelected`). Pair
-`Segmented` with `size = TabsSize.Segmented`. Tabs are built on `SlidingSelector`: the indicator
+(`TabsStyle.thumb`) to the selected one, at `TabsSize.Segmented` unless given a `size`; `Button`
+slides a flat fill (`TabsStyle.bgSelected`). Tabs are built on `SlidingSelector`: the indicator
 moves on the theme's `motion.slide()` spring unless `TabsSize.indicatorDuration` is changed from the
 theme's `motion.medium`, which makes it a tween of that length. For a setting that is not a view —
 or one that can be left unset — reach for `SlidingSelector` itself.
@@ -1089,7 +1505,6 @@ Tabs(
     ),
     selectedValue = period,
     onValueSelected = { period = it },
-    size = TabsSize.Segmented,
     variant = TabsVariant.Segmented,
     fillWidth = true,
 )
@@ -1142,6 +1557,40 @@ Box {
 Selection is the caller's in `Tabs`, `TabBar`, `FloatingTabBar` and `NavList`. The first three also
 have overloads that hold it in a remembered state — `rememberTabsState`, `rememberTabBarState`. See
 the [tabs recipe](../../docs/recipes/tabs.md).
+
+A tap on the destination already selected is the platforms' way back to the top of it. In
+`dev.voir.areca.foundation.navigation`, `LocalTabReselect` is a `Flow<Unit>` of those taps for the
+selected destination's screen; `AdaptiveNavigation` provides it. A screen reacts with
+`ScrollToTopOnTabReselect()` on its scroll state — `ScrollState`, `LazyListState` or
+`LazyGridState` — or with `OnTabReselect { … }` for anything else:
+
+```kotlin
+val listState = rememberLazyListState()
+listState.ScrollToTopOnTabReselect()
+OnTabReselect { onRefresh() }
+
+LazyColumn(state = listState, contentPadding = padding) { … }
+```
+
+Switching destinations never emits, so a screen left scrolled is found scrolled on the way back.
+Outside a navigation shell the flow never emits. An app that draws its own `TabBar` or
+`FloatingTabBar` provides a flow of its own, emitting when `onValueSelected` reports the value
+already selected:
+
+```kotlin
+val reselects = remember { MutableSharedFlow<Unit>(extraBufferCapacity = 1) }
+
+CompositionLocalProvider(LocalTabReselect provides reselects) {
+    BaseLayout(
+        bottomBar = {
+            TabBar(items, selectedValue = tab, onValueSelected = { value ->
+                if (value == tab) reselects.tryEmit(Unit)
+                tab = value
+            })
+        },
+    ) { padding -> CurrentScreen(tab, padding) }
+}
+```
 
 ### Wheel picker
 
@@ -1269,6 +1718,10 @@ AdaptiveNavigation(
     Screen(bottomPadding = contentPadding.calculateBottomPadding())
 }
 ```
+
+A tap on the destination already selected reaches its screen through `LocalTabReselect`, in every
+form: `listState.ScrollToTopOnTabReselect()` on the screen takes it back to the top. See
+[Navigation, tabs, tab bar and top bar](#navigation-tabs-tab-bar-and-top-bar).
 
 The slots of `AdaptiveNavigation`, `ListDetail` and `SupportingPane` know which form they are in —
 `layout`, `isTwoPane`, `isSupportingInline` — so a screen draws a back action or a "Filters" button

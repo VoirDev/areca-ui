@@ -478,8 +478,6 @@ fun ListItemShowcase() = ShowcaseScaffold(
                             },
                             selected = chosen,
                             selectionMode = BadgeSelectionMode.Multiple,
-                            horizontalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.sm),
-                            verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.sm),
                             style = BadgeStyle.FilledChip,
                             size = BadgeSize.Chip,
                         )

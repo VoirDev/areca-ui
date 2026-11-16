@@ -176,14 +176,14 @@ public data class SlidingSelectorStyle(
             content: Color = ArecaTheme.colors.fgMuted,
             contentSelected: Color = ArecaTheme.colors.fgBase,
             contentDisabled: Color = ArecaTheme.colors.fgDisabled,
-            track: Color = ArecaTheme.colors.bgNeutralMuted,
+            track: Color = ArecaTheme.surface.well,
             trackBorder: Color = Color.Transparent,
             trackShape: Shape = ArecaTheme.shapes.full,
             trackBorderWidth: Dp = 1.dp,
             trackPadding: Dp = ArecaTheme.spacing.xs2,
             // Raised means lighter in both themes: white on the light track, and a step lighter than
             // the track in dark, where the surface colour sits darker than it.
-            thumb: Color = if (ArecaTheme.isDark) ArecaTheme.colors.bgNeutralBase else ArecaTheme.colors.bgSurface,
+            thumb: Color = ArecaTheme.surface.onWell,
             thumbKind: SelectorThumbKind = SelectorThumbKind.Fill,
             thumbShape: Shape = ArecaTheme.shapes.full,
             thumbElevation: Dp = ArecaTheme.elevation.xs,

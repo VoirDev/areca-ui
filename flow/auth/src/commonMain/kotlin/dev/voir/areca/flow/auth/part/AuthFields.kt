@@ -18,6 +18,7 @@ import dev.voir.areca.foundation.field.OtpField
 import dev.voir.areca.foundation.field.PasswordField
 import dev.voir.areca.foundation.field.TextField
 import dev.voir.areca.foundation.text.Text
+import dev.voir.areca.theme.ArecaTheme
 
 /*
  * The credential fields, one composable each.
@@ -207,8 +208,8 @@ public fun AuthPasswordField(
     onImeAction: (() -> Unit)? = null,
     label: String = "Password",
     placeholder: String? = null,
-    revealDescription: String = "Show password",
-    hideDescription: String = "Hide password",
+    revealDescription: String = ArecaTheme.labels.showPassword,
+    hideDescription: String = ArecaTheme.labels.hidePassword,
     enabled: Boolean = true,
 ) {
     val onHero = LocalAuthOnHero.current

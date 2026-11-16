@@ -94,7 +94,7 @@ public data class DateTileStyle(
          */
         @Composable
         public fun default(
-            bg: Color = ArecaTheme.colors.bgSoft,
+            bg: Color = ArecaTheme.surface.well,
             month: Color = ArecaTheme.colors.fgSubtle,
             day: Color = ArecaTheme.colors.fgBase,
         ): DateTileStyle = DateTileStyle(bg = bg, month = month, day = day)

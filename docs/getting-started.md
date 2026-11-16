@@ -102,16 +102,16 @@ import dev.voir.areca.theme.ArecaThemeProvider
 @Composable
 fun App() {
     ArecaThemeProvider(darkTheme = isSystemInDarkTheme()) {
-        Box(Modifier.fillMaxSize().background(ArecaTheme.colors.bgCanvas)) {
-            NewsletterScreen()
-        }
+        NewsletterScreen()
     }
 }
 ```
 
 - `darkTheme` picks light or dark. Nothing follows the system on its own: pass
   `isSystemInDarkTheme()` or the user's own setting.
-- The provider paints nothing. Give the screen its ground, `ArecaTheme.colors.bgCanvas`, yourself.
+- The provider paints nothing; a screen's `BaseLayout` paints its page. The page is grey with white
+  cards by default (`SurfaceLayout.Grouped`); pass `surfaceLayout = SurfaceLayout.Plain` for a white
+  page with grey cards. See [Surfaces](theme.md#surfaces).
 - Without a provider, components fall back to the light defaults, so a preview or a test composes
   unwrapped. Only the provider can make the theme dark or change a token.
 
@@ -154,7 +154,6 @@ fun NewsletterScreen() {
     var subscribed by rememberSaveable { mutableStateOf(false) }
 
     BaseLayout(
-        bg = ArecaTheme.colors.bgCanvas,
         contentWindowInsets = WindowInsets.safeDrawing,
         topBar = { TopBar("Newsletter") },
     ) { padding ->
@@ -211,7 +210,6 @@ draws the group's surface and the hairlines between rows:
 
 ```kotlin
 BaseLayout(
-    bg = ArecaTheme.colors.bgCanvas,
     contentWindowInsets = WindowInsets.safeDrawing,
     topBar = { TopBar("Inbox") },
 ) { padding ->

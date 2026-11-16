@@ -63,7 +63,7 @@ public data class KeyboardStyle(
          */
         @Composable
         public fun default(
-            bg: Color = ArecaTheme.colors.bgSurface,
+            bg: Color = ArecaTheme.surfaces.bar,
             content: Color = ArecaTheme.colors.fgBase,
             border: Color = Color.Transparent,
             borderWidth: Dp = 1.dp,

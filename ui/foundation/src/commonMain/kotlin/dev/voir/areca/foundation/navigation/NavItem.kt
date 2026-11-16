@@ -104,8 +104,8 @@ public data class NavItemStyle(
             extra: Color = ArecaTheme.colors.fgMuted,
             extraDisabled: Color = ArecaTheme.colors.fgDisabled,
             extraSelected: Color = ArecaTheme.colors.fgBase,
-            bg: Color = ArecaTheme.colors.bgCanvas,
-            bgDisabled: Color = ArecaTheme.colors.bgCanvas,
+            bg: Color = Color.Transparent,
+            bgDisabled: Color = Color.Transparent,
             bgSelected: Color = ArecaTheme.colors.bgMuted,
             shape: Shape = ArecaTheme.shapes.md,
         ): NavItemStyle = NavItemStyle(

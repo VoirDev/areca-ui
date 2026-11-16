@@ -1,39 +1,22 @@
 package dev.voir.areca.flow.profile.sheet
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.unit.Dp
 import dev.voir.areca.flow.profile.icon.BundledIcons
 import dev.voir.areca.flow.profile.icon.Camera
 import dev.voir.areca.flow.profile.icon.Image
 import dev.voir.areca.flow.profile.icon.Trash
 import dev.voir.areca.foundation.adaptive.AdaptiveDefaults
 import dev.voir.areca.foundation.icon.Icon
-import dev.voir.areca.foundation.layout.DividerStyle
-import dev.voir.areca.foundation.layout.HorizontalDivider
 import dev.voir.areca.foundation.overlay.Dialog
 import dev.voir.areca.foundation.overlay.FlowModal
 import dev.voir.areca.foundation.overlay.FlowModalHeaderInsets
@@ -43,10 +26,10 @@ import dev.voir.areca.foundation.topbar.CloseAction
 import dev.voir.areca.foundation.topbar.TopBar
 import dev.voir.areca.foundation.topbar.TopBarSize
 import dev.voir.areca.foundation.topbar.TopBarStyle
-import dev.voir.areca.indication.FadeIndication
-import dev.voir.areca.modifier.MinimumTouchTarget
-import dev.voir.areca.modifier.clickCursor
 import dev.voir.areca.theme.ArecaTheme
+import dev.voir.areca.foundation.list.ListItem
+import dev.voir.areca.foundation.LocalContentColor
+import dev.voir.areca.theme.horizontalContentInsets
 
 /**
  * One choice on the picture sheet.
@@ -133,18 +116,13 @@ public fun AvatarSourceSheet(
     onDismiss: () -> Unit,
     title: String = "Change photo",
     subtitle: String? = null,
-    closeLabel: String = "Close",
+    closeLabel: String = ArecaTheme.labels.close,
 ) {
     val header: @Composable () -> Unit = {
         TopBar(
             title = title,
             modifier = Modifier.fillMaxWidth(),
-            size = TopBarSize.Modal.copy(
-                padding = PaddingValues(
-                    horizontal = ArecaTheme.spacing.xl3,
-                    vertical = ArecaTheme.spacing.md,
-                ),
-            ),
+            size = TopBarSize.Modal,
             style = TopBarStyle.Modal,
             windowInsets = FlowModalHeaderInsets,
             trailing = { CloseAction(onClick = onDismiss, contentDescription = closeLabel) },
@@ -155,56 +133,31 @@ public fun AvatarSourceSheet(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .navigationBarsPadding()
-                .padding(
-                    start = ArecaTheme.spacing.xl3,
-                    top = ArecaTheme.spacing.sm,
-                    end = ArecaTheme.spacing.xl3,
-                    bottom = ArecaTheme.spacing.xl3,
-                ),
+                // The choices run edge to edge on the sheet; the subtitle keeps to its gutter.
+                .padding(top = ArecaTheme.spacing.sm, bottom = ArecaTheme.spacing.xl),
         ) {
             // Under the bar rather than in it, where it may run to more than one line.
             if (subtitle != null) {
                 Text(
                     text = subtitle,
+                    modifier = Modifier.padding(horizontal = ArecaTheme.spacing.horizontalContentInsets),
                     style = ArecaTheme.typography.bodySmall,
                     color = ArecaTheme.colors.fgSubtle,
                 )
 
-                if (options.isNotEmpty()) Spacer(Modifier.height(ArecaTheme.spacing.lg))
+                if (options.isNotEmpty()) Spacer(Modifier.height(ArecaTheme.spacing.md))
             }
 
-            // No block at all for no options, rather than an empty one.
-            if (options.isNotEmpty()) {
-                val radius = ArecaTheme.radius.lg
-                // The block is the subtle fill, which the resting border sits level with.
-                val separator = DividerStyle.default(line = ArecaTheme.colors.borderOnSubtle)
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        // A block of choices set off from the sheet it sits on. Drawn in its shape
-                        // rather than clipped to it, so a choice's focus ring is not cut off.
-                        .background(ArecaTheme.colors.bgSubtle, RoundedCornerShape(radius)),
-                ) {
-                    options.forEachIndexed { index, option ->
-                        if (index > 0) HorizontalDivider(style = separator)
-
-                        SourceChoice(
-                            icon = option.icon,
-                            label = option.label,
-                            // The danger row's own ink: the icon step, which reads as red rather
-                            // than brown at a row's size.
-                            content = if (option.isDestructive) {
-                                ArecaTheme.colors.fgDanger
-                            } else {
-                                ArecaTheme.colors.fgBase
-                            },
-                            shape = choiceCorners(index = index, count = options.size).shape(radius),
-                            onClick = option.onClick,
-                        )
-                    }
-                }
+            // The choices as rows straight on the sheet, as every action sheet lists them: a sheet
+            // is already a segment of its own and needs no block inside it.
+            options.forEach { option ->
+                // The danger row's own ink, the others keep the row's.
+                val ink = if (option.isDestructive) ArecaTheme.colors.fgDanger else LocalContentColor.current
+                ListItem(
+                    title = { Text(text = option.label, color = ink) },
+                    onClick = option.onClick,
+                    leading = { Icon(imageVector = option.icon, contentDescription = null, tint = ink) },
+                )
             }
         }
     }
@@ -235,7 +188,7 @@ private fun AvatarSourceFlowModal(
     header: @Composable () -> Unit,
     body: @Composable () -> Unit,
 ) {
-    val controller = rememberFlowModal(autoHeight = true)
+    val controller = rememberFlowModal()
 
     LaunchedEffect(visible) {
         if (visible) controller.show() else controller.hide()
@@ -247,100 +200,4 @@ private fun AvatarSourceFlowModal(
         header = header,
         content = body,
     )
-}
-
-/**
- * One choice inside the sheet.
- *
- * Answers hover, press and focus with the same tint as every other pressable surface in the module,
- * inked with [content] so the destructive choice reddens rather than greys, and shows the hand cursor
- * on desktop. The tint follows [shape], so the first and last choices round the block's corners.
- *
- * @param icon Glyph on the left.
- * @param label What the choice does.
- * @param content Colour of both the glyph and the label.
- * @param shape Shape the press tint and focus ring follow.
- * @param onClick Called when it is chosen.
- */
-@Composable
-private fun SourceChoice(
-    icon: ImageVector,
-    label: String,
-    content: Color,
-    shape: Shape,
-    onClick: () -> Unit,
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(min = MinimumTouchTarget)
-            .clickCursor()
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = FadeIndication.tint(shape = shape, ink = content),
-                role = Role.Button,
-                onClick = onClick,
-            )
-            .padding(
-                horizontal = ArecaTheme.spacing.xl,
-                vertical = ArecaTheme.spacing.lg,
-            ),
-        horizontalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = content,
-            size = ArecaTheme.spacing.xl2,
-        )
-
-        Text(
-            text = label,
-            style = ArecaTheme.typography.labelMedium,
-            color = content,
-        )
-    }
-}
-
-/** Which corners of the block of choices one choice carries. */
-internal enum class ChoiceCorners {
-    /** The only choice: all four. */
-    All,
-
-    /** The first of several: the top two. */
-    Top,
-
-    /** The last of several: the bottom two. */
-    Bottom,
-
-    /** A choice between two others: none. */
-    None,
-}
-
-/**
- * The corners of the block the choice at [index] carries, so its press tint stays inside the block.
- *
- * @param index Position of the choice, from 0.
- * @param count Number of choices in the block.
- * @return The corners it rounds.
- */
-internal fun choiceCorners(index: Int, count: Int): ChoiceCorners = when {
-    count <= 1 -> ChoiceCorners.All
-    index == 0 -> ChoiceCorners.Top
-    index == count - 1 -> ChoiceCorners.Bottom
-    else -> ChoiceCorners.None
-}
-
-/**
- * The shape a choice with these corners is drawn in.
- *
- * @param radius Corner radius of the block of choices.
- * @return A shape rounding these corners by [radius] and leaving the others square.
- */
-private fun ChoiceCorners.shape(radius: Dp): Shape = when (this) {
-    ChoiceCorners.All -> RoundedCornerShape(radius)
-    ChoiceCorners.Top -> RoundedCornerShape(topStart = radius, topEnd = radius)
-    ChoiceCorners.Bottom -> RoundedCornerShape(bottomStart = radius, bottomEnd = radius)
-    ChoiceCorners.None -> RectangleShape
 }

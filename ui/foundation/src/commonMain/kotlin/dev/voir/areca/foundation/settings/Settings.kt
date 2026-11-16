@@ -46,8 +46,10 @@ public class SettingsScope internal constructor() {
  * ```
  *
  * @param modifier Modifier applied to the list container.
- * @param styles Colors used by the list.
- * @param sizes Metrics used by the list.
+ * @param styles Colors used by the list. Defaults to the [LocalSettingsStyles] in scope, or
+ * [SettingsDefaults.styles].
+ * @param sizes Metrics used by the list. Defaults to the [LocalSettingsSizes] in scope, or
+ * [SettingsDefaults.sizes].
  * @param headerPlacement Where the sections of the list draw their headers, unless a section says
  * otherwise.
  * @param content Sections of the list.
@@ -55,8 +57,8 @@ public class SettingsScope internal constructor() {
 @Composable
 public fun Settings(
     modifier: Modifier = Modifier,
-    styles: SettingsStyles = SettingsDefaults.styles(),
-    sizes: SettingsSizes = SettingsDefaults.sizes(),
+    styles: SettingsStyles = LocalSettingsStyles.current ?: SettingsDefaults.styles(),
+    sizes: SettingsSizes = LocalSettingsSizes.current ?: SettingsDefaults.sizes(),
     headerPlacement: SettingsHeaderPlacement = SettingsHeaderPlacement.Inside,
     content: @Composable SettingsScope.() -> Unit,
 ) {

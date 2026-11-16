@@ -27,6 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import dev.voir.areca.theme.ArecaTheme
+import dev.voir.areca.theme.SurfaceOf
+import dev.voir.areca.theme.SurfaceRoot
 
 /**
  * How wide a dropdown makes itself relative to the control that opened it.
@@ -100,7 +102,7 @@ public data class DropdownPopupStyle(
          */
         @Composable
         public fun default(
-            bg: Color = ArecaTheme.colors.bgSurface,
+            bg: Color = ArecaTheme.surfaces.sheet.page.ground,
             border: Color = ArecaTheme.colors.borderBase,
             shape: Shape = ArecaTheme.shapes.md,
             shadowElevation: Dp = ArecaTheme.elevation.xs,
@@ -332,8 +334,9 @@ public fun DropdownPopup(
                 .background(style.bg)
                 .border(width = size.borderWidth, color = style.border, shape = style.shape)
                 .then(widthModifier),
-            content = content
-        )
+        ) {
+            SurfaceOf(style.bg, root = SurfaceRoot.Sheet) { content() }
+        }
     }
 }
 

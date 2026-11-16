@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import dev.voir.areca.theme.horizontalContentInsets
 import dev.voir.areca.window.WindowClassBox
+import dev.voir.areca.modifier.thenIf
 
 /**
  * A column of content centred in the space it is given and no wider than [maxWidth].
@@ -41,6 +42,9 @@ import dev.voir.areca.window.WindowClassBox
  *   forms and reading; [AdaptiveDefaults.ContentWidth] for browsing.
  * @param verticalArrangement Vertical arrangement of the children.
  * @param horizontalAlignment Horizontal alignment of the children within the column.
+ * @param gutter Whether the column insets its children by the screen gutter. `false` for children
+ *   that inset themselves — settings sections, cards with their own outer padding — so they are not
+ *   inset twice.
  * @param content The column's children.
  */
 @Composable
@@ -49,6 +53,7 @@ public fun ContentColumn(
     maxWidth: Dp = AdaptiveDefaults.ReadableWidth,
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    gutter: Boolean = true,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     // Minimum constraints pass through, so a caller's fillMaxSize gives the column the full height
@@ -63,7 +68,7 @@ public fun ContentColumn(
             propagateMinConstraints = true,
         ) {
             Column(
-                modifier = Modifier.fillMaxWidth().horizontalContentInsets(),
+                modifier = Modifier.fillMaxWidth().thenIf(gutter) { horizontalContentInsets() },
                 verticalArrangement = verticalArrangement,
                 horizontalAlignment = horizontalAlignment,
                 content = content,

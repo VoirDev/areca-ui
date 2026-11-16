@@ -36,6 +36,7 @@ import dev.voir.areca.modifier.clickCursor
 import dev.voir.areca.theme.ArecaTheme
 import kotlinx.datetime.Month
 import kotlinx.datetime.YearMonth
+import androidx.compose.ui.graphics.lerp
 
 /**
  * Months as tiles, a year to a block — for picking a whole month at a glance, with a figure under
@@ -217,11 +218,11 @@ public data class MonthGridStyle(
         @Composable
         public fun default(
             year: Color = ArecaTheme.colors.fgBase,
-            bg: Color = ArecaTheme.colors.bgSubtle,
+            bg: Color = ArecaTheme.surface.well,
             content: Color = ArecaTheme.colors.fgBase,
             bgSelected: Color = ArecaTheme.colors.bgContrast,
             contentSelected: Color = ArecaTheme.colors.fgOnContrast,
-            bgDisabled: Color = ArecaTheme.colors.bgSoft,
+            bgDisabled: Color = lerp(ArecaTheme.surface.ground, ArecaTheme.surface.well, 0.5f),
             contentDisabled: Color = ArecaTheme.colors.fgDisabled,
         ): MonthGridStyle = MonthGridStyle(
             year = year,

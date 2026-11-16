@@ -33,6 +33,9 @@ import dev.voir.areca.indication.TouchIndication
 import dev.voir.areca.modifier.clickCursor
 import dev.voir.areca.modifier.thenIf
 import dev.voir.areca.theme.ArecaTheme
+import androidx.compose.ui.graphics.takeOrElse
+import dev.voir.areca.theme.SurfaceOf
+import dev.voir.areca.theme.ArecaSurface
 
 /**
  * Colors, shape, and interaction feedback for [Card].
@@ -45,7 +48,9 @@ import dev.voir.areca.theme.ArecaTheme
  * expanded — which is a state the card is *in* rather than one the user is causing. A pressed card
  * is the indication's job; an active one is the style's.
  *
- * @property bg Fill at rest.
+ * @property bg Fill at rest. [Color.Unspecified] takes the [raised][ArecaSurface.raised] fill of
+ *   the surface the card is drawn on — white on a grey page, grey on a white one — so one style is
+ *   right at every depth.
  * @property bgDisabled Fill while unavailable.
  * @property bgActive Fill while active.
  * @property border Border at rest. [Color.Unspecified] draws no border.
@@ -73,17 +78,23 @@ public data class CardStyle(
 ) {
     /** Theme-backed presets and builders. */
     public companion object {
-        /** Theme default: a plain surface with no border, tinted towards its copy when pressed. */
+        /**
+         * Theme default: the raised fill of the surface it sits on, no border, tinted towards its
+         * copy when pressed.
+         */
         public val Default: CardStyle
             @Composable
             get() = default()
 
-        /** A bordered card on the canvas. The default for content the user can act on. */
+        /** A bordered card that keeps the ground it sits on, separated by its outline alone. */
         public val Outlined: CardStyle
             @Composable
             get() = outlined()
 
-        /** A tinted card with no border, for content that groups rather than separates. */
+        /**
+         * A card set into the surface it sits on — its well fill, no border — for content that
+         * groups rather than separates.
+         */
         public val SoftNeutral: CardStyle
             @Composable
             get() = softNeutral()
@@ -106,7 +117,8 @@ public data class CardStyle(
          * a pressable card beside a list answers the finger the way the rows do rather than not at
          * all. Pass `null` for a pressable card that shows its press some other way.
          *
-         * @param bg Fill at rest.
+         * @param bg Fill at rest. [Color.Unspecified], the default, takes the raised fill of the
+         *   surface the card is drawn on, resolved where it is drawn.
          * @param border Border at rest.
          * @param content Color handed to children.
          * @param shape Shape of the fill, border, and indication.
@@ -115,10 +127,10 @@ public data class CardStyle(
          */
         @Composable
         public fun default(
-            bg: Color = ArecaTheme.colors.bgSurface,
+            bg: Color = Color.Unspecified,
             border: Color = Color.Unspecified,
             content: Color = ArecaTheme.colors.fgBase,
-            shape: Shape = ArecaTheme.shapes.lg,
+            shape: Shape = ArecaTheme.shapes.surface,
             indication: Indication? = FadeIndication.tint(shape),
         ): CardStyle = CardStyle(
             bg = bg,
@@ -135,11 +147,11 @@ public data class CardStyle(
          * @return The preset style with [shape] applied to its fill, border, and indication.
          */
         @Composable
-        public fun outlined(shape: Shape = ArecaTheme.shapes.lg): CardStyle =
+        public fun outlined(shape: Shape = ArecaTheme.shapes.surface): CardStyle =
             CardStyle(
-                bg = ArecaTheme.colors.bgCanvas,
+                bg = Color.Transparent,
                 bgDisabled = ArecaTheme.colors.bgDisabled,
-                bgActive = ArecaTheme.colors.bgCanvas,
+                bgActive = Color.Transparent,
                 border = ArecaTheme.colors.borderBase,
                 borderDisabled = ArecaTheme.colors.borderDisabled,
                 borderActive = ArecaTheme.colors.accentBase,
@@ -160,14 +172,14 @@ public data class CardStyle(
          * @return The preset style with [shape] applied to its fill, border, and indication.
          */
         @Composable
-        public fun softNeutral(shape: Shape = ArecaTheme.shapes.lg): CardStyle =
+        public fun softNeutral(shape: Shape = ArecaTheme.shapes.surface): CardStyle =
             CardStyle(
-                bg = ArecaTheme.colors.bgSubtle,
+                bg = ArecaTheme.surface.well,
                 bgDisabled = ArecaTheme.colors.bgDisabled,
-                bgActive = ArecaTheme.colors.bgMuted,
-                border = ArecaTheme.colors.bgSubtle,
-                borderDisabled = ArecaTheme.colors.bgDisabled,
-                borderActive = ArecaTheme.colors.bgMuted,
+                bgActive = ArecaTheme.colors.bgNeutralBase,
+                border = Color.Unspecified,
+                borderDisabled = Color.Unspecified,
+                borderActive = Color.Unspecified,
                 content = ArecaTheme.colors.fgBase,
                 contentDisabled = ArecaTheme.colors.fgDisabled,
                 contentActive = ArecaTheme.colors.fgBase,
@@ -185,7 +197,7 @@ public data class CardStyle(
          * @return The preset style with [shape] applied to its fill, border, and indication.
          */
         @Composable
-        public fun solidBrand(shape: Shape = ArecaTheme.shapes.lg): CardStyle =
+        public fun solidBrand(shape: Shape = ArecaTheme.shapes.surface): CardStyle =
             CardStyle(
                 bg = ArecaTheme.colors.bgBrandBase,
                 bgDisabled = ArecaTheme.colors.bgDisabled,
@@ -210,11 +222,11 @@ public data class CardStyle(
          * @return The preset style with [shape] applied to its fill, border, and indication.
          */
         @Composable
-        public fun ghostNeutral(shape: Shape = ArecaTheme.shapes.lg): CardStyle =
+        public fun ghostNeutral(shape: Shape = ArecaTheme.shapes.surface): CardStyle =
             CardStyle(
-                bg = ArecaTheme.colors.bgSubtle.copy(alpha = 0f),
-                bgDisabled = ArecaTheme.colors.bgSubtle.copy(alpha = 0f),
-                bgActive = ArecaTheme.colors.bgSubtle,
+                bg = Color.Transparent,
+                bgDisabled = Color.Transparent,
+                bgActive = ArecaTheme.surface.well,
                 border = Color.Transparent,
                 borderDisabled = Color.Transparent,
                 borderActive = Color.Transparent,
@@ -223,9 +235,9 @@ public data class CardStyle(
                 contentActive = ArecaTheme.colors.fgBase,
                 shape = shape,
                 indication = FadeIndication(
-                    color = ArecaTheme.colors.bgSubtle.copy(alpha = 0f),
-                    hoverColor = ArecaTheme.colors.bgSubtle.copy(alpha = .5f),
-                    pressedColor = ArecaTheme.colors.bgSubtle.copy(alpha = 1f),
+                    color = ArecaTheme.surface.well.copy(alpha = 0f),
+                    hoverColor = ArecaTheme.surface.well.copy(alpha = .5f),
+                    pressedColor = ArecaTheme.surface.well.copy(alpha = 1f),
                     shape = shape,
                 )
             )
@@ -376,11 +388,12 @@ public fun Card(
     footer: (@Composable RowScope.() -> Unit)? = null,
     content: @Composable BoxScope.(padding: PaddingValues) -> Unit,
 ) {
+    val raised = ArecaTheme.surface.raised
     val bgColor = when {
         !enabled -> style.bgDisabled
         active -> style.bgActive
         else -> style.bg
-    }
+    }.takeOrElse { raised }
     val borderColor = when {
         !enabled -> style.borderDisabled
         active -> style.borderActive
@@ -419,14 +432,16 @@ public fun Card(
             // border is drawn over it, and the press indication sits outside the clip.
             .thenIf(footer != null) { clip(style.shape) }
     ) {
-        CompositionLocalProvider(LocalContentColor provides contentColor) {
-            if (footer == null) {
-                content(size.padding)
-            } else {
-                CardBodyWithFooter(
-                    body = { Box { content(size.padding) } },
-                    footer = { CardFooter(style = footerStyle, size = size, content = footer) },
-                )
+        SurfaceOf(bgColor) {
+            CompositionLocalProvider(LocalContentColor provides contentColor) {
+                if (footer == null) {
+                    content(size.padding)
+                } else {
+                    CardBodyWithFooter(
+                        body = { Box { content(size.padding) } },
+                        footer = { CardFooter(style = footerStyle, size = size, content = footer) },
+                    )
+                }
             }
         }
     }

@@ -99,7 +99,7 @@ public fun AvatarUploadStatus(
     formatProgress: (@Composable (percent: Int) -> String)? = { "$it%" },
     failedTitle: String = "Photo not updated",
     retryLabel: String = "Try again",
-    dismissLabel: String = "Dismiss",
+    dismissLabel: String = ArecaTheme.labels.dismiss,
 ) {
     val active = state.takeUnless { it is AvatarUploadState.Idle }
     // Held over so the band does not empty itself halfway through its own exit animation.
@@ -125,7 +125,7 @@ public fun AvatarUploadStatus(
             modifier = Modifier
                 .padding(top = ArecaTheme.spacing.xl2)
                 .fillMaxWidth()
-                .background(SettingsTheme.styles.section.bg, SettingsTheme.styles.section.shape)
+                .background(profileCardFill(), SettingsTheme.styles.section.shape)
                 .padding(ArecaTheme.spacing.xl),
         ) {
             val current = shown ?: AvatarUploadState.Idle

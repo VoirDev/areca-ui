@@ -3,6 +3,7 @@ package dev.voir.areca.foundation.overlay
 import androidx.annotation.FloatRange
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationSpec
+import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
@@ -34,6 +35,8 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -57,15 +60,29 @@ import androidx.compose.ui.unit.isSpecified
 import androidx.compose.ui.window.DialogProperties
 import dev.voir.areca.modifier.thenIf
 import dev.voir.areca.theme.ArecaTheme
+import dev.voir.areca.theme.slide
 import dev.voir.areca.theme.tween
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 import androidx.compose.ui.window.Dialog as ComposeDialog
+import dev.voir.areca.theme.SurfaceOf
+import dev.voir.areca.theme.SurfaceRoot
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.layout.Layout
+import androidx.compose.foundation.layout.consumeWindowInsets
 
 /**
  * Colors and shape of a [FlowModal]: the scrim behind it, the sheet and its drag handle.
@@ -94,7 +111,9 @@ public data class FlowModalStyle(
          * Builds a style from the current theme.
          *
          * @param overlay Scrim covering the screen the sheet interrupts.
-         * @param bg Fill of the sheet.
+         * @param bg Fill of the sheet. Defaults to the sheet surface — white, lifted in the dark —
+         *   whatever the screen's layout; a sheet given the grey of a card is laid out as one, so
+         *   the cards inside it turn white.
          * @param drag Color of the drag handle.
          * @param shape Shape of the sheet.
          * @return Style built from the supplied colors and shape.
@@ -102,7 +121,7 @@ public data class FlowModalStyle(
         @Composable
         public fun default(
             overlay: Color = ArecaTheme.colors.bgOverlayDark,
-            bg: Color = ArecaTheme.colors.bgCanvas,
+            bg: Color = ArecaTheme.surfaces.sheet.page.ground,
             drag: Color = ArecaTheme.colors.bgNeutralBase,
             shape: Shape = RoundedCornerShape(
                 topStart = ArecaTheme.radius.lg,
@@ -206,12 +225,25 @@ public enum class FlowModalState {
  *
  * @param initialState State the modal starts in: [FlowModalState.Hidden],
  *   [FlowModalState.PartiallyOpened] or [FlowModalState.Expanded].
- * @param allowPartial Whether the modal has a partial height.
- * @param allowExpand Whether the modal has an expanded height.
+ * Every sheet is as tall as its content, up to [maxHeightFraction] of the window: a short list
+ * opens at the height of its rows, a long one stops at the cap and scrolls. A sheet that should be
+ * tall whatever it holds says so in its content — a lazy list fills the room it is given, and so
+ * does a body with `Modifier.fillMaxHeight()`. Its heights are measured, not configured:
+ * - expanded: the content's height, up to the cap;
+ * - partial: [partialMultiplier] of the cap, which a sheet has only when [allowPartial] — off by
+ *   default — and its content is taller than that. A partial request on a shorter sheet opens it fully, and [state]
+ *   says so.
+ *
+ * @param allowPartial Whether the modal may rest at a partial height when its content is tall
+ *   enough to have one. Off by default: a sheet opens at its full height, so a form or a calendar
+ *   never opens cut off; turn it on for a long list that may peek first.
+ * @param allowExpand Whether the sheet may grow past its partial height. Off with [allowPartial],
+ *   the sheet is capped at the partial height and rests there as its only height.
  * @param allowDrag Whether the sheet can be dragged between its heights and dragged away.
- * @param partialMultiplier Partial height as a share of the expanded height.
- * @param maxHeightFraction Expanded height as a share of the window height, in `0..1`.
- * @param autoHeight Whether the sheet sizes to its content instead of a fixed height.
+ * @param partialMultiplier Partial height as a share of the sheet's cap.
+ * @param maxHeightFraction Cap on the sheet's height as a share of the window height, in `0..1`;
+ *   never past the status bar.
+ * @param autoHeight Ignored: every sheet sizes to its content. Kept for source compatibility.
  * @property dialogProperties Properties of the dialog window the modal is drawn in. Its scrim colour
  *   is replaced by [FlowModalStyle.overlay].
  * @property animationSpec Animation of the sheet's height between states, or `null` for the theme's
@@ -224,7 +256,7 @@ public enum class FlowModalState {
  */
 public class FlowModalController(
     initialState: FlowModalState = FlowModalState.Hidden,
-    allowPartial: Boolean = true,
+    allowPartial: Boolean = false,
     allowExpand: Boolean = true,
     allowDrag: Boolean = true,
     partialMultiplier: Float = 0.5f,
@@ -241,16 +273,16 @@ public class FlowModalController(
     // caller's changes to the live controller. Recreating the controller instead would reset
     // [state], closing an open modal whenever any of these changed.
 
-    /** Whether the modal has a partial height. */
+    /** Whether the modal may rest at a partial height when its content is tall enough to have one. */
     public var allowPartial: Boolean by mutableStateOf(allowPartial)
 
-    /** Whether the modal has an expanded height. */
+    /** Whether the sheet may grow past its partial height; off with [allowPartial] caps it there. */
     public var allowExpand: Boolean by mutableStateOf(allowExpand)
 
     /** Whether the sheet can be dragged between its heights and dragged away. */
     public var allowDrag: Boolean by mutableStateOf(allowDrag)
 
-    /** Partial height as a share of the expanded height. */
+    /** Partial height as a share of the sheet's cap. */
     public var partialMultiplier: Float by mutableStateOf(partialMultiplier)
 
     /** Backing state of [maxHeightFraction]. */
@@ -269,7 +301,11 @@ public class FlowModalController(
             maxHeightFractionState = value
         }
 
-    /** Whether the sheet sizes to its content instead of a fixed height. */
+    /** Ignored: every sheet sizes to its content, up to [maxHeightFraction] of the window. */
+    @Deprecated(
+        message = "Every FlowModal sizes to its content up to maxHeightFraction. A sheet that should " +
+            "be tall whatever it holds fills its body: a lazy list, or Modifier.fillMaxHeight().",
+    )
     public var autoHeight: Boolean by mutableStateOf(autoHeight)
 
     /** Current state observed by Compose (drives recomposition). */
@@ -294,17 +330,20 @@ public class FlowModalController(
      * @param partial Whether to open at the partial height, when the modal has one.
      */
     public fun show(partial: Boolean = true) {
-        moveTo(FlowModalStateMachine.show(phase, partial, allowPartial, autoHeight))
+        moveTo(FlowModalStateMachine.show(phase, partial, allowPartial))
     }
 
-    /** Moves the modal to its expanded height, opening it if it is hidden. */
+    /** Moves the modal to its full height, opening it if it is hidden. */
     public fun expand() {
-        moveTo(FlowModalStateMachine.expand(phase, allowExpand, autoHeight))
+        moveTo(FlowModalStateMachine.expand(phase))
     }
 
-    /** Moves the modal to its partial height, opening it if it is hidden. */
+    /**
+     * Moves the modal to its partial height, opening it if it is hidden. A sheet whose content is
+     * no taller than the partial height goes to its full height instead.
+     */
     public fun collapse() {
-        moveTo(FlowModalStateMachine.collapse(phase, allowPartial, autoHeight))
+        moveTo(FlowModalStateMachine.collapse(phase, allowPartial))
     }
 
     /** Starts hiding a visible modal. Does nothing while it is hidden or hiding. */
@@ -323,6 +362,14 @@ public class FlowModalController(
      */
     internal fun settle(anchor: FlowModalState) {
         moveTo(FlowModalStateMachine.settle(phase, anchor))
+    }
+
+    /**
+     * Moves a partial request on to the full height, for a sheet that has measured its content and
+     * found it no taller than the partial height.
+     */
+    internal fun dropPartial() {
+        moveTo(FlowModalStateMachine.withoutPartial(phase))
     }
 
     /**
@@ -368,12 +415,14 @@ private fun requireHeightFraction(fraction: Float) {
  * that needs them to vary builds a [FlowModalController] itself, remembered under a key that
  * changes with them; the new controller starts in its initial state.
  *
- * @param allowPartial Whether the modal has a partial height.
- * @param allowExpand Whether the modal has an expanded height.
+ * @param allowPartial Whether the modal may rest at a partial height when its content is tall
+ *   enough to have one. Off by default, so every sheet opens at its full height.
+ * @param allowExpand Whether the sheet may grow past its partial height; off with [allowPartial]
+ *   caps it there.
  * @param allowDrag Whether the sheet can be dragged between its heights and dragged away.
- * @param partialMultiplier Partial height as a share of the expanded height.
- * @param maxHeightFraction Expanded height as a share of the window height.
- * @param autoHeight Whether the sheet sizes to its content instead of a fixed height.
+ * @param partialMultiplier Partial height as a share of the sheet's cap.
+ * @param maxHeightFraction Cap on the sheet's height as a share of the window height.
+ * @param autoHeight Ignored: every sheet sizes to its content. Kept for source compatibility.
  * @param dialogProperties Properties of the dialog window, read once. Build them with
  *   [flowModalDialogProperties] so the window keeps drawing edge to edge.
  * @param animationSpec Animation of the sheet's height between states, read once, or `null` for
@@ -383,7 +432,7 @@ private fun requireHeightFraction(fraction: Float) {
  */
 @Composable
 public fun rememberFlowModal(
-    allowPartial: Boolean = true,
+    allowPartial: Boolean = false,
     allowExpand: Boolean = true,
     allowDrag: Boolean = true,
     partialMultiplier: Float = 0.5f,
@@ -399,7 +448,6 @@ public fun rememberFlowModal(
             allowDrag = allowDrag,
             partialMultiplier = partialMultiplier,
             maxHeightFraction = maxHeightFraction,
-            autoHeight = autoHeight,
             dialogProperties = dialogProperties,
             animationSpec = animationSpec
         )
@@ -413,7 +461,6 @@ public fun rememberFlowModal(
         controller.allowDrag = allowDrag
         controller.partialMultiplier = partialMultiplier
         controller.maxHeightFraction = maxHeightFraction
-        controller.autoHeight = autoHeight
     }
 
     return controller
@@ -437,11 +484,12 @@ public fun rememberFlowModal(
  * The sheet's animated height is read only while laying out and drawing, so the slide and the drag
  * do not recompose the modal frame by frame.
  *
- * In [FlowModalController.autoHeight] mode the content is composed and measured exactly once.
- * The natural content height is captured via a [Modifier.layout] interceptor and used as the
- * animation target, while the layout's reported size is constrained to the current animated
- * value — this means content beyond the visible portion is properly clipped from both
- * rendering and pointer input (so partially-revealed items can't be clicked).
+ * The sheet is as tall as its content, up to the controller's cap; the body scrolls past it while
+ * the header and the footer stay. Its content is composed once and measured before the sheet moves,
+ * so it opens straight to its height. Opening, hiding and a drag toward dismissal slide the sheet
+ * as a whole; between its partial and full heights the body is revealed under a header and a footer
+ * that stay put. A change of content — a search that narrows a list — moves the sheet to its new
+ * height. The keyboard counts against the cap: the sheet's content stays above it.
  *
  * @param controller State of the modal and its configuration.
  * @param modifier Modifier applied to the sheet.
@@ -463,7 +511,7 @@ public fun FlowModal(
     style: FlowModalStyle = LocalFlowModalStyle.current ?: FlowModalStyle.Default,
     size: FlowModalSize = LocalFlowModalSize.current ?: FlowModalSize.Default,
     onDismissRequest: () -> Unit = { controller.hide() },
-    overlayContentDescription: String = "Dismiss",
+    overlayContentDescription: String = ArecaTheme.labels.dismiss,
     header: (@Composable () -> Unit)? = null,
     footer: (@Composable () -> Unit)? = null,
     content: @Composable () -> Unit,
@@ -493,41 +541,45 @@ public fun FlowModal(
                 screenHeightPx * controller.maxHeightFraction,
                 screenHeightPx - topInsetPx,
             ).coerceAtLeast(0f)
-            val maxSheetHeightDp = with(density) { maxSheetHeightPx.toDp() }
+            val partialHeightPx = maxSheetHeightPx * controller.partialMultiplier
+            // A sheet that may not grow past its partial height is capped there.
+            val capPx = if (controller.allowPartial && !controller.allowExpand) partialHeightPx else maxSheetHeightPx
 
-            /**
-             * Natural measured height of the sheet content (drag handle + header + body + footer),
-             * captured by the [Modifier.layout] interceptor below. Used as the animation target
-             * in autoHeight mode. In fixed-height mode this stays at 0 and is unused.
-             */
-            var measuredContentHeightPx by remember { mutableStateOf(0f) }
+            // The content's own height, up to the cap, measured by [SheetContent] on every layout;
+            // 0 until it has been measured once.
+            var contentHeightPx by remember { mutableFloatStateOf(0f) }
+            val measured = contentHeightPx > 0f
+            val expandedHeightPx = contentHeightPx.coerceAtMost(capPx)
+            val hasPartial = controller.allowPartial && controller.allowExpand && expandedHeightPx > partialHeightPx
+            // The lowest height the sheet rests at: below it, the sheet slides rather than shrinks.
+            val restHeightPx = if (hasPartial) partialHeightPx else expandedHeightPx
 
-            val expandedHeightPx = if (controller.autoHeight) {
-                measuredContentHeightPx.coerceIn(0f, maxSheetHeightPx)
-            } else {
-                maxSheetHeightPx
-            }
-
-            val partialHeightPx =
-                (expandedHeightPx * controller.partialMultiplier).coerceIn(0f, expandedHeightPx)
+            // The heights as they are now, read by a running animation so that content which grows
+            // or shrinks while the sheet moves redirects the motion instead of restarting it.
+            val currentRestHeightPx by rememberUpdatedState(restHeightPx)
+            val currentExpandedHeightPx by rememberUpdatedState(expandedHeightPx)
 
             /**
              * Height the sheet rests at, or animates toward, in [phase], at the current sizes.
+             * Reads state, so a [snapshotFlow] of it follows the content.
              *
              * @param phase Current state and target of the modal.
              * @return Height in pixels.
              */
             fun heightOf(phase: FlowModalPhase): Float = FlowModalStateMachine.heightOf(
                 phase = phase,
-                partialHeight = partialHeightPx,
-                expandedHeight = expandedHeightPx,
-                autoHeight = controller.autoHeight,
+                partialHeight = currentRestHeightPx,
+                expandedHeight = currentExpandedHeightPx,
             )
 
+            // Carries the sheet to a height that changed while it moved or rested, from the speed it
+            // has: content that arrives while the sheet opens (data replacing a placeholder) bends
+            // one motion toward the new height rather than stopping and starting again.
+            val followSpec = remember(motion) { motion.slide<Float>() }
+
             /**
-             * Single source of truth for the sheet's currently-visible height.
-             * Because the sheet is bottom-aligned, animating this value creates the
-             * natural "slide up/down" effect.
+             * How much of the sheet shows above the bottom edge: the single source of truth for its
+             * position, animated between states and moved by the finger.
              */
             val sheetHeightPx = remember { Animatable(0f) }
 
@@ -537,48 +589,54 @@ public fun FlowModal(
              */
             var isDragging by remember { mutableStateOf(false) }
 
-            // Drive height animation from controller state machine. A drag cancels the running
-            // animation, so `isDragging` is a key: releasing the sheet restarts the effect, which
-            // then animates from wherever the finger left it even when the phase is unchanged.
+            // A sheet too short for its partial height opens, and rests, at its full height, and its
+            // state says so.
+            LaunchedEffect(measured, hasPartial, controller.state, controller.targetState) {
+                if (measured && !hasPartial) controller.dropPartial()
+            }
+
+            // Drive the position from the controller. A drag cancels the running animation, so
+            // `isDragging` is a key: releasing the sheet restarts the effect, which then animates from
+            // wherever the finger left it even when the phase is unchanged. Nothing opens before the
+            // content has been measured, so the sheet rises straight to its height. The heights are
+            // not keys: a change of size redirects the running motion (see [followHeight]).
             LaunchedEffect(
                 controller.state,
                 controller.targetState,
                 isDragging,
-                maxSheetHeightPx,
-                partialHeightPx,
-                expandedHeightPx
+                measured,
             ) {
                 if (isDragging) return@LaunchedEffect
 
                 val started = controller.phase
                 when (started.state) {
                     FlowModalState.Opening -> {
-                        val target = heightOf(started)
-                        // In autoHeight mode wait for the first measurement before animating in.
-                        if (target > 0f || !controller.autoHeight) {
-                            sheetHeightPx.animateTo(
-                                targetValue = target,
-                                animationSpec = animationSpec
-                            )
-
-                            controller.finish(started)
-                        }
+                        if (!measured) return@LaunchedEffect
+                        sheetHeightPx.followHeight(
+                            target = { heightOf(started) },
+                            firstSpec = animationSpec,
+                            followSpec = followSpec,
+                            untilSettled = true,
+                        )
+                        controller.finish(started)
                     }
 
                     FlowModalState.Hiding -> {
-                        sheetHeightPx.animateTo(
-                            targetValue = 0f,
-                            animationSpec = animationSpec
-                        )
+                        sheetHeightPx.animateTo(targetValue = 0f, animationSpec = animationSpec)
                         controller.finish(started)
                     }
 
                     FlowModalState.PartiallyOpened,
                     FlowModalState.Expanded -> {
-                        // If constraints changed (rotation/resize/content reflow),
-                        // keep the visual height consistent.
-                        val target = heightOf(started)
-                        if (abs(sheetHeightPx.value - target) > 1f) sheetHeightPx.snapTo(target)
+                        // The content changed (a search narrowed the list, data replaced a
+                        // placeholder), or the window did: move to the new height.
+                        if (!measured) return@LaunchedEffect
+                        sheetHeightPx.followHeight(
+                            target = { heightOf(started) },
+                            firstSpec = followSpec,
+                            followSpec = followSpec,
+                            untilSettled = false,
+                        )
                     }
 
                     FlowModalState.Hidden -> sheetHeightPx.snapTo(0f)
@@ -592,7 +650,7 @@ public fun FlowModal(
                     .fillMaxSize()
                     .thenIf(!platformDrawsModalScrim) {
                         drawBehind {
-                            val openness = (sheetHeightPx.value / max(1f, expandedHeightPx))
+                            val openness = (sheetHeightPx.value / max(1f, restHeightPx))
                                 .coerceIn(0f, 1f)
                             drawRect(style.overlay.copy(alpha = style.overlay.alpha * openness))
                         }
@@ -612,55 +670,12 @@ public fun FlowModal(
                     }
             )
 
-            // Sheet — bottom-anchored. Composed exactly once regardless of mode.
+            // Sheet — bottom-anchored, composed once.
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.BottomCenter
             ) {
-                // Build the size/layout strategy:
-                //  - fixed-height mode  -> lay out at the animated height
-                //  - auto-height mode   -> measure children naturally up to max,
-                //                          report the *animated* height as our size,
-                //                          and remember the natural height for animation
-                val sizingModifier = if (controller.autoHeight) {
-                    Modifier
-                        .heightIn(max = maxSheetHeightDp)
-                        .layout { measurable, constraints ->
-                            // Measure the content at its natural height (capped by heightIn above).
-                            val placeable = measurable.measure(
-                                constraints.copy(minHeight = 0)
-                            )
-                            val natural = placeable.height
-
-                            // Publish the natural height so the controller can target it.
-                            // Only write if it actually changed to avoid extra invalidations.
-                            if (measuredContentHeightPx != natural.toFloat()) {
-                                measuredContentHeightPx = natural.toFloat()
-                            }
-
-                            // Report our size as the animated visible height. Anything beyond
-                            // this is clipped (visually by .clip below, and from hit testing
-                            // because Compose hit-tests against reported layout bounds).
-                            val visible = sheetHeightPx.value
-                                .roundToInt()
-                                .coerceIn(0, natural)
-
-                            layout(placeable.width, visible) {
-                                placeable.place(0, 0)
-                            }
-                        }
-                } else {
-                    Modifier.layout { measurable, constraints ->
-                        val height = constraints.constrainHeight(sheetHeightPx.value.roundToInt())
-                        val placeable = measurable.measure(
-                            constraints.copy(minHeight = height, maxHeight = height)
-                        )
-                        layout(placeable.width, height) {
-                            placeable.place(0, 0)
-                        }
-                    }
-                }
-
+                val capInt = capPx.roundToInt()
                 Box(
                     // The cap comes first so that nothing the caller passes can widen the sheet
                     // past it; the bottom-centre alignment above centres a capped sheet.
@@ -674,7 +689,15 @@ public fun FlowModal(
                         )
                         .then(modifier)
                         .fillMaxWidth()
-                        .then(sizingModifier)
+                        // The sheet takes as much of the window as shows: content past it is clipped
+                        // from drawing and, through the reported bounds, from touch.
+                        .layout { measurable, constraints ->
+                            val placeable = measurable.measure(
+                                constraints.copy(minHeight = 0, maxHeight = min(capInt, constraints.maxHeight)),
+                            )
+                            val shown = sheetHeightPx.value.roundToInt().coerceIn(0, placeable.height)
+                            layout(placeable.width, shown) { placeable.place(0, 0) }
+                        }
                         .clip(style.shape)
                         .background(style.bg, style.shape)
                         // Swallows presses so they never reach the scrim behind. A `clickable` here
@@ -688,10 +711,9 @@ public fun FlowModal(
                                 Modifier.flowModalDrag(
                                     scope = scope,
                                     sheetHeightPx = sheetHeightPx,
-                                    maxSheetHeightPx = expandedHeightPx,
-                                    partialHeightPx = partialHeightPx,
-                                    allowPartial = controller.allowPartial && !controller.autoHeight,
-                                    allowExpand = controller.allowExpand || controller.autoHeight,
+                                    expandedHeightPx = expandedHeightPx,
+                                    partialHeightPx = restHeightPx,
+                                    hasPartial = hasPartial,
                                     onDragStarted = { isDragging = true },
                                     onDragSettled = { anchor ->
                                         val hiding = controller.state == FlowModalState.Hiding
@@ -718,13 +740,16 @@ public fun FlowModal(
                             }
                         )
                         // Last in the chain, so the background and the drag area reach the screen
-                        // edge while the content clears the navigation bar, cutouts and keyboard.
-                        .windowInsetsPadding(SheetContentInsets)
+                        // edges while the content clears the cutouts at the sides; the bottom inset
+                        // — the navigation bar and the keyboard — is the content's own.
+                        .windowInsetsPadding(SheetSideInsets)
                 ) {
                     SheetContent(
                         controller = controller,
                         style = style,
                         size = size,
+                        layoutHeight = { max(sheetHeightPx.value, restHeightPx).roundToInt() },
+                        onContentHeight = { height -> contentHeightPx = height.toFloat() },
                         header = header,
                         footer = footer,
                         content = content,
@@ -735,11 +760,55 @@ public fun FlowModal(
     }
 }
 
-/** Insets the sheet's content clears: everything on the sides and bottom it is drawn against. */
-private val SheetContentInsets: WindowInsets
-    @Composable get() = WindowInsets.safeDrawing.only(
-        WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom,
-    )
+/**
+ * Animates toward [target] and keeps following it: each new value redirects the running animation
+ * from its current position and speed, so the motion bends instead of stopping and starting again.
+ *
+ * @param target Height to reach; reads state, and is followed through a [snapshotFlow].
+ * @param firstSpec Animation toward the first value.
+ * @param followSpec Animation toward every later value; a spring, so it carries the speed over.
+ * @param untilSettled Whether to return once the animation toward the latest value has ended, or to
+ *   follow until cancelled.
+ */
+private suspend fun Animatable<Float, AnimationVector1D>.followHeight(
+    target: () -> Float,
+    firstSpec: AnimationSpec<Float>,
+    followSpec: AnimationSpec<Float>,
+    untilSettled: Boolean,
+) {
+    val settled = CompletableDeferred<Unit>()
+    coroutineScope {
+        var spec = firstSpec
+        val follower = launch {
+            snapshotFlow(target).collect { height ->
+                if (abs(value - height) <= 1f && !isRunning) {
+                    settled.complete(Unit)
+                    return@collect
+                }
+                val animationSpec = spec
+                spec = followSpec
+                // Undispatched, so the speed is read and the running animation is replaced at once;
+                // a replaced animation ends with a cancellation and settles nothing.
+                launch(start = CoroutineStart.UNDISPATCHED) {
+                    animateTo(targetValue = height, animationSpec = animationSpec, initialVelocity = velocity)
+                    settled.complete(Unit)
+                }
+            }
+        }
+        if (untilSettled) {
+            settled.await()
+            follower.cancel()
+        }
+    }
+}
+
+/** Insets the sheet's content clears at its sides: cutouts and system bars. */
+private val SheetSideInsets: WindowInsets
+    @Composable get() = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal)
+
+/** Insets the sheet's content clears at its bottom: the navigation bar, or the keyboard when open. */
+private val SheetBottomInsets: WindowInsets
+    @Composable get() = WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)
 
 /** Default [FlowModalSize] in scope, seeded by [dev.voir.areca.theme.ArecaThemeProvider]. */
 public val LocalFlowModalSize: ProvidableCompositionLocal<FlowModalSize?> =
@@ -750,17 +819,21 @@ public val LocalFlowModalStyle: ProvidableCompositionLocal<FlowModalStyle?> =
     compositionLocalOf { null }
 
 /**
- * Single, deduplicated sheet body. Used in both fixed-height and auto-height modes —
- * the parent is responsible for sizing/clipping it.
+ * The sheet's content: the header at its top, the footer above the navigation bar or the keyboard,
+ * and the body between them, with the drag handle floating over the top.
  *
- * In auto-height mode this Column is allowed to wrap its content (the parent's
- * [Modifier.layout] interceptor measures it once). In fixed-height mode the body
- * uses [ColumnScope.weight] so the content area absorbs the remaining space below
- * the (optional) drag handle / header and above the (optional) footer.
+ * Measured once per layout, against the cap the sheet passes down: the header and the footer at
+ * their own height, the body with what is left, so a long body stops at the cap and scrolls. The
+ * resulting height — the content's own — goes to [onContentHeight]. The content is then laid out at
+ * [layoutHeight], never taller than its own height: below that, the footer stays at the visible
+ * bottom and the body is cut off above it, which is how a sheet shows between its partial and full
+ * heights.
  *
  * @param controller State and configuration of the modal.
  * @param style Style passed to [FlowModal]; supplies the drag handle's color.
  * @param size Size passed to [FlowModal]; supplies the drag handle's geometry.
+ * @param layoutHeight The height to lay the content out at, read during layout.
+ * @param onContentHeight Called during layout with the content's own height, in pixels.
  * @param header Content above the body.
  * @param footer Content below the body.
  * @param content Body of the sheet.
@@ -770,35 +843,88 @@ private fun SheetContent(
     controller: FlowModalController,
     style: FlowModalStyle,
     size: FlowModalSize,
+    layoutHeight: () -> Int,
+    onContentHeight: (Int) -> Unit,
     header: (@Composable () -> Unit)?,
     footer: (@Composable () -> Unit)?,
     content: @Composable () -> Unit,
 ) {
     val dragAreaHeight = if (controller.allowDrag) size.dragAreaHeight else 0.dp
     val headerInsets = WindowInsets(top = dragAreaHeight)
+    val bottomInset = SheetBottomInsets.getBottom(LocalDensity.current)
 
     Box(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            // A header runs up to the sheet's top edge so its fill shows under the drag handle, and
-            // clears the handle itself with [FlowModalHeaderInsets]. A body has no fill to show,
-            // so it starts below the handle.
-            if (header != null) {
-                CompositionLocalProvider(LocalFlowModalHeaderInsets provides headerInsets) {
-                    header()
+        SurfaceOf(style.bg, root = SurfaceRoot.Sheet) {
+            Layout(
+                contents = listOf(
+                    {
+                        // A header runs up to the sheet's top edge so its fill shows under the drag
+                        // handle, and clears the handle itself with [FlowModalHeaderInsets]. A body
+                        // has no fill to show, so it starts below the handle.
+                        if (header != null) {
+                            CompositionLocalProvider(LocalFlowModalHeaderInsets provides headerInsets) {
+                                header()
+                            }
+                        } else {
+                            Spacer(Modifier.height(dragAreaHeight))
+                        }
+                    },
+                    // The sheet clears the bottom inset — the navigation bar, or the keyboard — itself,
+                    // below the footer; the body and the footer see it as used, so a padding of
+                    // their own for it adds nothing.
+                    {
+                        Column(modifier = Modifier.fillMaxWidth().consumeWindowInsets(SheetBottomInsets)) {
+                            content()
+                        }
+                    },
+                    {
+                        if (footer != null) {
+                            Box(modifier = Modifier.consumeWindowInsets(SheetBottomInsets)) { footer() }
+                        }
+                    },
+                ),
+                modifier = Modifier.fillMaxWidth(),
+            ) { (headers, bodies, footers), constraints ->
+                val width = constraints.maxWidth
+                val loose = Constraints(minWidth = width, maxWidth = width, maxHeight = constraints.maxHeight)
+                val top = headers.map { it.measure(loose) }
+                val bottom = footers.map { it.measure(loose) }
+                val topHeight = top.sumOf { it.height }
+                val bottomHeight = bottom.sumOf { it.height }
+                val bodyRoom = (constraints.maxHeight - topHeight - bottomHeight - bottomInset).coerceAtLeast(0)
+                val body = bodies.map { it.measure(loose.copy(maxHeight = bodyRoom)) }
+                val bodyHeight = body.maxOfOrNull { it.height } ?: 0
+
+                val own = (topHeight + bodyHeight + bottomHeight + bottomInset).coerceAtMost(constraints.maxHeight)
+                onContentHeight(own)
+                val height = layoutHeight().coerceIn(topHeight + bottomHeight + bottomInset, own)
+
+                layout(width, height) {
+                    var y = 0
+                    top.forEach { placeable ->
+                        placeable.place(0, y)
+                        y += placeable.height
+                    }
+                    val footerTop = height - bottomInset - bottomHeight
+                    val bodyShown = (footerTop - topHeight).coerceAtLeast(0)
+                    body.forEach { placeable ->
+                        if (bodyShown >= placeable.height) {
+                            placeable.place(0, topHeight)
+                        } else {
+                            // Cut off above the footer, for drawing and for touch alike.
+                            placeable.placeWithLayer(0, topHeight) {
+                                clip = true
+                                shape = TopPartShape(bodyShown.toFloat())
+                            }
+                        }
+                    }
+                    var footerY = footerTop
+                    bottom.forEach { placeable ->
+                        placeable.place(0, footerY)
+                        footerY += placeable.height
+                    }
                 }
-            } else {
-                Spacer(Modifier.height(dragAreaHeight))
             }
-
-            Column(
-                modifier = Modifier
-                    .weight(1f, fill = !controller.autoHeight)
-                    .fillMaxWidth()
-            ) {
-                content()
-            }
-
-            footer?.invoke()
         }
 
         // Drawn after the content, so it floats over whatever the top of the sheet shows.
@@ -816,6 +942,17 @@ private fun SheetContent(
             )
         }
     }
+}
+
+/**
+ * The top [height] pixels of whatever it clips: the part of a sheet's body that shows above its
+ * footer.
+ *
+ * @property height Height of the part that shows, in pixels.
+ */
+private class TopPartShape(private val height: Float) : Shape {
+    override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline =
+        Outline.Rectangle(Rect(0f, 0f, size.width, height.coerceIn(0f, size.height)))
 }
 
 /**
@@ -843,19 +980,14 @@ public val FlowModalHeaderInsets: WindowInsets
 /**
  * Drag modifier for [FlowModal].
  *
- * Responsibilities:
- * - Update [sheetHeightPx] directly during drag for a "finger-following" interaction.
- * - On release, pick the anchor the sheet settles on with [FlowModalStateMachine.dragTarget].
- * - Delegate the actual state transitions back to the caller via lambdas.
+ * Moves [sheetHeightPx] with the finger, and on release picks the height the sheet settles on with
+ * [FlowModalStateMachine.dragTarget], handing the state change back through the lambdas.
  *
- * This keeps the main composable smaller and makes the drag rules easier to evolve.
- *
- * @param scope Scope the finger-following height updates run in.
- * @param sheetHeightPx Animated height of the sheet, in pixels.
- * @param maxSheetHeightPx Expanded height of the sheet, in pixels.
- * @param partialHeightPx Partial height of the sheet, in pixels.
- * @param allowPartial Whether the sheet can rest at [partialHeightPx].
- * @param allowExpand Whether the sheet can rest at [maxSheetHeightPx].
+ * @param scope Scope the finger-following updates run in.
+ * @param sheetHeightPx How much of the sheet shows, in pixels.
+ * @param expandedHeightPx Full height of the sheet, in pixels; the highest it can be dragged.
+ * @param partialHeightPx Partial height of the sheet, or its full height when it has none, in pixels.
+ * @param hasPartial Whether the sheet can rest at [partialHeightPx] as well as at [expandedHeightPx].
  * @param onDragStarted Called when the finger starts dragging the sheet.
  * @param onDragSettled Called with the resting state the released sheet settles on.
  * @param onDragCancelled Called when the drag is cancelled before the finger lifts.
@@ -864,26 +996,20 @@ public val FlowModalHeaderInsets: WindowInsets
 private fun Modifier.flowModalDrag(
     scope: CoroutineScope,
     sheetHeightPx: Animatable<Float, *>,
-    maxSheetHeightPx: Float,
+    expandedHeightPx: Float,
     partialHeightPx: Float,
-    allowPartial: Boolean,
-    allowExpand: Boolean,
+    hasPartial: Boolean,
     onDragStarted: () -> Unit,
     onDragSettled: (FlowModalState) -> Unit,
     onDragCancelled: () -> Unit,
-): Modifier = pointerInput(
-    maxSheetHeightPx,
-    partialHeightPx,
-    allowPartial,
-    allowExpand
-) {
+): Modifier = pointerInput(expandedHeightPx, partialHeightPx, hasPartial) {
     detectVerticalDragGestures(
         onDragStart = { onDragStarted() },
         onVerticalDrag = { change, dragAmount ->
             change.consume()
 
             // dragAmount: +down, -up
-            val newHeight = (sheetHeightPx.value - dragAmount).coerceIn(0f, maxSheetHeightPx)
+            val newHeight = (sheetHeightPx.value - dragAmount).coerceIn(0f, expandedHeightPx)
             // Undispatched, so the snap lands before the release is handled; a snap that ran
             // after it would cancel the settling animation the release starts.
             scope.launch(start = CoroutineStart.UNDISPATCHED) {
@@ -895,9 +1021,8 @@ private fun Modifier.flowModalDrag(
                 FlowModalStateMachine.dragTarget(
                     height = sheetHeightPx.value,
                     partialHeight = partialHeightPx,
-                    expandedHeight = maxSheetHeightPx,
-                    allowPartial = allowPartial,
-                    allowExpand = allowExpand,
+                    expandedHeight = expandedHeightPx,
+                    hasPartial = hasPartial,
                 ),
             )
         },

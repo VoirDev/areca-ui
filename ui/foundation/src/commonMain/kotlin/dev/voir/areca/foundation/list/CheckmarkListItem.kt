@@ -8,8 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.semantics.Role
-import dev.voir.areca.foundation.LocalContentColor
 import dev.voir.areca.foundation.slot.SlotRowLayout
+import dev.voir.areca.theme.ArecaTheme
 
 /**
  * A row that marks itself with a check when chosen — the shape of a select sheet, a filter list or a
@@ -32,8 +32,8 @@ import dev.voir.areca.foundation.slot.SlotRowLayout
  * @param value Inline value rendered before the check mark.
  * @param enabled Whether the row accepts input and uses its enabled colors.
  * @param highlightSelected Whether a chosen row also wears the selected background and rail.
- * @param checkmarkColor Colour of the check mark — the brand's, say, so the choice reads as the
- *   product's answer. [Color.Unspecified] takes the row's trailing-slot colour.
+ * @param checkmarkColor Colour of the check mark. [Color.Unspecified], the default, takes the
+ *   brand's, so a choice reads the same in every list, sheet and menu.
  * @param nestingLevel Indentation steps of [ListItemSize.nestedLevelOffset] to add.
  * @param style Colors of the row across its states.
  * @param size Metrics and typography of the row.
@@ -87,7 +87,7 @@ public fun CheckmarkListItem(
         bottom = bottom,
         // The mark reads the row's own selection, which is what animates it in and out.
         trailing = {
-            ListItemCheckmark(color = checkmarkColor.takeOrElse { LocalContentColor.current })
+            ListItemCheckmark(color = checkmarkColor.takeOrElse { ArecaTheme.colors.fgBrand })
         },
     )
 }

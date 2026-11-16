@@ -30,6 +30,14 @@ class SelectFlowModalDraftTest {
     }
 
     @Test
+    fun `pressing the chosen option of a required single choice keeps it`() {
+        assertEquals(true, SelectSelectionMode.Single.keepsChosen(setOf(apple.value), apple, clearable = false))
+        assertEquals(false, SelectSelectionMode.Single.keepsChosen(setOf(apple.value), apple, clearable = true))
+        assertEquals(false, SelectSelectionMode.Single.keepsChosen(setOf(apple.value), banana, clearable = false))
+        assertEquals(false, SelectSelectionMode.Multiple.keepsChosen(setOf(apple.value), apple, clearable = false))
+    }
+
+    @Test
     fun `discarding drops unapplied edits so a reopened sheet shows the committed selection`() {
         val draft = SelectFlowModalDraft(setOf(apple.value))
         draft.select(banana, SelectSelectionMode.Multiple)

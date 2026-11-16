@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dev.voir.areca.theme.ArecaTheme
+import androidx.compose.ui.graphics.takeOrElse
+import dev.voir.areca.theme.surfaceFor
 
 /**
  * A group of rows that draws a separator at every boundary between two of them.
@@ -75,7 +77,11 @@ public fun ListItemColumn(
         .then(
             RowSeparatorElement(
                 boundaries = boundaries,
-                color = if (separated) listStyle.separator else Color.Unspecified,
+                color = if (separated) {
+                    listStyle.separator.takeOrElse { surfaceFor(listStyle.bg).separator }
+                } else {
+                    Color.Unspecified
+                },
                 thickness = listSize.separatorThickness,
                 inset = listSize.separatorInset,
             )

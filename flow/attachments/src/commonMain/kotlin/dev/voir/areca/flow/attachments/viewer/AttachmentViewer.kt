@@ -116,7 +116,7 @@ public fun AttachmentViewer(
     title: (AttachmentItem) -> String = { item -> item.label },
     position: ((index: Int, count: Int) -> String)? = { index, count -> "${index + 1} of $count" },
     caption: (AttachmentItem) -> String? = { item -> viewerCaption(item) },
-    closeLabel: String = "Close",
+    closeLabel: String = ArecaTheme.labels.close,
     shareLabel: String = "Share",
     moreLabel: String = "More options",
     filmstripLabel: (item: AttachmentItem, index: Int, count: Int) -> String = { item, index, count ->

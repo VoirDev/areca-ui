@@ -198,8 +198,8 @@ configuration change.
 - `ColumnChartLayout.Fill` for a handful of columns: they share the width, nothing scrolls, bars
   shrink to fit a narrow column.
 - Pass the screen gutter as `contentPadding` so columns scroll to the screen's edge.
-- A reference line's label sits on `ColumnChartStyle.referenceLabelBg` (default `bgCanvas`); match it
-  to what the chart sits on.
+- A reference line's label sits on `ColumnChartStyle.referenceLabelBg` (default `ArecaTheme.surface.ground`,
+  the ground of the surface the chart is drawn on).
 
 ### Line chart
 

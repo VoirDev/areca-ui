@@ -174,6 +174,28 @@ an amount and its currency. `RequirementList` ticks off password rules as they a
 failed sign-in shown as text — is not spoken by itself. `AnnounceOnChange(message)` speaks it when
 it appears and whenever it changes.
 
+**A docked action.** On a full screen the action can sit at the bottom edge in a
+`BottomActionBar`, passed as `BaseLayout`'s `bottomBar`. `ready = false` softens it while the form
+is incomplete but keeps it pressable, so the press runs the same validation; `caption` is a line
+above it:
+
+```kotlin
+BaseLayout(
+    topBar = { TopBar("Create your account") },
+    bottomBar = {
+        BottomActionBar(
+            actionText = "Create account",
+            onAction = submit,
+            loading = submitting,
+            caption = "You can change these later in Settings.",
+            ready = "@" in email && password.length >= 8,
+        )
+    },
+) { padding -> SignUpFields(Modifier.padding(padding)) }
+```
+
+Keep `enabled = false` with a `hint` for an action that must not happen at all.
+
 **Settings typed in place.** A short form inside a settings card is `SettingsTextFieldRow`; see the
 [settings screen](settings.md).
 

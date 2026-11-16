@@ -111,10 +111,10 @@ public data class WheelPickerStyle(
          */
         @Composable
         public fun default(
-            highlight: Color = ArecaTheme.colors.bgMuted,
+            highlight: Color = ArecaTheme.surface.well,
             highlightShape: Shape = ArecaTheme.shapes.md,
             content: Color = ArecaTheme.colors.fgBase,
-            surface: Color = ArecaTheme.colors.bgSurface,
+            surface: Color = ArecaTheme.surface.ground,
             selectedFontWeight: FontWeight = FontWeight.SemiBold,
             fontWeight: FontWeight = FontWeight.Normal,
             falloff: WheelPickerFalloff = WheelPickerFalloff.Default,

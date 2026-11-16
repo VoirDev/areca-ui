@@ -17,6 +17,10 @@ import androidx.compose.ui.unit.TextUnit
 import dev.voir.areca.foundation.LocalContentColor
 import dev.voir.areca.foundation.LocalTextStyle
 import dev.voir.areca.theme.ArecaTheme
+import androidx.compose.foundation.text.TextAutoSize
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.text.style.TextDirection
 
 /**
  * The role a piece of text plays, resolved against [dev.voir.areca.theme.ArecaTypography].
@@ -71,6 +75,9 @@ public enum class TextVariant {
 
     /** Label on a large control, or a list row's primary line. */
     LabelLarge,
+
+    /** A small tracked label above what it names: a group above its rows, an eyebrow. */
+    Overline,
 }
 
 /**
@@ -131,6 +138,7 @@ public val TextVariant.style: TextStyle
         TextVariant.Display -> ArecaTheme.typography.display
         TextVariant.Caption -> ArecaTheme.typography.caption
         TextVariant.LabelSmall -> ArecaTheme.typography.labelSmall
+        TextVariant.Overline -> ArecaTheme.typography.overline
         TextVariant.LabelMedium -> ArecaTheme.typography.labelMedium
         TextVariant.LabelLarge -> ArecaTheme.typography.labelLarge
     }
@@ -179,6 +187,9 @@ public val TextColor.color: Color
  * @param maxLines Largest number of lines to render.
  * @param minLines Smallest number of lines to reserve space for.
  * @param onTextLayout Called with the measured layout, for callers that need glyph positions.
+ * @param autoSize Shrinks the text to fit its box, `null` for none:
+ *   `TextAutoSize.StepBased(minFontSize = 12.sp, maxFontSize = style.fontSize)` for a figure that
+ *   must stay on one line however long it gets — pair it with `maxLines = 1`.
  */
 @Composable
 public fun Text(
@@ -199,8 +210,17 @@ public fun Text(
     maxLines: Int = Int.MAX_VALUE,
     minLines: Int = 1,
     onTextLayout: ((TextLayoutResult) -> Unit)? = null,
+    autoSize: TextAutoSize? = null,
 ) {
+    // A paragraph left without a direction reads in the interface's, never in its first letter's:
+    // a line starting with a symbol in another script — "د.إ 1 234" in an English interface —
+    // would otherwise be laid out right to left and reorder its figures.
+    val interfaceDirection = when (LocalLayoutDirection.current) {
+        LayoutDirection.Ltr -> TextDirection.Ltr
+        LayoutDirection.Rtl -> TextDirection.Rtl
+    }
     val mergedStyle = style.merge(
+        textDirection = if (style.textDirection == TextDirection.Unspecified) interfaceDirection else style.textDirection,
         color = color,
         fontSize = fontSize,
         lineHeight = lineHeight,
@@ -224,6 +244,7 @@ public fun Text(
             softWrap = softWrap,
             maxLines = maxLines,
             minLines = minLines,
+            autoSize = autoSize,
         )
     } else {
         BasicText(
@@ -235,6 +256,7 @@ public fun Text(
             softWrap = softWrap,
             maxLines = maxLines,
             minLines = minLines,
+            autoSize = autoSize,
         )
     }
 }
@@ -265,6 +287,9 @@ public fun Text(
  * @param maxLines Largest number of lines to render.
  * @param minLines Smallest number of lines to reserve space for.
  * @param onTextLayout Called with the measured layout, for callers that need glyph positions.
+ * @param autoSize Shrinks the text to fit its box, `null` for none:
+ *   `TextAutoSize.StepBased(minFontSize = 12.sp, maxFontSize = style.fontSize)` for a figure that
+ *   must stay on one line however long it gets — pair it with `maxLines = 1`.
  */
 @Composable
 public fun Text(
@@ -285,6 +310,7 @@ public fun Text(
     maxLines: Int = Int.MAX_VALUE,
     minLines: Int = 1,
     onTextLayout: ((TextLayoutResult) -> Unit)? = null,
+    autoSize: TextAutoSize? = null,
 ) {
     Text(
         text = text,
@@ -304,6 +330,7 @@ public fun Text(
         maxLines = maxLines,
         minLines = minLines,
         onTextLayout = onTextLayout,
+        autoSize = autoSize,
     )
 }
 

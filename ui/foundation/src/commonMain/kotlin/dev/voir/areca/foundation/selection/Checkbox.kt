@@ -161,7 +161,7 @@ public data class CheckboxStyle(
         @Composable
         public fun default(
             uncheckedBg: Color = Color.Transparent,
-            uncheckedBorder: Color = ArecaTheme.colors.borderBase,
+            uncheckedBorder: Color = ArecaTheme.colors.borderIntense,
             checkedBg: Color = ArecaTheme.colors.accentBase,
             checkedBorder: Color = ArecaTheme.colors.accentBase,
             mark: Color = ArecaTheme.colors.fgOnFill,
@@ -209,10 +209,11 @@ public val LocalCheckboxStyle: ProvidableCompositionLocal<CheckboxStyle?> =
  * from its corner and the dash grows from its centre, which reads as the control responding rather
  * than as a glyph appearing.
  *
- * [indeterminate] is a modifier on [checked], not a third value — exactly as in HTML. A checkbox is
- * only ever unchecked or checked, and an indeterminate one is a *checked* box showing a dash because
- * its children disagree. `Checkbox(checked = false, indeterminate = true)` therefore draws an empty
- * box.
+ * [indeterminate] wins over [checked], as in HTML: while it is set the box draws the dash, takes the
+ * checked colors and reports the mixed state, whatever [checked] says — a parent whose children
+ * disagree. [checked] still decides what a tap asks for: the press calls [onCheckedChange] with
+ * `!checked`, so pass `checked = false` for a tap that selects every child and `checked = true` for
+ * one that clears them.
  *
  * [enabled] and [readOnly] are different refusals. Disabled means the action is unavailable and the
  * control greys out; read-only means the value is real and current but not the user's to change, so
@@ -233,8 +234,7 @@ public val LocalCheckboxStyle: ProvidableCompositionLocal<CheckboxStyle?> =
  * @param modifier Modifier applied to the box.
  * @param style Colors. Defaults to the theme's.
  * @param size Dimensions. Defaults to the theme's, or [CheckboxSize.Default].
- * @param indeterminate Whether to draw a dash instead of a check, and report the mixed state. Only
- *   applies while [checked].
+ * @param indeterminate Whether to draw a dash and report the mixed state, whatever [checked] is.
  * @param enabled Whether the control is available.
  * @param readOnly Whether the control shows its value but rejects changes.
  * @param interactionSource Source of the checkbox's interactions; pass one to observe them.
@@ -251,8 +251,7 @@ public fun Checkbox(
     readOnly: Boolean = false,
     interactionSource: MutableInteractionSource? = null,
 ) {
-    val showIndeterminate = checked && indeterminate
-    val colors = style.resolve(selected = checked, enabled = enabled, readOnly = readOnly)
+    val colors = style.resolve(selected = checked || indeterminate, enabled = enabled, readOnly = readOnly)
     val source = interactionSource ?: remember { MutableInteractionSource() }
     val change = onCheckedChange.takeUnless { LocalSelectionControlInert.current }
     val motion = ArecaTheme.motion
@@ -273,12 +272,12 @@ public fun Checkbox(
         label = "checkboxMark",
     )
     val checkProgress by animateFloatAsState(
-        targetValue = if (checked && !showIndeterminate) 1f else 0f,
+        targetValue = if (checked && !indeterminate) 1f else 0f,
         animationSpec = motion.fast.tween(motion.standard),
         label = "checkboxCheckProgress",
     )
     val indeterminateProgress by animateFloatAsState(
-        targetValue = if (showIndeterminate) 1f else 0f,
+        targetValue = if (indeterminate) 1f else 0f,
         animationSpec = motion.fast.tween(motion.standard),
         label = "checkboxIndeterminateProgress",
     )
@@ -385,12 +384,12 @@ private const val CheckShortLegShare = 0.45f
  * Accessibility state of a checkbox, or of a row that is one.
  *
  * @param checked Whether the checkbox is ticked.
- * @param indeterminate Whether a ticked checkbox shows the indeterminate dash.
- * @return [ToggleableState.Indeterminate] for a ticked box showing the dash, otherwise on or off.
+ * @param indeterminate Whether the checkbox shows the indeterminate dash, whatever [checked] is.
+ * @return [ToggleableState.Indeterminate] while the dash shows, otherwise on or off.
  */
 internal fun checkboxToggleableState(checked: Boolean, indeterminate: Boolean): ToggleableState =
     when {
-        checked && indeterminate -> ToggleableState.Indeterminate
+        indeterminate -> ToggleableState.Indeterminate
         checked -> ToggleableState.On
         else -> ToggleableState.Off
     }

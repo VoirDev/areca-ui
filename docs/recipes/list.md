@@ -2,9 +2,9 @@
 
 A paged list of invoices: a top bar with an add control, rows that open an invoice, pull-to-refresh,
 the next page loaded as the user nears the end, and a face for each state — loading, failed with a
-retry, empty with a call to action, and the end of the list.
+retry, empty, and the end of the list.
 
-Needs `dev.voir.areca:foundation`, and `dev.voir.areca:icons` for the inbox glyph.
+Needs `dev.voir.areca:foundation`.
 
 ## Components
 
@@ -15,7 +15,7 @@ Needs `dev.voir.areca:foundation`, and `dev.voir.areca:icons` for the inbox glyp
 | `PagedContentList` | Decides which face to show from the state, composes rows lazily, requests the next page near the end, and adds pull-to-refresh when `onRefresh` is set |
 | `PagedContentListState` | Plain data your view model produces: the items, whether there is a next page, and what is loading or failed |
 | `ContentListLabels` | The words of the default faces |
-| `Fallback` with `FeaturedIcon` | A custom empty face with an action |
+| `Fallback(title, …, tone)` | The empty face and the failed face, in words, with the stock tray and alert marks |
 | `NavigationListItem` | A row that opens something, with a chevron |
 
 Every component is in the [catalogue](../components.md).
@@ -28,20 +28,16 @@ import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.runtime.Composable
-import dev.voir.areca.foundation.button.Button
 import dev.voir.areca.foundation.collection.ContentListLabels
 import dev.voir.areca.foundation.collection.PagedContentList
 import dev.voir.areca.foundation.collection.PagedContentListState
 import dev.voir.areca.foundation.feedback.Fallback
-import dev.voir.areca.foundation.icon.FeaturedIcon
+import dev.voir.areca.foundation.feedback.FallbackTone
 import dev.voir.areca.foundation.layout.BaseLayout
 import dev.voir.areca.foundation.list.NavigationListItem
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.foundation.topbar.AddAction
 import dev.voir.areca.foundation.topbar.TopBar
-import dev.voir.areca.icons.ArecaIcons
-import dev.voir.areca.icons.Inbox
-import dev.voir.areca.theme.ArecaTheme
 ```
 
 ```kotlin
@@ -56,7 +52,6 @@ fun InvoicesScreen(
     onCreate: () -> Unit,
 ) {
     BaseLayout(
-        bg = ArecaTheme.colors.bgCanvas,
         contentWindowInsets = WindowInsets.safeDrawing.only(
             WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal,
         ),
@@ -85,10 +80,17 @@ fun InvoicesScreen(
             itemKey = { it.id },
             emptyContent = {
                 Fallback(
-                    top = { FeaturedIcon(ArecaIcons.Inbox, contentDescription = null) },
-                    heading = { Text("No invoices yet") },
-                    body = { Text("Invoices you send appear here.") },
-                    content = { Button(text = "New invoice", onClick = onCreate) },
+                    title = "No invoices yet",
+                    body = "Invoices you send appear here. Create one with +.",
+                )
+            },
+            initialErrorContent = { message, retry ->
+                Fallback(
+                    title = "Couldn’t load invoices",
+                    body = message,
+                    tone = FallbackTone.Failure,
+                    actionText = "Try again",
+                    onAction = retry,
                 )
             },
         ) { invoice ->
@@ -108,7 +110,12 @@ fun InvoicesScreen(
   them; the faces and the pull-to-refresh indicator are inset by it too.
 - **Keys.** `itemKey` keeps each row's state with its item when the list changes.
 - **Retry.** The error face's retry calls `onRetryInitial`, which defaults to `onRefresh`; the
-  load-more error's calls `onRetryLoadMore`, which defaults to `onLoadNextPage`.
+  load-more error's calls `onRetryLoadMore`, which defaults to `onLoadNextPage`. A custom
+  `initialErrorContent` is handed the message and that retry.
+- **Faces.** `Fallback(title, …)` with `FallbackTone.Empty` draws a tray and, with an action, a
+  neutral way back such as "Clear filters"; `FallbackTone.Failure` draws an alert and a "Try again".
+  The create action stays in the top bar. For an empty face that is a call to action, use the slot
+  form of `Fallback` with a solid `Button`.
 
 ## The state
 
@@ -180,3 +187,33 @@ fun Feed(invoices: List<Invoice>, refreshing: Boolean, onRefresh: () -> Unit) {
 **Columns.** A set read across columns is a `Table` or a `LazyTable`.
 
 **Placeholders.** `ListItemSkeleton` is a row-shaped placeholder, for a custom `loadingContent`.
+`SkeletonBlock` holds the place of something that is not text — an avatar, a thumbnail, a card — at
+the size its modifier gives it. Wrap a region of placeholders in `SkeletonGroup`, which reads its
+`contentDescription` once.
+
+**A section that loads on its own.** Outside a `ContentList`, `rememberSettledLoading(loading)`
+keeps a fast load from flashing a placeholder: no face for a load under 150ms, and a face that
+shows stays at least 400ms.
+
+```kotlin
+val showSkeleton = rememberSettledLoading(state.loading)
+when {
+    showSkeleton -> SkeletonGroup(contentDescription = "Loading invoices") {
+        repeat(3) { ListItemSkeleton() }
+    }
+    state.loading -> Unit // under the delay: draw nothing, not the empty face
+    state.error != null -> Fallback(
+        title = "Couldn’t load invoices",
+        body = state.error,
+        tone = FallbackTone.Failure,
+        actionText = "Try again",
+        onAction = onRetry,
+    )
+    state.invoices.isEmpty() -> Fallback(title = "No invoices yet")
+    else -> RecentInvoices(state.invoices)
+}
+```
+
+**Back to the top.** In a tab destination, hoist the list's state and call
+`listState.ScrollToTopOnTabReselect()`; pass `listState` to `PagedContentList`. A tap on the tab
+already selected scrolls the list to its first row.

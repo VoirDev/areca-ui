@@ -479,8 +479,6 @@ internal val FoundationSelectionShot = DocShot(name = "foundation-selection", wi
                     selectionMode = BadgeSelectionMode.Multiple,
                     style = BadgeStyle.FilledChip,
                     size = BadgeSize.Chip,
-                    horizontalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md),
-                    verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md),
                 )
             }
         },

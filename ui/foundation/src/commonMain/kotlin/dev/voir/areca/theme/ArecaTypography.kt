@@ -5,6 +5,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.em
 
 /**
  * Named text styles, each a role rather than a size.
@@ -58,6 +59,12 @@ public data class ArecaTypography(
     public val labelMedium: TextStyle,
     /** Label on a large control, or a list row's primary line. */
     public val labelLarge: TextStyle,
+    /**
+     * A small tracked label above what it names: a group above its rows, an eyebrow above a title,
+     * a house name above a product. Defaults to [labelSmall] tracked out, so a typography built
+     * without it still has one.
+     */
+    public val overline: TextStyle = labelSmall.merge(letterSpacing = OverlineTracking),
 ) {
     /** Factories for a complete set of named styles. */
     public companion object {
@@ -101,9 +108,16 @@ public data class ArecaTypography(
             labelSmall = baseTypography.xs.merge(fontWeight = FontWeight.Medium),
             labelMedium = baseTypography.sm.merge(fontWeight = FontWeight.Medium),
             labelLarge = (if (dense) baseTypography.sm else baseTypography.md).merge(fontWeight = FontWeight.Medium),
+            overline = baseTypography.xs.merge(
+                fontWeight = FontWeight.Medium,
+                letterSpacing = OverlineTracking,
+            ),
         )
     }
 }
+
+/** Tracking of [ArecaTypography.overline]: wide enough to read as a label at its small size. */
+private val OverlineTracking = 0.06.em
 
 /** Named text styles in scope. Read them through [ArecaTheme.typography]. */
 internal val LocalTypography = staticCompositionLocalOf { ArecaTypography.from() }

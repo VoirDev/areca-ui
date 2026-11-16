@@ -20,6 +20,7 @@ import dev.voir.areca.icon.Search
 import dev.voir.areca.icon.Settings
 import dev.voir.areca.icon.Share
 import dev.voir.areca.icon.Trash
+import dev.voir.areca.theme.ArecaTheme
 
 /*
  * The verbs a bar is asked for again and again, each with its glyph, its words and its color
@@ -45,7 +46,7 @@ import dev.voir.areca.icon.Trash
 public fun TopBarActionScope.SearchAction(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    contentDescription: String? = "Search",
+    contentDescription: String? = ArecaTheme.labels.search,
     enabled: Boolean = true,
     interactionSource: MutableInteractionSource? = null,
 ) {
@@ -409,7 +410,7 @@ public fun TopBarActionScope.DoneAction(
 public fun TopBarActionScope.CancelAction(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    text: String = "Cancel",
+    text: String = ArecaTheme.labels.cancel,
     enabled: Boolean = true,
     interactionSource: MutableInteractionSource? = null,
 ) {

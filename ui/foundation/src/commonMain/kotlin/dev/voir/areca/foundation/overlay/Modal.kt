@@ -108,7 +108,8 @@ public data class ModalStyle(
          * Builds a style from the current theme.
          *
          * @param overlay Scrim covering whatever the modal interrupts.
-         * @param bg Fill of the modal surface.
+         * @param bg Fill of the modal surface. Defaults to the sheet surface: white, lifted in the
+         *   dark.
          * @param border Border of the modal surface.
          * @param shape Shape of the surface's fill and border.
          * @return Style built from the supplied colors and shape.
@@ -116,7 +117,7 @@ public data class ModalStyle(
         @Composable
         public fun default(
             overlay: Color = ArecaTheme.colors.bgOverlayDark,
-            bg: Color = ArecaTheme.colors.bgCanvas,
+            bg: Color = ArecaTheme.surfaces.sheet.page.ground,
             border: Color = ArecaTheme.colors.borderBase,
             shape: Shape = ArecaTheme.shapes.md,
         ): ModalStyle = ModalStyle(

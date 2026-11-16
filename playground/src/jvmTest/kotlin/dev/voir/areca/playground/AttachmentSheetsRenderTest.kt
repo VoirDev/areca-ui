@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Density
 import dev.voir.areca.flow.attachments.AttachmentFormat
 import dev.voir.areca.media.LocalMediaImageLoader
+import dev.voir.areca.flow.attachments.sheet.AttachmentChoiceLayout
 import dev.voir.areca.flow.attachments.sheet.AttachmentOptions
 import dev.voir.areca.flow.attachments.sheet.AttachmentOptionsSheet
 import dev.voir.areca.flow.attachments.sheet.AttachmentRenameSheet
@@ -110,6 +111,33 @@ class AttachmentSheetsRenderTest {
             ),
             onDismiss = {},
             subtitle = "Up to 25 MB each. Photos are resized before they’re saved.",
+        )
+    }
+
+    @Test
+    fun `source as a bento`() = bothThemes("attachment-sheet-source-bento") {
+        AttachmentSourceSheet(
+            visible = true,
+            options = listOf(
+                AttachmentSourceOptions.camera(description = "Snap a receipt or a bill") {},
+                AttachmentSourceOptions.library {},
+                AttachmentSourceOptions.files {},
+            ),
+            onDismiss = {},
+            subtitle = "Up to 25 MB each. Photos are resized before they’re saved.",
+            layout = AttachmentChoiceLayout.Bento,
+        )
+    }
+
+    /** No camera: the two left share one row. */
+    @Test
+    fun `source as a bento of two`() = bothThemes("attachment-sheet-source-bento-two") {
+        AttachmentSourceSheet(
+            visible = true,
+            options = listOf(AttachmentSourceOptions.library {}, AttachmentSourceOptions.files {}),
+            onDismiss = {},
+            subtitle = "Up to 25 MB each.",
+            layout = AttachmentChoiceLayout.Bento,
         )
     }
 

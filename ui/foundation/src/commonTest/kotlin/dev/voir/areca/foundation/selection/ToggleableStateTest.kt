@@ -26,8 +26,11 @@ class ToggleableStateTest {
     }
 
     @Test
-    fun `an unchecked checkbox row stays off even when marked indeterminate`() {
-        assertEquals(ToggleableState.Off, checkboxToggleableState(checked = false, indeterminate = true))
+    fun `an unchecked checkbox row marked indeterminate is indeterminate`() {
+        assertEquals(
+            ToggleableState.Indeterminate,
+            checkboxToggleableState(checked = false, indeterminate = true),
+        )
     }
 
     @Test

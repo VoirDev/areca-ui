@@ -46,12 +46,13 @@ public data class NoticeStyle(
          * Builds a style from the current theme.
          *
          * [bg] is only the ground of a [NoticeEmphasis.Subtle] notice: a filled one is on its
-         * tone's own muted tint whatever it is drawn over. Pick it for what the notice stands on —
-         * a grey tile inside a white panel, the white surface on a grey page.
+         * tone's own muted tint whatever it is drawn over. It defaults to the raised fill of the
+         * surface the notice is built on — white on a grey page, grey on a white one or in a sheet —
+         * so build the style where the notice is drawn, as [Notice] does.
          *
          * @param tone What the notice is saying.
          * @param emphasis How much of the notice carries [tone].
-         * @param bg Ground of a subtle notice.
+         * @param bg Ground of a subtle notice. Defaults to the surface's raised fill.
          * @param shape Shape of the block.
          * @param chipShape Shape of the mark of a titled notice.
          * @return Style for one notice.
@@ -60,8 +61,8 @@ public data class NoticeStyle(
         public fun of(
             tone: NoticeTone,
             emphasis: NoticeEmphasis = NoticeEmphasis.Subtle,
-            bg: Color = ArecaTheme.colors.bgSubtle,
-            shape: Shape = ArecaTheme.shapes.lg,
+            bg: Color = ArecaTheme.surface.raised,
+            shape: Shape = ArecaTheme.shapes.surface,
             chipShape: Shape = ArecaTheme.shapes.md,
         ): NoticeStyle {
             val colors = ArecaTheme.colors

@@ -79,6 +79,9 @@ import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.modifier.thenIf
 import dev.voir.areca.theme.ArecaTheme
 import kotlinx.coroutines.flow.distinctUntilChanged
+import androidx.compose.ui.graphics.takeOrElse
+import dev.voir.areca.theme.SurfaceOf
+import dev.voir.areca.theme.surfaceFor
 
 /**
  * What a content list shows: its items and where loading them stands.
@@ -232,10 +235,7 @@ public data class ContentListStyle(
             headerSubtitle: Color = ArecaTheme.colors.fgMuted,
             spinner: Color = ArecaTheme.colors.accentBase,
             endReached: Color = ArecaTheme.colors.fgBase,
-            group: ListStyle = ListStyle.default(
-                bg = ArecaTheme.colors.bgSubtle,
-                separator = ArecaTheme.colors.borderOnSubtle,
-            ),
+            group: ListStyle = ListStyle.default(),
             groupHeader: Color = ArecaTheme.colors.fgSubtle,
         ): ContentListStyle = ContentListStyle(
             headerTitle = headerTitle,
@@ -341,7 +341,7 @@ public data class ContentListSize(
             headerSubtitleTextStyle: TextStyle = ArecaTheme.typography.bodySmall,
             endReachedTextStyle: TextStyle = ArecaTheme.typography.caption,
             group: ListSize = ListSize.default(
-                shape = ArecaTheme.shapes.lg,
+                shape = ArecaTheme.shapes.surface,
                 separatorInset = rowTextInset(),
             ),
             groupOuterPadding: PaddingValues = PaddingValues(horizontal = ArecaTheme.spacing.horizontalContentInsets),
@@ -1248,13 +1248,16 @@ private fun InsetGroupCard(
     size: ContentListSize,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(size.groupOuterPadding)
-            .background(style.group.bg, size.group.shape),
-        content = content,
-    )
+    val bg = style.group.bg.takeOrElse { ArecaTheme.surface.raised }
+    SurfaceOf(bg) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(size.groupOuterPadding)
+                .background(bg, size.group.shape),
+            content = content,
+        )
+    }
 }
 
 /**
@@ -1284,6 +1287,8 @@ private fun InsetGroupSegment(
         GroupSegmentShape(base = size.group.shape, top = first, bottom = last)
     }
     val placement = remember { PlacedCoordinates() }
+    val bg = style.group.bg.takeOrElse { ArecaTheme.surface.raised }
+    val separator = style.group.separator.takeOrElse { surfaceFor(bg).separator }
 
     Box(
         modifier = Modifier
@@ -1294,20 +1299,22 @@ private fun InsetGroupSegment(
                 top = if (first) outer.calculateTopPadding() else 0.dp,
                 bottom = if (last) outer.calculateBottomPadding() else 0.dp,
             )
-            .background(style.group.bg, shape)
+            .background(bg, shape)
             .recordPlacement(placement)
             .thenIf(separated) {
                 topSeparator(
-                    color = style.group.separator,
+                    color = separator,
                     thickness = size.group.separatorThickness,
                     inset = size.group.separatorInset,
                 )
             },
     ) {
-        CompositionLocalProvider(
-            LocalListGroupClip provides ListGroupClip(shape = shape, placement = placement),
-            content = content,
-        )
+        SurfaceOf(bg) {
+            CompositionLocalProvider(
+                LocalListGroupClip provides ListGroupClip(shape = shape, placement = placement),
+                content = content,
+            )
+        }
     }
 }
 

@@ -95,13 +95,13 @@ public fun BirthdayRow(
     formatDate: (LocalDate) -> String = ::englishDate,
     sheetTitle: String = "Choose your birthday",
     applyLabel: String = "Save",
-    cancelLabel: String = "Cancel",
-    removeLabel: String = "Remove",
+    cancelLabel: String = ArecaTheme.labels.cancel,
+    removeLabel: String = ArecaTheme.labels.remove,
     calendarLabels: CalendarLabels = CalendarLabels.English,
     startDayOfWeek: DayOfWeek = DayOfWeek.MONDAY,
     enabled: Boolean = true,
 ) {
-    val sheet = rememberFlowModal(autoHeight = true)
+    val sheet = rememberFlowModal()
 
     // From an expanded window up the calendar is a centred dialog, and whether it is open is plain
     // state; below that it is the sheet, driven by its controller as on a phone.

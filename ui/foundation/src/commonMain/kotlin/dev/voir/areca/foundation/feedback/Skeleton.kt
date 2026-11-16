@@ -83,8 +83,8 @@ public data class SkeletonStyle(
          */
         @Composable
         public fun default(
-            base: Color = ArecaTheme.colors.bgMuted,
-            highlight: Color = ArecaTheme.colors.bgSubtle,
+            base: Color = ArecaTheme.surface.well,
+            highlight: Color = ArecaTheme.surface.ground,
         ): SkeletonStyle = SkeletonStyle(base = base, highlight = highlight)
     }
 }

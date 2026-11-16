@@ -128,8 +128,8 @@ public fun PendingAttachmentSheet(
     title: String = "Add this file?",
     problemTitle: String = "Couldn’t add this file",
     attachText: String = "Attach",
-    cancelText: String = "Cancel",
-    closeLabel: String = "Close",
+    cancelText: String = ArecaTheme.labels.cancel,
+    closeLabel: String = ArecaTheme.labels.close,
     copyingText: String? = null,
     onEdit: (() -> Unit)? = null,
     editText: String = "Edit",
@@ -173,6 +173,7 @@ public fun PendingAttachmentSheet(
 
         if (current.fileName != null) {
             PendingFileRow(
+                modifier = Modifier.sheetGutter(),
                 file = current,
                 copyingText = copyingText,
                 onEdit = onEdit.takeIf { problem == null },
@@ -186,7 +187,7 @@ public fun PendingAttachmentSheet(
 
             Notice(
                 title = null,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().sheetGutter(),
                 icon = BundledIcons.AlertCircle,
                 tone = NoticeTone.Danger,
             ) {
@@ -195,7 +196,7 @@ public fun PendingAttachmentSheet(
         } else if (question != null) {
             if (current.fileName != null) Spacer(Modifier.height(ArecaTheme.spacing.xl))
 
-            question()
+            Column(Modifier.sheetGutter()) { question() }
         }
     }
 }
@@ -203,6 +204,7 @@ public fun PendingAttachmentSheet(
 /**
  * The picked file: its picture or its kind of file, its name, and its size once copied.
  *
+ * @param modifier Modifier applied to the row.
  * @param file The picked file.
  * @param copyingText Line under the name while the copy runs, or `null` for none.
  * @param onEdit Called when the edit control is pressed, or `null` for no edit control.
@@ -211,6 +213,7 @@ public fun PendingAttachmentSheet(
  */
 @Composable
 private fun PendingFileRow(
+    modifier: Modifier,
     file: PendingAttachment,
     copyingText: String?,
     onEdit: (() -> Unit)?,
@@ -221,6 +224,7 @@ private fun PendingFileRow(
     val side = ArecaTheme.spacing.xl7
 
     Row(
+        modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg),
         verticalAlignment = Alignment.CenterVertically,
     ) {

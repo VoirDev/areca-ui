@@ -17,6 +17,7 @@ import dev.voir.areca.foundation.icon.FeaturedIconSize
 import dev.voir.areca.foundation.icon.FeaturedIconStyle
 import dev.voir.areca.foundation.list.LocalListItemState
 import dev.voir.areca.theme.ArecaTheme
+import androidx.compose.ui.graphics.Color
 
 /** Opacity of a tile in a disabled row; its color would otherwise outshout the shaded text. */
 private const val DISABLED_TILE_ALPHA = 0.4f
@@ -55,6 +56,41 @@ public fun SettingsRowIcon(
     SettingsRowIcon(
         imageVector = imageVector,
         style = FeaturedIconStyle.solid(color),
+        modifier = modifier,
+        contentDescription = contentDescription,
+        shape = shape,
+        size = size,
+    )
+}
+
+/**
+ * A glyph on a tile of a categorical colour, for the leading slot of a settings row: a settings
+ * menu where every row is a different thing — a purple appearance, an orange backup, a teal export.
+ *
+ * The same tile as the overload taking an [ActionColor], for colours that carry no meaning beyond
+ * telling rows apart. Take [hue] from [ArecaTheme.hues] and keep one hue per concept.
+ *
+ * @param imageVector Glyph to draw on the tile.
+ * @param hue The tile's colour.
+ * @param modifier Modifier applied to the tile.
+ * @param soft Whether the tile is the quiet form: the hue mixed into the surface, a deeper glyph.
+ * @param contentDescription What the glyph says, if the row's text does not.
+ * @param shape Shape of the tile.
+ * @param size Size of the tile and its glyph.
+ */
+@Composable
+public fun SettingsRowIcon(
+    imageVector: ImageVector,
+    hue: Color,
+    modifier: Modifier = Modifier,
+    soft: Boolean = false,
+    contentDescription: String? = null,
+    shape: Shape = ArecaTheme.shapes.tile,
+    size: FeaturedIconSize = SettingsTheme.sizes.iconTile,
+) {
+    SettingsRowIcon(
+        imageVector = imageVector,
+        style = if (soft) FeaturedIconStyle.softHue(hue) else FeaturedIconStyle.solidHue(hue),
         modifier = modifier,
         contentDescription = contentDescription,
         shape = shape,

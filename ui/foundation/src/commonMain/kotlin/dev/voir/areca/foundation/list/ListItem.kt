@@ -40,6 +40,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.clipPath
+import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.selected
@@ -391,25 +392,40 @@ internal fun ListItemLayout(
         animationSpec = selectionSpec,
         label = "listItemOverline",
     )
+    // A selected row keeps its selected inks under the pointer: on a row that floods when selected,
+    // the active ink would land on the fill. Every stock style gives both states the same ink.
+    val extraTarget = when {
+        !rowEnabled -> style.extraDisabled
+        showSelected -> style.extraSelected
+        hovered || pressed -> style.extraActive
+        else -> style.extra
+    }
     val extraColor by animateColorAsState(
-        targetValue = when {
-            !rowEnabled -> style.extraDisabled
-            hovered || pressed -> style.extraActive
-            showSelected -> style.extraSelected
-            else -> style.extra
-        },
+        targetValue = extraTarget,
         animationSpec = selectionSpec,
         label = "listItemExtra",
     )
     val valueColor by animateColorAsState(
         targetValue = when {
             !rowEnabled -> style.valueDisabled
-            hovered || pressed -> style.valueActive
             showSelected -> style.valueSelected
+            hovered || pressed -> style.valueActive
             else -> style.value
         },
         animationSpec = selectionSpec,
         label = "listItemValue",
+    )
+    // The chevron has an ink of its own so it can be quieter than the leading slot, which shares
+    // the trailing slot's; left unspecified it is the trailing slot's, as it always was.
+    val chevronColor by animateColorAsState(
+        targetValue = when {
+            !rowEnabled -> style.chevronDisabled
+            showSelected -> style.chevronSelected
+            hovered || pressed -> style.chevronActive
+            else -> style.chevron
+        }.takeOrElse { extraTarget },
+        animationSpec = selectionSpec,
+        label = "listItemChevron",
     )
 
     val rowModifier = modifier
@@ -451,6 +467,7 @@ internal fun ListItemLayout(
         LocalListItemRowSize provides size,
         LocalIconSize provides size.icon,
         LocalChevronSize provides size.chevron,
+        LocalListItemChevronColor provides chevronColor,
     ) {
         Column(modifier = rowModifier) {
             SlotRow(

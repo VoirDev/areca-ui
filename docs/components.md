@@ -12,7 +12,9 @@ lives. Find the intent below, or scan a family's table; each component links to 
 
 Every component needs the theme around it: wrap the application in `ArecaThemeProvider`, and a
 region that is always dark in `ArecaDarkTheme`, both in `dev.voir.areca.theme` — see
-[Theme](theme.md). Styles, sizes and defaults work the same way for every component — see
+[Theme](theme.md). Components take their fills from the surface they are drawn on — a grey page
+with white cards by default (`SurfaceLayout.Grouped`), or a white page with grey cards
+(`SurfaceLayout.Plain`) — see [Surfaces](theme.md#surfaces). Styles, sizes and defaults work the same way for every component — see
 [Customising](customising.md).
 
 ## Which component?
@@ -22,6 +24,7 @@ region that is always dark in `ArecaDarkTheme`, both in `dev.voir.areca.theme` �
 | Offer the screen's primary action | `Button` (the default style is `ButtonStyle.solid()`; one per screen) |
 | Offer a secondary, cancel or destructive action | `Button` with `ButtonStyle.soft()`, `outlined()` or `plain(ActionColor.Neutral)`; `soft(ActionColor.Danger)` for a destructive one |
 | Act with an icon alone | `IconButton`; in a top bar, `IconAction` or a named control such as `SearchAction` |
+| Turn something on or off with an icon — a favourite, a pin | `IconToggleButton`; in a top bar, `FavoriteAction` |
 | Put a link in text | `TextLink`; a prompt and a link ("No account? Sign up") `TextLinkPrompt` |
 | Show text; a title with a supporting line | `Text` with a `TextVariant`; `Heading` |
 | Lay a screen out differently on a tablet or desktop | `AdaptiveContent` or `adaptive(…)` on `ArecaTheme.window`; `WindowClassBox` around each pane |
@@ -32,6 +35,8 @@ region that is always dark in `ArecaDarkTheme`, both in `dev.voir.areca.theme` �
 | Name an icon or a truncated control for a pointer user | `TooltipBox`; an `IconButton` shows its `contentDescription` already |
 | Give a scrolling element of your own a desktop scrollbar | `VerticalScrollbar`; `HorizontalScrollbar` |
 | Hide a value until revealed | `SensitiveText` |
+| Show a sum of money or a quantity with its symbol | `AmountText` with an `Amount` the app formatted; `masked = true` to hide the figures |
+| Keep a figure on one line however long it gets | `AmountText(autoSize = …)`, or `Text(maxLines = 1, autoSize = TextAutoSize.StepBased(…))` |
 | Show an icon; give a block its subject; show a disclosure arrow | `Icon`; `FeaturedIcon`; `Chevron` |
 | Take labelled text input with a hint or an error | `FieldGroup` around `TextField` |
 | Take a password; show its rules | `PasswordField`; `RequirementList` |
@@ -39,9 +44,11 @@ region that is always dark in `ArecaDarkTheme`, both in `dev.voir.areca.theme` �
 | Take an amount with a currency or a unit | `AffixTextField` |
 | Take a one-time code | `OtpField` |
 | Take a compound value — a dialling code and a number | `FieldRow` with `SelectSegment` and `TextSegment` |
-| Pick from a short list; from a long or searchable one | `SelectField`; `SelectFlowModal` (grouped under titles, with "add your own", via `sections` and `onCreateOption`) |
+| Pick from a short list; from a long or searchable one | `SelectField`; `SelectFlowModal` — as tall as its options (theme, language at their rows' height), a search over the whole sheet; grouped under titles, with "add your own", via `sections` and `onCreateOption` |
 | Pick from a scrolling wheel | `WheelPicker` with `WheelPickerColumn`; dates and times are in [datetime](../ui/datetime/README.md) |
 | Filter with chips | `BadgeSelect`, `LazyBadgeSelect` (scrolls) or `FlowBadgeSelect` (wraps) |
+| Show one toggle chip; the filters applied above a list, each with a cross | `Chip(selected, onSelectedChange)`; `Chip(onRemove = …)` |
+| Pick a plan or an option shown as a card — a paywall | `ChoiceCard` in a `selectableGroup()` column; `ChoiceCardMode.Multiple` for several |
 | Pick a colour; nudge a small number | `SwatchPicker`; `NumberStepper` |
 | Switch a setting on; tick a box in a form; pick one of many | `Toggle`; `Checkbox`; `Radio` |
 | Put one of those controls in a row with a title | `ToggleListItem`, `CheckboxListItem`, `RadioListItem`, `CheckmarkListItem` |
@@ -53,12 +60,17 @@ region that is always dark in `ArecaDarkTheme`, both in `dev.voir.areca.theme` �
 | Show a long list grouped by date or category, a card per group | `GroupedContentList` or `GroupedPagedContentList` with `groupLayout = ContentListGroupLayout.Inset` |
 | Show a grid with group headers; tabular data | `LazyVerticalGroupedGrid`; `Table` or `LazyTable` |
 | Group content on a surface | `Card`; show and hide a region `Expandable` |
+| Fill a container of your own so what is inside it takes the right fills | `ArecaTheme.surface.raised` with `RaisedSurface`; a panel at a chosen level `ProvideSurface` |
 | Separate two things | `HorizontalDivider`, `VerticalDivider` |
 | Frame a screen with bars | `BaseLayout` |
+| Float the screen's primary action above the bottom edge; show toasts above the bars | `BaseLayout(floatingAction = { Button(…) })`; `BaseLayout(toastState = …)` |
 | Pin a screen's primary action to the bottom; with a count; disabled with a reason | `BottomActionBar` as `BaseLayout`'s `bottomBar` (`FlowModalActionBar` is for sheets) |
+| Dock a form's action that runs validation when pressed early; with a line above it | `BottomActionBar(ready = complete, caption = "…")` |
+| Put a total or a summary over its breakdown on a panel | `PanelLayout` |
 | Title a screen | `TopBar` with `BackAction`; a large title that collapses `LargeTopBar` |
 | Collapse a hero above content that stays | `CollapsingHeaderLayout` |
 | Show the application's destinations | `TabBar` (docked) or `FloatingTabBar` (floating) |
+| Go back to the top when the selected tab is tapped again | `ScrollToTopOnTabReselect()` on the screen's scroll state; anything else `OnTabReselect` |
 | Switch views within a screen | `Tabs` |
 | Choose one of a few values; words with a moving pill; a three-state toggle | `SlidingSelector` (`SlidingSelectorStyle.Segmented`, `Pill`, `Underline`, `Button`; `SelectorMode.Optional` to allow none) |
 | Navigate a sidebar or a tree | `NavList` |
@@ -66,19 +78,26 @@ region that is always dark in `ArecaDarkTheme`, both in `dev.voir.areca.theme` �
 | Say which picture or page is on screen | `PageIndicator` (`variant`: dots, a shrinking window, a line, story segments); as a count, `PageCounter` |
 | Show the steps of a flow | `StepIndicator` |
 | Refresh by pulling | `PagedContentList(onRefresh = …)`, or `PullToRefreshLayout` (experimental) |
-| Open a bottom sheet | `FlowModal` with `FlowModalActionBar` |
+| Open a bottom sheet | `FlowModal(visible = …)` with `FlowModalActionBar`; from code, `FlowModal(controller)` |
+| Open a sheet about one item | `FlowModal(item = …) { item -> }`, which keeps the item while it slides out; for an overlay of your own, `rememberLastNonNull(item)` |
+| Give a sheet its header; with a pinned search field | `FlowModalTopBar`; `FlowModalTopBar(bottom = { SearchField(…) })` |
 | Confirm something hard to undo | `ConfirmSheet`; centred, `ConfirmationDialog` |
 | Open any other dialog | `Dialog` |
 | Open a menu from a control | `DropdownPopup` |
 | Say something just happened | `ToastHost` |
 | Say something that stays on the page | `Notice` with `NoticeText`; one that comes and goes `AnimatedNotice` |
-| Fill an empty or failed region | `Fallback` |
+| Say in words that a region is empty or failed to load | `Fallback(title, body, tone = FallbackTone.Empty / Failure, actionText, onAction)` |
+| Fill an empty or failed region with content of your own | `Fallback` (slot form) |
 | Give a whole screen to progress or a result | `StatusScene` with `StatusMark` |
 | Show that something is loading | `Spinner`; `ProgressBar`; `Skeleton`, `ListItemSkeleton`, `SettingsRowSkeleton` |
+| Hold the place of something that is not text — an avatar, a thumbnail, a card | `SkeletonBlock`; a region of them, announced once, `SkeletonGroup` |
+| Show a loading face without a flash on a fast load | `rememberSettledLoading(loading)` |
 | Show a status label; a count; a dot | `Badge`; `NotificationBadge`; `IndicatorDot` |
 | Show a figure; a block of figures | `Stat`; `StatGrid` |
 | Show a chart | [charts](../ui/charts/README.md) |
 | Show a person | `Avatar` |
+| Show a logo, a bank or a currency with a monogram when there is no image | `Avatar(shape = ArecaTheme.shapes.tile, letters = …)`, its slot only when there is an image; in a settings row `SettingsRowTile` |
+| Tell the rows of a settings menu or a set of categories apart by colour | `SettingsRowIcon(imageVector, hue = ArecaTheme.hues.…)`; elsewhere `FeaturedIconStyle.solidHue` / `softHue` |
 | Build a row of your own that lines up with list rows | `SlotRow` |
 | Place content beside other content; veil a box | `RelativePositionLayout`; `Overlay` |
 | Tell a screen reader something changed | `AnnounceOnChange` |
@@ -94,6 +113,7 @@ region that is always dark in `ArecaDarkTheme`, both in `dev.voir.areca.theme` �
 | --- | --- | --- | --- |
 | [`Button`](../ui/foundation/README.md#buttons-and-actions) | An action with a label, and optionally an icon either side | `button` | `ButtonShowcase` |
 | [`IconButton`](../ui/foundation/README.md#buttons-and-actions) | An action shown by an icon alone | `button` | `IconButtonShowcase` |
+| [`IconToggleButton`](../ui/foundation/README.md#buttons-and-actions) | An icon that is on or off — a favourite, a pin — announced as a toggle | `button` | — |
 | [`BackAction`](../ui/foundation/README.md#buttons-and-actions) | A top bar's back control | `topbar` | `TopBarActionsShowcase` |
 | [`CloseAction`](../ui/foundation/README.md#buttons-and-actions) | A top bar's dismiss control, for a sheet or a full-screen task | `topbar` | `TopBarActionsShowcase` |
 | [`DoneAction`](../ui/foundation/README.md#buttons-and-actions) | The worded control that finishes a task: "Done", "Save" | `topbar` | `TopBarActionsShowcase` |
@@ -127,6 +147,7 @@ slots only.
 | [`TextLink`](../ui/foundation/README.md#text) | A standalone pressable label — "Forgot password?" | `text` | `TextLinkShowcase` |
 | [`TextLinkPrompt`](../ui/foundation/README.md#text) | A sentence with one pressable part — "No account? Sign up" | `text` | `TextLinkShowcase` |
 | [`SensitiveText`](../ui/foundation/README.md#text) | A value hidden until revealed — a balance, a card number | `text` | `SensitiveTextShowcase` |
+| [`AmountText`](../ui/foundation/README.md#text) | A formatted sum or quantity: tabular figures, smaller minor units and symbol, kept in order by bidi, maskable, shrinks to fit | `text` | — |
 
 ## Icons
 
@@ -149,6 +170,7 @@ artifact.
 | [`BadgeSelect`](../ui/foundation/README.md#badges-and-avatars) | Chips that select something, on one line | `badge` | `BadgeShowcase` |
 | [`LazyBadgeSelect`](../ui/foundation/README.md#badges-and-avatars) | The same on one scrolling line | `badge` | `BadgeShowcase` |
 | [`FlowBadgeSelect`](../ui/foundation/README.md#badges-and-avatars) | The same on wrapping lines | `badge` | `BadgeShowcase` |
+| [`Chip`](../ui/foundation/README.md#badges-and-avatars) | One chip: a toggle, or an applied filter with a remove cross, with an optional leading mark | `badge` | — |
 | [`Avatar`](../ui/foundation/README.md#badges-and-avatars) | A person or entity: an image, initials or an empty shape | `avatar` | `AvatarShowcase` |
 
 ## Stats
@@ -193,7 +215,7 @@ With a title and a row-wide tap target, use the list rows under
 | [`AffixTextField`](../ui/foundation/README.md#fields) | A value with a fixed prefix or suffix — a currency, a unit | `field` | `TextFieldShowcase` |
 | [`OtpField`](../ui/foundation/README.md#fields) | A one-time code, one character to a cell | `field` | `OtpFieldShowcase` |
 | [`SelectField`](../ui/foundation/README.md#fields) | A value chosen from a dropdown | `field.select` | `SelectFieldShowcase` |
-| [`SelectFlowModal`](../ui/foundation/README.md#fields) | A long or searchable list chosen from in a sheet; with `sections`, grouped under titles and an "add your own" row | `field.select` | `SelectFlowModalShowcase` |
+| [`SelectFlowModal`](../ui/foundation/README.md#fields) | A choice in a sheet, sized to its options — compact for a few, tall with search for many; flat rows on the sheet with a mark, a description and a detail; with `sections`, grouped under titles and an "add your own" row; `headerBottom` puts a line or pill under the title and keeps the stock close. Stock bodies `SelectFlowModalDefaults.List` / `SectionedList`; dropdowns use `MenuList` | `field.select` | `SelectFlowModalShowcase` |
 | [`FieldRow`](../ui/foundation/README.md#fields) | Several parts sharing one border and one status | `field` | `FieldRowShowcase` |
 | [`TextSegment`](../ui/foundation/README.md#fields) | A typed part of a `FieldRow` | `field` | `FieldRowShowcase` |
 | [`SelectSegment`](../ui/foundation/README.md#fields) | A dropdown part of a `FieldRow` | `field.select` | `FieldRowShowcase` |
@@ -214,8 +236,10 @@ With a title and a row-wide tap target, use the list rows under
 | [`ProgressBar`](../ui/foundation/README.md#feedback) | Work with a known total, or indeterminate | `feedback` | `ProgressShowcase` |
 | [`StepIndicator`](../ui/foundation/README.md#feedback) | Which of a handful of steps the user is on | `feedback` | — |
 | [`Skeleton`](../ui/foundation/README.md#feedback) | Placeholder bars while content loads | `feedback` | `SkeletonShowcase` |
+| [`SkeletonBlock`](../ui/foundation/README.md#feedback) | One placeholder shape sized by its modifier — an avatar, a thumbnail, a card | `feedback` | — |
+| [`SkeletonGroup`](../ui/foundation/README.md#feedback) | A region of placeholders announced once | `feedback` | — |
 | [`RequirementList`](../ui/foundation/README.md#feedback) | The rules a value must meet, ticked off as met | `feedback` | `RequirementListShowcase` |
-| [`Fallback`](../ui/foundation/README.md#feedback) | Part of a screen standing in for missing content: empty, failed, offline | `feedback` | `FallbackShowcase` |
+| [`Fallback`](../ui/foundation/README.md#feedback) | Part of a screen standing in for missing content: empty, failed, offline. `Fallback(title, …, tone)` is the stock empty state and failure in words | `feedback` | `FallbackShowcase` |
 | [`ToastHost`](../ui/foundation/README.md#feedback) | Shows queued toasts one at a time | `feedback` | `ToastShowcase` |
 | [`Toast`](../ui/foundation/README.md#feedback) | One toast's surface, drawn by the host | `feedback` | `ToastShowcase` |
 | [`AnnounceOnChange`](../ui/foundation/README.md#feedback) | A sentence spoken by the screen reader when it appears or changes | `dev.voir.areca.foundation` | — |
@@ -241,9 +265,11 @@ With a title and a row-wide tap target, use the list rows under
 | Component | Use it for | Package | Playground |
 | --- | --- | --- | --- |
 | [`ConfirmSheet`](../ui/foundation/README.md#overlays) | A yes-or-no question in a bottom sheet | `overlay` | `ConfirmSheetShowcase` |
+| [`ConfirmSheetRows`](../ui/foundation/README.md#overlays) | Choice rows in a `ConfirmSheet`'s `extra`, run edge to edge past its padding | `overlay` | — |
 | [`ConfirmationDialog`](../ui/foundation/README.md#overlays) | The same question as a centred dialog, with progress | `overlay` | `ConfirmationDialogShowcase` |
 | [`Dialog`](../ui/foundation/README.md#overlays) | A centred window for a short task | `overlay` | `DialogShowcase` |
-| [`FlowModal`](../ui/foundation/README.md#overlays) | A bottom sheet dragged between heights and away | `overlay` | `FlowModalShowcase` |
+| [`FlowModal`](../ui/foundation/README.md#overlays) | A bottom sheet dragged between heights and away; shown by a `visible` flag, an `item` or a controller | `overlay` | `FlowModalShowcase` |
+| [`FlowModalTopBar`](../ui/foundation/README.md#overlays) | A sheet's header: centred title, close cross, optional pinned content | `overlay` | — |
 | [`FlowModalActionBar`](../ui/foundation/README.md#overlays) | A sheet's footer with its commit button | `overlay` | `FlowModalShowcase` |
 | [`FlowModalSecondaryAction`](../ui/foundation/README.md#overlays) | The secondary button in a sheet's footer | `overlay` | `FlowModalShowcase` |
 | [`DropdownPopup`](../ui/foundation/README.md#overlays) | A surface hanging off the control that opened it — a menu | `overlay` | — |
@@ -253,13 +279,15 @@ With a title and a row-wide tap target, use the list rows under
 
 | Component | Use it for | Package | Playground |
 | --- | --- | --- | --- |
-| [`BaseLayout`](../ui/foundation/README.md#layout-and-surfaces) | A screen's frame with top and bottom bars | `layout` | `BaseLayoutShowcase` |
-| [`BottomActionBar`](../ui/foundation/README.md#layout-and-surfaces) | A screen's bottom bar with its primary action, a count, or a hint why it is unavailable | `layout` | `BottomActionBarShowcase` |
+| [`BaseLayout`](../ui/foundation/README.md#layout-and-surfaces) | A screen's frame with top and bottom bars, a floating action and toasts | `layout` | `BaseLayoutShowcase` |
+| [`BottomActionBar`](../ui/foundation/README.md#layout-and-surfaces) | A screen's bottom bar with its primary action, a count, a caption, a soft not-ready state, or a hint why it is unavailable | `layout` | `BottomActionBarShowcase` |
+| [`PanelLayout`](../ui/foundation/README.md#layout-and-surfaces) | A header on the page's ground over a rounded-top panel that fills the rest of the screen | `layout` | — |
 | [`CollapsingHeaderLayout`](../ui/foundation/README.md#layout-and-surfaces) | A header that scrolls away above a strip that stays | `layout` | `CollapsingHeaderLayoutShowcase` |
 | [`PullToRefreshLayout`](../ui/foundation/README.md#layout-and-surfaces) | Pull-to-refresh around scrolling content (experimental) | `layout` | `PullToRefreshShowcase` |
 | [`PullToRefreshIndicator`](../ui/foundation/README.md#layout-and-surfaces) | Its default indicator (experimental) | `layout` | `PullToRefreshShowcase` |
-| [`Card`](../ui/foundation/README.md#layout-and-surfaces) | A surface grouping content, optionally pressable, expandable or with a footer | `layout` | `CardShowcase` |
+| [`Card`](../ui/foundation/README.md#layout-and-surfaces) | A surface grouping content, optionally pressable, expandable or with a footer. By default on the `raised` fill of the surface under it; `CardStyle.Outlined` keeps that surface's ground | `layout` | `CardShowcase` |
 | [`Expandable`](../ui/foundation/README.md#layout-and-surfaces) | A region that opens and closes under a trigger | `layout` | `ExpandableShowcase` |
+| [`ChoiceCard`](../ui/foundation/README.md#layout-and-surfaces) | One answer of a choice as a card — a plan, an option with a price — with a ring, a mark, a badge and radio or checkbox semantics | `layout` | — |
 | [`HorizontalDivider`](../ui/foundation/README.md#layout-and-surfaces) | A horizontal rule, optionally labelled | `layout` | `DividerShowcase` |
 | [`VerticalDivider`](../ui/foundation/README.md#layout-and-surfaces) | A vertical rule | `layout` | `DividerShowcase` |
 | [`RelativePositionLayout`](../ui/foundation/README.md#layout-and-surfaces) | A companion on one of eight sides of its content | `layout` | — |
@@ -267,6 +295,8 @@ With a title and a row-wide tap target, use the list rows under
 | [`VerticalScrollbar`](../ui/foundation/README.md#layout-and-surfaces) | A draggable scrollbar for a column, list or grid, under a pointer only | `layout` | `ScrollbarShowcase` |
 | [`HorizontalScrollbar`](../ui/foundation/README.md#layout-and-surfaces) | The same for a row, under a pointer only | `layout` | `ScrollbarShowcase` |
 | [`SystemBars`](theme.md) | The colour behind the status and navigation bars, for a region that is always dark | `dev.voir.areca.platform` | — |
+| [`RaisedSurface`](theme.md#your-own-fill) | Puts its content one surface level up, for content on a fill of your own in `ArecaTheme.surface.raised` | `dev.voir.areca.theme` | — |
+| [`ProvideSurface`](theme.md#your-own-fill) | Puts its content at a chosen surface level (`Page`, `Card`, `Inset`) of a screen's or a sheet's ladder | `dev.voir.areca.theme` | — |
 
 ## Adaptive layouts
 
@@ -314,7 +344,7 @@ With a title and a row-wide tap target, use the list rows under
 | [`List`](../ui/foundation/README.md#lists-and-settings) | A short grouped list, declared with `item(...)` | `list` | `ListShowcase` |
 | [`LazyList`](../ui/foundation/README.md#lists-and-settings) | A long grouped list, composed lazily | `list` | `ListShowcase` |
 | [`ListItemColumn`](../ui/foundation/README.md#lists-and-settings) | A group of rows you compose, with separators | `list` | `ListItemShowcase` |
-| [`ListItem`](../ui/foundation/README.md#lists-and-settings) | A row with title, subtitle, caption, value, leading and trailing slots | `list` | `ListItemShowcase` |
+| [`ListItem`](../ui/foundation/README.md#lists-and-settings) | A row with title, subtitle, caption, value, leading and trailing slots; `ListItemStyle` presets `plain`, `surface`, `outlined`, `soft`, `ghost` and `flood` (fills when selected), re-inked with `withValueColor` / `withChevronColor` | `list` | `ListItemShowcase` |
 | [`NavigationListItem`](../ui/foundation/README.md#lists-and-settings) | A row that opens something | `list` | `ListItemShowcase` |
 | [`CheckboxListItem`](../ui/foundation/README.md#lists-and-settings) | A row that is a checkbox | `list` | `ListItemShowcase` |
 | [`RadioListItem`](../ui/foundation/README.md#lists-and-settings) | A row that is a radio | `list` | `ListItemShowcase` |
@@ -322,7 +352,7 @@ With a title and a row-wide tap target, use the list rows under
 | [`CheckmarkListItem`](../ui/foundation/README.md#lists-and-settings) | A row ticked when chosen | `list` | `ListItemShowcase` |
 | [`ExpandableListItem`](../ui/foundation/README.md#lists-and-settings) | A row that discloses content under it | `list` | `ListItemShowcase` |
 | [`ListItemSkeleton`](../ui/foundation/README.md#lists-and-settings) | A row-shaped placeholder | `list` | `ListItemShowcase` |
-| [`ListItemChevron`](../ui/foundation/README.md#lists-and-settings) | The trailing chevron of a row you compose | `list` | `ListItemShowcase` |
+| [`ListItemChevron`](../ui/foundation/README.md#lists-and-settings) | The trailing chevron of a row you compose, in the row's own chevron ink (`ListItemStyle.withChevronColor`) or the trailing slot's | `list` | `ListItemShowcase` |
 | [`ListItemCheckmark`](../ui/foundation/README.md#lists-and-settings) | The trailing check mark of a row you compose | `list` | `ListItemShowcase` |
 | [`Settings`](../ui/foundation/README.md#lists-and-settings) | A settings screen of sections | `settings` | `SettingsShowcase` |
 | [`Section`](../ui/foundation/README.md#lists-and-settings) | One section of rows on its own card, with header, footer and band | `settings` | `SettingsShowcase` |
@@ -332,7 +362,7 @@ With a title and a row-wide tap target, use the list rows under
 | [`SettingsOptionRow`](../ui/foundation/README.md#lists-and-settings) | One option of a set, as a settings row | `settings` | `SettingsShowcase` |
 | [`SettingsTextFieldRow`](../ui/foundation/README.md#lists-and-settings) | A field typed in place, as a settings row; with `title`, a "label … value" form row | `settings` | `SettingsShowcase` |
 | [`SettingsTextFieldSuffix`](../ui/foundation/README.md#lists-and-settings) | The unit after a text field row's input, pressable to change it | `settings` | `SettingsShowcase` |
-| [`SettingsRowIcon`](../ui/foundation/README.md#lists-and-settings) | A row's leading glyph on a tile | `settings` | `SettingsShowcase` |
+| [`SettingsRowIcon`](../ui/foundation/README.md#lists-and-settings) | A row's leading glyph on a tile, in an `ActionColor` or a categorical hue (`hue = ArecaTheme.hues.…`) | `settings` | `SettingsShowcase` |
 | [`SettingsRowTile`](../ui/foundation/README.md#lists-and-settings) | Any other leading visual, cropped to the tile | `settings` | `SettingsShowcase` |
 | [`SettingsRowLink`](../ui/foundation/README.md#lists-and-settings) | A second action at the end of a pressable row | `settings` | `SettingsShowcase` |
 | [`SettingsBlock`](../ui/foundation/README.md#lists-and-settings) | Free content on a section card, inset like a row | `settings` | `SettingsShowcase` |
@@ -378,6 +408,8 @@ With a title and a row-wide tap target, use the list rows under
 | [`PagerControls`](../ui/foundation/README.md#navigation-tabs-tab-bar-and-top-bar) | A pager's dots and next button | `navigation` | — |
 | [`PageIndicator`](../ui/foundation/README.md#navigation-tabs-tab-bar-and-top-bar) | A pager's position as marks: elongated or plain dots, a shrinking window, a line or story segments; on the page or over a picture | `navigation` | `PageIndicatorShowcase` |
 | [`PageCounter`](../ui/foundation/README.md#navigation-tabs-tab-bar-and-top-bar) | A pager's position as a count, "3 / 9" | `navigation` | `PageCounterShowcase` |
+| [`ScrollToTopOnTabReselect`](../ui/foundation/README.md#navigation-tabs-tab-bar-and-top-bar) | Scrolls a column, list or grid to its top when its tab is tapped again | `navigation` | — |
+| [`OnTabReselect`](../ui/foundation/README.md#navigation-tabs-tab-bar-and-top-bar) | Runs an action when the selected destination is tapped again; the taps come from `LocalTabReselect` | `navigation` | — |
 
 A top bar's controls — `BackAction` and the rest — are under
 [Buttons and actions](#buttons-and-actions).

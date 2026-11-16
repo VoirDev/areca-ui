@@ -146,7 +146,7 @@ private fun FlowPreview(
         PreviewTheme.Dark -> true
     }
 
-    ArecaThemeProvider(darkTheme = dark) {
+    ArecaThemeProvider(darkTheme = dark, surfaceLayout = ArecaTheme.surfaces.layout) {
         BoxWithConstraints(
             modifier = modifier.background(ArecaTheme.colors.bgSubtle),
             contentAlignment = Alignment.Center,

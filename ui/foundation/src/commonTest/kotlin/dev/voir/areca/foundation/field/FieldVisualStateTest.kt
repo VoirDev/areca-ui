@@ -6,6 +6,8 @@ import dev.voir.areca.foundation.button.IconButtonStyle
 import dev.voir.areca.indication.FadeIndication
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import dev.voir.areca.theme.ArecaSurface
+import dev.voir.areca.theme.SurfaceRole
 
 /**
  * The order a field resolves everything that might apply into the one state it is drawn in.
@@ -132,13 +134,28 @@ class FieldVisualStateTest {
     fun `hover falls back to the resting color where a style does not distinguish it`() {
         val style = testStyle()
 
-        assertEquals(style.bg, resolveBackgroundColor(style, FieldVisualState.Hovered))
+        assertEquals(style.bg, resolveBackgroundColor(style, FieldVisualState.Hovered, testSurface))
         assertEquals(style.content, resolveContentColor(style, FieldVisualState.Hovered))
         assertEquals(style.placeholder, resolvePlaceholderColor(style, FieldVisualState.Hovered))
         assertEquals(
             style.label.content,
             style.label.colorFor(FieldVisualState.Hovered),
         )
+    }
+
+    @Test
+    fun `an unspecified fill takes the style's role from the surface it is drawn on`() {
+        val filled = testStyle().copy(
+            bg = Color.Unspecified,
+            bgFocused = Color.Unspecified,
+            bgHovered = Color.Unspecified,
+            bgRole = SurfaceRole.Well,
+            bgFocusedRole = SurfaceRole.Field,
+        )
+
+        assertEquals(testSurface.well, resolveBackgroundColor(filled, FieldVisualState.Rest, testSurface))
+        assertEquals(testSurface.well, resolveBackgroundColor(filled, FieldVisualState.Hovered, testSurface))
+        assertEquals(testSurface.field, resolveBackgroundColor(filled, FieldVisualState.Focused, testSurface))
     }
 
     @Test
@@ -181,4 +198,14 @@ private fun testStyle() = FieldStyle(
         shape = RectangleShape,
         indication = FadeIndication(),
     ),
+)
+
+/** A surface whose roles are all different, so a test can tell which one a fill took. */
+private val testSurface = ArecaSurface(
+    ground = Color(0xFF000001),
+    raised = Color(0xFF000002),
+    well = Color(0xFF000003),
+    onWell = Color(0xFF000004),
+    separator = Color(0xFF000005),
+    field = Color(0xFF000006),
 )

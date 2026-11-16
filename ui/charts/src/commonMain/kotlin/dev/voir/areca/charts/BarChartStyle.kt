@@ -90,10 +90,10 @@ public data class BarChartStyle(
         @Composable
         public fun of(
             color: BarChartColor,
-            bg: Color = ArecaTheme.colors.bgSurface,
-            plotBg: Color = ArecaTheme.colors.bgSurface,
-            axis: Color = ArecaTheme.colors.borderBase,
-            guide: Color = ArecaTheme.colors.borderBase,
+            bg: Color = ArecaTheme.surface.ground,
+            plotBg: Color = ArecaTheme.surface.ground,
+            axis: Color = ArecaTheme.surface.separator,
+            guide: Color = ArecaTheme.surface.separator,
             xLabel: Color = ArecaTheme.colors.fgSubtle,
             groupLabel: Color = ArecaTheme.colors.fgSubtle,
             yLabel: Color = ArecaTheme.colors.fgSubtle,

@@ -24,6 +24,7 @@ import dev.voir.areca.foundation.field.TextField
 import dev.voir.areca.foundation.overlay.FlowModalActionBar
 import dev.voir.areca.foundation.overlay.FlowModalSecondaryAction
 import dev.voir.areca.foundation.topbar.TopBarTitleAlignment
+import dev.voir.areca.theme.ArecaTheme
 
 /**
  * Gives an attached file a new name.
@@ -65,7 +66,7 @@ public fun AttachmentRenameSheet(
     title: String = "Rename",
     label: String = "Name",
     saveText: String = "Save",
-    cancelText: String = "Cancel",
+    cancelText: String = ArecaTheme.labels.cancel,
     canSave: (String) -> Boolean = { true },
     error: String? = null,
     saving: Boolean = false,
@@ -116,7 +117,7 @@ public fun AttachmentRenameSheet(
             }
         }
 
-        FieldGroup(label = label, error = error) { field ->
+        FieldGroup(label = label, error = error, modifier = Modifier.sheetGutter()) { field ->
             TextField(
                 value = name,
                 onValueChange = { edited -> name = edited },
