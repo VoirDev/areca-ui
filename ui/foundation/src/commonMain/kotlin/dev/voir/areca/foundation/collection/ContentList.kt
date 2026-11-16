@@ -1,6 +1,7 @@
 package dev.voir.areca.foundation.collection
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,6 +10,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -31,10 +35,27 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.geometry.toRect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathOperation
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.addOutline
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
 import dev.voir.areca.ExperimentalArecaApi
+import dev.voir.areca.foundation.LocalContentColor
+import dev.voir.areca.foundation.LocalTextStyle
 import dev.voir.areca.foundation.button.Button
 import dev.voir.areca.foundation.button.ButtonSize
 import dev.voir.areca.foundation.feedback.Fallback
@@ -44,7 +65,18 @@ import dev.voir.areca.foundation.layout.PullToRefreshIndicator
 import dev.voir.areca.foundation.layout.PullToRefreshLayout
 import dev.voir.areca.foundation.layout.VerticalScrollbarOverlay
 import dev.voir.areca.foundation.layout.rememberPullToRefreshState
+import dev.voir.areca.foundation.list.ListGroupClip
+import dev.voir.areca.foundation.list.ListItemColumn
+import dev.voir.areca.foundation.list.ListItemSize
+import dev.voir.areca.foundation.list.ListSize
+import dev.voir.areca.foundation.list.ListStyle
+import dev.voir.areca.foundation.list.LocalListGroupClip
+import dev.voir.areca.foundation.list.LocalListItemSize
+import dev.voir.areca.foundation.list.PlacedCoordinates
+import dev.voir.areca.foundation.list.recordPlacement
+import dev.voir.areca.foundation.list.topSeparator
 import dev.voir.areca.foundation.text.Text
+import dev.voir.areca.modifier.thenIf
 import dev.voir.areca.theme.ArecaTheme
 import kotlinx.coroutines.flow.distinctUntilChanged
 
@@ -127,6 +159,29 @@ public data class ContentListGroup<G, T>(
 )
 
 /**
+ * How a grouped content list lays out its groups.
+ */
+public enum class ContentListGroupLayout {
+    /**
+     * Headers and items in one run down the list, spaced by [ContentListSize.itemSpacing]; a paged
+     * list keeps each header stuck to the top while its group scrolls past. The default.
+     */
+    Plain,
+
+    /**
+     * Each group on a card of its own, the header inside the card above the first item — a
+     * [dev.voir.areca.foundation.list.ListItemColumn] with a heading. The card is drawn from
+     * [ContentListStyle.group] and [ContentListSize.group], the same surface fields a list's own
+     * card takes: its background, separator and shape, with separators between items only. Cards are
+     * [ContentListSize.groupSpacing] apart and inset by [ContentListSize.groupOuterPadding]. Rows such as
+     * [dev.voir.areca.foundation.list.ListItem] draw their press and hover states inside the card's
+     * corners. Headers do not stick: a header stuck over a card it is no longer the top of would
+     * cut the card in two.
+     */
+    Inset,
+}
+
+/**
  * Colors of a content list's own pieces: its header and its loading and end-of-list rows.
  *
  * The empty and error faces are [Fallback]s and take their colors from the fallback style.
@@ -135,6 +190,9 @@ public data class ContentListGroup<G, T>(
  * @property headerSubtitle Color of the header subtitle.
  * @property spinner Color of the loading spinners.
  * @property endReached Color of the end-of-list line.
+ * @property group Surface of a group's card under [ContentListGroupLayout.Inset]: its background
+ *   and the hairline between two of its items. The border is not drawn.
+ * @property groupHeader Content color given to a group header inside its card.
  */
 @Immutable
 public data class ContentListStyle(
@@ -142,6 +200,12 @@ public data class ContentListStyle(
     public val headerSubtitle: Color,
     public val spinner: Color,
     public val endReached: Color,
+    public val group: ListStyle = ListStyle(
+        bg = Color.Unspecified,
+        border = Color.Unspecified,
+        separator = Color.Unspecified,
+    ),
+    public val groupHeader: Color = headerTitle,
 ) {
     /** Theme-backed presets and builders. */
     public companion object {
@@ -157,6 +221,9 @@ public data class ContentListStyle(
          * @param headerSubtitle Color of the header subtitle.
          * @param spinner Color of the loading spinners.
          * @param endReached Color of the end-of-list line.
+         * @param group Surface of an inset group's card: the subtle ground grouped regions sit on,
+         *   with the hairline drawn on it.
+         * @param groupHeader Color of a group header inside its card.
          * @return The style.
          */
         @Composable
@@ -165,11 +232,18 @@ public data class ContentListStyle(
             headerSubtitle: Color = ArecaTheme.colors.fgMuted,
             spinner: Color = ArecaTheme.colors.accentBase,
             endReached: Color = ArecaTheme.colors.fgBase,
+            group: ListStyle = ListStyle.default(
+                bg = ArecaTheme.colors.bgSubtle,
+                separator = ArecaTheme.colors.borderOnSubtle,
+            ),
+            groupHeader: Color = ArecaTheme.colors.fgSubtle,
         ): ContentListStyle = ContentListStyle(
             headerTitle = headerTitle,
             headerSubtitle = headerSubtitle,
             spinner = spinner,
             endReached = endReached,
+            group = group,
+            groupHeader = groupHeader,
         )
     }
 }
@@ -190,6 +264,14 @@ public data class ContentListStyle(
  * @property headerTitleTextStyle Type of the header title.
  * @property headerSubtitleTextStyle Type of the header subtitle.
  * @property endReachedTextStyle Type of the end-of-list line.
+ * @property group Geometry of a group's card under [ContentListGroupLayout.Inset]: its shape and
+ *   the thickness and inset of the hairline between two of its items.
+ * @property groupOuterPadding Inset around each card under [ContentListGroupLayout.Inset], on top of
+ *   [contentPadding].
+ * @property groupSpacing Space between two cards under [ContentListGroupLayout.Inset], which takes
+ *   the place of [itemSpacing] there.
+ * @property groupHeaderPadding Padding around a group header inside its card.
+ * @property groupHeaderTextStyle Type given to a group header inside its card.
  */
 @Immutable
 public data class ContentListSize(
@@ -204,6 +286,16 @@ public data class ContentListSize(
     public val headerTitleTextStyle: TextStyle,
     public val headerSubtitleTextStyle: TextStyle,
     public val endReachedTextStyle: TextStyle,
+    public val group: ListSize = ListSize(
+        shape = RectangleShape,
+        borderWidth = 0.dp,
+        separatorThickness = 1.dp,
+        separatorInset = 0.dp,
+    ),
+    public val groupOuterPadding: PaddingValues = PaddingValues(0.dp),
+    public val groupSpacing: Dp = itemSpacing,
+    public val groupHeaderPadding: PaddingValues = headerPadding,
+    public val groupHeaderTextStyle: TextStyle = headerTitleTextStyle,
 ) {
     /** Theme-backed presets and builders. */
     public companion object {
@@ -226,6 +318,13 @@ public data class ContentListSize(
          * @param headerTitleTextStyle Type of the header title.
          * @param headerSubtitleTextStyle Type of the header subtitle.
          * @param endReachedTextStyle Type of the end-of-list line.
+         * @param group Geometry of an inset card: the large corner radius, and hairlines inset as
+         *   far as a list row's text, from both edges.
+         * @param groupOuterPadding Inset around each inset card: the screen gutter at the sides.
+         * @param groupSpacing Space between inset cards.
+         * @param groupHeaderPadding Padding around a group header inside its card, its text in line
+         *   with a list row's.
+         * @param groupHeaderTextStyle Type of a group header inside its card.
          * @return The size.
          */
         @Composable
@@ -241,6 +340,19 @@ public data class ContentListSize(
             headerTitleTextStyle: TextStyle = ArecaTheme.typography.headingExtraSmall,
             headerSubtitleTextStyle: TextStyle = ArecaTheme.typography.bodySmall,
             endReachedTextStyle: TextStyle = ArecaTheme.typography.caption,
+            group: ListSize = ListSize.default(
+                shape = ArecaTheme.shapes.lg,
+                separatorInset = rowTextInset(),
+            ),
+            groupOuterPadding: PaddingValues = PaddingValues(horizontal = ArecaTheme.spacing.horizontalContentInsets),
+            groupSpacing: Dp = ArecaTheme.spacing.lg,
+            groupHeaderPadding: PaddingValues = PaddingValues(
+                start = rowTextInset(),
+                end = rowTextInset(),
+                top = ArecaTheme.spacing.lg,
+                bottom = ArecaTheme.spacing.xs,
+            ),
+            groupHeaderTextStyle: TextStyle = ArecaTheme.typography.labelMedium,
         ): ContentListSize = ContentListSize(
             contentPadding = contentPadding,
             itemSpacing = itemSpacing,
@@ -253,6 +365,11 @@ public data class ContentListSize(
             headerTitleTextStyle = headerTitleTextStyle,
             headerSubtitleTextStyle = headerSubtitleTextStyle,
             endReachedTextStyle = endReachedTextStyle,
+            group = group,
+            groupOuterPadding = groupOuterPadding,
+            groupSpacing = groupSpacing,
+            groupHeaderPadding = groupHeaderPadding,
+            groupHeaderTextStyle = groupHeaderTextStyle,
         )
     }
 }
@@ -623,6 +740,9 @@ public fun <T> ContentList(
 /**
  * A [ContentList] whose items are broken into groups, each under its own header.
  *
+ * With [groupLayout] set to [ContentListGroupLayout.Inset], each group is drawn on a card of its
+ * own with its header inside — the shape of a list grouped by date or category on a white screen.
+ *
  * @param G Type of the group header values.
  * @param T Type of the items.
  * @param state Groups and where loading them stands.
@@ -632,12 +752,15 @@ public fun <T> ContentList(
  * @param labels Copy of the default faces.
  * @param fillAvailableHeight Whether the list, and its loading, empty, and error faces, fill the
  *   height they are given rather than wrapping their content.
+ * @param groupLayout Whether groups run on in one column or each sit on a card of their own.
  * @param onRetryInitial Called by the default error face's retry button.
  * @param loadingContent Face shown during the first load.
  * @param emptyContent Face shown when there is nothing to show.
  * @param initialErrorContent Face shown when the first load failed, given the message and a retry.
  * @param header Content above the groups and faces, such as a [ContentListDefaults.Header].
- * @param groupHeaderContent Renders a group's header.
+ * @param groupHeaderContent Renders a group's header. Inside an inset card it is given
+ *   [ContentListStyle.groupHeader] and [ContentListSize.groupHeaderTextStyle], so a plain `Text`
+ *   is enough.
  * @param itemContent Renders one item.
  */
 @Composable
@@ -648,6 +771,7 @@ public fun <G, T> GroupedContentList(
     size: ContentListSize = LocalContentListSize.current ?: ContentListSize.Default,
     labels: ContentListLabels = ContentListLabels.English,
     fillAvailableHeight: Boolean = false,
+    groupLayout: ContentListGroupLayout = ContentListGroupLayout.Plain,
     onRetryInitial: () -> Unit = {},
     loadingContent: @Composable () -> Unit = { ContentListDefaults.LoadingState() },
     emptyContent: @Composable () -> Unit = {
@@ -677,11 +801,38 @@ public fun <G, T> GroupedContentList(
             initialErrorContent = initialErrorContent,
             header = header,
         ) {
-            EagerItemsColumn(size = size) {
-                state.items.forEach { group ->
-                    groupHeaderContent(group.group)
-                    group.items.forEach { item ->
-                        itemContent(item)
+            if (groupLayout == ContentListGroupLayout.Inset) {
+                EagerItemsColumn(size = size, spacing = size.groupSpacing) {
+                    state.items.forEach { group ->
+                        InsetGroupCard(style = style, size = size) {
+                            InsetGroupHeader(style = style, size = size) {
+                                groupHeaderContent(group.group)
+                            }
+                            if (group.items.isNotEmpty()) {
+                                // The card's surface is drawn around the header too, so the rows'
+                                // column draws none of its own: only the hairlines between rows, and
+                                // the card's bottom corners for the last row's tints.
+                                ListItemColumn(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    listStyle = style.group.copy(bg = Color.Unspecified, border = Color.Unspecified),
+                                    listSize = size.group.copy(
+                                        shape = GroupSegmentShape(base = size.group.shape, top = false, bottom = true),
+                                        borderWidth = 0.dp,
+                                    ),
+                                ) {
+                                    group.items.forEach { item -> itemContent(item) }
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                EagerItemsColumn(size = size) {
+                    state.items.forEach { group ->
+                        groupHeaderContent(group.group)
+                        group.items.forEach { item ->
+                            itemContent(item)
+                        }
                     }
                 }
             }
@@ -837,6 +988,10 @@ public fun <T> PagedContentList(
  * A [PagedContentList] whose items are broken into groups, each under a header that sticks to the
  * top while its group scrolls past.
  *
+ * With [groupLayout] set to [ContentListGroupLayout.Inset], each group is drawn on a card of its
+ * own with its header inside, and headers scroll with their cards rather than sticking. Items stay
+ * lazy: a card is drawn as segments, one per item, that join into one surface.
+ *
  * @param G Type of the group header values.
  * @param T Type of the items.
  * @param state Groups and where loading them stands.
@@ -851,6 +1006,7 @@ public fun <T> PagedContentList(
  *   scrolling items, so a list with a header under a bar insets the header itself.
  * @param fillAvailableHeight Whether the list, and its loading, empty, and error faces, fill the
  *   height they are given rather than wrapping their content.
+ * @param groupLayout Whether groups run on under sticky headers or each sit on a card of their own.
  * @param listState Scroll state, hoisted so a caller can scroll to an item.
  * @param onRefresh Called when the user pulls down to refresh, or `null` for no pull-to-refresh.
  * @param onLoadNextPage Called when the next page is due.
@@ -865,7 +1021,9 @@ public fun <T> PagedContentList(
  * @param endReachedContent Row appended after the last page.
  * @param header Content above the groups and faces, such as a [ContentListDefaults.Header]. It does
  *   not scroll with the items.
- * @param groupHeaderContent Renders a group's sticky header.
+ * @param groupHeaderContent Renders a group's header: sticky under [ContentListGroupLayout.Plain],
+ *   inside the card, with [ContentListStyle.groupHeader] and [ContentListSize.groupHeaderTextStyle]
+ *   provided, under [ContentListGroupLayout.Inset].
  * @param itemContent Renders one item.
  */
 @OptIn(ExperimentalFoundationApi::class)
@@ -878,6 +1036,7 @@ public fun <G, T> GroupedPagedContentList(
     labels: ContentListLabels = ContentListLabels.English,
     contentPadding: PaddingValues = PaddingValues(ArecaTheme.spacing.none),
     fillAvailableHeight: Boolean = true,
+    groupLayout: ContentListGroupLayout = ContentListGroupLayout.Plain,
     listState: LazyListState = rememberLazyListState(),
     onRefresh: (() -> Unit)? = null,
     onLoadNextPage: () -> Unit = {},
@@ -940,26 +1099,74 @@ public fun <G, T> GroupedPagedContentList(
                 indicatorTopInset = contentPadding.calculateTopPadding(),
             ) {
                 Box(modifier = Modifier.fillMaxSize()) {
+                    val inset = groupLayout == ContentListGroupLayout.Inset
                     LazyColumn(
                         state = listState,
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = padding,
-                        verticalArrangement = Arrangement.spacedBy(size.itemSpacing),
+                        // Inset cards are drawn as abutting segments, so the gaps are spacers of
+                        // their own between cards rather than an arrangement between every item.
+                        verticalArrangement = if (inset) Arrangement.Top else Arrangement.spacedBy(size.itemSpacing),
                     ) {
                         item(key = TopSpacingKey) {
                             Spacer(Modifier.height(size.topSpacing))
                         }
 
-                        state.items.forEach { group ->
-                            stickyHeader(key = "group-header:${group.key}") {
-                                groupHeaderContent(group.group)
-                            }
+                        if (inset) {
+                            // A gap before every card and after the last, as the eager list spaces
+                            // its cards, so the paging rows below do not sit against the last card.
+                            state.items.forEach { group ->
+                                item(key = "group-gap:${group.key}", contentType = GroupGapContentType) {
+                                    Spacer(Modifier.height(size.groupSpacing))
+                                }
 
-                            items(
-                                items = group.items,
-                                key = itemKey,
-                            ) { item ->
-                                itemContent(item)
+                                item(key = "group-header:${group.key}", contentType = GroupHeaderContentType) {
+                                    InsetGroupSegment(
+                                        style = style,
+                                        size = size,
+                                        first = true,
+                                        last = group.items.isEmpty(),
+                                        separated = false,
+                                    ) {
+                                        InsetGroupHeader(style = style, size = size) {
+                                            groupHeaderContent(group.group)
+                                        }
+                                    }
+                                }
+
+                                val lastIndex = group.items.lastIndex
+                                itemsIndexed(
+                                    items = group.items,
+                                    key = itemKey?.let { key -> { _, item -> key(item) } },
+                                ) { index, item ->
+                                    InsetGroupSegment(
+                                        style = style,
+                                        size = size,
+                                        first = false,
+                                        last = index == lastIndex,
+                                        separated = index > 0,
+                                    ) {
+                                        itemContent(item)
+                                    }
+                                }
+                            }
+                            if (state.items.isNotEmpty()) {
+                                item(key = GroupsEndGapKey, contentType = GroupGapContentType) {
+                                    Spacer(Modifier.height(size.groupSpacing))
+                                }
+                            }
+                        } else {
+                            state.items.forEach { group ->
+                                stickyHeader(key = "group-header:${group.key}") {
+                                    groupHeaderContent(group.group)
+                                }
+
+                                items(
+                                    items = group.items,
+                                    key = itemKey,
+                                ) { item ->
+                                    itemContent(item)
+                                }
                             }
                         }
 
@@ -1006,24 +1213,186 @@ private fun ProvideContentListConfig(
  * Column of eagerly composed items, padded and spaced by [size].
  *
  * @param size Spacing of the list.
+ * @param spacing Space between consecutive children.
  * @param content Items, and group headers for a grouped list.
  */
 @Composable
 private fun EagerItemsColumn(
     size: ContentListSize,
+    spacing: Dp = size.itemSpacing,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(size.contentPadding),
-        verticalArrangement = Arrangement.spacedBy(size.itemSpacing),
+        verticalArrangement = Arrangement.spacedBy(spacing),
     ) {
         Spacer(Modifier.height(size.topSpacing))
         content()
         Spacer(Modifier.height(size.bottomSpacing))
     }
 }
+
+/**
+ * One whole group card of an eager grouped list under [ContentListGroupLayout.Inset]: the card's
+ * surface around its header and rows.
+ *
+ * @param style Colors of the card.
+ * @param size Geometry and insets of the card.
+ * @param content Header and rows of the group.
+ */
+@Composable
+private fun InsetGroupCard(
+    style: ContentListStyle,
+    size: ContentListSize,
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(size.groupOuterPadding)
+            .background(style.group.bg, size.group.shape),
+        content = content,
+    )
+}
+
+/**
+ * One lazy item's share of a group card under [ContentListGroupLayout.Inset]: the card's top on the
+ * header, its bottom on the last item, and a plain band in between, so the segments of a group join
+ * into one card however many of them are composed.
+ *
+ * @param style Colors of the card.
+ * @param size Insets of the card.
+ * @param first Whether this segment carries the card's top edge.
+ * @param last Whether this segment carries the card's bottom edge.
+ * @param separated Whether a hairline is drawn along the segment's top.
+ * @param content The header or the item.
+ */
+@Composable
+private fun InsetGroupSegment(
+    style: ContentListStyle,
+    size: ContentListSize,
+    first: Boolean,
+    last: Boolean,
+    separated: Boolean,
+    content: @Composable () -> Unit,
+) {
+    val layoutDirection = LocalLayoutDirection.current
+    val outer = size.groupOuterPadding
+    val shape = remember(size.group.shape, first, last) {
+        GroupSegmentShape(base = size.group.shape, top = first, bottom = last)
+    }
+    val placement = remember { PlacedCoordinates() }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                start = outer.calculateStartPadding(layoutDirection),
+                end = outer.calculateEndPadding(layoutDirection),
+                top = if (first) outer.calculateTopPadding() else 0.dp,
+                bottom = if (last) outer.calculateBottomPadding() else 0.dp,
+            )
+            .background(style.group.bg, shape)
+            .recordPlacement(placement)
+            .thenIf(separated) {
+                topSeparator(
+                    color = style.group.separator,
+                    thickness = size.group.separatorThickness,
+                    inset = size.group.separatorInset,
+                )
+            },
+    ) {
+        CompositionLocalProvider(
+            LocalListGroupClip provides ListGroupClip(shape = shape, placement = placement),
+            content = content,
+        )
+    }
+}
+
+/**
+ * A group header inside its card, with the card's header color, type and padding, marked as a
+ * heading for assistive technology.
+ *
+ * @param style Colors of the list.
+ * @param size Metrics of the list.
+ * @param content The caller's header.
+ */
+@Composable
+private fun InsetGroupHeader(
+    style: ContentListStyle,
+    size: ContentListSize,
+    content: @Composable () -> Unit,
+) {
+    CompositionLocalProvider(
+        LocalContentColor provides style.groupHeader,
+        LocalTextStyle provides size.groupHeaderTextStyle,
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(size.groupHeaderPadding)
+                .semantics(mergeDescendants = true) { heading() },
+        ) {
+            content()
+        }
+    }
+}
+
+/**
+ * The part of a card's [base] shape that one segment covers: the top corners, the bottom corners,
+ * both, or neither.
+ *
+ * The segment's outline is the card's outline drawn taller than the segment, then cut to it, so a
+ * shape of any kind — a squircle as much as a rounded rectangle — keeps the corners it would have
+ * as one card.
+ *
+ * @property base Shape of the whole card.
+ * @property top Whether the segment carries the card's top edge.
+ * @property bottom Whether the segment carries the card's bottom edge.
+ */
+@Immutable
+internal data class GroupSegmentShape(
+    val base: Shape,
+    val top: Boolean,
+    val bottom: Boolean,
+) : Shape {
+    override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
+        if (top && bottom) return base.createOutline(size, layoutDirection, density)
+        if (!top && !bottom) return Outline.Rectangle(size.toRect())
+
+        // Longer than any corner can reach, so the cut-off end of the card is straight.
+        val extension = size.width
+        val card = base.createOutline(Size(size.width, size.height + extension), layoutDirection, density)
+        val cardPath = Path().apply {
+            addOutline(card)
+            if (!top) translate(Offset(0f, -extension))
+        }
+        val segment = Path().apply { addRect(size.toRect()) }
+        return Outline.Generic(Path.combine(PathOperation.Intersect, cardPath, segment))
+    }
+}
+
+/** Lazy key of the gap after the last inset card. */
+private const val GroupsEndGapKey = "groups-end-gap"
+
+/**
+ * Start of a list row's text from the row's edge, the default [ListItemSize]'s start padding, which
+ * inset cards align their headers and hairlines to.
+ *
+ * @return The inset.
+ */
+@Composable
+private fun rowTextInset(): Dp =
+    (LocalListItemSize.current ?: ListItemSize.Default).contentPadding
+        .calculateStartPadding(LocalLayoutDirection.current)
+
+/** Content type of the spacers between inset cards. */
+private const val GroupGapContentType = "group-gap"
+
+/** Content type of the headers inside inset cards. */
+private const val GroupHeaderContentType = "group-header"
 
 /**
  * Wraps the scrolling items of a paged list in a [PullToRefreshLayout] when [onRefresh] is set.

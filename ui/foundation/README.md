@@ -484,6 +484,30 @@ CompositionLocalProvider(LocalFieldStyle provides FieldStyle.filled()) {
 Selection is controlled: `onChange` reports the values that should be selected next, and nothing
 moves until your state comes back.
 
+A `SelectFlowModal` given `sections` instead of `options` groups them under titles —
+`SelectOptionSection(key, title, options, indexed)`, where `indexed = true` breaks a section such as
+"All" under letter headers (pass its options already sorted). With `onCreateOption` and a search
+field, a last row offers to add the typed query as the user's own — "Add “Gorenje” as your own" —
+and stays when nothing matched. `SelectFlowModalLabels` holds the sheet's copy — in either
+overload, so a picker is localized the same way with or without sections. The stock body is
+`SelectFlowModalDefaults.SectionedList`, and `CreateOptionRow` is there for a custom one.
+
+```kotlin
+SelectFlowModal(
+    controller = brandPicker,
+    values = setOf(brand),
+    sections = listOf(
+        SelectOptionSection("yours", "Yours", yours),
+        SelectOptionSection("popular", "Popular", popular),
+        SelectOptionSection("all", "All", allSorted, indexed = true),
+    ),
+    onChange = { picked -> picked.firstOrNull()?.let(onBrand); brandPicker.hide() },
+    state = search,
+    onQueryChange = onSearch,
+    onCreateOption = { query -> onAddBrand(query); brandPicker.hide() },
+)
+```
+
 **Compound fields.** A `FieldRow` holds segments that share its border, status and focus ring:
 
 ```kotlin
@@ -696,6 +720,7 @@ Box {
 | Component | Use it for |
 | --- | --- |
 | `BaseLayout` | A screen's frame: top and bottom bars drawn over full-height content that is handed their height as padding |
+| `BottomActionBar` | A screen's bottom bar with its primary action: alone, beside a count ("3 selected · Move"), or disabled with a hint saying what is missing |
 | `CollapsingHeaderLayout` | A header that scrolls away above a strip that stays — artwork over tabs — optionally into a compact band that stays |
 | `PullToRefreshLayout` / `PullToRefreshIndicator` | Pull-to-refresh around scrolling content, and its default indicator. [Experimental](#experimental-api) |
 | `Card` | A surface that groups content, optionally pressable or expandable, with an optional footer for its status and actions |
@@ -717,7 +742,29 @@ BaseLayout(
 ```
 
 The content is laid out under the bars and must apply the padding it is handed — normally as a lazy
-list's `contentPadding` — or the bars hide its first and last items. A `Card`'s content is handed the
+list's `contentPadding` — or the bars hide its first and last items.
+
+A screen's primary action goes in a `BottomActionBar` passed as `bottomBar`. It is opaque, draws a
+hairline above itself and, like `TabBar`, clears the navigation bar and the keyboard by default — so
+keep the bottom insets out of `BaseLayout`'s `contentWindowInsets`, or they are counted twice. A
+`leading` slot puts a count beside the button; `enabled = false` with a `hint` says why the action
+is not available yet. Keep `FlowModalActionBar` for sheets: it is transparent, adds no insets and has
+no hint line.
+
+```kotlin
+BaseLayout(
+    topBar = { TopBar("Move items") },
+    bottomBar = {
+        BottomActionBar(
+            actionText = "Move",
+            onAction = onMove,
+            enabled = selected.isNotEmpty(),
+            hint = if (selected.isEmpty()) "Select items to move" else null,
+            leading = { Text("${selected.size} selected") },
+        )
+    },
+) { padding -> ItemsList(contentPadding = padding) }
+``` A `Card`'s content is handed the
 card's padding the same way, so a full-bleed image can ignore it.
 
 A card's status and actions go in its `footer`, a strip along the bottom filled by a
@@ -871,6 +918,28 @@ A row's slots are roles with one size and one ink each, so pass plain `Text`: th
 `SettingsRowIcon` tiles, anything else in `SettingsRowTile`. A section's closing action goes on its
 `band`, a strip at the bottom of the card in `bandColor`.
 
+A `SettingsTextFieldRow` given a `title` is a labelled form row — the label at the start, the input
+against the end — and a `suffix` names its unit. Make the suffix a `SettingsTextFieldSuffix`, with an
+`onClick` when the unit can be changed:
+
+```kotlin
+SettingsTextFieldRow(
+    value = width,
+    onValueChange = { width = it },
+    title = "Width",
+    placeholder = "0",
+    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+    suffix = {
+        SettingsTextFieldSuffix(
+            text = unit.symbol,
+            modifier = Modifier.anchored(units.anchorState),
+            onClick = { units.show() },
+            onClickLabel = "Change unit",
+        )
+    },
+)
+```
+
 An `ExpandableListItem` with `container = ExpandableListItemContainer.Soft` sits on a `bgSoft` block
 while expanded, behind the row and what it reveals. `showChevron = false` drops the chevron when the
 row already says it opens. Its `bottom` slot holds content that belongs to the row itself — a meter
@@ -904,6 +973,25 @@ model produces; the list picks the face to show from it. `ContentListLabels` hol
 faces' copy. A paged list's `contentPadding` — the `padding` a `BaseLayout` hands its content —
 insets the items, which scroll under the bars, and the loading, empty and error faces. See the
 [list recipe](../../docs/recipes/list.md).
+
+`groupLayout = ContentListGroupLayout.Inset` on a grouped list puts each group on a card of its own —
+`bgSubtle` in `shapes.lg`, the header inside it, hairlines between items, the header and the
+hairlines in line with a row's text. The card is the same `ListStyle` / `ListSize` surface a
+`ListItemColumn` takes, given as `ContentListStyle.group` and `ContentListSize.group`; the header's
+colour, type and padding and the cards' spacing are the other `group…` properties. A paged list
+draws the cards as lazy segments and its headers stop sticking.
+
+```kotlin
+GroupedPagedContentList(
+    state = byWarrantyEnd,
+    groupLayout = ContentListGroupLayout.Inset,
+    contentPadding = padding,
+    itemKey = { it.id },
+    groupHeaderContent = { period -> Text(period.title) },
+) { item ->
+    ListItem(title = { Text(item.name) }, subtitle = { Text(item.place) }, onClick = { onOpen(item) })
+}
+```
 
 ### Tables
 

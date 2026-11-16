@@ -85,10 +85,14 @@ import dev.voir.areca.foundation.icon.LocalChevronSize
 import dev.voir.areca.foundation.icon.LocalFeaturedIconSize
 import dev.voir.areca.foundation.icon.LocalFeaturedIconStyle
 import dev.voir.areca.foundation.icon.LocalIconSize
+import dev.voir.areca.foundation.layout.BottomActionBarSize
+import dev.voir.areca.foundation.layout.BottomActionBarStyle
 import dev.voir.areca.foundation.layout.CardSize
 import dev.voir.areca.foundation.layout.CardStyle
 import dev.voir.areca.foundation.layout.DividerSize
 import dev.voir.areca.foundation.layout.DividerStyle
+import dev.voir.areca.foundation.layout.LocalBottomActionBarSize
+import dev.voir.areca.foundation.layout.LocalBottomActionBarStyle
 import dev.voir.areca.foundation.layout.LocalCardSize
 import dev.voir.areca.foundation.layout.LocalCardStyle
 import dev.voir.areca.foundation.layout.LocalDividerSize
@@ -357,6 +361,8 @@ public fun ArecaThemeProvider(
             LocalFlowModalStyle provides FlowModalStyle.Default,
             LocalFlowModalActionBarSize provides FlowModalActionBarSize.Default,
             LocalFlowModalActionBarStyle provides FlowModalActionBarStyle.Default,
+            LocalBottomActionBarSize provides BottomActionBarSize.Default,
+            LocalBottomActionBarStyle provides BottomActionBarStyle.Default,
             LocalSkeletonSize provides SkeletonSize.Default,
             LocalSkeletonStyle provides SkeletonStyle.Default,
             LocalStatusMarkSize provides StatusMarkSize.Default,

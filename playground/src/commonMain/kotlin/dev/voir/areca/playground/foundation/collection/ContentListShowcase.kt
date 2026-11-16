@@ -10,6 +10,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.voir.areca.foundation.collection.ContentList
+import dev.voir.areca.foundation.collection.ContentListGroup
+import dev.voir.areca.foundation.collection.ContentListGroupLayout
+import dev.voir.areca.foundation.collection.GroupedContentList
+import dev.voir.areca.foundation.collection.GroupedPagedContentList
 import dev.voir.areca.foundation.collection.LimitedContentListState
 import dev.voir.areca.foundation.collection.PagedContentList
 import dev.voir.areca.foundation.collection.PagedContentListState
@@ -20,8 +24,28 @@ import dev.voir.areca.playground.showcase.section.EdgeCases
 import dev.voir.areca.playground.showcase.section.Playground
 import dev.voir.areca.playground.showcase.section.States
 import dev.voir.areca.playground.showcase.section.VariantLayout
+import dev.voir.areca.playground.showcase.section.Variants
 
 private val SampleItems = List(8) { "Invoice #${4800 + it}" }
+
+/** Items grouped by when their warranty ends, as a catalogue screen groups them. */
+private val WarrantyGroups = listOf(
+    ContentListGroup(
+        key = "month",
+        group = "Ends this month",
+        items = listOf("Espresso machine" to "Kitchen", "Robot vacuum" to "Hallway"),
+    ),
+    ContentListGroup(
+        key = "quarter",
+        group = "Ends in the next 3 months",
+        items = listOf("Laptop" to "Study", "Projector" to "Living room", "Cordless drill" to "Garage"),
+    ),
+    ContentListGroup(
+        key = "later",
+        group = "Later",
+        items = listOf("Washing machine" to "Bathroom", "Television" to "Living room", "Bicycle" to "Garage"),
+    ),
+)
 
 /** The states a content list resolves between. */
 private enum class ListStateOption {
@@ -32,7 +56,7 @@ private enum class ListStateOption {
     Refreshing,
 }
 
-/** Showcase for [ContentList] and [PagedContentList]. */
+/** Showcase for [ContentList], [PagedContentList] and their grouped forms. */
 @Composable
 fun ContentListShowcase() = ShowcaseScaffold(
     title = "Content list",
@@ -75,7 +99,63 @@ fun ContentListShowcase() = ShowcaseScaffold(
         }
     }
 
+    Variants(
+        title = "Group layout",
+        description = "groupLayout on GroupedContentList and GroupedPagedContentList.",
+        layout = VariantLayout.Vertical,
+    ) {
+        variant(name = "Plain", detail = "Headers and items in one run; a paged list's headers stick") {
+            GroupedContentList(
+                state = LimitedContentListState(WarrantyGroups),
+                modifier = Modifier.fillMaxWidth(),
+                groupHeaderContent = { Text(it) },
+                itemContent = { (name, place) -> ThingRow(name, place) },
+            )
+        }
+        variant(
+            name = "Inset",
+            detail = "Each group on a bgSubtle card in shapes.lg, its header inside, in line with the rows' text",
+        ) {
+            GroupedContentList(
+                state = LimitedContentListState(WarrantyGroups),
+                modifier = Modifier.fillMaxWidth(),
+                groupLayout = ContentListGroupLayout.Inset,
+                groupHeaderContent = { Text(it) },
+                itemContent = { (name, place) -> ThingRow(name, place, onClick = {}) },
+            )
+        }
+        variant(name = "Inset, paged", detail = "The same cards, drawn as lazy segments; headers scroll with them") {
+            GroupedPagedContentList(
+                state = PagedContentListState(WarrantyGroups, hasNextPage = false),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(360.dp),
+                groupLayout = ContentListGroupLayout.Inset,
+                itemKey = { (name, _) -> name },
+                groupHeaderContent = { Text(it) },
+                itemContent = { (name, place) -> ThingRow(name, place, onClick = {}) },
+            )
+        }
+    }
+
     EdgeCases {
+        case(
+            name = "Inset group with one item",
+            expectation = "The header and the single item share one card with all four corners rounded.",
+        ) {
+            GroupedPagedContentList(
+                state = PagedContentListState(
+                    items = listOf(ContentListGroup("one", "Ends today", listOf("Kettle" to "Kitchen"))),
+                    hasNextPage = false,
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp),
+                groupLayout = ContentListGroupLayout.Inset,
+                groupHeaderContent = { Text(it) },
+                itemContent = { (name, place) -> ThingRow(name, place, onClick = {}) },
+            )
+        }
         case(
             name = "Paged list with more to load",
             expectation = "Shows a loading row at the end while hasNextPage is true.",
@@ -147,6 +227,11 @@ fun ContentListShowcase() = ShowcaseScaffold(
 @Composable
 private fun InvoiceRow(label: String) {
     ListItem(title = { Text(label) })
+}
+
+@Composable
+private fun ThingRow(name: String, place: String, onClick: (() -> Unit)? = null) {
+    ListItem(title = { Text(name) }, subtitle = { Text(place) }, onClick = onClick)
 }
 
 private val ListStateOption.detail: String

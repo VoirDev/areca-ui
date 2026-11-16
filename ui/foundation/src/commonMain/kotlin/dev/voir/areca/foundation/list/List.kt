@@ -414,7 +414,7 @@ private fun ListEntryContent(
  * @param inset Distance between the line and both row edges.
  * @return Modifier that draws the line.
  */
-private fun Modifier.topSeparator(
+internal fun Modifier.topSeparator(
     color: Color,
     thickness: Dp,
     inset: Dp,
