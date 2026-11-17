@@ -714,6 +714,10 @@ These 1.0.0 names have no direct replacement in 1.x. The recommended approach fo
 
 These changes compile without edits, except where noted. Check each screen they touch.
 
+1.1.0 is source-compatible with 1.0.4 but not binary-compatible: many components and styles gained
+parameters, so their compiled signatures changed. Rebuild every library of your own that depends on
+Areca against 1.1.0; a library compiled against 1.0.4 fails at run time with `NoSuchMethodError`.
+
 | Change | What to do |
 | --- | --- |
 | The default surface layout is `SurfaceLayout.Grouped`: a grey page (`neutral15`) with white cards. In 1.0.4 the page was white | Pass `ArecaThemeProvider(surfaceLayout = SurfaceLayout.Plain)` to keep a white page with grey cards. Components now take their fills from the surface they are drawn on — see [Surfaces](theme.md#surfaces) |
@@ -819,6 +823,8 @@ cards had no style of their own and should keep their 1.0.4 border.
 | `ConfirmSheetRows` | Wrap choice rows in a `ConfirmSheet`'s `extra` in it, so they run edge to edge instead of being inset twice |
 | Every `FlowModal` is as tall as its content, up to `maxHeightFraction`; the fixed height and `autoHeight` are gone (`autoHeight` is deprecated and ignored). `allowPartial` defaults to `false`, so a sheet opens at its full height; a partial height is opt-in and exists only for content taller than it; a partial `show()` on shorter content opens fully and `state` reports `Expanded`. Partially open, the footer stays in sight. The keyboard counts against the cap. `allowExpand = false` with `allowPartial` caps the sheet at the partial height, where it rests as `Expanded` | Remove `autoHeight = true`. A sheet that must stay tall whatever it holds (a search over a list that narrows) fills its body with `Modifier.fillMaxHeight()`; a long body must scroll (a lazy list or `verticalScroll`), or it is cut off at the cap. Check sheets that relied on the fixed 90% height, and code that compares `state` with `PartiallyOpened`. Pass `allowPartial = true` only to a long list that may peek first; drop `allowPartial = false`, now the default |
 | `SelectField` and `SelectSegment` draw their dropdown with `SelectFlowModalDefaults.MenuList` | A custom `content` that called `SelectFlowModalDefaults.List` for a dropdown calls `MenuList` |
+| `List`, `LazyList`, `ListItemColumn` and `ContentList` inset groups start each hairline at the text of the `ListItem` under it and run it to the far edge, like a settings section; `ListSize.separatorInset` applies to rows that are not `ListItem`s and to the far edge | Drop a `separatorInset` chosen to clear a leading icon |
+| `AuthScaffold` lies on the sheet's ground in light: a white page whatever the surface layout | Drop a wrapper that put sign-in screens on a white page (`ProvideSurface(root = SurfaceRoot.Sheet)` or a painted background) |
 | Light `ArecaSurface.band`: a card's footer band and a settings section's band are a step darker than the well, so a white card's band does not merge with a grey page; the well (fields, chips) stays light | — |
 
 ### Notes

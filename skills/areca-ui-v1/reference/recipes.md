@@ -527,11 +527,13 @@ fun SpendingScreen(month: MonthSpending, onOpenCategory: (Category) -> Unit) {
                 )
             },
             panel = {
+                // Rows carry their own 16dp start padding; only the heading takes the gutter, so
+                // the heading and the rows' content line up.
                 Column(
-                    modifier = Modifier.contentInsets(),
+                    modifier = Modifier.padding(vertical = ArecaTheme.spacing.xl),
                     verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md),
                 ) {
-                    Heading(title = { Text("By category") })
+                    Heading(title = { Text("By category") }, modifier = Modifier.horizontalContentInsets())
                     ListItemColumn {
                         month.categories.forEach { category ->
                             NavigationListItem(

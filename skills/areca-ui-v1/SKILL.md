@@ -488,7 +488,7 @@ Every foundation family, by intent. Signatures, overloads and packages:
 | Settings screen; a short, bounded group of rows | `Settings { Section { SettingsToggleRow / SettingsSelectRow / SettingsRow / SettingsTextFieldRow / SettingsOptionRow } }`; leading `SettingsRowIcon` / `SettingsRowTile`; loading row `SettingsRowSkeleton`; free content `SettingsBlock` |
 | Form of "label … value" rows, with units | `Section { SettingsTextFieldRow(title = "Width", suffix = { SettingsTextFieldSuffix("cm", onClick = …) }) }` |
 | Second action in a pressable row; line of detail under a subtitle | `trailing = { SettingsRowLink("Verify", onVerify) }`; the row's `caption` slot |
-| Grouped rows on one surface | `List { item(…) }` (eager), `LazyList` (lazy), `ListItemColumn` (hand-composed `ListItem`s) |
+| Grouped rows on one surface | `List { item(…) }` (eager), `LazyList` (lazy), `ListItemColumn` (hand-composed `ListItem`s); hairlines start at each row's text, past its leading icon |
 | Row that navigates; row that expands | `NavigationListItem`; `ExpandableListItem` (`container = ExpandableListItemContainer.Soft` for one soft ground with what it reveals) |
 | Remote list with loading, empty and error faces | `ContentList` (one load), `PagedContentList` (pages, pull-to-refresh); with group headers `GroupedContentList`, `GroupedPagedContentList` (`groupLayout = ContentListGroupLayout.Inset` for a card per group, header inside) |
 | Grid with group headers; tabular data | `LazyVerticalGroupedGrid` / `LazyHorizontalGroupedGrid`; `Table` / `LazyTable` |

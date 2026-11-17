@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -20,6 +21,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import dev.voir.areca.foundation.layout.HorizontalDivider
 import dev.voir.areca.foundation.layout.DividerSize
@@ -334,20 +336,25 @@ public fun LazyList(
                         entry is ListEntry.Item &&
                         entries[index - 1] is ListEntry.Item
 
-                    ListEntryContent(
-                        entry = entry,
-                        itemStyle = itemStyle,
-                        itemSize = itemSize,
-                        dividerStyle = dividerStyle,
-                        dividerSize = dividerSize,
-                        modifier = Modifier.thenIf(drawSeparator) {
-                            topSeparator(
-                                color = listSeparator,
-                                thickness = listSize.separatorThickness,
-                                inset = listSize.separatorInset,
-                            )
-                        },
-                    )
+                    // Each item is its own list of one row, so its hairline can start at its text.
+                    val rowAnchors = remember { ListRowAnchors() }
+                    CompositionLocalProvider(LocalListRowAnchors provides rowAnchors) {
+                        ListEntryContent(
+                            entry = entry,
+                            itemStyle = itemStyle,
+                            itemSize = itemSize,
+                            dividerStyle = dividerStyle,
+                            dividerSize = dividerSize,
+                            modifier = Modifier.thenIf(drawSeparator) {
+                                topSeparator(
+                                    color = listSeparator,
+                                    thickness = listSize.separatorThickness,
+                                    inset = listSize.separatorInset,
+                                    rowAnchors = rowAnchors,
+                                )
+                            },
+                        )
+                    }
                 }
             }
             VerticalScrollbarOverlay(state)
@@ -415,12 +422,15 @@ private fun ListEntryContent(
  * @param thickness Thickness of the line, floored at one pixel so it never disappears on a
  * low-density screen.
  * @param inset Distance between the line and both row edges.
+ * @param rowAnchors Where the row puts its text, for a line that starts there; `null`, or a row that
+ *   reports none, starts it at [inset].
  * @return Modifier that draws the line.
  */
 internal fun Modifier.topSeparator(
     color: Color,
     thickness: Dp,
     inset: Dp,
+    rowAnchors: ListRowAnchors? = null,
 ): Modifier = drawWithContent {
     drawContent()
 
@@ -428,14 +438,16 @@ internal fun Modifier.topSeparator(
 
     val lineThickness = thickness.toPx().coerceAtLeast(1f)
     val insetPx = inset.toPx()
-    val lineWidth = size.width - insetPx * 2f
+    val rtl = layoutDirection == LayoutDirection.Rtl
+    val start = rowAnchors?.textStartOfOnlyRow(rtl)?.coerceAtLeast(insetPx) ?: insetPx
+    val lineWidth = size.width - start - insetPx
     if (lineWidth <= 0f) return@drawWithContent
 
     // Drawn over the row, like the group layout does, so a hover tint runs underneath the line
     // rather than covering it.
     drawRect(
         color = color,
-        topLeft = Offset(insetPx, 0f),
+        topLeft = Offset(if (rtl) insetPx else start, 0f),
         size = Size(lineWidth, lineThickness),
     )
 }

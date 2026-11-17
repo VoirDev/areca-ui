@@ -185,6 +185,11 @@ palette re-themes both.
 
 ### Hues
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/theme-hues-dark.png">
+  <img alt="The ten hues as solid and soft icon tiles, a settings menu on solid hue tiles and spending categories on soft ones" src="images/theme-hues-light.png" width="720">
+</picture>
+
 `ArecaTheme.hues` is an `ArecaHues`: ten categorical colours for the tiles that tell unrelated rows
 apart — a settings menu, categories of spending, a set of tags. A hue means only "this is a
 different kind of thing". Meaning — brand, danger, success, warning, information — stays with the
@@ -235,6 +240,13 @@ are drawn on, so one card, field or chip is right on a grey page, inside a white
 sheet without being told where it is.
 
 ### Layouts
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/surfaces-dark.png">
+  <img alt="The same budget screen twice: in SurfaceLayout.Grouped, a grey page with white cards, and in SurfaceLayout.Plain, a white page with grey cards" src="images/surfaces-light.png" width="720">
+</picture>
+
+The same screen in `Grouped`, on the left, and in `Plain`, on the right.
 
 `ArecaThemeProvider(surfaceLayout = …)` picks which of a screen's page and its cards is grey.
 

@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.voir.areca.flow.attachments.part.AttachmentStrip
+import dev.voir.areca.flow.attachments.sheet.AttachmentChoiceLayout
 import dev.voir.areca.flow.attachments.sheet.AttachmentSourceOptions
 import dev.voir.areca.flow.attachments.sheet.AttachmentSourceSheet
 import dev.voir.areca.flow.auth.AuthBranding
@@ -141,7 +142,7 @@ private fun ExpenseForm() {
     }
 }
 
-/** `flow-attachments`: an expense's attachment strip, and the sheet its add square opens. */
+/** `flow-attachments`: an expense's attachment strip, and the bento sheet its add square opens. */
 internal val FlowAttachmentsShot = DocShot(
     name = "flow-attachments",
     panels = listOf(
@@ -157,6 +158,7 @@ internal val FlowAttachmentsShot = DocShot(
                 ),
                 onDismiss = {},
                 subtitle = "Up to 25 MB each. Photos are resized before they're saved.",
+                layout = AttachmentChoiceLayout.Bento,
             )
         },
     ),

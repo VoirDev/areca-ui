@@ -140,6 +140,11 @@ slots only.
 
 ## Text
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/foundation-amounts-dark.png">
+  <img alt="Amounts drawn with AmountText at several sizes, with the symbol before and after, masked, and in income and expense colours, beside stats in cards" src="images/foundation-amounts-light.png" width="720">
+</picture>
+
 | Component | Use it for | Package | Playground |
 | --- | --- | --- | --- |
 | [`Text`](../ui/foundation/README.md#text) | All text, by `TextVariant` and `TextColor`, or inheriting a slot's style | `text` | `TextShowcase` |
@@ -187,6 +192,11 @@ artifact.
   <img alt="Checkboxes, radios, toggles, sliding selectors, swatches, a number stepper and a badge select" src="images/foundation-selection-light.png" width="720">
 </picture>
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/foundation-choice-dark.png">
+  <img alt="A plan picker of choice cards with one chosen and a badge, toggle chips and removable filter chips, and favourite icon toggle buttons" src="images/foundation-choice-light.png" width="720">
+</picture>
+
 | Component | Use it for | Package | Playground |
 | --- | --- | --- | --- |
 | [`Checkbox`](../ui/foundation/README.md#selection-controls) | A value in a form, saved later; `indeterminate` for mixed children | `selection` | `CheckboxShowcase` |
@@ -230,6 +240,11 @@ With a title and a row-wide tap target, use the list rows under
   <img alt="A notice, a progress bar, skeleton rows, a toast and a status scene" src="images/foundation-feedback-light.png" width="720">
 </picture>
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/foundation-states-dark.png">
+  <img alt="Empty and failed fallbacks in cards, and skeleton placeholders shaped like the content they stand in for" src="images/foundation-states-light.png" width="720">
+</picture>
+
 | Component | Use it for | Package | Playground |
 | --- | --- | --- | --- |
 | [`Spinner`](../ui/foundation/README.md#feedback) | Work of unknown length | `feedback` | `ProgressShowcase` |
@@ -262,6 +277,11 @@ With a title and a row-wide tap target, use the list rows under
   <img alt="A dialog and a confirm sheet" src="images/foundation-overlays-light.png" width="720">
 </picture>
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/foundation-sheets-dark.png">
+  <img alt="A form sheet with flat settings rows and a commit button, and a category picker sheet with search, icon tiles, descriptions and one option ticked" src="images/foundation-sheets-light.png" width="720">
+</picture>
+
 | Component | Use it for | Package | Playground |
 | --- | --- | --- | --- |
 | [`ConfirmSheet`](../ui/foundation/README.md#overlays) | A yes-or-no question in a bottom sheet | `overlay` | `ConfirmSheetShowcase` |
@@ -276,6 +296,11 @@ With a title and a row-wide tap target, use the list rows under
 | [`TooltipBox`](../ui/foundation/README.md#overlays) | A short label naming its content under a pointer or keyboard focus | `overlay` | `TooltipShowcase` |
 
 ## Layout and surfaces
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/foundation-layouts-dark.png">
+  <img alt="A panel page with its total over a breakdown and a floating action above the tab bar, and a form whose bottom action bar has a caption and a soft, not-ready button" src="images/foundation-layouts-light.png" width="720">
+</picture>
 
 | Component | Use it for | Package | Playground |
 | --- | --- | --- | --- |
@@ -299,6 +324,11 @@ With a title and a row-wide tap target, use the list rows under
 | [`ProvideSurface`](theme.md#your-own-fill) | Puts its content at a chosen surface level (`Page`, `Card`, `Inset`) of a screen's or a sheet's ladder | `dev.voir.areca.theme` | — |
 
 ## Adaptive layouts
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/foundation-adaptive-dark.png">
+  <img alt="A tablet screen whose navigation is the edge column of AdaptiveNavigation: status, primary action, destinations and search along the end edge" src="images/foundation-adaptive-light.png" width="720">
+</picture>
 
 | Component | Use it for | Package | Playground |
 | --- | --- | --- | --- |

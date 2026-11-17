@@ -45,7 +45,6 @@ import dev.voir.areca.foundation.icon.FeaturedIconStyle
 import dev.voir.areca.foundation.icon.Icon
 import dev.voir.areca.foundation.layout.BaseLayout
 import dev.voir.areca.foundation.layout.Card
-import dev.voir.areca.foundation.layout.CardStyle
 import dev.voir.areca.foundation.list.CheckboxListItem
 import dev.voir.areca.foundation.list.List
 import dev.voir.areca.foundation.list.ListItemSkeleton
@@ -140,13 +139,26 @@ internal fun TransactionIcon(transaction: SampleTransaction) {
 }
 
 /**
- * Transactions as a list on one surface, grouped by day.
+ * Transactions as a list in a card on the page, as a grouped layout shows rows.
  *
  * @param transactions Rows to show.
  */
 @Composable
 internal fun TransactionList(transactions: kotlin.collections.List<SampleTransaction>) {
-    List(modifier = Modifier.fillMaxWidth().horizontalContentInsets()) {
+    // The rows keep their own insets, so the card's content padding is not applied.
+    Card(modifier = Modifier.fillMaxWidth().horizontalContentInsets()) { _ ->
+        TransactionRows(transactions)
+    }
+}
+
+/**
+ * The rows of [TransactionList], edge to edge in whatever holds them.
+ *
+ * @param transactions Rows to show.
+ */
+@Composable
+private fun TransactionRows(transactions: kotlin.collections.List<SampleTransaction>) {
+    List(modifier = Modifier.fillMaxWidth()) {
         transactions.forEach { transaction ->
             item(
                 key = transaction.merchant,
@@ -508,7 +520,6 @@ internal val FoundationNavigationShot = DocShot(
     padded = false,
 ) {
     BaseLayout(
-        bg = ArecaTheme.colors.bgCanvas,
         topBar = {
             TopBar(
                 title = "Activity",
@@ -548,7 +559,6 @@ internal val FoundationNavigationShot = DocShot(
 @Composable
 private fun InvoicesScreen() {
     BaseLayout(
-        bg = ArecaTheme.colors.bgCanvas,
         topBar = { TopBar(title = "Invoices", leading = { BackAction(onClick = {}) }) },
     ) { padding ->
         Column(Modifier.padding(padding)) {
@@ -629,7 +639,7 @@ internal val FoundationFeedbackShot = DocShot(name = "foundation-feedback", widt
         },
         {
             DocGroup("Status scene") {
-                Card(modifier = Modifier.fillMaxWidth().height(500.dp), style = CardStyle.Outlined) { padding ->
+                Card(modifier = Modifier.fillMaxWidth().height(500.dp)) { padding ->
                     StatusScene(
                         title = "Import complete",
                         modifier = Modifier.padding(padding),

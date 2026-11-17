@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import dev.voir.areca.foundation.LocalContentColor
 import dev.voir.areca.foundation.LocalTextStyle
@@ -71,7 +72,9 @@ public data class Amount(
  * figures nor be reordered by them, and no invisible control characters are added to the text, so
  * the figures truncate and copy as written. Tabular figures keep a column of amounts aligned and a
  * changing total from jittering. Pass [autoSize] for a hero figure that must stay on one line
- * however long it gets — the figures shrink, the symbol keeps its size; [masked] draws the figures
+ * however long it gets — the figures shrink, the symbol keeps its size. A currency sign before the
+ * figures sits against them (`€12`); a symbol with letters before them (`CHF 12`) and any symbol
+ * after them (`12 kr`) stand a small gap apart. [masked] draws the figures
  * as dots, for a balance hidden until the user reveals it. Read aloud as one phrase: the parts as
  * drawn, or [Amount.spokenText].
  *
@@ -118,6 +121,9 @@ public fun AmountText(
     val minorSize = minorScale.em
     val symbolFirst = amount.symbol != null && amount.symbolPlacement == AmountSymbolPlacement.Before
     val gap = ArecaTheme.spacing.xs
+    // A currency sign before the figures is written against them — `€12`, `$12` — while a symbol
+    // with letters — `CHF 12`, `د.إ 12` — and anything after the figures stands a space apart.
+    val gapAfterSymbol = if (amount.symbol?.all { it.category == CharCategory.CURRENCY_SYMBOL } == true) 0.dp else gap
     val figures = remember(amount, masked, minorSize) {
         buildAnnotatedString {
             // The sign leads the whole amount: before the symbol when the symbol comes first.
@@ -159,7 +165,7 @@ public fun AmountText(
                 }
                 Text(
                     text = amount.symbol.orEmpty(),
-                    modifier = Modifier.alignByBaseline().padding(end = gap),
+                    modifier = Modifier.alignByBaseline().padding(end = gapAfterSymbol),
                     style = symbolStyle,
                     color = color,
                     maxLines = 1,

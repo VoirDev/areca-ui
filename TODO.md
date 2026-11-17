@@ -109,8 +109,6 @@ start at the repository root.
       (both edge to edge). Unverified on iOS, where a source frame's bounds may be offset.
 - [ ] `ZoomBehavior.Peek` lifts the picture into a full-window `Popup`; on Android that popup window
       may take the touches that follow the gesture until it is removed.
-- [ ] No screenshots of media or the gallery flow in `docs/images`, and no `renderDocImages` shots
-      for them.
 
 ## Gallery flow
 

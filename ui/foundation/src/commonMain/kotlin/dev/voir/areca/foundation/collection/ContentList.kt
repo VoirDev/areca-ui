@@ -68,6 +68,8 @@ import dev.voir.areca.foundation.layout.rememberPullToRefreshState
 import dev.voir.areca.foundation.list.ListGroupClip
 import dev.voir.areca.foundation.list.ListItemColumn
 import dev.voir.areca.foundation.list.ListItemSize
+import dev.voir.areca.foundation.list.ListRowAnchors
+import dev.voir.areca.foundation.list.LocalListRowAnchors
 import dev.voir.areca.foundation.list.ListSize
 import dev.voir.areca.foundation.list.ListStyle
 import dev.voir.areca.foundation.list.LocalListGroupClip
@@ -1289,6 +1291,8 @@ private fun InsetGroupSegment(
     val placement = remember { PlacedCoordinates() }
     val bg = style.group.bg.takeOrElse { ArecaTheme.surface.raised }
     val separator = style.group.separator.takeOrElse { surfaceFor(bg).separator }
+    // The segment holds one row, which reports where its text starts so the hairline starts there.
+    val rowAnchors = remember { ListRowAnchors() }
 
     Box(
         modifier = Modifier
@@ -1306,12 +1310,14 @@ private fun InsetGroupSegment(
                     color = separator,
                     thickness = size.group.separatorThickness,
                     inset = size.group.separatorInset,
+                    rowAnchors = rowAnchors,
                 )
             },
     ) {
         SurfaceOf(bg) {
             CompositionLocalProvider(
                 LocalListGroupClip provides ListGroupClip(shape = shape, placement = placement),
+                LocalListRowAnchors provides rowAnchors,
                 content = content,
             )
         }

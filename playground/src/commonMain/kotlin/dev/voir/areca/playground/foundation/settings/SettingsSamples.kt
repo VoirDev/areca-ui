@@ -539,7 +539,7 @@ internal fun LoadingSettingsSample() {
 /** A choice laid out as a section of options rather than a menu. */
 @Composable
 internal fun AutoLockSample() {
-    val options = listOf("Away for 1 minute", "Away for 5 minutes", "Away for 1 hour", "Never")
+    val options = listOf("After 1 minute", "After 5 minutes", "After 1 hour", "Never")
     var selected by remember { mutableStateOf(options[1]) }
 
     Settings(modifier = Modifier.fillMaxWidth()) {

@@ -70,6 +70,11 @@ and `button`.
 
 ## Surfaces
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../../docs/images/surfaces-dark.png">
+  <img alt="The same budget screen twice: in SurfaceLayout.Grouped, a grey page with white cards, and in SurfaceLayout.Plain, a white page with grey cards" src="../../docs/images/surfaces-light.png" width="720">
+</picture>
+
 Every fill sits on a surface, and components read the role of the surface they are drawn on —
 `ArecaTheme.surface.ground`, `raised`, `well`, `onWell`, `separator`, `field` — rather than a fixed
 ground token. `ArecaThemeProvider(surfaceLayout = …)` picks the grounds: `SurfaceLayout.Grouped`,
@@ -256,6 +261,11 @@ TopBar(
 
 ### Text
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../../docs/images/foundation-amounts-dark.png">
+  <img alt="Amounts drawn with AmountText at several sizes, with the symbol before and after, masked, and in income and expense colours, beside stats in cards" src="../../docs/images/foundation-amounts-light.png" width="720">
+</picture>
+
 | Component | Use it for |
 | --- | --- |
 | `Text` with a `TextVariant` | All text. The variant names a role — `HeadingSmall`, `BodyMedium`, `Caption`, `LabelLarge`, `Overline` — and `TextColor` a foreground: `Base`, `Subtle`, `Muted`, `Danger`, … |
@@ -302,7 +312,7 @@ Text(
 | `fraction` | The minor units without the mark: `"50"`; `null` for none |
 | `decimalMark` | `"."` (default) or `","` |
 | `symbol` | A currency symbol or a unit: `"€"`, `"د.إ"`, `"kg"`; `null` for none |
-| `symbolPlacement` | `AmountSymbolPlacement.Before` (default) or `After` |
+| `symbolPlacement` | `AmountSymbolPlacement.Before` (default) or `After`. A currency sign before the figures sits against them (`€12`); a symbol with letters (`CHF 12`) or after the figures (`12 kg`) stands a small gap apart |
 | `sign` | A sign before everything: `"−"`, `"+"`; `null` for none |
 | `spokenText` | What a screen reader says — "minus 1,284 euros 50 cents"; `null` reads the parts as drawn |
 
@@ -475,6 +485,11 @@ every cell an equal width and every cell of a row the row's height; pass the sta
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../../docs/images/foundation-selection-dark.png">
   <img alt="Checkboxes, radios, toggles, sliding selectors, swatches, a number stepper and a badge select" src="../../docs/images/foundation-selection-light.png" width="720">
+</picture>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../../docs/images/foundation-choice-dark.png">
+  <img alt="A plan picker of choice cards with one chosen and a badge, toggle chips and removable filter chips, and favourite icon toggle buttons" src="../../docs/images/foundation-choice-light.png" width="720">
 </picture>
 
 | Component | Use it for |
@@ -717,6 +732,11 @@ FieldGroupLayout(
   <img alt="A notice, a progress bar, skeleton rows, a toast and a status scene" src="../../docs/images/foundation-feedback-light.png" width="720">
 </picture>
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../../docs/images/foundation-states-dark.png">
+  <img alt="Empty and failed fallbacks in cards, and skeleton placeholders shaped like the content they stand in for" src="../../docs/images/foundation-states-light.png" width="720">
+</picture>
+
 | Component | Use it for |
 | --- | --- |
 | `Spinner` | Work of unknown length |
@@ -860,6 +880,11 @@ a `Fallback` stands in for part of one and appears at once. Their slots line up 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../../docs/images/foundation-overlays-dark.png">
   <img alt="A dialog and a confirm sheet" src="../../docs/images/foundation-overlays-light.png" width="720">
+</picture>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../../docs/images/foundation-sheets-dark.png">
+  <img alt="A form sheet with flat settings rows and a commit button, and a category picker sheet with search, icon tiles, descriptions and one option ticked" src="../../docs/images/foundation-sheets-light.png" width="720">
 </picture>
 
 | Component | Use it for |
@@ -1009,6 +1034,11 @@ Box {
 `Dialog` and `FlowModal` open in their own platform window, above everything, with one scrim.
 
 ### Layout and surfaces
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../../docs/images/foundation-layouts-dark.png">
+  <img alt="A panel page with its total over a breakdown and a floating action above the tab bar, and a form whose bottom action bar has a caption and a soft, not-ready button" src="../../docs/images/foundation-layouts-light.png" width="720">
+</picture>
 
 | Component | Use it for |
 | --- | --- |
@@ -1301,7 +1331,9 @@ Settings {
 ```
 
 A list owns the group's surface and the hairlines between its rows; never draw a divider between two
-rows by hand. A row is one accessibility node. `Settings` hands its rows the styles and sizes in
+rows by hand. Each hairline starts where the text of the `ListItem` under it starts — past its
+leading icon — and runs to the far edge, as in a settings section; a row that is not a `ListItem`
+gets `ListSize.separatorInset`. A row is one accessibility node. `Settings` hands its rows the styles and sizes in
 `LocalSettingsStyles` and `LocalSettingsSizes` — provide `SettingsDefaults.styles(…)` and
 `SettingsDefaults.sizes(…)` there once for the whole app — or, unprovided, the defaults; it does not
 scroll, so put it in a scrolling container.
@@ -1627,6 +1659,11 @@ item into what a screen reader says for it; the default is `toString()`. Dates a
 own pickers in [datetime](../datetime/README.md).
 
 ### Adaptive layouts
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../../docs/images/foundation-adaptive-dark.png">
+  <img alt="A tablet screen whose navigation is the edge column of AdaptiveNavigation: status, primary action, destinations and search along the end edge" src="../../docs/images/foundation-adaptive-light.png" width="720">
+</picture>
 
 Layouts that take the form the window calls for, in `dev.voir.areca.foundation.adaptive`. Each
 falls back to the phone pattern Areca screens already use, and decides by the space it is given — a

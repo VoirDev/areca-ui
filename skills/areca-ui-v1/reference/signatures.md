@@ -300,7 +300,8 @@ data class Amount(whole: String, fraction: String? = null, decimalMark: String =
     sign: String? = null, spokenText: String? = null)
 // The app's formatted amount in parts: whole with its grouping ("1,284"), fraction without the mark
 // ("50"), the mark, a currency symbol or unit ("€", "د.إ", "kg"), a sign ("−", "+"), and what a
-// screen reader says (null reads the parts as drawn). AmountSymbolPlacement.Before | After.
+// screen reader says (null reads the parts as drawn). AmountSymbolPlacement.Before | After. A
+// currency sign before the figures sits against them (€12); letters (CHF 12) or After get a gap.
 
 fun AmountText(amount: Amount, modifier: Modifier = Modifier,
     style: TextStyle = LocalTextStyle.current, color: Color = LocalContentColor.current,

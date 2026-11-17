@@ -428,7 +428,14 @@ internal fun ListItemLayout(
         label = "listItemChevron",
     )
 
-    val rowModifier = modifier
+    // In a list, the row reports where it and its text are placed, so the list's hairline beside
+    // it starts at the text rather than across the leading slot.
+    val rowAnchors = LocalListRowAnchors.current
+    val rowAnchor = rememberListRowAnchor(rowAnchors)
+
+    val rowModifier = Modifier
+        .listRow(rowAnchor, rowAnchors)
+        .then(modifier)
         .fillMaxWidth()
         .thenIf(groupClip != null) { recordPlacement(statesPlacement) }
         .drawRowStates(
@@ -468,6 +475,8 @@ internal fun ListItemLayout(
         LocalIconSize provides size.icon,
         LocalChevronSize provides size.chevron,
         LocalListItemChevronColor provides chevronColor,
+        // The row's own slots are not rows of the list around it.
+        LocalListRowAnchors provides null,
     ) {
         Column(modifier = rowModifier) {
             SlotRow(
@@ -484,24 +493,26 @@ internal fun ListItemLayout(
                     }
                 },
                 center = {
-                    if (content != null) {
-                        CompositionLocalProvider(
-                            LocalContentColor provides titleColor,
-                            LocalTextStyle provides size.titleTextStyle,
-                        ) {
-                            content()
+                    ListItemTextAnchor(rowAnchor, rowAnchors) {
+                        if (content != null) {
+                            CompositionLocalProvider(
+                                LocalContentColor provides titleColor,
+                                LocalTextStyle provides size.titleTextStyle,
+                            ) {
+                                content()
+                            }
+                        } else if (title != null) {
+                            ListItemText(
+                                title = title,
+                                subtitle = subtitle,
+                                overline = overline,
+                                caption = caption,
+                                titleColor = titleColor,
+                                subtitleColor = subtitleColor,
+                                overlineColor = overlineColor,
+                                size = size,
+                            )
                         }
-                    } else if (title != null) {
-                        ListItemText(
-                            title = title,
-                            subtitle = subtitle,
-                            overline = overline,
-                            caption = caption,
-                            titleColor = titleColor,
-                            subtitleColor = subtitleColor,
-                            overlineColor = overlineColor,
-                            size = size,
-                        )
                     }
                 },
                 end = trailingSlot(
@@ -802,5 +813,25 @@ private fun DrawScope.drawRowDecorations(
             size = Size(railWidth, railHeight),
             cornerRadius = CornerRadius(selectedRailRadius.toPx()),
         )
+    }
+}
+
+/**
+ * The text block of a row, marked for the list's hairline when the row is in a list.
+ *
+ * @param anchor The row's anchor, or `null` outside a list.
+ * @param anchors The list's rows, or `null` outside a list.
+ * @param content The text block.
+ */
+@Composable
+private fun ListItemTextAnchor(
+    anchor: ListRowAnchor?,
+    anchors: ListRowAnchors?,
+    content: @Composable () -> Unit,
+) {
+    if (anchor == null) {
+        content()
+    } else {
+        Box(modifier = Modifier.listRowText(anchor, anchors)) { content() }
     }
 }
