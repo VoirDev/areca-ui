@@ -56,7 +56,7 @@ colour. `SocialApple` is black and is meant to be tinted black or white.
 Directional icons set `ImageVector.autoMirror` and flip in a right-to-left layout: the horizontal and
 diagonal arrows (`Arrow*Left`, `Arrow*Right`, `ArrowsLeft`, `ArrowsRight`, `ArrowBlockLeft`/`Right`,
 and their circle, square, narrow and broken-circle variants), `ChevronLeft`, `ChevronRight` and their
-`Double` variants, every `Corner*`, `FlipBackward`/`FlipForward`, `ReverseLeft`/`ReverseRight`,
+`Double` variants, every `Corner*`, `FlipBackward`/`FlipForward`, `ReverseLeft`,
 `LeftIndent`/`RightIndent`, `LogIn`/`LogOut`, `Send` and `Share`.
 
 Media transport (`Play`, `FastForward`, `SkipBack`), clocks, refresh and rotate arrows, text

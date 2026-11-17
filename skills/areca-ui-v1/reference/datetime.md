@@ -364,17 +364,29 @@ val GermanCalendarLabels = CalendarLabels(
 | `MonthYearPicker`, `TimePicker` | foundation `WheelPickerStyle` · `LocalWheelPickerStyle` | `WheelPickerSize` (month picker: `CalendarSize.monthPicker`) |
 | `DateTimeField` | foundation `FieldStyle` · `LocalFieldStyle` | `FieldSize` · `LocalFieldSize` |
 | `CalendarHeatDay`, `CalendarHeatLegend` | `CalendarHeatStyle` · `LocalCalendarHeatStyle` · `default(ramp = accentScale, empty, emptyRing, future, futureContent, content, inkOnLight, inkOnDark, todayRing, selectedRing, legendLabel)`; `inkOn(shade)` | `CalendarHeatSize` · `LocalCalendarHeatSize` · `Default`, `default(…)` |
-| `MonthGrid` | `MonthGridStyle` · `LocalMonthGridStyle` · `default(year, bg, content, bgSelected, contentSelected, bgDisabled, contentDisabled)` | `MonthGridSize` · `LocalMonthGridSize` · `Default` (52 dp tiles), `default(…)` |
-| `DateTile` | `DateTileStyle` · `LocalDateTileStyle` · `default(bg, month, day)` | `DateTileSize` · `LocalDateTileSize` · `Default` (46 dp), `default(…)` |
+| `MonthGrid` | `MonthGridStyle` · `LocalMonthGridStyle` · `default(year, bg = surface.well, content, bgSelected = bgContrast, contentSelected = fgOnContrast, bgDisabled, contentDisabled)` | `MonthGridSize` · `LocalMonthGridSize` · `Default` (52 dp tiles), `default(…)` |
+| `DateTile` | `DateTileStyle` · `LocalDateTileStyle` · `default(bg = surface.well, month = fgSubtle, day = fgBase)` | `DateTileSize` · `LocalDateTileSize` · `Default` (46 dp, `shapes.lg`), `default(…)` |
+
+Grounds follow the surface the component is drawn on (`ArecaTheme.surface`): a `DateTile`, a
+`MonthGrid` tile, a range's preview track and an adjacent selected day take its `well`; a heat day
+with nothing is its `ground`, and a refused month or a heat day still to come sits halfway between
+`ground` and `well`. One calendar is then right on a grey page, in a white card and in a sheet — pass
+a colour only to fix one, never a fixed grey such as `bgSubtle`. `DateTimeField`'s dropdown is a
+sheet: its calendar lies on the sheet's white ground in light.
 
 The module's locals are `null` unless provided and are **not seeded** by `ArecaThemeProvider`
-(the wheel and field locals are foundation's and are seeded):
+(the field locals are foundation's and are seeded; `LocalWheelPickerStyle` is seeded `null`, so a
+wheel builds its style from the surface under it). Provide an app-wide default in the provider's
+`componentDefaults`; for one screen, around it:
 
 ```kotlin
-CompositionLocalProvider(
-    LocalCalendarStyle provides CalendarStyle.default(selectedBg = ArecaTheme.colors.bgSuccessBase),
-    LocalCalendarSize provides CalendarSize.Compact,
-) { BookingScreen() }
+ArecaThemeProvider(
+    componentDefaults = ComponentDefaults {
+        arrayOf(LocalCalendarStyle provides CalendarStyle.default(selectedBg = ArecaTheme.colors.bgSuccessBase))
+    },
+) { App() }
+
+CompositionLocalProvider(LocalCalendarSize provides CalendarSize.Compact) { BookingScreen() }
 ```
 
 ## Snippets

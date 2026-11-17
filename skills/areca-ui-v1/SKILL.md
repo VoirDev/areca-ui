@@ -124,9 +124,9 @@ Every token, what it is for and how to change it: [reference/theme.md](reference
 
 | Accessor | Members |
 | --- | --- |
-| `ArecaTheme.surface` | The surface the content in scope is drawn on, by role: `ground` (its own fill), `raised` (a card laid on it), `well` (a track, a filled field, a soft chip set into it), `onWell` (a thumb inside a well), `separator` (hairlines on it), `field` (an outlined field, a stepper). Read these for anything drawn on a surface. `surface[SurfaceRole.X]` reads one by name |
+| `ArecaTheme.surface` | The surface the content in scope is drawn on, by role: `ground` (its own fill), `raised` (a card laid on it), `well` (a track, a filled field, a soft chip set into it), `onWell` (a thumb inside a well), `separator` (hairlines on it), `field` (an outlined field, a stepper), `band` (a strip closing a card along its edge — a footer, a section's band — a step past the `well`). Read these for anything drawn on a surface. `surface[SurfaceRole.X]` reads one by name |
 | `ArecaTheme.surfaces`, `surfaceLevel` | `surfaces.layout` (`SurfaceLayout`), `surfaces.screen` / `surfaces.sheet` ladders (`page`, `card`, `inset`), `surfaces.bar` (docked bars); `surfaceLevel` is `SurfaceLevel.Page`, `Card` or `Inset` |
-| `ArecaTheme.colors` | Fixed grounds `bgCanvas`, `bgSoft`, `bgSubtle`, `bgMuted`, `bgSurface` (palette steps; components read `surface` roles instead), `bgContrast`, `bgContrastMuted`, `bgOverlayDark`, `bgOverlayLight`, `bgDisabled`; per tone `bg{Brand,Danger,Success,Warn,Info,Neutral}{Muted,Base,Intense}`. Foregrounds `fgBase`, `fgSubtle`, `fgMuted`, `fgDisabled`, `fgOnContrast`, `fgOnFill`, `fgOnWarn`, `fgNeutral`, marks `fg{Brand,Danger,Success,Info,Warn}` and text `fg{…}Text`. Borders `borderBase`, `borderStrong`, `borderIntense`, `borderSubtle`, `borderOnSubtle` (hairlines on `bgSubtle`; components use `surface.separator`), `borderDisabled`, `border{Danger,Success,Info,Warn}`. Accent `accentBase`, `accentStrong`, `accentIntense`, `accentSubtle`, `accentMuted`; `accentScale`, eight shades for data, index `0` faintest in both themes |
+| `ArecaTheme.colors` | Fixed grounds `bgCanvas`, `bgSoft`, `bgSubtle`, `bgMuted`, `bgSurface` (palette steps; components read `surface` roles instead), `bgContrast`, `bgContrastMuted`, `bgOverlayDark`, `bgOverlayLight`, `bgDisabled`; per tone `bg{Brand,Danger,Success,Warn,Info,Neutral}{Muted,Base,Intense}`. Foregrounds `fgBase`, `fgSubtle`, `fgMuted`, `fgDisabled`, `fgOnContrast`, `fgOnFill`, `fgOnWarn`, `fgNeutral`, marks `fg{Brand,Danger,Success,Info,Warn}` and text `fg{…}Text` (`fgBrandText` reads at 4.5:1 on the canvas, a surface and `bgBrandMuted` even for a light brand; never darken it per app). Borders `borderBase`, `borderStrong`, `borderIntense`, `borderSubtle`, `borderOnSubtle` (hairlines on `bgSubtle`; components use `surface.separator`), `borderDisabled`, `border{Danger,Success,Info,Warn}`. Accent `accentBase`, `accentStrong`, `accentIntense`, `accentSubtle`, `accentMuted`; `accentScale`, eight shades for data, index `0` faintest in both themes |
 | `ArecaTheme.hues` | Categorical tile colours `blue`, `indigo`, `purple`, `pink`, `red`, `orange`, `yellow`, `green`, `teal`, `gray`, and `all`; one per kind of thing, never a meaning (see "Leading visuals") |
 | `ArecaTheme.spacing` | `none` 0, `xs2` 2, `xs` 4, `sm` 6, `md` 8, `lg` 12, `xl` 16, `xl2` 20, `xl3` 24, `xl4` 32, `xl5` 40, `xl6` 48, `xl7` 64, `xl8` 80, `xl9` 96; `horizontalContentInsets` 16, `verticalContentInsets` 24 |
 | `ArecaTheme.shapes` / `radius` | `none`, `xs`, `sm`, `md`, `lg`, `xl`, `xl2`, plus shapes `full`, `tile`, `button` (`md`), `surface` (`lg`: every card preset, settings section, notice, inset group); prefer `shapes` |
@@ -227,7 +227,8 @@ component:
 1. **The theme wrapper.** One composable (`AppTheme { … }`) that calls `ArecaThemeProvider` with
    the app's colours, fonts, radius, shapes and `surfaceLayout`, and passes the app-wide component
    locals as its `componentDefaults` (`LocalButtonStyle`, `LocalCardStyle`, `LocalFlowModalStyle`,
-   `LocalTopBarStyle`, `LocalSettingsStyles`, `LocalFieldStyle`, …). Anything every instance should
+   `LocalTopBarStyle`, `LocalTopBarTitleAlignment`, `LocalSettingsStyles`, `LocalFieldStyle`,
+   `LocalSelectFlowModalLabels`, …). Anything every instance should
    share goes here, once.
 2. **One file of named presets**, as extensions on the companions, for the looks that vary by place
    rather than app-wide: `fun CardStyle.Companion.highlight(): CardStyle = default(…)`,
@@ -305,7 +306,8 @@ cancel, more, remove, search, clear search, show and hide password — come from
 stringResource(…), …))`, and every `BackAction`, `CloseAction`, sheet scrim, busy button,
 `SearchField`, `Chip` and flow sheet follows; never wrap a component only to localise its default.
 Component-specific copy stays per component — `ContentListLabels.English`, `SelectFieldLabels`,
-`RequirementListLabels`, `labels = …` — and a value passed at the call site still wins.
+`SelectFlowModalLabels` (once, as `LocalSelectFlowModalLabels`), `RequirementListLabels`,
+`labels = …` — and a value passed at the call site still wins.
 Presentation-safe messages (errors, statuses) come from the presentation layer; static UI words come
 from the app's resources. Never show exception text.
 
@@ -331,7 +333,15 @@ is an extension property needing two imports: `dev.voir.areca.icons.ArecaIcons` 
     `FlowModal(controller)` with `show()` / `hide()`. To navigate after a sheet, call
     `controller.hideAndWait()` in a coroutine first, so the next screen does not arrive under it.
   - `ConfirmSheet` takes its `visible` flag. It takes its sheet from the `LocalFlowModalStyle` in
-    scope, so restyle sheets there, not per confirmation.
+    scope, so restyle sheets there, not per confirmation. Choice rows in its `extra` go in
+    `ConfirmSheetRows { … }`, so they run edge to edge instead of being inset twice.
+- Every sheet is as tall as its content, up to the controller's `maxHeightFraction` (0.9 of the
+  window): a short form opens at its own height, a long body stops at the cap. A long body must
+  scroll (a lazy list or `verticalScroll`) or it is cut off there; a body that must stay tall
+  whatever it holds (a search over a list that narrows) takes `Modifier.fillMaxHeight()`. A sheet
+  opens at full height; `rememberFlowModal(allowPartial = true)` lets a long list peek first.
+  `autoHeight` is deprecated and ignored — never pass it. Open the sheet at once: data that replaces
+  a placeholder while it opens bends the opening toward the new height in one motion.
 - A sheet's header is `FlowModalTopBar(title, onClose = …)`: a centred title, a close cross, the
   modal bar style, and `FlowModalHeaderInsets` so the fill runs under the drag handle and the title
   clears it. `bottom` holds a search field pinned above a list; `leading` a way back in a step of a
@@ -343,9 +353,11 @@ is an extension property needing two imports: `dev.voir.areca.icons.ArecaIcons` 
   `onQueryChange` takes the whole sheet with the search pinned. Rows lie straight on the sheet with
   hairlines; give each `SelectOption` a `description` and a `leading` mark
   (`SettingsRowIcon(hue = …)`, a flag in `SettingsRowTile`) when the choice needs them. A single
-  choice closes the sheet itself and pressing the chosen option keeps it, so `onChange` only
-  stores the value. Provide the app's `SelectFlowModalLabels` once via `LocalSelectFlowModalLabels`
-  in `componentDefaults`; `SelectOption(detail = …)` puts a symbol at the row's end. Something under
+  choice with no `footer` closes the sheet on the pick (`closeOnSelect`) and is required: pressing
+  the chosen option keeps it (`clearable = true` lets it clear), so `onChange` only stores the
+  value — no `controller.hide()`. Provide the app's `SelectFlowModalLabels` once via
+  `LocalSelectFlowModalLabels` in `componentDefaults`; `searchPlaceholder` names what one search
+  finds; `SelectOption(detail = …)` puts a symbol at the row's end. Something under
   the title — a pill naming the region a bank list is drawn from — goes in `headerBottom = { … }`,
   which keeps the stock header and its close (focus cleared, keyboard hidden); never rebuild the
   header for it. Never build an app
@@ -413,7 +425,8 @@ off its `bounds`, and while its `state` is `FoldState.HalfOpened` lay each half 
 - Use the adaptive layouts (`dev.voir.areca.foundation.adaptive`) before branching by hand:
   `AdaptiveNavigation` for the app shell (bottom bar on a phone, the edge column from medium up),
   `ListDetail`,
-  `SupportingPane`, `ContentColumn` for forms and auth, `AdaptiveGrid`, `AdaptiveSheet` instead of a
+  `SupportingPane`, `ContentColumn` for forms and auth (`gutter = false` when its children inset
+  themselves — settings sections, cards), `AdaptiveGrid`, `AdaptiveSheet` instead of a
   bare `FlowModal` for forms (`ConfirmSheet` is already a dialog on wide windows), `AdaptiveMenu`
   for a row's actions. Their slots say which form they are in (`layout`, `isTwoPane`,
   `isSupportingInline`): draw a back action only when `!isTwoPane`, a "Filters" button only when
@@ -430,7 +443,8 @@ off its `bounds`, and while its `state` is `FoldState.HalfOpened` lay each half 
   `EdgeButtonEmphasis.Primary` in the column; it follows the reach too), its sync or offline state in
   `status` as an `EdgeStatus` with the full text in `footer`, search in `onSearch`. Never draw
   your own buttons along the column's edge or across `ArecaTheme.window`'s top as a toolbar.
-  Placement, the screen states and a shell of your own: reference/adaptive-shell.md.
+  Placement, the screen states and a shell of your own from its parts (`EdgeColumn`,
+  `VerticalTabBar`, `NavRail`, `FloatingSidebar`): reference/adaptive-shell.md.
 - Desktop affordances come with the components; do not build them by hand. Put
   `Modifier.contextMenu(menu)` on a row that has an `AdaptiveMenu`, ahead of its `clickable`: it
   opens the menu on a right-click, a long press, the Menu key and the accessibility long-click, and
@@ -439,7 +453,7 @@ off its `bounds`, and while its `state` is `FoldState.HalfOpened` lay each half 
   title — in `TooltipBox(text)`, and still give it a description for assistive technology. Areca's
   lists, grids and tables draw a scrollbar under a pointer; beside a `verticalScroll` or a
   `LazyColumn` of your own add `VerticalScrollbar(state, Modifier.align(Alignment.CenterEnd)
-  .fillMaxHeight())` in a `Box`. `ListDetail`'s divider drags under a pointer
+  .fillMaxHeight())` in a `Box` (`HorizontalScrollbar` for a row). `ListDetail`'s divider drags under a pointer
   (`resizable = false` pins it). None of these draws or reacts under touch.
 - Size presets already follow the input: `ButtonSize.Medium` is 48dp under touch and 36dp under a
   pointer, read from `ArecaTheme.sizing`, and screen gutters widen with the window. Never hard-code a
@@ -469,7 +483,7 @@ Every foundation family, by intent. Signatures, overloads and packages:
 | Intent | Use |
 | --- | --- |
 | Primary action; secondary; cancel or skip | `Button(text, onClick)`; `ButtonStyle.soft()` / `outlined()`; `ButtonStyle.plain(ActionColor.Neutral)` |
-| Destructive action | `ButtonStyle.soft(ActionColor.Danger)` confirmed with `ConfirmSheet` (phone) or `ConfirmationDialog` (centred, suspend handlers) |
+| Destructive action; a choice inside the confirmation ("now" or "after the next payment") | `ButtonStyle.soft(ActionColor.Danger)` confirmed with `ConfirmSheet(style = ConfirmSheetStyle.Danger)` (a centred dialog on wide windows) or `ConfirmationDialog` (centred, suspend handlers); `ConfirmSheet(extra = { ConfirmSheetRows { RadioListItem(…) } })` |
 | Icon-only action | `IconButton(imageVector, contentDescription, onClick)` |
 | Icon that is on or off — favourite, pin, mute | `IconToggleButton(checked, onCheckedChange, imageVector, contentDescription, checkedImageVector = …)`; in a top bar `FavoriteAction` |
 | Link; prompt plus link | `TextLink`; `TextLinkPrompt` ("No account? Sign up") |
@@ -480,16 +494,16 @@ Every foundation family, by intent. Signatures, overloads and packages:
 | Password and its rules; search; amount with unit | `PasswordField` + `RequirementList`; `SearchField`; `AffixTextField` |
 | One-time code; compound input | `OtpField`; `FieldRow { SelectSegment(…); TextSegment(…) }` |
 | A custom control drawn as a field; label and message around it without wiring | `Field(onClick = …) { … }`; `FieldGroupLayout` (prefer `FieldGroup`) |
-| Pick from a short list in a form; in a sheet (theme, language — compact; currency, bank — tall with search); grouped ("Yours", "Popular", "All" by letter) with "add your own" | `SelectField`; `SelectFlowModal(controller, title, values, options)`; `SelectFlowModal(sections = listOf(SelectOptionSection(…)), onCreateOption = …)` |
+| Pick from a short list in a form; in a sheet (theme, language — compact; currency, bank — tall with search); grouped ("Yours", "Popular", "All" by letter) with "add your own" | `SelectField` (a custom dropdown `content` draws `SelectFlowModalDefaults.MenuList`); `SelectFlowModal(controller, title, values, options)` (`onQueryChange` + `searchPlaceholder` for search, `headerBottom` for a line under the title); `SelectFlowModal(sections = listOf(SelectOptionSection(…)), onCreateOption = …)` |
 | One toggle chip; applied filters with a cross | `Chip(label, selected, onSelectedChange)`; `Chip(label, onRemove = …, removeContentDescription = …, leading = { … })` |
 | Plan picker, paywall, options shown as cards | `ChoiceCard(selected, onClick, badge = …, trailing = …) { … }` in a `Column(Modifier.selectableGroup())`; `mode = ChoiceCardMode.Multiple` for several; `BottomActionBar` to commit |
 | Filter chips; colour; small integer | `BadgeSelect` / `FlowBadgeSelect` / `LazyBadgeSelect` with `BadgeStyle.Chip` (`FilledChip` to fill the unchosen ones) + `BadgeSize.Chip`; `SwatchPicker` (one chip `Swatch`); `NumberStepper` |
-| On/off setting; tick in a form; one of many | `Toggle`; `Checkbox`; `Radio`, each inside its row: `ToggleListItem`, `CheckboxListItem`, `RadioListItem`, `CheckmarkListItem` (a tick, `ListItemCheckmark` by hand), or the settings rows |
+| On/off setting; tick in a form (a parent of mixed children); one of many | `Toggle`; `Checkbox` (`indeterminate = true` draws the dash whatever `checked` is; a tap still asks for `!checked`); `Radio`, each inside its row: `ToggleListItem`, `CheckboxListItem`, `RadioListItem`, `CheckmarkListItem` (a brand tick, `ListItemCheckmark` by hand), or the settings rows |
 | Settings screen; a short, bounded group of rows | `Settings { Section { SettingsToggleRow / SettingsSelectRow / SettingsRow / SettingsTextFieldRow / SettingsOptionRow } }`; leading `SettingsRowIcon` / `SettingsRowTile`; loading row `SettingsRowSkeleton`; free content `SettingsBlock` |
 | Form of "label … value" rows, with units | `Section { SettingsTextFieldRow(title = "Width", suffix = { SettingsTextFieldSuffix("cm", onClick = …) }) }` |
 | Second action in a pressable row; line of detail under a subtitle | `trailing = { SettingsRowLink("Verify", onVerify) }`; the row's `caption` slot |
-| Grouped rows on one surface | `List { item(…) }` (eager), `LazyList` (lazy), `ListItemColumn` (hand-composed `ListItem`s); hairlines start at each row's text, past its leading icon |
-| Row that navigates; row that expands | `NavigationListItem`; `ExpandableListItem` (`container = ExpandableListItemContainer.Soft` for one soft ground with what it reveals) |
+| Grouped rows on one surface | `List { item(…) }` (eager), `LazyList` (lazy), `ListItemColumn` (hand-composed `ListItem`s); hairlines start at each row's text, past its leading icon, with no `separatorInset` of yours |
+| Row that navigates; row that expands; with a control before its chevron | `NavigationListItem`; `ExpandableListItem` (`container = ExpandableListItemContainer.Soft` for one soft ground with what it reveals); `ExpandableListItem(trailing = { Checkbox(…) })` — a checkbox for the whole group |
 | Remote list with loading, empty and error faces | `ContentList` (one load), `PagedContentList` (pages, pull-to-refresh); with group headers `GroupedContentList`, `GroupedPagedContentList` (`groupLayout = ContentListGroupLayout.Inset` for a card per group, header inside) |
 | Grid with group headers; tabular data | `LazyVerticalGroupedGrid` / `LazyHorizontalGroupedGrid`; `Table` / `LazyTable` |
 | Grouping surface; with status and actions along its bottom | `Card` (expandable overload); `Card(footer = { … }, footerStyle = CardFooterStyle.soft(ActionColor.Brand))` |
@@ -499,7 +513,7 @@ Every foundation family, by intent. Signatures, overloads and packages:
 | Floating primary action; toasts above the bars | `BaseLayout(floatingAction = { Button(text, onClick, leading = { Icon(…) }) })`; `BaseLayout(toastState = toasts)` |
 | Total or summary over its breakdown on a rounded panel | `PanelLayout(contentPadding = padding, header = { … }, panel = { … })` |
 | Back to the top when the selected tab is tapped again | `listState.ScrollToTopOnTabReselect()` (`ScrollState`, `LazyListState`, `LazyGridState`); `OnTabReselect { … }` |
-| Screen frame; title bar; large collapsing title | `BaseLayout`; `TopBar` with `BackAction` and the named controls (`CloseAction`, `OverflowAction`, `DoneAction`, `IconAction`, `TextAction`, `AvatarAction`, … or `Action` for custom content); `LargeTopBar` + `rememberTopBarScrollState(TopBarScrollBehavior.ExitUntilCollapsed)` |
+| Screen frame; title bar; large collapsing title | `BaseLayout`; `TopBar` with `BackAction` and the named controls (`CloseAction`, `DoneAction`, `CancelAction`, `SearchAction`, `FilterAction`, `NotificationsAction`, `OverflowAction`, `AvatarAction`, … `IconAction` / `TextAction` for any other, or `Action` for custom content); `LargeTopBar` + `rememberTopBarScrollState(TopBarScrollBehavior.ExitUntilCollapsed)` |
 | Progress under the bar; collapsing hero | `TopBarProgress` in the bar's `bottom`; `CollapsingHeaderLayout` (`collapsed = { … }` for a compact band that stays) |
 | App destinations; views within a screen; sidebar | `TabBar` / `FloatingTabBar` (items drawn with `FloatingTabBarItemContent`); `Tabs` (`TabsVariant.Underline`); `NavList` (one custom row `NavItem`) |
 | Segmented choice of a setting; words with a moving pill; three-state toggle (has / avoid / either) | `SlidingSelector(items = listOf(SelectorItem(value) { Text(…) }), selected, onSelectedChange)` — `style = SlidingSelectorStyle.Segmented` (default) / `Pill` / `Underline` / `Button`, `layout = SelectorLayout.Fill` (default) / `Hug` / `Scroll`; three-state: the `onSelect: (T?) -> Unit` form with `mode = SelectorMode.Optional` (tapping the chosen option calls `onSelect(null)`) with a `thumb` colour per `SelectorItem`. Not `Tabs` for a setting: `Tabs` switch views |
@@ -589,7 +603,9 @@ A row's slots carry fixed roles; plain `Text("…")` in a slot takes the role's 
 - Draw with `AmountText(Amount(whole, fraction, decimalMark, symbol, symbolPlacement, sign,
   spokenText))`. It sets tabular figures, draws the minor units and the symbol a step smaller
   (`minorScale`, `0.7f`), and lays the symbol and the figures out as separate texts left to right, so
-  `د.إ 1 284,50` keeps its order without control characters.
+  `د.إ 1 284,50` keeps its order without control characters. A currency sign before the figures
+  sits against them with no gap (`€12`); a symbol with letters (`CHF 12`) or after the figures
+  (`12 kr`) stands a small gap apart. Pass the bare symbol: never pad it with a space.
 - In a row, the amount goes in the `value` or `trailing` slot as `AmountText(…)` with no `style`:
   it takes the slot's type. Never two `Text`s with `fontWeight`, and never `fontWeight` on a figure
   in a row slot.
@@ -680,8 +696,9 @@ Section(
 ) { SessionRow(session = current) }
 ```
 
-The band's default colour is the card's `well`, a step past the card on whatever surface it sits;
-use the danger tint under a danger row. One band per section, holding one row.
+The band's default colour is the card's `band` role (`ArecaTheme.surface.band` inside the card), a
+step past its `well`, so it reads against the card and the page around it on whatever surface the
+card sits; use the danger tint under a danger row. One band per section, holding one row.
 
 ### Card footers
 
@@ -710,10 +727,16 @@ grey page, inside a white card and in a sheet.
 - A sheet is already a segment: its content lies flat on it. Rows (`ListItem`, settings rows,
   `SelectFlowModal` options), fields and headers sit straight on the sheet's ground at its 16dp
   gutter; a `Section` there draws flat on its own (no fill, rows edge to edge, hairlines from the
-  text). A `Card` in a sheet is emphasis only — a total, a plan to choose (`ChoiceCard`). Never wrap
-  a sheet's form, list or settings in cards or a `RaisedSurface` block, and never add side padding
-  around rows; action sheets are plain `ListItem` rows with a leading glyph (danger ink for a
-  destructive one), as `AdaptiveMenu` lists them.
+  text). A `Card` in a sheet is emphasis only — a total, a plan to choose (`ChoiceCard`); a
+  `Section` whose style names a `bg` (`SettingsDefaults.sectionStyle(bg = …)`) keeps its card,
+  for the same reason. Never wrap a sheet's form,
+  list or settings in cards or a `RaisedSurface` block, and never add side padding around rows;
+  action sheets are plain `ListItem` rows with a leading glyph (danger ink for a destructive one),
+  as `AdaptiveMenu` lists them. The one deliberate exception is the attachment source sheet's
+  `AttachmentSourceSheet(layout = AttachmentChoiceLayout.Bento)` (`flow-attachments`): two to four
+  sources as cards, one leading.
+- `AuthScaffold` (`flow-auth`) lies on the sheet's ground in light: a white page whatever the
+  layout. Never repaint sign-in screens or wrap them in `ProvideSurface` to whiten them.
 - Levels: `BaseLayout` puts content on the page; `Card`, `Section`, `Notice` and `ContentList` inset
   groups put theirs one level up (Page → Card → Inset → Card …). A transparent card
   (`CardStyle.Outlined`, `GhostNeutral`) keeps the surface it sits on.
@@ -880,6 +903,12 @@ packages and dependencies, then open the module's file:
       sheet is `FlowModal(visible = …)`, a sheet about one item `FlowModal(item = …)`; navigation
       after a sheet waits for `hideAndWait()`.
 - [ ] Sheet headers are `FlowModalTopBar`; no app sheet header.
+- [ ] Sheet content lies flat: no cards, `RaisedSurface` blocks or side padding around a sheet's
+      rows, fields or sections; a card in a sheet only for emphasis.
+- [ ] Sheets size to their content: no `autoHeight`; a long body scrolls, a body that must stay
+      tall takes `Modifier.fillMaxHeight()`; `allowPartial` only for a long list that may peek.
+- [ ] Choices in a sheet are `SelectFlowModal`; a single-choice `onChange` stores the value and
+      does not hide the sheet.
 - [ ] A floating action is `BaseLayout(floatingAction = …)` and toasts `BaseLayout(toastState = …)`;
       no hand-made offsets or bottom spacers.
 - [ ] Empty and failed regions are `Fallback(title, tone = …)` or the slot form; loading faces go

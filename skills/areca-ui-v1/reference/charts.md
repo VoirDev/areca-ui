@@ -124,8 +124,11 @@ ColumnChartColumn<K>(
 )
 ColumnChartBar(segments: List<ColumnChartSegment>, companion: Boolean = false)
 ColumnChartBar.of(value: Float, color: Color? = null)          // plain bar
+ColumnChartBar.of(value: Float, brush: Brush)                  // plain bar filled with a gradient
 ColumnChartBar.companion(value: Float, color: Color? = null)   // slim bar: the same period a year earlier
-ColumnChartSegment(value: Float, color: Color? = null)         // several stack from the baseline up
+ColumnChartSegment(value: Float, color: Color? = null, brush: Brush? = null)   // several stack from the baseline up
+// A brush is drawn in place of color and spans the whole plot, so a vertical gradient shades every
+// bar alike by height.
 ColumnChartReferenceLine(value: Float, label: String? = null, color: Color? = null)
 ColumnChartValueLabels.None | Selected | All
 ColumnChartLayout.Scroll | Fill
@@ -209,8 +212,14 @@ configuration change.
 
 ### Colours
 
-- Bar chart: one `BarChartColor` family colours bars and tracks: `BarChartStyle.of(BarChartColor.Info)`.
-  Per bar: `fill`, `trackColor`.
+- Bar chart: one `BarChartColor` family colours bars and tracks: `BarChartStyle.of(BarChartColor.Info)`
+  — bars in the family's `bg…Base`, tracks in its `bg…Muted` (`Neutral`: `bgContrastMuted` on
+  `bgNeutralMuted`). Per bar: `fill`, `trackColor`.
+- Grounds follow the surface the chart is drawn on (`ArecaTheme.surface`): the bar chart's `bg` and
+  `plotBg` are its `ground`, axis and guides its `separator`; the stacked bar's and the meter bar's
+  track and the column chart's companion bars its `well`; a reference label's backing and a line
+  marker's ring its `ground`. A chart is then right on a grey page, in a white card and in a sheet;
+  never restyle these with a fixed grey such as `bgSubtle` or `bgMuted`.
 - Stacked bar, column, line: a segment, bar or series without its own `color` takes
   `palette[index % palette.size]`. A stacked segment's index counts every segment, drawn or not,
   so a category keeps its colour at zero. A palette must not be empty.
@@ -246,7 +255,7 @@ configuration change.
 | --- | --- | --- |
 | `BarChart` | `BarChartStyle` · `LocalBarChartStyle` · `of(color: BarChartColor, bg, plotBg, axis, guide, xLabel, groupLabel, yLabel)`; `Default` = `of(Brand)` | `BarChartSize` · `LocalBarChartSize` · `Small` (160 dp plot), `Medium` (220), `Large` (280) |
 | `StackedBarChart` | `StackedBarChartStyle` · `LocalStackedBarChartStyle` · `default(track, palette)` | `StackedBarChartSize` · `LocalStackedBarChartSize` · `Tiny` (4 dp, hairline gaps, under a pair of figures), `ExtraSmall` (8 dp, hairline gaps), `Small` (12), `Medium` (24), `Large` (40) |
-| `ColumnChart` | `ColumnChartStyle` · `LocalColumnChartStyle` · `default(palette, companion, halo, baseline, referenceLine, referenceLabel, referenceLabelBg, label, labelSelected, sublabel, valueLabel, placeholder, dimmedAlpha = 0.45f)` | `ColumnChartSize` · `LocalColumnChartSize` · `Small` (110 dp plot, 48 dp columns), `Medium` (150), `Large` (200) |
+| `ColumnChart` | `ColumnChartStyle` · `LocalColumnChartStyle` · `default(palette, companion, halo, baseline, referenceLine, referenceLabel, referenceLabelBg, label, labelSelected, sublabel, valueLabel, placeholder, dimmedAlpha = 0.45f)` | `ColumnChartSize` · `LocalColumnChartSize` · `Small` (110 dp plot, 48 dp columns), `Medium` (150, 58), `Large` (200, 72); `barBaseCornerRadius = 0.dp` stands bars square on the baseline — `copy(barBaseCornerRadius = barCornerRadius)` for free-standing rounded bars |
 | `LineChart` | `LineChartStyle` · `LocalLineChartStyle` · `default(palette, grid, label, rule, markerRing, tooltipBg, tooltipContent, areaAlpha = 0.22f)` | `LineChartSize` · `LocalLineChartSize` · `Default` (140 dp plot), `default(height, lineStroke, …)` |
 | `MeterBar` | `MeterBarStyle` · `LocalMeterBarStyle` · `default(track, fill, marker)` | `MeterBarSize` · `LocalMeterBarSize` · `Slim` (4 dp), `Medium` (6), `Large` (10) |
 | `ChartLegend` | `ChartLegendStyle` · `LocalChartLegendStyle` · `default(label)` | `ChartLegendSize` · `LocalChartLegendSize` · `Default`, `default(square, dot, lineLength, …, textStyle)` |
@@ -256,14 +265,17 @@ configuration change.
   `BarChartSize.Medium.copy(yLabelWidth = 56.dp)` for long tick labels,
   `ColumnChartSize.Medium.copy(columnWidth = 48.dp)`.
 - Every `Default` is `default()` (bar: `of(BarChartColor.Brand)`); all are built in composition.
-- `ArecaThemeProvider` does not seed the chart locals; provide them around the screens that want
-  another default:
+- `ArecaThemeProvider` does not seed the chart locals. Provide an app-wide default in the provider's
+  `componentDefaults`, or around the screens that want another default:
 
 ```kotlin
-CompositionLocalProvider(
-    LocalBarChartStyle provides BarChartStyle.of(BarChartColor.Info),
-    LocalBarChartSize provides BarChartSize.Small,
-) { Dashboard() }
+ArecaThemeProvider(
+    componentDefaults = ComponentDefaults {
+        arrayOf(LocalBarChartStyle provides BarChartStyle.of(BarChartColor.Info))
+    },
+) { App() }
+
+CompositionLocalProvider(LocalBarChartSize provides BarChartSize.Small) { Dashboard() }
 ```
 
 ## Snippets

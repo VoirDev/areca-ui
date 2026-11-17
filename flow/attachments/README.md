@@ -210,6 +210,7 @@ fun AttachmentSheets(state: AttachmentsState, viewModel: AttachmentsViewModel, c
                     title = stringResource(Res.string.remove_attachment_title),
                     description = stringResource(Res.string.remove_attachment_description),
                     confirmText = stringResource(Res.string.remove),
+                    style = ConfirmSheetStyle.Danger,
                     onConfirm = viewModel::confirmRemove,
                     onDismiss = viewModel::dismissRemove,
                 )

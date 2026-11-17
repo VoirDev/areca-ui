@@ -115,7 +115,7 @@ class SizingRenderTest {
                 ListItem(title = { Text("Exchange rates") }, size = ListItemSize.Medium, onClick = {})
                 ListItem(
                     title = { Text("Everyday") },
-                    subtitle = { Text("Debit card · Revolut") },
+                    subtitle = { Text("Debit card · Northbank") },
                     size = ListItemSize.Comfortable,
                     onClick = {},
                     trailing = { Checkbox(checked = true, onCheckedChange = {}) },

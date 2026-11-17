@@ -52,9 +52,10 @@ AuthBranding(
 )
 AuthLayout.Plain | HeroTop(fraction: Float = 0.42f) | HeroBottom(fraction: Float = 0.42f) | HeroInline | FullBleed
     | Split(fraction: Float = 0.42f, fallback: AuthLayout = HeroTop())
-    // fraction within AuthLayout.MinHeroFraction (0.1f) .. MaxHeroFraction (0.8f); height share for
-    // HeroTop/HeroBottom, width share for Split. Split draws from WidthClass.Expanded (840dp) up while
-    // HeightClass > Compact (ArecaTheme.window); elsewhere it draws `fallback`.
+    // fraction defaults to AuthLayout.DefaultHeroFraction (0.42f), clamped to MinHeroFraction (0.1f)
+    // .. MaxHeroFraction (0.8f); height share for HeroTop/HeroBottom, width share for Split. Split
+    // draws from WidthClass.Expanded (840dp) up while HeightClass > Compact (ArecaTheme.window);
+    // elsewhere it draws `fallback`.
 AuthProvider.Apple | Google | Facebook | Email
 AuthLegalLinks(terms: String = "terms", privacy: String = "privacy")   // handed back to onLinkClick
 
@@ -95,7 +96,8 @@ object AuthScaffoldDefaults { val MaxWidth: Dp /* 480.dp */ }
     error: String? = null, newAccount: Boolean = false, focusRequester: FocusRequester? = null,
     imeAction: ImeAction = ImeAction.Done, onImeAction: (() -> Unit)? = null,
     label: String = "Password", placeholder: String? = null,
-    revealDescription: String = "Show password", hideDescription: String = "Hide password",
+    revealDescription: String = ArecaTheme.labels.showPassword,   // "Show password"
+    hideDescription: String = ArecaTheme.labels.hidePassword,     // "Hide password"
     enabled: Boolean = true,
 )
 @Composable fun AuthCodeField(
@@ -214,6 +216,10 @@ object AuthScaffoldDefaults { val MaxWidth: Dp /* 480.dp */ }
   `fallback`. Pass `hero` artwork that crops to any shape (`ContentScale.Crop`, `fillMaxSize`). The
   body sits in a `WindowClassBox`, so parts inside see the column's width class. Preview at
   `ProvideWindowClass(WindowClass(DpSize(1440.dp, 900.dp), InputMode.Pointer)) { … }`.
+- **Ground:** in light the scaffold lies on the sheet's ground — white whatever the surface layout,
+  which the provider buttons and the identity chip are drawn for; in dark it keeps the screen's own
+  ground. Never repaint it: no `background`, no `ProvideSurface(root = SurfaceRoot.Sheet)` wrapper,
+  no `BaseLayout(bg = …)` around it.
 - **Top bar:** a screen reached from another takes foundation `TopBar` in `topBar` with
   `BackAction`. The scaffold lands its controls on the gutter and uses `TopBarStyle.Scrim` over
   `FullBleed`. When changing the bar's size, start from `LocalTopBarSize.current ?: TopBarSize.Default`
@@ -227,10 +233,11 @@ object AuthScaffoldDefaults { val MaxWidth: Dp /* 480.dp */ }
 
 ## Words and accessibility
 
-- Required words default to English — field `label`s, `revealDescription` / `hideDescription`,
-  `changeLabel`, `verifiedDescription`, `actionText`, `LegalConsent` `sentence` / `termsLabel` /
-  `privacyLabel`, provider labels (`providerLabel`, `label`, `contentDescription`). Pass the app's
-  strings for every one.
+- Required words default to English — field `label`s, `changeLabel`, `verifiedDescription`,
+  `actionText`, `LegalConsent` `sentence` / `termsLabel` / `privacyLabel`, provider labels
+  (`providerLabel`, `label`, `contentDescription`). Pass the app's strings for every one.
+- `revealDescription` / `hideDescription` come from the theme's `ArecaLabels` (`showPassword`,
+  `hidePassword`): localise them once in `ArecaThemeProvider(labels = …)`, not per field.
 - Optional words default to `null` and draw nothing: `placeholder`, `dividerText`, `onChangeLabel`,
   `prompt`, `sent`, `cooldown`, `assistive`, banner `title`.
 - `AuthBanner.contentDescription` joins title and message for screen readers — localise it and add a

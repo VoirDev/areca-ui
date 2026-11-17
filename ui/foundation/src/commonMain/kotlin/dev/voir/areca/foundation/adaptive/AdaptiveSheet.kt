@@ -62,7 +62,7 @@ public fun AdaptiveSheet(
         }
     } else {
         // A form is as tall as it is, not a fixed share of the window.
-        val controller = rememberFlowModal(allowPartial = false)
+        val controller = rememberFlowModal()
         LaunchedEffect(visible) {
             if (visible) controller.show(partial = false) else controller.hide()
         }

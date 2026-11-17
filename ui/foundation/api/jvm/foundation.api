@@ -7561,6 +7561,7 @@ public final class dev/voir/areca/theme/ArecaSurfaces$Companion {
 
 public final class dev/voir/areca/theme/ArecaSurfacesKt {
 	public static final fun ProvideSurface (Ldev/voir/areca/theme/SurfaceLevel;Ldev/voir/areca/theme/SurfaceRoot;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+	public static final fun ProvideSurface-Iv8Zu3U (JLkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
 	public static final fun RaisedSurface (Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
 }
 

@@ -3,7 +3,8 @@
 A tab that reads a spending history and lets the reader pick one period of it. A segmented switch
 picks the step; the period's figures sit above a column chart that is also the picker — tapping a
 column selects it, and every section below follows the selection, except "your usual month", which
-stays fixed so it can be compared against. Each category opens to its subcategories.
+stays fixed so it can be compared against. Each category opens to its subcategories. The switch,
+figures and chart head the page on its grey ground; the sections under them sit on cards.
 
 Needs `dev.voir.areca:foundation`, `dev.voir.areca:charts`, and `dev.voir.areca:icons` for the
 "back to latest" glyph.
@@ -14,11 +15,13 @@ Needs `dev.voir.areca:foundation`, `dev.voir.areca:charts`, and `dev.voir.areca:
 | --- | --- | --- |
 | `SlidingSelector` | foundation | The week, month or year switch |
 | `Stat` and `StatGrid` | foundation | Figures with their labels, in equal columns |
+| `Card` | foundation | The ground of the usual figures and of the categories, on the grey page |
 | `StackedBarChart` | charts | The period's spending against what was kept |
 | `ColumnChart`, `ColumnChartColumn`, `ColumnChartBar`, `ColumnChartReferenceLine` | charts | Every period as a column of income and spending, with the usual spend as a line. Selecting a column is the picker |
 | `ChartLegend` | charts | What the colours and the line stand for |
 | `IconButton` | foundation | "Back to latest", shown only when an older period is selected |
-| `ExpandableListItem` with `ExpandableListItemContainer.Soft` | foundation | A category that opens to its subcategories |
+| `ExpandableListItem` | foundation | A category that opens to its subcategories |
+| `AmountText` | foundation | A category's amount, in the row's type with tabular figures |
 | `MeterBar` | charts | A category's share, with a marker at its usual share |
 | `ListItem` | foundation | A subcategory |
 
@@ -58,20 +61,23 @@ import dev.voir.areca.foundation.button.ActionColor
 import dev.voir.areca.foundation.button.IconButton
 import dev.voir.areca.foundation.button.IconButtonSize
 import dev.voir.areca.foundation.button.IconButtonStyle
+import dev.voir.areca.foundation.layout.Card
 import dev.voir.areca.foundation.list.ExpandableListItem
-import dev.voir.areca.foundation.list.ExpandableListItemContainer
 import dev.voir.areca.foundation.list.ListItem
 import dev.voir.areca.foundation.selection.SelectorItem
 import dev.voir.areca.foundation.selection.SelectorLayout
 import dev.voir.areca.foundation.selection.SlidingSelector
 import dev.voir.areca.foundation.stat.Stat
 import dev.voir.areca.foundation.stat.StatGrid
+import dev.voir.areca.foundation.text.Amount
+import dev.voir.areca.foundation.text.AmountText
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.foundation.text.TextColor
 import dev.voir.areca.foundation.text.TextVariant
 import dev.voir.areca.icons.ArecaIcons
 import dev.voir.areca.icons.RefreshCcw
 import dev.voir.areca.theme.ArecaTheme
+import dev.voir.areca.theme.horizontalContentInsets
 ```
 
 ```kotlin
@@ -84,6 +90,8 @@ data class PeriodSummary(
     val title: String,
     val income: Float,
     val spent: Float,
+    val incomeText: String,
+    val spentText: String,
     val description: String,
 )
 
@@ -91,12 +99,12 @@ data class PeriodSummary(
 @Immutable
 data class CategoryShare(
     val name: String,
-    val amount: String,
+    val amount: Amount,
     val detail: String,
     val share: Float,
     val usualShare: Float,
     val usualAmount: String,
-    val subcategories: List<Pair<String, String>>,
+    val subcategories: List<Pair<String, Amount>>,
 )
 
 /**
@@ -123,13 +131,13 @@ fun AnalyticsOverview(
 
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.xl3)) {
         Column(
-            modifier = Modifier.padding(horizontal = ArecaTheme.spacing.horizontalContentInsets),
+            modifier = Modifier.horizontalContentInsets(),
             verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg),
         ) {
             SlidingSelector(
                 items = listOf("Week", "Month", "Year").map { SelectorItem(it) { Text(it) } },
                 selected = step,
-                onSelect = { if (it != null) step = it },
+                onSelectedChange = { step = it },
                 layout = SelectorLayout.Hug,
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -145,8 +153,8 @@ fun AnalyticsOverview(
                 }
             }
             StatGrid {
-                Stat(label = "Income", value = "€${period.income.toInt()}")
-                Stat(label = "Expenses", value = "€${period.spent.toInt()}")
+                Stat(label = "Income", value = period.incomeText)
+                Stat(label = "Expenses", value = period.spentText)
             }
             StackedBarChart(
                 segments = listOf(
@@ -185,45 +193,49 @@ fun AnalyticsOverview(
                     ChartLegendItem("Spent", ChartSwatch.Square(spent)),
                     ChartLegendItem("Usual spend", ChartSwatch.DashedLine(ArecaTheme.colors.fgDangerText)),
                 ),
-                modifier = Modifier.padding(horizontal = ArecaTheme.spacing.horizontalContentInsets),
+                modifier = Modifier.horizontalContentInsets(),
             )
         }
 
         Column(
-            modifier = Modifier.padding(horizontal = ArecaTheme.spacing.horizontalContentInsets),
-            verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg),
+            modifier = Modifier.horizontalContentInsets(),
+            verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md),
         ) {
             Text("Your usual month", variant = TextVariant.HeadingExtraSmall)
-            StatGrid {
-                usual.forEach { (label, value, note) -> Stat(label = label, value = value, note = note) }
+            Card(modifier = Modifier.fillMaxWidth()) { padding ->
+                StatGrid(modifier = Modifier.padding(padding)) {
+                    usual.forEach { (label, value, note) -> Stat(label = label, value = value, note = note) }
+                }
             }
         }
 
-        Column(modifier = Modifier.padding(horizontal = ArecaTheme.spacing.md)) {
-            categories.forEach { category ->
-                ExpandableListItem(
-                    expanded = open == category.name,
-                    onExpandedChange = { open = if (it) category.name else null },
-                    title = { Text(category.name) },
-                    value = { Text(category.amount) },
-                    // The meter is part of the row, so a tap on it opens the category too.
-                    bottom = {
-                        Column(verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md)) {
-                            MeterBar(
-                                fraction = category.share,
-                                marker = category.usualShare,
-                                color = spent,
-                                contentDescription = "Usual ${category.usualAmount}",
-                            )
-                            Text(category.detail, variant = TextVariant.BodyExtraSmall, color = TextColor.Subtle)
+        // The rows bring their own 16dp inset, so the card's padding is not applied.
+        Card(modifier = Modifier.fillMaxWidth().horizontalContentInsets()) { _ ->
+            Column {
+                categories.forEach { category ->
+                    ExpandableListItem(
+                        expanded = open == category.name,
+                        onExpandedChange = { open = if (it) category.name else null },
+                        title = { Text(category.name) },
+                        // Formatted parts, drawn in the slot's type: no style, no fontWeight.
+                        value = { AmountText(category.amount) },
+                        // The meter is part of the row, so a tap on it opens the category too.
+                        bottom = {
+                            Column(verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md)) {
+                                MeterBar(
+                                    fraction = category.share,
+                                    marker = category.usualShare,
+                                    color = spent,
+                                    contentDescription = "Usual ${category.usualAmount}",
+                                )
+                                Text(category.detail, variant = TextVariant.BodyExtraSmall, color = TextColor.Subtle)
+                            }
+                        },
+                        onClickLabel = "Show subcategories",
+                    ) {
+                        category.subcategories.forEach { (name, amount) ->
+                            ListItem(title = { Text(name) }, value = { AmountText(amount) }, nestingLevel = 1)
                         }
-                    },
-                    showChevron = false,
-                    container = ExpandableListItemContainer.Soft,
-                    onClickLabel = "Show subcategories",
-                ) {
-                    category.subcategories.forEach { (name, amount) ->
-                        ListItem(title = { Text(name) }, value = { Text(amount) }, nestingLevel = 1)
                     }
                 }
             }
@@ -232,9 +244,12 @@ fun AnalyticsOverview(
 }
 ```
 
-- **The data arrives finished.** The presentation layer hands over periods already summed, labelled
-  and described; the charts draw numbers and strings, they do not aggregate or format. Put the
-  latest period last.
+- **The data arrives finished.** The presentation layer hands over periods already summed, labelled,
+  formatted and described; the charts draw numbers and strings, they do not aggregate or format.
+  Amounts in rows are `Amount`s in parts, drawn with `AmountText`. Put the latest period last.
+- **Cards on the page.** The rows and the usual figures sit on cards; the switch, title, figures and
+  chart above them head the page, as a `PanelLayout` header does. Rows bring their own start
+  padding, so nothing adds a gutter inside the categories' card.
 - **Describe every column.** Give each column a `contentDescription` that says the whole period
   ("October: income €4,250, spent €2,340"); the drawn labels alone ("Now") do not.
 - **Selection.** "Back to latest" selects the last key, and the chart scrolls to it. The chart stays
@@ -272,11 +287,14 @@ FlowModal(
         selectionMode = BadgeSelectionMode.Multiple,
         style = BadgeStyle.FilledChip,
         size = BadgeSize.Chip,
+        // Chips are not rows: they take the sheet's gutter themselves.
+        modifier = Modifier.horizontalContentInsets(),
     )
 }
 ```
 
-The sheet's controller comes from `rememberFlowModal()`; open it with `show()`.
+The sheet's controller comes from `rememberFlowModal()`; open it with `show()`. The chips lie flat
+on the sheet, with no card around them, and the sheet is as tall as they are.
 
 **A month day by day.** A `Calendar` from `dev.voir.areca:datetime` with `CalendarHeatDay` in its
 `day` slot, and `calendarHeatLevel` mapping amounts to the theme's `accentScale` shades; see

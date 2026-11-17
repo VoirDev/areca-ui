@@ -25,6 +25,10 @@ your own.
 | What a picture shows | `GalleryCaption(title, kicker = "From the brand", caption = …)` in the viewer's `footer` |
 | Whose photo it is | `GalleryAuthor(name = "Photo by Mara K.", letters = "M", detail = date, caption = …)` |
 | The gallery's one action | `GalleryPrimaryAction("Add to bag · $129", onClick)` |
+| Thumbnails in the viewer | media `ThumbnailStrip(count = viewer.itemCount, selectedIndex = viewer.currentIndex, onSelect = viewer::goTo, style = ThumbnailStripStyle.onDark())` in the `footer`, between the caption and the action |
+| A thumbnail rail beside the picture (desktop) | media `ThumbnailStrip(orientation = Orientation.Vertical, selectedIndex = state.currentItem, onSelect = { state.goToItem(it) })` |
+| Products marked on a picture (shop the look) | media `Hotspot` in the frame's `pictureOverlay`, the same overlay passed to `MediaViewerImage` so the markers follow its zoom |
+| The user's photo beside the catalogue's (photo match) | media `ComparePair(first, second, labels = CompareLabels("Your photo", "In our catalogue"), onOpen)` |
 | A grid page | `AdaptiveGrid(minCellWidth = 88.dp, maxColumns = adaptive(compact = 3, medium = 4, expanded = 6), horizontalSpacing = spacing.sm, verticalSpacing = spacing.none)` with a full-line `GalleryGroupHeader(title, count = "12", horizontalPadding = 0.dp)` per group and a `GalleryTile(model, contentDescription, onClick, Modifier.padding(vertical = spacing.xs), label = author, transition, transitionKey)` per picture |
 | Product cards | `AdaptiveGrid(minCellWidth = 140.dp, maxColumns = adaptive(compact = 2, medium = 3, expanded = 4))` of cards, each a `Carousel` of `MediaFrame`s |
 | A product page | `AdaptiveContent(compact = { ProductPage() }, expanded = { DesktopProductPage() })` — the README's two recipes |
@@ -47,8 +51,15 @@ your own.
 
 ## Rules
 
+- Open the viewer from the picture tapped: one `rememberMediaTransitionState()` passed to the frames
+  (`transition`, `transitionKey`, or `GalleryTile(transition, transitionKey)`) and to
+  `MediaViewer(transition, key)`, the viewer composed only while open (`open?.let { … }`).
 - Close the viewer with `viewer::dismiss` from the bar's `CloseAction`, so the picture shrinks back
-  into its frame.
+  into its frame, and follow it with `onIndexChange` (`hero.goToItem(it, animated = false)`) so that
+  frame is on screen.
+- The bar is `TopBar(style = MediaViewerStyle.dark().topBar())` — or the style the viewer was given —
+  with `TopBarTitleAlignment.Center`; the foot is a `Column` of `GalleryCaption` or `GalleryAuthor`,
+  a `ThumbnailStrip` and the `GalleryPrimaryAction`.
 - Word everything in the app's language: titles, counts, captions, author lines and action labels
   are parameters.
 - One `GalleryPrimaryAction` per gallery; leave it out where the gallery leads nowhere.

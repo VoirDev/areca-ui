@@ -51,7 +51,8 @@ Use `api` only when the module intentionally exposes Areca types in its public c
 The core types (`BaseViewModel`, `UiState`, `displayOrNull`, `RefreshGate`) live in
 `dev.voir.areca.viewmodel`; the list types (`BaseListViewModel`, `BaseSimpleListViewModel`,
 `ListState` and its `isEmpty`, `hasContent` and `isAnyOperationInProgress`, `PageResult`,
-`PagingMeta`, `ReloadStrategy`) live in `dev.voir.areca.viewmodel.list`. Every public declaration
+`PagingMeta`, `ReloadStrategy`, and the `NoFilter` / `NoSort` aliases for `Unit`) live in
+`dev.voir.areca.viewmodel.list`. Every public declaration
 with its parameters and defaults: [reference/api.md](reference/api.md).
 
 ## Model
@@ -293,7 +294,7 @@ throws `IllegalArgumentException` otherwise.
 | Operation | In flight | Success | Failure |
 | --- | --- | --- | --- |
 | `handleLoad` / `handleRetry` | Top-level `Loading` | Replace with page 1 | Top-level `Error` |
-| `handleRefresh` with content | `isRefreshing`, items kept | Replace with page 1 | Items kept, `refreshError` set |
+| `handleRefresh` while `Display` is shown | `isRefreshing`, items kept; ignored while already refreshing | Replace with page 1 | Items kept, `refreshError` set |
 | `handleLoadNextPage` / `handleRetryLoadNextPage` | `isLoadingNextPage` | Append the page | Pages kept, `nextPageError` set |
 | `handleUpdateFilters` / `handleClearFilters` / `handleUpdateSorting`, `ReloadStrategy.FullScreen` | Top-level `Loading` | Replace with page 1 | Top-level `Error`; retry uses the new query |
 | The same, `ReloadStrategy.Inline` | `isReloading`, items kept | Replace with page 1 | Items kept, previous query restored, `refreshError` set |
@@ -301,8 +302,9 @@ throws `IllegalArgumentException` otherwise.
 - Render `ListState.refreshError` with the retained content. `onRefreshError` is an optional extra,
   such as a snackbar effect; the failure is already in state.
 - Refresh and inline reload are full-screen when started from a loading or error screen.
-- Next-page loads run in a ViewModel-owned job, so the reducer stays free. Repeat requests are
-  ignored while one is in flight, during a refresh or inline reload, and while no content is shown.
+- Next-page loads run in a ViewModel-owned job, so the reducer stays free. Requests are ignored
+  while one is in flight, during a refresh or inline reload, after the last page
+  (`hasNextPage == false`), and while no `Display` is shown.
 - Any reload from page 1 cancels an in-flight next-page job and drops stale pages, so the
   `handle*` functions may also run in latest-wins jobs launched in `viewModelScope`.
 - Cancellation never sets an error and never calls `onRefreshError`.
@@ -314,7 +316,8 @@ throws `IllegalArgumentException` otherwise.
 - `pageSize` defaults to `BaseListViewModel.DEFAULT_PAGE_SIZE` (20) and is kept in
   `PagingMeta.pageSize`.
 
-`RefreshGate` rejects concurrent refreshes and requests inside its cooldown; it does not queue them.
+`RefreshGate` rejects concurrent refreshes and requests inside its cooldown, counted from the end of
+the last `runReserved`; it does not queue them.
 Every successful `tryReserve` must reach exactly one `runReserved`; `dispatch` never drops an
 action, so reserving in front of `dispatch` is safe. Create one gate per refresh owner;
 `RefreshGate(cooldown = RefreshGate.DEFAULT_COOLDOWN)` (1 s) is the default, and `Duration.ZERO`

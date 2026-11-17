@@ -96,7 +96,7 @@ public class AdaptiveToolbarAction(
  *
  * ```kotlin
  * AdaptiveToolbar(
- *     title = "Lidl",
+ *     title = "Corner Market",
  *     onBack = if (isTwoPane) null else { { selected = null } },
  *     actions = listOf(
  *         AdaptiveToolbarAction(ArecaIcons.Edit, "Edit", onClick = edit, primary = true),

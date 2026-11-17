@@ -5,6 +5,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.ImageComposeScene
 import androidx.compose.ui.unit.Density
+import dev.voir.areca.foundation.collection.ContentListGroup
+import dev.voir.areca.foundation.collection.PagedContentListState
 import dev.voir.areca.foundation.text.Amount
 import dev.voir.areca.media.LocalMediaImageLoader
 import dev.voir.areca.playground.media.SampleMediaImageLoader
@@ -75,13 +77,28 @@ class RecipesRenderTest {
                 filters = CatalogueFilters(families = setOf("Woody", "Floral"), inStockOnly = true),
                 draft = null,
                 families = listOf("Woody", "Floral", "Citrus", "Oriental"),
-                items = List(6) { CatalogueItem("$it", "Perfume ${it + 1}", "Eau de parfum · 50 ml") },
+                results = PagedContentListState(
+                    items = listOf(
+                        ContentListGroup(
+                            key = "Woody",
+                            group = "Woody",
+                            items = List(4) { CatalogueItem("woody-$it", "Perfume ${it + 1}", "Eau de parfum · 50 ml") },
+                        ),
+                        ContentListGroup(
+                            key = "Floral",
+                            group = "Floral",
+                            items = List(2) { CatalogueItem("floral-$it", "Perfume ${it + 5}", "Eau de toilette · 100 ml") },
+                        ),
+                    ),
+                    hasNextPage = false,
+                ),
                 onQueryChange = {},
                 onFiltersChange = {},
                 onOpenFilters = {},
                 onDraftChange = {},
                 onApplyDraft = {},
                 onDismissFilters = {},
+                onLoadNextPage = {},
                 onOpenItem = {},
             )
         }
@@ -92,8 +109,8 @@ class RecipesRenderTest {
         render("recipe-product") {
             ProductDetailScreen(
                 product = ProductUi(
-                    name = "Iris Nobile",
-                    maker = "Acqua di Parma",
+                    name = "Iris Twelve",
+                    maker = "Maison Verte",
                     price = Amount(whole = "142", fraction = "00", symbol = "€"),
                     pictures = listOf(SamplePicture(80, "Bottle", SampleShape.Bottle), SamplePicture(81, "Box", SampleShape.Bag)),
                     rating = "4.6",

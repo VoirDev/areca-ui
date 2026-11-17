@@ -114,7 +114,7 @@ val ada = ProfileSummary(name = "Ada Lovelace", handle = "@ada", email = "ada@ex
 | `SignOutSheet` | Confirms signing out of this device | `dev.voir.areca.flow.profile.sheet` |
 | `SignOutOthersSheet` | Confirms ending every other session | `dev.voir.areca.flow.profile.sheet` |
 | `RevokeSessionSheet` | Confirms ending one session, naming the device | `dev.voir.areca.flow.profile.sheet` |
-| `DeleteAccountSheet` | Confirms deletion, optionally behind a typed phrase | `dev.voir.areca.flow.profile.sheet` |
+| `DeleteAccountSheet` | Confirms deletion in the danger style, optionally behind a typed phrase | `dev.voir.areca.flow.profile.sheet` |
 
 The state the parts draw:
 
@@ -564,6 +564,7 @@ fun AccountSettings(
     deviceCount: Int,
     confirmingSignOut: Boolean,
     onSignOut: () -> Unit,
+    onSignOutConfirmed: () -> Unit,
     onSignOutDismissed: () -> Unit,
     editProfile: @Composable () -> Unit,
     devices: @Composable () -> Unit,
@@ -656,7 +657,7 @@ fun AccountSettings(
     SignOutSheet(
         visible = confirmingSignOut,
         description = stringResource(Res.string.sign_out_description),
-        onConfirm = onSignOutDismissed,
+        onConfirm = onSignOutConfirmed,
         onDismiss = onSignOutDismissed,
     )
 }

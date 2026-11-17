@@ -86,6 +86,11 @@ fun AppShell(state: ShellState, onAction: (ShellAction) -> Unit) {
   The tab capsule hides while the sidebar is open.
 - The shell does not handle the platform's back gesture: while `sidebarOpen`, close it from the
   app's back handler.
+- Grounds: the shell's own frame is transparent; each screen's `BaseLayout` paints its page in the
+  surface layout's page ground. The `TabBar`, the `NavRail` and the sidebar column take
+  `ArecaTheme.surfaces.bar`; the edge column's capsules float on their own `EdgeColumnStyle.surface`.
+  `AdaptiveNavigationLayout` is `BottomBar`, `Rail`, `Sidebar` (a large window under
+  `AdaptiveNavigationStyle.Rail` with the sidebar shown) or `EdgeColumn`.
 
 ## A screen inside the shell
 
@@ -109,7 +114,7 @@ fun ActivityScreen(contentPadding: PaddingValues) {
         detail = {
             Column {
                 AdaptiveToolbar(
-                    title = "Lidl",
+                    title = "Corner Market",
                     onBack = if (isTwoPane) null else { { selected = null } },
                     actions = listOf(
                         AdaptiveToolbarAction(ArecaIcons.Edit, "Edit", onClick = edit, primary = true),

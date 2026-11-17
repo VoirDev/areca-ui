@@ -87,7 +87,8 @@ CropSpec(
     maxZoom: Float = 10f,
     maxOutputDimension: Int? = null,          // longest side of the render; never scales up
 )
-CropSpec.Avatar   // Square, Oval mask, 512 px, no grips — CropSpec(aspect = Square, mask = Oval, maxOutputDimension = 512)
+CropSpec.Avatar   // Square, locked, Oval mask, 512 px, no grips — CropSpec(aspect = CropAspect.Square,
+                  //   isAspectLocked = true, isResizable = false, mask = CropShapes.Oval, maxOutputDimension = 512)
 CropSpec.Photo    // Free, every PhotoPresets chip, grips, full detail
 CropAspect.PhotoPresets   // Free, Original, Square, 4:5, 4:3, 3:2, 16:9
 CropShapes.Oval

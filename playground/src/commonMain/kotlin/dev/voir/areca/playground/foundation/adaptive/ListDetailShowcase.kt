@@ -99,7 +99,7 @@ fun ListDetailShowcase() = ShowcaseScaffold(
 
     Variants(
         title = "Every window",
-        description = "Lidl is open in each: beside the list from 600dp, in place of it with a back action below.",
+        description = "Corner Market is open in each: beside the list from 600dp, in place of it with a back action below.",
         layout = VariantLayout.Grid,
     ) {
         for (preset in WindowPreset.entries) {

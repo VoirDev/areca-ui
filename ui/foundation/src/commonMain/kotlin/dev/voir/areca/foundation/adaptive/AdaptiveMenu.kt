@@ -56,13 +56,13 @@ public class AdaptiveMenuItem(
  * val menu = rememberDropdownPopup(placement = AnchoredPlacement.BelowEnd)
  * IconButton(
  *     imageVector = ArecaIcons.DotsVertical,
- *     contentDescription = "Actions for Lidl",
+ *     contentDescription = "Actions for Corner Market",
  *     onClick = menu::show,
  *     modifier = Modifier.anchored(menu.anchorState),
  * )
  * AdaptiveMenu(
  *     state = menu,
- *     title = "Lidl",
+ *     title = "Corner Market",
  *     actions = listOf(
  *         AdaptiveMenuItem("Duplicate", onClick = duplicate),
  *         AdaptiveMenuItem("Delete", destructive = true, onClick = delete),
@@ -93,7 +93,7 @@ public fun AdaptiveMenu(
             )
         }
     } else {
-        val controller = rememberFlowModal(allowPartial = false)
+        val controller = rememberFlowModal()
         LaunchedEffect(state.isOpen) {
             if (state.isOpen) controller.show(partial = false) else controller.hide()
         }

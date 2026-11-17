@@ -111,7 +111,7 @@ fun ScrollbarShowcase() = ShowcaseScaffold(
 
 /** A month of transactions as date, merchant and amount. */
 private val MonthOfTransactions: List<Triple<String, String, String>> = List(60) { index ->
-    val merchants = listOf("Lidl", "Café Central", "Netflix", "Uber", "Rewe", "Deutsche Bahn")
+    val merchants = listOf("Corner Market", "Café Central", "Streamly", "City Taxi", "Fresh Market", "Rail Travel")
     Triple("${31 - index / 2} Oct", merchants[index % merchants.size], "−€${(index * 7 % 90) + 3}.40")
 }
 

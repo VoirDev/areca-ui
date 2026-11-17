@@ -27,20 +27,23 @@ import dev.voir.areca.foundation.button.ActionColor
 import dev.voir.areca.foundation.button.IconButton
 import dev.voir.areca.foundation.button.IconButtonSize
 import dev.voir.areca.foundation.button.IconButtonStyle
+import dev.voir.areca.foundation.layout.Card
 import dev.voir.areca.foundation.list.ExpandableListItem
-import dev.voir.areca.foundation.list.ExpandableListItemContainer
 import dev.voir.areca.foundation.list.ListItem
 import dev.voir.areca.foundation.selection.SelectorItem
 import dev.voir.areca.foundation.selection.SelectorLayout
 import dev.voir.areca.foundation.selection.SlidingSelector
 import dev.voir.areca.foundation.stat.Stat
 import dev.voir.areca.foundation.stat.StatGrid
+import dev.voir.areca.foundation.text.Amount
+import dev.voir.areca.foundation.text.AmountText
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.foundation.text.TextColor
 import dev.voir.areca.foundation.text.TextVariant
 import dev.voir.areca.icons.ArecaIcons
 import dev.voir.areca.icons.RefreshCcw
 import dev.voir.areca.theme.ArecaTheme
+import dev.voir.areca.theme.horizontalContentInsets
 
 // The analytics overview recipe from `skills/areca-ui-v1/reference/recipes.md`, kept here so the
 // snippet the skill shows is known to compile and is rendered by AnalyticsRenderTest.
@@ -54,6 +57,8 @@ data class PeriodSummary(
     val title: String,
     val income: Float,
     val spent: Float,
+    val incomeText: String,
+    val spentText: String,
     val description: String,
 )
 
@@ -61,12 +66,12 @@ data class PeriodSummary(
 @Immutable
 data class CategoryShare(
     val name: String,
-    val amount: String,
+    val amount: Amount,
     val detail: String,
     val share: Float,
     val usualShare: Float,
     val usualAmount: String,
-    val subcategories: List<Pair<String, String>>,
+    val subcategories: List<Pair<String, Amount>>,
 )
 
 /**
@@ -93,7 +98,7 @@ fun AnalyticsOverview(
 
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.xl3)) {
         Column(
-            modifier = Modifier.padding(horizontal = ArecaTheme.spacing.horizontalContentInsets),
+            modifier = Modifier.horizontalContentInsets(),
             verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg),
         ) {
             SlidingSelector(
@@ -115,8 +120,8 @@ fun AnalyticsOverview(
                 }
             }
             StatGrid {
-                Stat(label = "Income", value = "€${period.income.toInt()}")
-                Stat(label = "Expenses", value = "€${period.spent.toInt()}")
+                Stat(label = "Income", value = period.incomeText)
+                Stat(label = "Expenses", value = period.spentText)
             }
             StackedBarChart(
                 segments = listOf(
@@ -148,40 +153,44 @@ fun AnalyticsOverview(
         )
 
         Column(
-            modifier = Modifier.padding(horizontal = ArecaTheme.spacing.horizontalContentInsets),
-            verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg),
+            modifier = Modifier.horizontalContentInsets(),
+            verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md),
         ) {
             Text("Your usual month", variant = TextVariant.HeadingExtraSmall)
-            StatGrid {
-                usual.forEach { (label, value, note) -> Stat(label = label, value = value, note = note) }
+            Card(modifier = Modifier.fillMaxWidth()) { padding ->
+                StatGrid(modifier = Modifier.padding(padding)) {
+                    usual.forEach { (label, value, note) -> Stat(label = label, value = value, note = note) }
+                }
             }
         }
 
-        Column(modifier = Modifier.padding(horizontal = ArecaTheme.spacing.md)) {
-            categories.forEach { category ->
-                ExpandableListItem(
-                    expanded = open == category.name,
-                    onExpandedChange = { open = if (it) category.name else null },
-                    title = { Text(category.name) },
-                    value = { Text(category.amount) },
-                    // The meter is part of the row, so a tap on it opens the category too.
-                    bottom = {
-                        Column(verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md)) {
-                            MeterBar(
-                                fraction = category.share,
-                                marker = category.usualShare,
-                                color = spent,
-                                contentDescription = "Usual ${category.usualAmount}",
-                            )
-                            Text(category.detail, variant = TextVariant.BodyExtraSmall, color = TextColor.Subtle)
+        // The rows bring their own 16dp inset, so the card's padding is not applied.
+        Card(modifier = Modifier.fillMaxWidth().horizontalContentInsets()) { _ ->
+            Column {
+                categories.forEach { category ->
+                    ExpandableListItem(
+                        expanded = open == category.name,
+                        onExpandedChange = { open = if (it) category.name else null },
+                        title = { Text(category.name) },
+                        // Formatted parts, drawn in the slot's type: no style, no fontWeight.
+                        value = { AmountText(category.amount) },
+                        // The meter is part of the row, so a tap on it opens the category too.
+                        bottom = {
+                            Column(verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md)) {
+                                MeterBar(
+                                    fraction = category.share,
+                                    marker = category.usualShare,
+                                    color = spent,
+                                    contentDescription = "Usual ${category.usualAmount}",
+                                )
+                                Text(category.detail, variant = TextVariant.BodyExtraSmall, color = TextColor.Subtle)
+                            }
+                        },
+                        onClickLabel = "Show subcategories",
+                    ) {
+                        category.subcategories.forEach { (name, amount) ->
+                            ListItem(title = { Text(name) }, value = { AmountText(amount) }, nestingLevel = 1)
                         }
-                    },
-                    showChevron = false,
-                    container = ExpandableListItemContainer.Soft,
-                    onClickLabel = "Show subcategories",
-                ) {
-                    category.subcategories.forEach { (name, amount) ->
-                        ListItem(title = { Text(name) }, value = { Text(amount) }, nestingLevel = 1)
                     }
                 }
             }

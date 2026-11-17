@@ -4,9 +4,10 @@ Add it when people attach files to something — a strip of files on a form, the
 details, a list of documents — with the sheets that add a file and act on one, and a full-screen
 viewer that swipes through them.
 
-- Artifact `dev.voir.areca:flow-attachments`. Depends on `foundation` as `api` (`ConfirmSheet`,
-  `Settings`, `Button` need nothing more). Needs `ArecaThemeProvider`. Recipes that draw
-  `ArecaIcons.*` need `dev.voir.areca:icons`; the module bundles its own glyphs.
+- Artifact `dev.voir.areca:flow-attachments`. Depends on `foundation` and `media` as `api`
+  (`ConfirmSheet`, `Settings`, `Button`, `MediaImageLoader` need nothing more). Needs
+  `ArecaThemeProvider`. Recipes that draw `ArecaIcons.*` need `dev.voir.areca:icons`; the module
+  bundles its own glyphs.
 - It ships **parts and recipes, not screens**, and is not a file manager. Picking, capturing, copying,
   uploading, downloading, sharing, saving, size limits and PDF rendering are the app's. Parts report
   intents (`onAdd`, `onOpen(item)`, `onRemove(item)`) and draw the state given. No dependency on other
@@ -14,7 +15,7 @@ viewer that swipes through them.
 
 | Package | Holds |
 | --- | --- |
-| `dev.voir.areca.flow.attachments` | `AttachmentItem`, `AttachmentFormat`, `AttachmentState`, `AttachmentImageLoader` (deprecated), `AttachmentImageState`, `LocalAttachmentImageLoader`, `AttachmentPdfRenderer`, `AttachmentPdfDocument`, `LocalAttachmentPdfRenderer` |
+| `dev.voir.areca.flow.attachments` | `AttachmentItem`, `AttachmentFormat`, `AttachmentState`, `AttachmentImageLoader`, `AttachmentImageState`, `LocalAttachmentImageLoader` (all three deprecated), `AttachmentPdfRenderer`, `AttachmentPdfDocument`, `LocalAttachmentPdfRenderer` |
 | `dev.voir.areca.flow.attachments.part` | `AttachmentThumbnail`, `AttachmentTile`, `AttachmentAddTile`, `AttachmentStrip`, `AttachmentIndicator`, `AttachmentTileStyle`, `LocalAttachmentTileStyle` |
 | `dev.voir.areca.flow.attachments.row` | `AttachmentRow` |
 | `dev.voir.areca.flow.attachments.sheet` | `AttachmentSourceSheet`, `AttachmentSourceOptions`, `PendingAttachmentSheet`, `PendingAttachment`, `AttachmentTagChips`, `AttachmentOptionsSheet`, `AttachmentOptions`, `AttachmentRenameSheet`, `AttachmentChoice`, `AttachmentChoiceLayout` |
@@ -36,7 +37,7 @@ viewer that swipes through them.
 | What a file is, one tap from the product's tags | `AttachmentTagChips(tags, selected, onSelect, label)` | — |
 | What can be done to one file | `AttachmentOptionsSheet(item, choices, onDismiss)` | `AttachmentOptions`, `AttachmentChoice` |
 | A new name, editing only the part before the extension | `AttachmentRenameSheet(item, onRename, onDismiss)` | — |
-| Confirm a final removal | foundation `ConfirmSheet` (the module ships none) | — |
+| Confirm a final removal | foundation `ConfirmSheet(style = ConfirmSheetStyle.Danger)` (the module ships none) | — |
 | A record's files full screen, one at a time, always dark | `AttachmentViewer(items, onDismiss, initialKey = …)` | `AttachmentViewerStyle` |
 | One file in the viewer (zoomable picture, PDF pages, or the file stated) | `AttachmentViewerPage(item)` | — |
 | A record's files beside it on a tablet or desktop, in a sheet below 920dp | foundation `SupportingPane` — record as `main`, `AttachmentTile`s in a `FlowRow` as `supporting` (recipe below) | — |
@@ -75,16 +76,20 @@ PendingAttachment(
 )
 class AttachmentChoice(label: String, icon: ImageVector, onClick: () -> Unit, isDestructive: Boolean = false,
     description: String? = null,                // a line on what it is for; bento cards only
-    hue: Color = Color.Unspecified)             // its bento card's colour (ArecaTheme.hues); Unspecified: source default, else gray
-AttachmentSourceOptions.camera(label = "Take a photo", description = "Snap a receipt or a page", hue = Unspecified /* blue */) { }
-    · library(label = "Choose from library", description = "From your photos", hue = Unspecified /* purple */) { }
-    · files(label = "Choose a file", description = "PDF or document", hue = Unspecified /* orange */) { }
-AttachmentChoiceLayout.Rows        // default: glyph-and-label rows flat on the sheet; description and hue unused
+    hue: Color = Color.Unspecified)             // its bento card's colour (ArecaTheme.hues); Unspecified: source default,
+                                                // else gray (red when isDestructive)
+AttachmentSourceOptions.camera(label: String = "Take a photo", description: String? = "Snap a receipt or a page",
+        hue: Color = Color.Unspecified /* hues.blue */, onClick: () -> Unit)
+    · library(label = "Choose from library", description = "From your photos", hue = Unspecified /* hues.purple */, onClick)
+    · files(label = "Choose a file", description = "PDF or document", hue = Unspecified /* hues.orange */, onClick)
+AttachmentChoiceLayout.Rows        // default: flat ListItem rows (glyph and label) edge to edge on the sheet;
+                                   // description and hue unused
     | Bento                        // cards: the first full width and larger, the rest in one row of equal height
                                    // (two choices share the row as halves); each washed in its hue with a
                                    // solid-hue disc, label and description; subtitle centred under the cards
 AttachmentOptions.rename(label = "Rename") { } · share(label = "Share") { } · save(label = "Save to device") { }
-    · openElsewhere(label = "Open in another app") { } · remove(label = "Remove attachment") { }
+    · openElsewhere(label = "Open in another app") { } · remove(label = "Remove attachment") { }   // remove is not
+                                                // danger-coloured: the ConfirmSheet behind it guards it
 
 // Pictures load through media's MediaImageLoader / LocalMediaImageLoader (see media.md):
 // load(model, maxSize) drawn whole; loadSquare(model, side) must COVER the square. Unprovided → glyphs.
@@ -164,7 +169,7 @@ interface AttachmentPdfDocument : AutoCloseable {
 // .sheet
 @Composable fun AttachmentSourceSheet(
     visible: Boolean, options: List<AttachmentChoice>, onDismiss: () -> Unit,
-    title: String = "Add attachment", subtitle: String? = null, closeLabel: String = "Close",
+    title: String = "Add attachment", subtitle: String? = null, closeLabel: String = ArecaTheme.labels.close,
     layout: AttachmentChoiceLayout = AttachmentChoiceLayout.Rows,   // Bento: cards, the first leads
 )
 // A sheet on a phone, a centred dialog on a wide window, in either layout. Bento is a deliberate
@@ -173,7 +178,8 @@ interface AttachmentPdfDocument : AutoCloseable {
     file: PendingAttachment?,                   // non-null = shown
     onAttach: () -> Unit, onDismiss: () -> Unit,
     title: String = "Add this file?", problemTitle: String = "Couldn’t add this file",
-    attachText: String = "Attach", cancelText: String = "Cancel", closeLabel: String = "Close",
+    attachText: String = "Attach",
+    cancelText: String = ArecaTheme.labels.cancel, closeLabel: String = ArecaTheme.labels.close,
     copyingText: String? = null,
     onEdit: (() -> Unit)? = null, editText: String = "Edit",   // offer Edit (crop) for this file
     thumbnailStyle: AttachmentTileStyle = LocalAttachmentTileStyle.current ?: AttachmentTileStyle.Default,
@@ -189,14 +195,15 @@ interface AttachmentPdfDocument : AutoCloseable {
     choices: List<AttachmentChoice>, onDismiss: () -> Unit,
     title: (AttachmentItem) -> String = { it.fileName },
     subtitle: (AttachmentItem) -> String? = { it.size },
-    tagsTitle: String? = null, closeLabel: String = "Close",
+    tagsTitle: String? = null, closeLabel: String = ArecaTheme.labels.close,
     tags: (@Composable ColumnScope.() -> Unit)? = null,
 )
 @Composable fun AttachmentRenameSheet(
     item: AttachmentItem?,                      // non-null = shown
     onRename: (String) -> Unit,                 // receives the full name, extension restored
     onDismiss: () -> Unit,
-    title: String = "Rename", label: String = "Name", saveText: String = "Save", cancelText: String = "Cancel",
+    title: String = "Rename", label: String = "Name", saveText: String = "Save",
+    cancelText: String = ArecaTheme.labels.cancel,
     canSave: (String) -> Boolean = { true }, error: String? = null, saving: Boolean = false,
 )
 
@@ -215,7 +222,7 @@ interface AttachmentPdfDocument : AutoCloseable {
     title: (AttachmentItem) -> String = { it.label },
     position: ((index: Int, count: Int) -> String)? = { i, n -> "${i + 1} of $n" },
     caption: (AttachmentItem) -> String? = { /* default line over the file */ },
-    closeLabel: String = "Close", shareLabel: String = "Share", moreLabel: String = "More options",
+    closeLabel: String = ArecaTheme.labels.close, shareLabel: String = "Share", moreLabel: String = "More options",
     filmstripLabel: (item: AttachmentItem, index: Int, count: Int) -> String = { item, i, n -> "${item.label}, ${i + 1} of $n" },
     style: AttachmentViewerStyle = LocalAttachmentViewerStyle.current ?: AttachmentViewerStyle.Default,
     page: @Composable (AttachmentItem) -> Unit = { AttachmentViewerPage(item = it, onRetry = { onRequest(it) }, style = style) },
@@ -250,6 +257,13 @@ interface AttachmentPdfDocument : AutoCloseable {
   are **not seeded** by `ArecaThemeProvider`.
 - **Sheets are state-driven:** `visible` or the item they are about (`file`, `item`); they report
   `onDismiss` and **do not close themselves** on a choice — every choice clears the state that shows it.
+- **Sheets are flat and size to their content.** Every module sheet is a `rememberFlowModal()`
+  sheet under a modal bar, as tall as what it holds and clear of the navigation bar on its own. The
+  source and options sheets list their choices as plain `ListItem` rows straight on the sheet's
+  ground, edge to edge — a leading glyph, danger ink for an `isDestructive` choice; copy, fields,
+  chips and the pending file keep to the 16dp sheet gutter; forms (pending, rename) commit from a
+  `FlowModalActionBar`. Never wrap the choices in a card, and never add `navigationBarsPadding()` or a
+  bottom spacer.
 - Offer only sources the platform can complete. With one source left (desktop: files only) skip the
   sheet and start that pick from the add square.
 - **The tag is asked, never guessed:** start `PendingAttachmentSheet` with nothing selected
@@ -264,8 +278,9 @@ interface AttachmentPdfDocument : AutoCloseable {
   expanded width and up, not a phone on its side. Same heading, content and foot; heading and foot
   pinned, content scrolls; scrim / Escape / back arrive as `onDismiss`. Nothing to pass, and it reads
   the whole window, not the pane it was opened from. `ConfirmSheet` does the same.
-- **Removal:** a saved record removes at once and confirms first with foundation `ConfirmSheet`; a form
-  saves nothing until it is saved, so removing there asks nothing.
+- **Removal:** a saved record removes at once and confirms first with foundation `ConfirmSheet`
+  (`style = ConfirmSheetStyle.Danger`); a form saves nothing until it is saved, so removing there
+  asks nothing.
 - **Viewer:** compose it while a file is being viewed (`if (viewing != null) AttachmentViewer(…)`); it
   is its own always-dark, edge-to-edge window and paints the system bars. Put the options, rename and
   confirm sheets in its `sheets` slot so they open above the file. It calls `onRequest` once per
@@ -285,8 +300,10 @@ interface AttachmentPdfDocument : AutoCloseable {
 ## Words and accessibility
 
 - Required words default to English (sheet titles, button texts, `addLabel`, `removeLabel`,
-  `closeLabel`, viewer labels, `AttachmentIndicator.contentDescription`, choice labels); pass the app's
-  strings. Optional words (`subtitle`, `counter`, `copyingText`, `waitingText`, empty texts) default to
+  viewer labels, `AttachmentIndicator.contentDescription`, choice labels and the source
+  `description`s); pass the app's strings. Every `closeLabel` and `cancelText` comes from the theme's
+  `ArecaLabels` (`close`, `cancel`): localise them once in `ArecaThemeProvider(labels = …)`.
+  Optional words (`subtitle`, `counter`, `copyingText`, `waitingText`, empty texts) default to
   `null`. Sizes arrive worded.
 - Pass `stateDescription` to word where a file's bytes are, and `description` to word a square ("Receipt,
   IMG_2041.jpg"); `pictureDescription` / `pageDescription` in the viewer.
@@ -368,6 +385,7 @@ fun AttachmentSheets(state: AttachmentsState, actions: AttachmentActions, confir
                     confirmText = removeWord,
                     onConfirm = actions::confirmRemove,
                     onDismiss = actions::dismissRemove,
+                    style = ConfirmSheetStyle.Danger,
                 )
             },
         )

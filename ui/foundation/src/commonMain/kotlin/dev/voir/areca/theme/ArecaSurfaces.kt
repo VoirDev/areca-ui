@@ -357,6 +357,26 @@ public fun ProvideSurface(
     )
 }
 
+/**
+ * Puts [content] on the surface that a fill of your own stands for — a docked bar, a panel — so the
+ * fills inside it (a soft button, a key, a track) take that surface's roles and stay visible on it.
+ * A fill that is the ground of a step of the current ladder puts the content on that step; any
+ * other opaque fill, one step up; a transparent one leaves the surface as it is.
+ *
+ * ```kotlin
+ * Box(Modifier.background(ArecaTheme.surfaces.bar)) {
+ *     ProvideSurface(fill = ArecaTheme.surfaces.bar) { BarContent() }
+ * }
+ * ```
+ *
+ * @param fill The fill drawn behind [content].
+ * @param content Content drawn on it.
+ */
+@Composable
+public fun ProvideSurface(fill: Color, content: @Composable () -> Unit) {
+    SurfaceOf(fill = fill, content = content)
+}
+
 /** @return The surface in scope. */
 @Composable
 @ReadOnlyComposable

@@ -226,7 +226,8 @@ public enum class FlowModalState {
  * @param initialState State the modal starts in: [FlowModalState.Hidden],
  *   [FlowModalState.PartiallyOpened] or [FlowModalState.Expanded].
  * Every sheet is as tall as its content, up to [maxHeightFraction] of the window: a short list
- * opens at the height of its rows, a long one stops at the cap and scrolls. A sheet that should be
+ * opens at the height of its rows, a long one stops at the cap — its body must scroll itself (a lazy
+ * list or `verticalScroll`), or it is cut off there. A sheet that should be
  * tall whatever it holds says so in its content — a lazy list fills the room it is given, and so
  * does a body with `Modifier.fillMaxHeight()`. Its heights are measured, not configured:
  * - expanded: the content's height, up to the cap;
@@ -484,8 +485,8 @@ public fun rememberFlowModal(
  * The sheet's animated height is read only while laying out and drawing, so the slide and the drag
  * do not recompose the modal frame by frame.
  *
- * The sheet is as tall as its content, up to the controller's cap; the body scrolls past it while
- * the header and the footer stay. Its content is composed once and measured before the sheet moves,
+ * The sheet is as tall as its content, up to the controller's cap; past it the header and the footer
+ * stay and the body gets what is left, which it must scroll itself (a lazy list or `verticalScroll`). Its content is composed once and measured before the sheet moves,
  * so it opens straight to its height. Opening, hiding and a drag toward dismissal slide the sheet
  * as a whole; between its partial and full heights the body is revealed under a header and a footer
  * that stay put. A change of content — a search that narrows a list — moves the sheet to its new
@@ -823,7 +824,8 @@ public val LocalFlowModalStyle: ProvidableCompositionLocal<FlowModalStyle?> =
  * and the body between them, with the drag handle floating over the top.
  *
  * Measured once per layout, against the cap the sheet passes down: the header and the footer at
- * their own height, the body with what is left, so a long body stops at the cap and scrolls. The
+ * their own height, the body with what is left, so a long body stops at the cap (scrolling is the
+ * body's own). The
  * resulting height — the content's own — goes to [onContentHeight]. The content is then laid out at
  * [layoutHeight], never taller than its own height: below that, the footer stays at the visible
  * bottom and the body is cut off above it, which is how a sheet shows between its partial and full

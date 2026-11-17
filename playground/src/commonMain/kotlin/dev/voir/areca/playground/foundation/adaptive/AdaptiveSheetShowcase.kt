@@ -122,7 +122,7 @@ fun AdaptiveSheetShowcase() = ShowcaseScaffold(
                     }
                     VerticalDivider()
                     Box(modifier = Modifier.weight(1f).fillMaxHeight().padding(32.dp)) {
-                        Text("Lidl · −€42.80", variant = TextVariant.HeadingSmall)
+                        Text("Corner Market · −€42.80", variant = TextVariant.HeadingSmall)
                     }
                 }
             }
@@ -260,7 +260,7 @@ private fun TransactionForm() {
                 modifier = Modifier.fillMaxWidth(),
                 field = field,
                 singleLine = true,
-                placeholder = { Text("Lidl") },
+                placeholder = { Text("Corner Market") },
             )
         }
         FieldGroup(modifier = Modifier.fillMaxWidth(), label = "Note", assistive = "Only you can see this.") { field ->

@@ -361,6 +361,9 @@ private fun <Value> SelectFlowModalFrame(
     FlowModal(
         controller = controller,
         modifier = modifier,
+        // A tap on the scrim, back and a drag close it the same way as the cross: the search loses
+        // focus and the keyboard goes with the sheet.
+        onDismissRequest = close,
         header = stockHeader,
         style = style,
         size = size,

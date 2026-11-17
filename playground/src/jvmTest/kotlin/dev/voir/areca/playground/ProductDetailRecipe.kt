@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
@@ -12,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import dev.voir.areca.foundation.layout.BaseLayout
 import dev.voir.areca.foundation.layout.BottomActionBar
+import dev.voir.areca.foundation.layout.Card
 import dev.voir.areca.foundation.navigation.PageIndicator
 import dev.voir.areca.foundation.navigation.PageIndicatorStyle
 import dev.voir.areca.foundation.settings.Section
@@ -133,9 +135,11 @@ internal fun ProductDetailScreen(
                 }
             }
             item(key = "figures") {
-                StatGrid(modifier = Modifier.horizontalContentInsets(), columns = 2) {
-                    Stat(label = "Rating", value = product.rating)
-                    Stat(label = "Reviews", value = product.reviews)
+                Card(modifier = Modifier.fillMaxWidth().horizontalContentInsets()) { padding ->
+                    StatGrid(modifier = Modifier.padding(padding), columns = 2) {
+                        Stat(label = "Rating", value = product.rating)
+                        Stat(label = "Reviews", value = product.reviews)
+                    }
                 }
             }
             item(key = "facts") {

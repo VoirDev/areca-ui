@@ -94,6 +94,7 @@ import dev.voir.areca.foundation.tabs.TabItem
 import dev.voir.areca.foundation.tabs.Tabs
 import dev.voir.areca.foundation.tabs.TabsSize
 import dev.voir.areca.foundation.tabs.TabsVariant
+import dev.voir.areca.foundation.text.Amount
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.foundation.text.TextColor
 import dev.voir.areca.foundation.text.TextVariant
@@ -549,6 +550,12 @@ private fun Patterns() {
     }
 }
 
+/** A whole number of euros as the app's formatter would hand it over, "€4,250". */
+private fun euros(value: Float): String = "€" + "%,d".format(value.toInt())
+
+/** Whole euros as the parts `AmountText` draws. */
+private fun euro(whole: String): Amount = Amount(whole = whole, symbol = "€")
+
 @Composable
 private fun Overview() {
     var selected by remember { mutableStateOf("2026-10") }
@@ -562,6 +569,8 @@ private fun Overview() {
                 title = if (latest) "October so far" else "${Months[i]} 2026",
                 income = Income[i],
                 spent = Spent[i],
+                incomeText = euros(Income[i]),
+                spentText = euros(Spent[i]),
                 description = "${Months[i]}: income €${Income[i].toInt()}, spent €${Spent[i].toInt()}",
             )
         },
@@ -575,9 +584,9 @@ private fun Overview() {
             Triple("A day", "€71.20", "weekends 1.8× weekdays"),
         ),
         categories = listOf(
-            CategoryShare("Housing", "€920", "39% of spending · usual €980", 1f, 0.95f, "€980", listOf("Rent" to "€780", "Utilities" to "€110")),
-            CategoryShare("Food and dining", "€612", "26% · €62 over usual", 0.66f, 0.6f, "€550", listOf("Groceries" to "€318", "Restaurants" to "€190")),
-            CategoryShare("Transport", "€318", "14% · on usual", 0.35f, 0.36f, "€320", emptyList()),
+            CategoryShare("Housing", euro("920"), "39% of spending · usual €980", 1f, 0.95f, "€980", listOf("Rent" to euro("780"), "Utilities" to euro("110"))),
+            CategoryShare("Food and dining", euro("612"), "26% · €62 over usual", 0.66f, 0.6f, "€550", listOf("Groceries" to euro("318"), "Restaurants" to euro("190"))),
+            CategoryShare("Transport", euro("318"), "14% · on usual", 0.35f, 0.36f, "€320", emptyList()),
         ),
         modifier = Modifier.padding(vertical = ArecaTheme.spacing.xl),
     )
