@@ -47,11 +47,11 @@ import kotlin.math.roundToInt
  * ```kotlin
  * val menu = rememberDropdownPopup()
  * ListItem(
- *     title = { Text("Lidl") },
+ *     title = { Text("Corner Market") },
  *     onClick = { open(transaction) },
  *     modifier = Modifier.contextMenu(menu),
  * )
- * AdaptiveMenu(state = menu, title = "Lidl", actions = actions)
+ * AdaptiveMenu(state = menu, title = "Corner Market", actions = actions)
  * ```
  *
  * @param state The menu the element opens.

@@ -38,7 +38,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import dev.voir.areca.foundation.button.ActionColor
 import dev.voir.areca.foundation.layout.BaseLayout
 import dev.voir.areca.foundation.settings.Section
 import dev.voir.areca.foundation.settings.Settings
@@ -103,7 +102,7 @@ fun NotificationSettingsScreen(
                     checked = pushEnabled,
                     onCheckedChange = onPushEnabledChange,
                     title = { Text("Push notifications") },
-                    leading = { SettingsRowIcon(ArecaIcons.Bell, color = ActionColor.Brand) },
+                    leading = { SettingsRowIcon(ArecaIcons.Bell, hue = ArecaTheme.hues.red) },
                     status = pushStatus,
                 )
                 SettingsSelectRow(
@@ -133,6 +132,8 @@ fun NotificationSettingsScreen(
   sheet a section draws flat, its rows edge to edge.
 - `SettingsRowStatus.Loading` shows a spinner in place of the value while a change saves;
   `SettingsRowStatus.Error(message)` shows the failure under the row.
+- The bell's tile takes a hue: it tells the row apart and means nothing. Keep `ActionColor` for a
+  tile whose colour means something.
 
 ## Form with validation
 
@@ -289,15 +290,19 @@ the bottom out. Use `enabled = false` with a `hint` only for an action that must
 
 A screen opened over another: a back control, a floating primary action, toasts. The frame places
 the floating action above the navigation bar and adds its height to `padding`, and draws the toasts
-above it. The parent's effect collector shows messages through the same `ToastState`.
+above it. The parent's effect collector shows messages through the same `ToastState`. The
+transactions are rows on the grey page, so they sit on cards: one inset card per day, its date
+inside.
 
 ```kotlin
 @Composable
 fun WalletScreen(
     wallet: Wallet,
+    days: PagedContentListState<ContentListGroup<String, Transaction>>,
     toasts: ToastState,
     onBack: () -> Unit,
     onAdd: () -> Unit,
+    onLoadNextPage: () -> Unit,
     onOpen: (Transaction) -> Unit,
 ) {
     BaseLayout(
@@ -322,16 +327,20 @@ fun WalletScreen(
         },
         toastState = toasts,
     ) { padding ->
-        LazyList(contentPadding = padding) {
-            wallet.transactions.forEach { transaction ->
-                item(
-                    key = transaction.id,
-                    title = { Text(transaction.merchant) },
-                    value = { Text(transaction.amount) },
-                    onClick = { onOpen(transaction) },
-                    onClickLabel = "Open transaction",
-                )
-            }
+        GroupedPagedContentList(
+            state = days,
+            contentPadding = padding,
+            groupLayout = ContentListGroupLayout.Inset,
+            onLoadNextPage = onLoadNextPage,
+            itemKey = { it.id },
+            groupHeaderContent = { day -> Text(day) },
+        ) { transaction ->
+            ListItem(
+                title = { Text(transaction.merchant) },
+                value = { AmountText(transaction.amount) },
+                onClick = { onOpen(transaction) },
+                onClickLabel = "Open transaction",
+            )
         }
     }
 }
@@ -344,14 +353,22 @@ saved")` from its effects. A screen with a `BottomActionBar` gets its floating a
 
 `PagedContentList` shows the loading face, the error face with retry, the empty face or the items,
 requests pages near the end, and adds pull-to-refresh when `onRefresh` is set. `contentPadding`
-takes the layout's padding, so the rows scroll under the bars and rest clear of them.
+takes the layout's padding, so the rows scroll under the bars and rest clear of them. Rows on the
+grey page sit on cards, so the invoices come by month, in `GroupedPagedContentList` with
+`ContentListGroupLayout.Inset`: one card per month, its name inside.
 
 ```kotlin
-data class Invoice(val id: String, val customer: String, val due: String, val amount: String)
+data class Invoice(
+    val id: String,
+    val customer: String,
+    val month: String,
+    val due: String,
+    val amount: Amount,
+)
 
 @Composable
 fun InvoicesScreen(
-    state: PagedContentListState<Invoice>,
+    state: PagedContentListState<ContentListGroup<String, Invoice>>,
     onRefresh: () -> Unit,
     onLoadNextPage: () -> Unit,
     onOpen: (Invoice) -> Unit,
@@ -374,9 +391,10 @@ fun InvoicesScreen(
             )
         },
     ) { padding ->
-        PagedContentList(
+        GroupedPagedContentList(
             state = state,
             contentPadding = padding,
+            groupLayout = ContentListGroupLayout.Inset,
             listState = listState,
             labels = ContentListLabels(
                 emptyTitle = "No invoices yet",
@@ -403,12 +421,13 @@ fun InvoicesScreen(
                     onAction = retry,
                 )
             },
+            groupHeaderContent = { month -> Text(month) },
         ) { invoice ->
             NavigationListItem(
                 title = { Text(invoice.customer) },
                 onClick = { onOpen(invoice) },
                 subtitle = { Text(invoice.due) },
-                value = { Text(invoice.amount) },
+                value = { AmountText(invoice.amount) },
                 onClickLabel = "Open invoice",
             )
         }
@@ -417,12 +436,17 @@ fun InvoicesScreen(
 ```
 
 The empty face's button, when it has one, is a neutral way back ("Clear filters"); the create
-action stays in the top bar. `listState.ScrollToTopOnTabReselect()` takes the list back to the top
-when its tab is tapped again.
+action stays in the top bar. The faces lie on the page; only the rows take cards, and the rows
+bring their own 16dp start padding, so nothing adds a gutter around them.
+`listState.ScrollToTopOnTabReselect()` takes the list back to the top when its tab is tapped again.
+A list with no groups is `PagedContentList` with the same arguments, less `groupLayout` and
+`groupHeaderContent`; its rows lie straight on whatever is under it, so keep it for a sheet.
 
 For a list outside `ContentList`, wrap the scroller in
 `PullToRefreshLayout(isRefreshing, onRefresh) { … }` (opt in to `ExperimentalArecaApi`) and draw
-the faces yourself. `rememberSettledLoading` keeps a fast load from flashing its skeleton:
+the faces yourself. `rememberSettledLoading` keeps a fast load from flashing its skeleton. A section
+of a screen sits on its own card; its rows bring their own inset, so the card's padding goes only to
+the faces that are not rows:
 
 ```kotlin
 @Composable
@@ -430,33 +454,40 @@ fun RecentInvoicesSection(
     state: RecentInvoicesState,
     onRetry: () -> Unit,
     onOpen: (Invoice) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val showSkeleton = rememberSettledLoading(state.loading)
-    when {
-        showSkeleton -> SkeletonGroup(contentDescription = "Loading invoices") {
-            repeat(3) { ListItemSkeleton() }
-        }
-        state.loading -> Unit // under the delay: draw nothing, not the empty face
-        state.error != null -> Fallback(
-            title = "Couldn’t load invoices",
-            body = state.error,
-            tone = FallbackTone.Failure,
-            actionText = "Try again",
-            onAction = onRetry,
-        )
-        state.invoices.isEmpty() -> Fallback(
-            title = "No invoices yet",
-            body = "Invoices you send appear here.",
-            horizontalAlignment = Alignment.Start,
-        )
-        else -> ListItemColumn {
-            state.invoices.forEach { invoice ->
-                NavigationListItem(
-                    title = { Text(invoice.customer) },
-                    onClick = { onOpen(invoice) },
-                    value = { Text(invoice.amount) },
-                    onClickLabel = "Open invoice",
-                )
+    // Under the delay: draw nothing, not the empty face.
+    if (state.loading && !showSkeleton) return
+
+    Card(modifier = modifier.fillMaxWidth().horizontalContentInsets()) { padding ->
+        when {
+            showSkeleton -> SkeletonGroup(contentDescription = "Loading invoices") {
+                repeat(3) { ListItemSkeleton() }
+            }
+            state.error != null -> Fallback(
+                title = "Couldn’t load invoices",
+                modifier = Modifier.padding(padding),
+                body = state.error,
+                tone = FallbackTone.Failure,
+                actionText = "Try again",
+                onAction = onRetry,
+            )
+            state.invoices.isEmpty() -> Fallback(
+                title = "No invoices yet",
+                modifier = Modifier.padding(padding),
+                body = "Invoices you send appear here.",
+                horizontalAlignment = Alignment.Start,
+            )
+            else -> ListItemColumn {
+                state.invoices.forEach { invoice ->
+                    NavigationListItem(
+                        title = { Text(invoice.customer) },
+                        onClick = { onOpen(invoice) },
+                        value = { AmountText(invoice.amount) },
+                        onClickLabel = "Open invoice",
+                    )
+                }
             }
         }
     }
@@ -470,18 +501,20 @@ ArecaTheme.shapes.surface)`.
 
 With `dev.voir.areca:viewmodel`, map its list state to the foundation list state in the UI module,
 and wire `onRefresh`, `onLoadNextPage`, `onRetryInitial` and `onRetryLoadMore` to the ViewModel's
-public methods:
+public methods. `items` turns the loaded rows into what the list draws — the month groups above, or
+`{ it }` for a list with no groups:
 
 ```kotlin
-fun <T> UiState<ListState<T, *, *>>.toPagedContentListState(
+fun <T, R> UiState<ListState<T, *, *>>.toPagedContentListState(
     loadMoreErrorText: String,
-): PagedContentListState<T> = when (this) {
+    items: (List<T>) -> List<R>,
+): PagedContentListState<R> = when (this) {
     UiState.Initial, UiState.Loading ->
         PagedContentListState(items = emptyList(), hasNextPage = false, loadingInitial = true)
     is UiState.Error ->
         PagedContentListState(items = emptyList(), hasNextPage = false, initialError = message)
     is UiState.Display -> PagedContentListState(
-        items = data.items,
+        items = items(data.items),
         // A list ViewModel starts at Display(initial) with no page loaded: show the loading face
         // until the first page arrives, or every list flashes its empty face first.
         loadingInitial = data.pagingMeta.currentPage == 0,
@@ -490,6 +523,11 @@ fun <T> UiState<ListState<T, *, *>>.toPagedContentListState(
         loadMoreError = loadMoreErrorText.takeIf { data.nextPageError != null },
         refreshing = data.isRefreshing,
     )
+}
+
+// The invoices by month, for the grouped list above.
+val invoices = state.toPagedContentListState("Couldn’t load more invoices") { loaded ->
+    loaded.groupBy { it.month }.map { (month, inMonth) -> ContentListGroup(month, month, inMonth) }
 }
 ```
 
@@ -539,7 +577,7 @@ fun SpendingScreen(month: MonthSpending, onOpenCategory: (Category) -> Unit) {
                             NavigationListItem(
                                 title = { Text(category.name) },
                                 onClick = { onOpenCategory(category) },
-                                value = { Text(category.amount) },
+                                value = { AmountText(category.amount) },
                                 onClickLabel = "Open category",
                             )
                         }
@@ -558,7 +596,7 @@ fills. Put no lazy list inside a `PanelLayout`; a long, open-ended list is a lis
 
 The sheet's visibility is the caller's state. Answer `onConfirm` by setting `confirming`, then clear
 `visible` on success or `confirming` on failure; the sheet takes no further press until one of them
-changes. The toast host sits in `BaseLayout`'s overlay.
+changes. The frame draws the toasts: pass the `ToastState` as `BaseLayout`'s `toastState`.
 
 ```kotlin
 @Composable
@@ -634,10 +672,25 @@ fun SecurityScreen(
 With a ViewModel, the sheet's `visible`, `confirming` and failure note are fields of the screen
 state, and the success toast is an effect.
 
+Signing out is undone by signing in, so the sheet keeps its neutral style. A yes that destroys
+something — deleting an account, a file — takes `style = ConfirmSheetStyle.Danger`. A question with
+a choice in it ("cancel now" or "after the next payment") puts the rows in `extra`, wrapped in
+`ConfirmSheetRows` so they run edge to edge on the sheet rather than inside its padding:
+
+```kotlin
+extra = {
+    ConfirmSheetRows {
+        RadioListItem(selected = !later, onSelect = { later = false }, title = { Text("Now") })
+        RadioListItem(selected = later, onSelect = { later = true }, title = { Text("After the next payment") })
+    }
+},
+```
+
 ## Tabbed screen
 
 `TabBar` switches destinations and applies the bottom inset itself; `Tabs` switches views inside
-one.
+one. A tab bar of your own feeds `LocalTabReselect`, emitting when the selected tab is tapped again,
+so each destination's `ScrollToTopOnTabReselect()` takes it back to the top.
 
 ```kotlin
 enum class Destination(val label: String, val icon: ImageVector) {
@@ -651,36 +704,42 @@ enum class Feed(val label: String) { Following("Following"), Popular("Popular") 
 @Composable
 fun MainScreen() {
     var destination by rememberSaveable { mutableStateOf(Destination.Home) }
+    val reselects = remember { MutableSharedFlow<Unit>(extraBufferCapacity = 1) }
 
-    BaseLayout(
-        topBar = {
-            TopBar(
-                title = destination.label,
-                windowInsets = WindowInsets.safeDrawing.only(
-                    WindowInsetsSides.Top + WindowInsetsSides.Horizontal,
-                ),
-            )
-        },
-        bottomBar = {
-            TabBar(
-                items = Destination.entries.map { entry ->
-                    TabBarItem(value = entry) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Icon(entry.icon, contentDescription = null)
-                            Text(entry.label, variant = TextVariant.LabelSmall, maxLines = 1)
+    CompositionLocalProvider(LocalTabReselect provides reselects) {
+        BaseLayout(
+            topBar = {
+                TopBar(
+                    title = destination.label,
+                    windowInsets = WindowInsets.safeDrawing.only(
+                        WindowInsetsSides.Top + WindowInsetsSides.Horizontal,
+                    ),
+                )
+            },
+            bottomBar = {
+                TabBar(
+                    items = Destination.entries.map { entry ->
+                        TabBarItem(value = entry) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Icon(entry.icon, contentDescription = null)
+                                Text(entry.label, variant = TextVariant.LabelSmall, maxLines = 1)
+                            }
                         }
-                    }
-                },
-                selectedValue = destination,
-                onValueSelected = { destination = it },
-                modifier = Modifier.fillMaxWidth(),
-            )
-        },
-    ) { padding ->
-        when (destination) {
-            Destination.Home -> HomeTab(Modifier.padding(padding))
-            Destination.Search -> Text("Search", modifier = Modifier.padding(padding))
-            Destination.Account -> Text("Account", modifier = Modifier.padding(padding))
+                    },
+                    selectedValue = destination,
+                    onValueSelected = { value ->
+                        if (value == destination) reselects.tryEmit(Unit)
+                        destination = value
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            },
+        ) { padding ->
+            when (destination) {
+                Destination.Home -> HomeTab(Modifier.padding(padding))
+                Destination.Search -> Text("Search", modifier = Modifier.padding(padding))
+                Destination.Account -> Text("Account", modifier = Modifier.padding(padding))
+            }
         }
     }
 }
@@ -764,7 +823,15 @@ with `animateDpAsState`: every selector, tab strip and floating tab bar shares t
 
 ## Bottom sheet with its own action bar
 
-A sheet that state opens is `FlowModal(visible = …)`; its header is `FlowModalTopBar`.
+A sheet that state opens is `FlowModal(visible = …)`; its header is `FlowModalTopBar`. Its content
+lies flat on the sheet — rows, fields and sections at the sheet's gutter, never wrapped in a card or
+a `RaisedSurface` and never given side padding of their own.
+
+Every sheet is as tall as its content, up to the cap, so none passes `autoHeight` (ignored) or
+`allowPartial = false` (the default). A body that can outgrow the cap scrolls — a lazy list or
+`verticalScroll` — or it is cut off there; a body that must stay tall while a search narrows it
+takes `Modifier.fillMaxHeight()`. `rememberFlowModal(allowPartial = true)` is only for a long list
+that may peek first.
 
 ```kotlin
 @Composable
@@ -777,7 +844,6 @@ fun FilterSheet(onApply: (unpaidOnly: Boolean) -> Unit) {
     FlowModal(
         visible = open,
         onDismissRequest = { open = false },
-        controller = rememberFlowModal(),
         header = { FlowModalTopBar("Filters", onClose = { open = false }, closeContentDescription = "Close") },
         footer = {
             FlowModalActionBar(
@@ -868,6 +934,7 @@ val picker = rememberFlowModal()
 val scope = rememberCoroutineScope()
 
 FlowModal(picker, header = { FlowModalTopBar("Choose a wallet", onClose = { picker.hide() }) }) {
+    // A list that can outgrow the sheet is lazy, so it scrolls under the header at the cap.
     WalletRows(onPick = { wallet ->
         scope.launch {
             picker.hideAndWait()
@@ -912,6 +979,10 @@ fun MoreMenu(onRename: () -> Unit, onArchive: () -> Unit) {
 }
 ```
 
+The actions of a row — which a phone shows as a sheet and a pointer as a menu, with a
+right-click — are `AdaptiveMenu(state, actions = listOf(AdaptiveMenuItem(…)))` on the same
+`rememberDropdownPopup()`, with `Modifier.contextMenu(menu)` on the row.
+
 ## Region that is always dark
 
 A photo viewer, a camera or an editor is dark whatever the app theme. `ArecaDarkTheme` keeps the
@@ -922,7 +993,8 @@ bars while composed and restores them when it leaves.
 @Composable
 fun PhotoViewer(photo: Painter, onClose: () -> Unit) {
     ArecaDarkTheme {
-        SystemBars(color = ArecaTheme.colors.bgCanvas)
+        // The page's own ground, which BaseLayout paints below.
+        SystemBars(color = ArecaTheme.surface.ground)
         BaseLayout(
             topBar = {
                 TopBar(
@@ -1052,6 +1124,9 @@ It needs `dev.voir.areca:charts` beside `foundation`, and `icons` for the glyph.
   `lastVisibleIndex`.
 - A row whose meter belongs to it goes in `ExpandableListItem`'s `bottom` slot, so tapping the
   meter opens the row; what it reveals goes in its content.
+- The period's switch, title, figures and chart head the page on its ground, as a `PanelLayout`
+  header does; the sections under them — the usual figures, the categories — sit on cards. The
+  category rows bring their own inset, so their card's padding is not applied.
 - A row's amount is an `Amount` the presentation layer formatted for the locale, drawn with
   `AmountText` in the row's `value` (or `trailing`) slot with no `style`: it takes the slot's type,
   with tabular figures so the column of amounts lines up and the cents a step smaller.
@@ -1071,6 +1146,8 @@ data class PeriodSummary(
     val title: String,
     val income: Float,
     val spent: Float,
+    val incomeText: String,
+    val spentText: String,
     val description: String,
 )
 
@@ -1110,7 +1187,7 @@ fun AnalyticsOverview(
 
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.xl3)) {
         Column(
-            modifier = Modifier.padding(horizontal = ArecaTheme.spacing.horizontalContentInsets),
+            modifier = Modifier.horizontalContentInsets(),
             verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg),
         ) {
             SlidingSelector(
@@ -1132,8 +1209,8 @@ fun AnalyticsOverview(
                 }
             }
             StatGrid {
-                Stat(label = "Income", value = "€${period.income.toInt()}")
-                Stat(label = "Expenses", value = "€${period.spent.toInt()}")
+                Stat(label = "Income", value = period.incomeText)
+                Stat(label = "Expenses", value = period.spentText)
             }
             StackedBarChart(
                 segments = listOf(
@@ -1165,41 +1242,44 @@ fun AnalyticsOverview(
         )
 
         Column(
-            modifier = Modifier.padding(horizontal = ArecaTheme.spacing.horizontalContentInsets),
-            verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg),
+            modifier = Modifier.horizontalContentInsets(),
+            verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md),
         ) {
             Text("Your usual month", variant = TextVariant.HeadingExtraSmall)
-            StatGrid {
-                usual.forEach { (label, value, note) -> Stat(label = label, value = value, note = note) }
+            Card(modifier = Modifier.fillMaxWidth()) { padding ->
+                StatGrid(modifier = Modifier.padding(padding)) {
+                    usual.forEach { (label, value, note) -> Stat(label = label, value = value, note = note) }
+                }
             }
         }
 
-        Column(modifier = Modifier.padding(horizontal = ArecaTheme.spacing.md)) {
-            categories.forEach { category ->
-                ExpandableListItem(
-                    expanded = open == category.name,
-                    onExpandedChange = { open = if (it) category.name else null },
-                    title = { Text(category.name) },
-                    // Formatted parts, drawn in the slot's type: no style, no fontWeight.
-                    value = { AmountText(category.amount) },
-                    // The meter is part of the row, so a tap on it opens the category too.
-                    bottom = {
-                        Column(verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md)) {
-                            MeterBar(
-                                fraction = category.share,
-                                marker = category.usualShare,
-                                color = spent,
-                                contentDescription = "Usual ${category.usualAmount}",
-                            )
-                            Text(category.detail, variant = TextVariant.BodyExtraSmall, color = TextColor.Subtle)
+        // The rows bring their own 16dp inset, so the card's padding is not applied.
+        Card(modifier = Modifier.fillMaxWidth().horizontalContentInsets()) { _ ->
+            Column {
+                categories.forEach { category ->
+                    ExpandableListItem(
+                        expanded = open == category.name,
+                        onExpandedChange = { open = if (it) category.name else null },
+                        title = { Text(category.name) },
+                        // Formatted parts, drawn in the slot's type: no style, no fontWeight.
+                        value = { AmountText(category.amount) },
+                        // The meter is part of the row, so a tap on it opens the category too.
+                        bottom = {
+                            Column(verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md)) {
+                                MeterBar(
+                                    fraction = category.share,
+                                    marker = category.usualShare,
+                                    color = spent,
+                                    contentDescription = "Usual ${category.usualAmount}",
+                                )
+                                Text(category.detail, variant = TextVariant.BodyExtraSmall, color = TextColor.Subtle)
+                            }
+                        },
+                        onClickLabel = "Show subcategories",
+                    ) {
+                        category.subcategories.forEach { (name, amount) ->
+                            ListItem(title = { Text(name) }, value = { AmountText(amount) }, nestingLevel = 1)
                         }
-                    },
-                    showChevron = false,
-                    container = ExpandableListItemContainer.Soft,
-                    onClickLabel = "Show subcategories",
-                ) {
-                    category.subcategories.forEach { (name, amount) ->
-                        ListItem(title = { Text(name) }, value = { AmountText(amount) }, nestingLevel = 1)
                     }
                 }
             }
@@ -1273,8 +1353,8 @@ fun PlanPicker(
 ## Catalogue with filters
 
 A searchable list with filters: the query under the title, the count of filters in force on the
-bar's `FilterAction`, those filters as chips that remove themselves, and a sheet that edits a draft
-of them. The view model owns the filters and the draft; the sheet is open while there is a draft,
+bar's `FilterAction`, those filters as chips that remove themselves under the query, the items by
+family on inset cards, and a sheet that edits a draft of them. The view model owns the filters and the draft; the sheet is open while there is a draft,
 so it is `FlowModal(item = draft)` and slides out with the last draft shown. Filtering that the
 person must confirm ("Show results") edits the draft; a chip removed applies at once.
 
@@ -1312,19 +1392,20 @@ data class CatalogueFilters(
 data class CatalogueItem(val id: String, val name: String, val detail: String)
 
 /**
- * A searchable catalogue: the query under the title, the filters in force as chips that remove
- * themselves, the list, and a sheet that edits the filters.
+ * A searchable catalogue: the query and the filters in force under the title, the items by family
+ * on cards, and a sheet that edits the filters.
  *
  * @param filters The filters in force.
  * @param draft The filters being edited in the sheet, or `null` while the sheet is closed.
  * @param families Every family that can be chosen.
- * @param items The items the filters let through.
+ * @param results The items the filters let through, by family, and where loading them stands.
  * @param onQueryChange Called with the new search text.
  * @param onFiltersChange Called with filters to apply at once — a chip removed.
  * @param onOpenFilters Opens the sheet with the current filters as its draft.
  * @param onDraftChange Called with the draft as it is edited.
  * @param onApplyDraft Applies the draft and closes the sheet.
  * @param onDismissFilters Closes the sheet and drops the draft.
+ * @param onLoadNextPage Asks for the next page of results.
  * @param onOpenItem Opens an item.
  */
 @Composable
@@ -1332,13 +1413,14 @@ fun CatalogueScreen(
     filters: CatalogueFilters,
     draft: CatalogueFilters?,
     families: List<String>,
-    items: List<CatalogueItem>,
+    results: PagedContentListState<ContentListGroup<String, CatalogueItem>>,
     onQueryChange: (String) -> Unit,
     onFiltersChange: (CatalogueFilters) -> Unit,
     onOpenFilters: () -> Unit,
     onDraftChange: (CatalogueFilters) -> Unit,
     onApplyDraft: () -> Unit,
     onDismissFilters: () -> Unit,
+    onLoadNextPage: () -> Unit,
     onOpenItem: (CatalogueItem) -> Unit,
 ) {
     val listState = rememberLazyListState()
@@ -1350,62 +1432,66 @@ fun CatalogueScreen(
                 title = "Catalogue",
                 trailing = { FilterAction(onClick = onOpenFilters, badge = filters.count.takeIf { it > 0 }?.toString(), contentDescription = "Filters") },
                 bottom = {
-                    SearchField(
-                        value = filters.query,
-                        onValueChange = onQueryChange,
-                        modifier = Modifier.horizontalContentInsets(),
-                        placeholder = { Text("Search perfumes") },
-                    )
+                    Column(verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md)) {
+                        SearchField(
+                            value = filters.query,
+                            onValueChange = onQueryChange,
+                            modifier = Modifier.horizontalContentInsets(),
+                            placeholder = { Text("Search perfumes") },
+                        )
+                        if (filters.families.isNotEmpty() || filters.inStockOnly) {
+                            // The filters in force, each with its own way out.
+                            LazyRow(
+                                contentPadding = PaddingValues(horizontal = ArecaTheme.spacing.horizontalContentInsets),
+                                horizontalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md),
+                            ) {
+                                items(filters.families.toList(), key = { it }) { family ->
+                                    Chip(
+                                        label = family,
+                                        onRemove = { onFiltersChange(filters.copy(families = filters.families - family)) },
+                                        removeContentDescription = "Remove $family",
+                                    )
+                                }
+                                if (filters.inStockOnly) {
+                                    item(key = "stock") {
+                                        Chip(
+                                            label = "In stock",
+                                            onRemove = { onFiltersChange(filters.copy(inStockOnly = false)) },
+                                            removeContentDescription = "Remove In stock",
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
                 },
             )
         },
     ) { padding ->
-        LazyColumn(state = listState, contentPadding = padding) {
-            if (filters.families.isNotEmpty() || filters.inStockOnly) {
-                item(key = "applied") {
-                    // The filters in force, each with its own way out.
-                    LazyRow(
-                        contentPadding = PaddingValues(horizontal = ArecaTheme.spacing.horizontalContentInsets),
-                        horizontalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md),
-                    ) {
-                        items(filters.families.toList(), key = { it }) { family ->
-                            Chip(
-                                label = family,
-                                onRemove = { onFiltersChange(filters.copy(families = filters.families - family)) },
-                                removeContentDescription = "Remove $family",
-                            )
-                        }
-                        if (filters.inStockOnly) {
-                            item(key = "stock") {
-                                Chip(
-                                    label = "In stock",
-                                    onRemove = { onFiltersChange(filters.copy(inStockOnly = false)) },
-                                    removeContentDescription = "Remove In stock",
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-            if (items.isEmpty()) {
-                item(key = "empty") {
-                    Fallback(
-                        title = "Nothing matches",
-                        body = "Try fewer filters or another search.",
-                        actionText = "Clear filters",
-                        onAction = { onFiltersChange(CatalogueFilters(query = filters.query)) },
-                    )
-                }
-            } else {
-                items(items, key = { it.id }) { item ->
-                    ListItem(
-                        title = { Text(item.name) },
-                        subtitle = { Text(item.detail) },
-                        onClick = { onOpenItem(item) },
-                        onClickLabel = "Open ${item.name}",
-                    )
-                }
-            }
+        // Rows on the grey page sit on cards: one inset card per family, its name inside.
+        GroupedPagedContentList(
+            state = results,
+            contentPadding = padding,
+            groupLayout = ContentListGroupLayout.Inset,
+            listState = listState,
+            onLoadNextPage = onLoadNextPage,
+            itemKey = { it.id },
+            emptyContent = {
+                Fallback(
+                    title = "Nothing matches",
+                    body = "Try fewer filters or another search.",
+                    actionText = "Clear filters",
+                    onAction = { onFiltersChange(CatalogueFilters(query = filters.query)) },
+                )
+            },
+            groupHeaderContent = { family -> Text(family) },
+        ) { item ->
+            ListItem(
+                title = { Text(item.name) },
+                subtitle = { Text(item.detail) },
+                onClick = { onOpenItem(item) },
+                onClickLabel = "Open ${item.name}",
+            )
         }
     }
 
@@ -1416,7 +1502,11 @@ fun CatalogueScreen(
         header = { FlowModalTopBar(title = "Filters", onClose = onDismissFilters) },
         footer = { FlowModalActionBar(confirmText = "Show results", onConfirm = onApplyDraft) },
     ) { edited ->
-        Column(verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg)) {
+        // Flat on the sheet, and scrolling once a long list of families outgrows it.
+        Column(
+            modifier = Modifier.verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg),
+        ) {
             Text("Family", variant = TextVariant.Overline, modifier = Modifier.horizontalContentInsets())
             FlowBadgeSelect(
                 options = families.map { BadgeOption(label = { Text(it) }, value = it) },
@@ -1448,7 +1538,10 @@ fun CatalogueScreen(
 ```
 
 - One filter vocabulary: the same chips above the list and in the sheet, the same order.
+- The chips ride in the bar's `bottom` under the query, so the filters in force stay in sight while
+  the list scrolls.
 - The empty face says what to do — "Clear filters" — and keeps the query.
+- In the sheet, the overlines and the chips take the sheet's gutter; the checkbox row brings its own.
 - Compiled in the playground as `CatalogueFiltersRecipe.kt`.
 
 ## Product detail
@@ -1554,9 +1647,11 @@ fun ProductDetailScreen(
                 }
             }
             item(key = "figures") {
-                StatGrid(modifier = Modifier.horizontalContentInsets(), columns = 2) {
-                    Stat(label = "Rating", value = product.rating)
-                    Stat(label = "Reviews", value = product.reviews)
+                Card(modifier = Modifier.fillMaxWidth().horizontalContentInsets()) { padding ->
+                    StatGrid(modifier = Modifier.padding(padding), columns = 2) {
+                        Stat(label = "Rating", value = product.rating)
+                        Stat(label = "Reviews", value = product.reviews)
+                    }
                 }
             }
             item(key = "facts") {
@@ -1573,7 +1668,8 @@ fun ProductDetailScreen(
 }
 ```
 
-- The price is an `AmountText`; figures are `Stat`s; facts are a `Section` of value rows.
+- The price is an `AmountText`; figures are `Stat`s on a card; facts are a `Section` of value
+  rows. The name and price head the page on its ground; what follows sits on cards.
 - Compiled in the playground as `ProductDetailRecipe.kt` (needs `dev.voir.areca:media`).
 
 ## Anti-patterns
@@ -1598,6 +1694,13 @@ fun ProductDetailScreen(
 | `if (item != null) FlowModal(…)`, or an app `rememberLastNonNull` around a sheet | `FlowModal(item = item, onDismissRequest = { item = null }) { item -> … }` |
 | `controller.hide()` then `navigate(…)` at once | `scope.launch { controller.hideAndWait(); navigate(…) }` |
 | An app `AppModalTopBar`, or `TopBar(style = TopBarStyle.Modal, size = TopBarSize.Modal, windowInsets = FlowModalHeaderInsets, trailing = { CloseAction(…) })` in each sheet | `FlowModalTopBar(title, onClose = …)`; a pinned search in its `bottom` |
+| Rows straight on the grey page: a `LazyList`, a `PagedContentList` or `ListItem`s under `BaseLayout` with no card | A card under the rows: `GroupedPagedContentList(groupLayout = ContentListGroupLayout.Inset)` for a long list, `Card(Modifier.fillMaxWidth().horizontalContentInsets()) { _ -> List { … } }` or a `Section` for a short one |
+| A `Card` or `RaisedSurface` around a sheet's form, list or settings, or side padding around its rows | Nothing: rows, fields and `Section`s lie flat on the sheet at its gutter; a `Card` there is emphasis only — a total, a `ChoiceCard` |
+| `horizontalContentInsets()` or side padding around rows, a `List` or `Settings`; a `separatorInset` to clear a leading icon | Nothing: rows carry their own 16dp start padding, sections their gutter, and hairlines start at the text |
+| `rememberFlowModal(autoHeight = true)`, `allowPartial = false`, or a fixed sheet height | Nothing: a sheet is as tall as its content. A long body scrolls; a tall searchable body takes `Modifier.fillMaxHeight()`; `allowPartial = true` only for a long list that may peek |
+| An app choice sheet — an outlined card per option, a `LazyColumn` under its own header — or `controller.hide()` in a single choice's `onChange` | `SelectFlowModal(controller, title = …, values, options)`, which closes itself on the pick |
+| Choice rows in a `ConfirmSheet`'s `extra` inset by the sheet's padding | `extra = { ConfirmSheetRows { RadioListItem(…) } }` |
+| Attachment sources drawn as cards of your own — a big camera card over two small ones | `AttachmentSourceSheet(layout = AttachmentChoiceLayout.Bento)` (`dev.voir.areca:flow-attachments`) when the sources are fixed and one leads; the default rows otherwise |
 | An app `EmptyContent` / `EmptyState` / `ErrorContent` wrapper around `Fallback` | `Fallback(title, body = …, tone = FallbackTone.Empty / Failure, actionText, onAction)` |
 | A hand-built floating button: a shadowed `Box` in `overlay` with `navigationBarsPadding()` and a magic `Spacer(Modifier.height(88.dp))` at the end of the list | `BaseLayout(floatingAction = { Button(…, leading = { Icon(…) }) })`; the frame adds its height to `padding` |
 | `ToastHost` in `overlay` lifted above a bar with `padding(bottom = …)` | `BaseLayout(toastState = toasts)` |

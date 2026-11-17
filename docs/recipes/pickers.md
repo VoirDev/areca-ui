@@ -59,7 +59,7 @@ fun NoteFilters(
         SlidingSelector(
             items = Level.entries.map { SelectorItem(it) { Text(it.label) } },
             selected = level,
-            onSelect = { if (it != null) onLevelChange(it) },
+            onSelectedChange = onLevelChange,
         )
 
         Row(
@@ -70,7 +70,7 @@ fun NoteFilters(
             SlidingSelector(
                 items = Match.entries.map { SelectorItem(it) { Text(it.label) } },
                 selected = match,
-                onSelect = { if (it != null) onMatchChange(it) },
+                onSelectedChange = onMatchChange,
                 style = SlidingSelectorStyle.Pill,
                 size = SlidingSelectorSize.Small,
                 layout = SelectorLayout.Hug,
@@ -106,9 +106,10 @@ fun NoteFilters(
 }
 ```
 
-- **Required or optional.** The level and the match always have a value: the default
-  `SelectorMode.Required` never reports `null`, and tapping the chosen option does nothing. A note's
-  preference may be unset: `SelectorMode.Optional` reports `null` when the chosen option is tapped
+- **Required or optional.** The level and the match always have a value: the
+  `SlidingSelector(items, selected, onSelectedChange)` form takes a non-null value and never reports
+  `null`, and tapping the chosen option does nothing. A note's preference may be unset: the
+  `onSelect` form with `SelectorMode.Optional` reports `null` when the chosen option is tapped
   again, and announces each option as a switch.
 - **Motion.** Each selector opens with its thumb in place. The has / avoid thumb grows in on the
   first choice, slides and changes colour between the two, and shrinks away when cleared.
@@ -127,7 +128,7 @@ SlidingSelector(
         SelectorItem(Theme.Dark, contentDescription = "Dark theme") { Icon(ArecaIcons.MoonAlt, null) },
     ),
     selected = theme,
-    onSelect = { if (it != null) onThemeChange(it) },
+    onSelectedChange = onThemeChange,
     layout = SelectorLayout.Hug,
 )
 ```

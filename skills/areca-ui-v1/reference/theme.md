@@ -23,6 +23,7 @@ fun ArecaThemeProvider(darkTheme: Boolean = false, baseColors: ArecaBaseColors =
     surfaceLayout: SurfaceLayout = SurfaceLayout.Grouped,
     surfaces: ArecaSurfaces = ArecaSurfaces.from(baseColors, surfaceLayout, darkTheme),
     hues: ArecaHues = ArecaHues(),
+    labels: ArecaLabels = ArecaLabels(),
     radius: ArecaRadius = ArecaRadius(),
     shapes: ArecaShapes = ArecaShapes.from(radius), spacing: ArecaSpacing = ArecaSpacing(),
     elevation: ArecaElevation = ArecaElevation(), motion: ArecaMotion = ArecaMotion(),
@@ -61,8 +62,11 @@ fun interface ComponentDefaults {
 - The theme seeds `LocalAvatarStyle`, `LocalBadgeStyle`, `LocalProgressBarStyle`,
   `LocalSkeletonStyle`, `LocalSlidingSelectorStyle`, `LocalTabsStyle`, `LocalWheelPickerStyle` and
   `LocalPageCounterStyle` with `null`, so each component builds its style where it is drawn, from
-  the surface under it. `LocalCardStyle` is seeded with `CardStyle.Default`.
-- It also seeds `LocalContentColor` (`fgBase`), `LocalTextStyle` (`baseTypography.md`, normal
+  the surface under it. `LocalNoticeStyle` is `null` too (a notice derives its style from its tone
+  and emphasis), and so are `LocalConfirmSheetStyle` and `LocalConfirmSheetSize` (a confirm sheet
+  builds them from the flow modal defaults in scope). `LocalCardStyle` is seeded with
+  `CardStyle.Default`.
+- It also seeds `LocalContentColor` (`fgBase`), `LocalTextStyle` (`typography.bodyMedium`, normal
   weight) and `LocalIconSize` (`IconSize.Small`), which slot content and plain `Text` / `Icon`
   inherit.
 - Without a provider — previews, tests — every accessor returns the light defaults. Wrap a preview
@@ -85,11 +89,12 @@ Read through `ArecaTheme` inside composition; every accessor is `@Composable`.
 
 | Accessor | Type | Holds |
 | --- | --- | --- |
-| `ArecaTheme.surface` | `ArecaSurface` | Roles of the surface the content in scope is drawn on — `ground`, `raised`, `well`, `onWell`, `separator`, `field`; what components read for fills |
+| `ArecaTheme.surface` | `ArecaSurface` | Roles of the surface the content in scope is drawn on — `ground`, `raised`, `well`, `onWell`, `separator`, `field`, `band`; what components read for fills |
 | `ArecaTheme.surfaceLevel` | `SurfaceLevel` | `Page`, `Card` or `Inset`: where the content in scope sits |
 | `ArecaTheme.surfaces` | `ArecaSurfaces` | `layout`, the `screen` and `sheet` ladders, `bar` |
 | `ArecaTheme.colors` | `ArecaColors` | Semantic colours for the direction in scope — what components and screens read |
 | `ArecaTheme.hues` | `ArecaHues` | Categorical colours, one per kind of thing, for tiles that tell unrelated rows apart — see Hues |
+| `ArecaTheme.labels` | `ArecaLabels` | The words components share (back, close, search, …) in the app's language — see Labels |
 | `ArecaTheme.typography` | `ArecaTypography` | Named text styles (roles) |
 | `ArecaTheme.spacing` | `ArecaSpacing` | Spacing ramp and screen gutters |
 | `ArecaTheme.sizing` | `ArecaSizing` | Control heights and touch target for the input in scope — what every size preset reads |
@@ -145,8 +150,9 @@ Six families — `Brand`, `Danger`, `Success`, `Warn`, `Info`, `Neutral` — eac
 | `bg{Family}Intense` | The solid fill under press or hover |
 
 `bgWarnBase` is light in both themes, so its content is `fgOnWarn`, not `fgOnFill`.
-In the dark theme every `bg{Family}Muted` and `accentMuted` is `neutral90` with 14% of the family's
-colour mixed in, and `bgNeutralBase` is `neutral80`.
+In the dark theme every tone's `bg{Family}Muted` (all but `Neutral`) and `accentMuted` is `neutral90`
+with 14% of the family's colour mixed in (its `60` step, yellow's `50`); `bgNeutralMuted` and
+`bgNeutralBase` are `neutral80`.
 `bgNeutral*` is for a status with no sentiment.
 
 ### Foregrounds
@@ -161,7 +167,7 @@ colour mixed in, and `bgNeutralBase` is `neutral80`.
 | `fgOnFill` | Content on any solid tone fill except `bgWarnBase`; white in both themes |
 | `fgOnWarn` | Content on `bgWarnBase` |
 | `fgBrand`, `fgDanger`, `fgSuccess`, `fgInfo`, `fgWarn` | Icons, graphics and rules in the family's colour; 3:1, not enough for type |
-| `fgBrandText`, `fgDangerText`, `fgSuccessText`, `fgInfoText`, `fgWarnText` | Text in the family's colour (a field error is `fgDangerText`); 4.5:1 on the canvas and on the family's muted ground |
+| `fgBrandText`, `fgDangerText`, `fgSuccessText`, `fgInfoText`, `fgWarnText` | Text in the family's colour (a field error is `fgDangerText`); 4.5:1 on the canvas and on the family's muted ground. Light `fgBrandText` is the first of `brand70`, `brand80`, `brand90` that reads at 4.5:1 on `brand20` (`bgBrandMuted`), so a light brand such as a yellow keeps soft buttons and brand text readable; the default brand takes `brand70` |
 | `fgNeutral` | Neutral status text and icons (one token serves both) |
 
 ### Borders
@@ -243,10 +249,11 @@ card and in a sheet.
 enum class SurfaceLayout { Grouped, Plain }
 enum class SurfaceLevel { Page, Card, Inset }
 enum class SurfaceRoot { Screen, Sheet }
-enum class SurfaceRole { Ground, Raised, Well, OnWell, Separator, Field }
+enum class SurfaceRole { Ground, Raised, Well, OnWell, Separator, Field, Band }
 
 data class ArecaSurface(ground: Color, raised: Color, well: Color, onWell: Color,
-    separator: Color, field: Color) { operator fun get(role: SurfaceRole): Color }
+    separator: Color, field: Color, band: Color = well) {
+    operator fun get(role: SurfaceRole): Color }
 data class SurfaceLadder(page: ArecaSurface, card: ArecaSurface, inset: ArecaSurface) {
     fun at(level: SurfaceLevel): ArecaSurface }
 data class ArecaSurfaces(layout: SurfaceLayout, screen: SurfaceLadder, sheet: SurfaceLadder,
@@ -260,16 +267,20 @@ data class ArecaSurfaces(layout: SurfaceLayout, screen: SurfaceLadder, sheet: Su
 @Composable fun RaisedSurface(content: @Composable () -> Unit)
 @Composable fun ProvideSurface(level: SurfaceLevel,
     root: SurfaceRoot = /* the current ladder */, content: @Composable () -> Unit)
+@Composable fun ProvideSurface(fill: Color, content: @Composable () -> Unit)
+// The surface a fill of your own stands for: wrap the content of a bar painted surfaces.bar, or a
+// panel, so soft buttons and tracks in it take that surface's well and stay visible in dark.
 ```
 
 | Role | For | Read by |
 | --- | --- | --- |
 | `ground` | The surface's own fill | `BaseLayout`'s page, `TopBar`, `Table` rows, `WheelPicker`, a skeleton's highlight, chart marker rings |
 | `raised` | A card laid on it | `Card` (default style), a settings `Section`, a subtle `Notice`, a `ContentList` inset group, `ExpandableListItemContainer.Soft` |
-| `well` | Something set into it | Filled, soft and solid-neutral fields; soft `Neutral` buttons, icon buttons and featured icons; `CardStyle.SoftNeutral`; a neutral card footer; a section's band; `SlidingSelector`, `Tabs` and `ProgressBar` tracks; `Skeleton`; `WheelPicker`'s highlight; empty `Avatar`; `PageCounter`; `BadgeStyle.FilledChip`; picture placeholders |
+| `well` | Something set into it | Filled, soft and solid-neutral fields; soft `Neutral` buttons, icon buttons and featured icons; `CardStyle.SoftNeutral`; `SlidingSelector`, `Tabs` and `ProgressBar` tracks; `Skeleton`; `WheelPicker`'s highlight; empty `Avatar`; `PageCounter`; `BadgeStyle.FilledChip`; picture placeholders |
 | `onWell` | Something raised inside a well | `SlidingSelector` and `Tabs` thumbs |
 | `separator` | A hairline on it | Settings section, `List`, `ListItemColumn` and inset-group hairlines |
 | `field` | An outlined field or a stepper | `FieldStyle.outlined()`, a focused filled field, `NumberStepper`, a soft `Badge`; white anywhere in light |
+| `band` | A strip that closes the surface along its edge | A neutral card footer (`CardFooterStyle.soft()`), a settings section's band. Defaults to `well`; in light a white surface's band is `neutral30`, a step past the well, so it does not run into a grey page |
 
 Grounds of each level:
 
@@ -474,7 +485,8 @@ fun PhotoViewer(photo: Painter, onClose: () -> Unit) {
 ```
 
 - `ArecaDarkTheme(content)` puts content in the dark theme whatever the theme around it, keeping the
-  app's palette, surface layout, hues, shapes, spacing, elevation, motion, type and `componentDefaults`,
+  app's palette, surface layout, hues, labels, shapes, spacing, sizing, elevation, motion, type and
+  `componentDefaults`,
   and re-resolving component defaults and surfaces for dark. Inside an already-dark theme it changes nothing. A nested
   `ArecaThemeProvider(darkTheme = true)` instead resets everything to the library defaults.
 - `ArecaTheme.darkColors` names a dark colour before the `ArecaDarkTheme` scope begins, such as a

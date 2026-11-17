@@ -89,7 +89,7 @@ class EdgeColumnTest {
                 ) {
                     if (pushed) {
                         AdaptiveToolbar(
-                            title = "Lidl",
+                            title = "Corner Market",
                             onBack = { pushed = false },
                             actions = listOf(AdaptiveToolbarAction(icon, "Edit", onClick = {})),
                         )
@@ -145,7 +145,7 @@ class EdgeColumnTest {
                 Tablet(size = DpSize(820.dp, 1180.dp)) {
                     AdaptiveNavigation(destinations, "Home", {}, onSearch = {}) {
                         AdaptiveToolbar(
-                            title = "Lidl",
+                            title = "Corner Market",
                             onBack = {},
                             actions = listOf("Edit", "Share", "Archive", "Delete").map { AdaptiveToolbarAction(icon, it, onClick = {}) },
                         )
@@ -189,12 +189,12 @@ class EdgeColumnTest {
         setContent {
             Tablet {
                 AdaptiveNavigation(destinations, "Home", {}, style = AdaptiveNavigationStyle.Rail) {
-                    AdaptiveToolbar(title = "Lidl", onBack = {}, actions = listOf(AdaptiveToolbarAction(icon, "Edit", onClick = {})))
+                    AdaptiveToolbar(title = "Corner Market", onBack = {}, actions = listOf(AdaptiveToolbarAction(icon, "Edit", onClick = {})))
                 }
             }
         }
 
-        onNodeWithText("Lidl").assertExists()
+        onNodeWithText("Corner Market").assertExists()
         onNodeWithContentDescription("Back").assertExists()
         onNodeWithContentDescription("Edit").assertExists()
     }

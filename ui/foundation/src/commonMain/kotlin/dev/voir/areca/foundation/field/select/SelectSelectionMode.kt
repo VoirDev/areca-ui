@@ -5,8 +5,9 @@ package dev.voir.areca.foundation.field.select
  */
 public enum class SelectSelectionMode {
     /**
-     * At most one value. Choosing an option replaces whatever was chosen before, and choosing
-     * the current one clears the selection.
+     * At most one value. Choosing an option replaces whatever was chosen before. Choosing the
+     * current one clears the selection in a `SelectField` or `SelectSegment` dropdown; in a
+     * `SelectFlowModal` it keeps it unless the sheet is `clearable`.
      */
     Single,
 

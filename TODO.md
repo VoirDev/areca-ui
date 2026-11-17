@@ -33,6 +33,19 @@ start at the repository root.
 
 ## Foundation: components
 
+- [ ] English defaults that do not read `ArecaLabels` yet: `AddAction`, `MenuAction`,
+      `NotificationsAction`, `FilterAction`, `EditAction`, `SettingsAction`, `ShareAction`,
+      `DownloadAction`, `DeleteAction`, `FavoriteAction`, `DoneAction`, `AvatarAction`,
+      `FloatingSidebar`, `AdaptiveNavigation.sidebarToggleDescription`, `Modifier.contextMenu` and
+      `FieldGroup.requiredDescription`.
+- [ ] `SettingsRowSkeleton` and `ListItemSkeleton` cannot turn their shimmer off, as
+      `SkeletonBlock(animated = false)` can; a settings row's `bottom` slot starts under the leading
+      tile while its hairline starts at the text.
+- [ ] `EdgeColumnStyle.default(surface = colors.bgSurface)` reads a fixed ground where the other
+      docked bars read `surfaces.bar`. `BottomActionBar` builds its button styles on the page, not
+      on its bar (soft neutral buttons in it would take the page's well).
+- [ ] `autoHeight` on `rememberFlowModal` and the `FlowModalController` constructor is ignored
+      without a deprecation warning (only the property is `@Deprecated`); remove it in 2.0.
 - [ ] Adaptive shell: the edge column's tooltips open below their anchor (`AnchoredPlacement` has no
       side placement); the shell does not catch the platform's back gesture while the sidebar is
       open (the app routes it to `onSidebarVisibleChange(false)`).
@@ -93,6 +106,10 @@ start at the repository root.
 
 ## Attachments flow
 
+- [ ] The module sheets (`AttachmentSheetFrame`, `AvatarSourceSheet`, `BirthdayRow`'s sheet) build
+      their header from `TopBar(TopBarSize.Modal)` rather than `FlowModalTopBar`; the frame keeps a
+      private `rememberLastNonNull` beside foundation's public one. `AttachmentRow` and
+      `AttachmentTileStyle` read fixed grounds (`bgMuted`, `bgSurface`) rather than surface roles.
 - [ ] `AttachmentImageLoader`, `AttachmentImageState` and `LocalAttachmentImageLoader` are deprecated
       in favour of media's loader and still read as a fallback; remove them in a later release.
 - [ ] The viewer's filmstrip (`AttachmentFilmstrip`) and media's `ThumbnailStrip` do the same job
@@ -103,6 +120,9 @@ start at the repository root.
 
 ## Media
 
+- [ ] `ThumbnailStrip.centreOn` reads the viewport width in a `LaunchedEffect`; before the strip is
+      laid out (width 0) it pushes the chosen thumbnail half off the start edge. Seen in headless
+      rendering; check on a device.
 - [ ] Pinch, peek, swipe-down-to-close and the open/close transition are covered by JVM UI tests
       only; none has been checked on an Android or iOS device.
 - [ ] The viewer's transition assumes its dialog window and the screen's window share coordinates

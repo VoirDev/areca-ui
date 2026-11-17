@@ -10,7 +10,7 @@ deleting the account.
 - It ships **parts and recipes, not screens**: copy the recipe and edit it; never write a configurable
   `ProfileScreen(…)` wrapper.
 - Rows are foundation `SettingsRow`s and go in foundation `Settings { Section { … } }`, beside the
-  app's own rows. Cards (header, cover, summary) and status bands sit on the canvas above the list.
+  app's own rows. Cards (header, cover, summary) and status bands sit on the page above the list.
 - The parts draw and report presses. Form state, validation, rules (what may be unlinked, minimum age),
   networking, image loading, capture, cropping and uploading are the app's. No dependency on
   `flow-auth`, `crop`, `icons`, a navigation library or `viewmodel`.
@@ -93,7 +93,7 @@ LocalAvatarImageLoader: ProvidableCompositionLocal<AvatarImageLoader>
 @Composable fun ProfileSummaryCard(
     summary: ProfileSummary, onClick: () -> Unit, modifier: Modifier = Modifier,
     onClickLabel: String? = null,
-    caption: @Composable () -> Unit = { /* summary.caption or email */ },
+    caption: @Composable () -> Unit = { /* summary.caption, else handle, else email */ },
     trailing: (@Composable BoxScope.() -> Unit)? = null,
 )
 @Composable fun ProfileSummaryCardAction(modifier: Modifier = Modifier, label: String? = null)   // "Edit" + chevron
@@ -106,7 +106,8 @@ AvatarUploadState.Idle | Uploading(progress: Float? = null) | Failed(message: St
     state: AvatarUploadState, onRetry: () -> Unit, onDismiss: () -> Unit, modifier: Modifier = Modifier,
     uploadingTitle: String = "Uploading photo", uploadingSubtitle: String? = null,
     formatProgress: (@Composable (percent: Int) -> String)? = { "$it%" },
-    failedTitle: String = "Photo not updated", retryLabel: String = "Try again", dismissLabel: String = "Dismiss",
+    failedTitle: String = "Photo not updated", retryLabel: String = "Try again",
+    dismissLabel: String = ArecaTheme.labels.dismiss,
 )
 @Composable fun StaleDetailsNotice(message: String, modifier: Modifier = Modifier, title: String = "Showing saved details")
 @Composable fun ProfileLoadFailure(
@@ -149,9 +150,10 @@ AvatarUploadState.Idle | Uploading(progress: Float? = null) | Failed(message: St
     maxDate: LocalDate? = Clock.System.todayIn(TimeZone.currentSystemDefault()),
     removable: Boolean = true,
     label: String = "Birthday", placeholder: String = "Add birthday",
-    formatDate: (LocalDate) -> String = /* English "15 September 1990" */,
+    formatDate: (LocalDate) -> String = /* English "12 March 1990" */,
     sheetTitle: String = "Choose your birthday",
-    applyLabel: String = "Save", cancelLabel: String = "Cancel", removeLabel: String = "Remove",
+    applyLabel: String = "Save",
+    cancelLabel: String = ArecaTheme.labels.cancel, removeLabel: String = ArecaTheme.labels.remove,
     calendarLabels: CalendarLabels = CalendarLabels.English,
     startDayOfWeek: DayOfWeek = DayOfWeek.MONDAY,
     enabled: Boolean = true,
@@ -222,33 +224,33 @@ AvatarSourceOptions.library(label: String = "Choose from library", onClick: () -
 AvatarSourceOptions.remove(label: String = "Remove current photo", onClick: () -> Unit)
 @Composable fun AvatarSourceSheet(
     visible: Boolean, options: List<AvatarSourceOption>, onDismiss: () -> Unit,
-    title: String = "Change photo", subtitle: String? = null, closeLabel: String = "Close",
+    title: String = "Change photo", subtitle: String? = null, closeLabel: String = ArecaTheme.labels.close,
 )
 @Composable fun SignOutSheet(
     visible: Boolean, onConfirm: () -> Unit, onDismiss: () -> Unit, confirming: Boolean = false,
     note: String? = null, title: String = "Sign out?", description: String? = null,
-    confirmText: String = "Sign out", cancelText: String = "Cancel",
+    confirmText: String = "Sign out", cancelText: String = ArecaTheme.labels.cancel,
 )
 @Composable fun SignOutOthersSheet(
     visible: Boolean, onConfirm: () -> Unit, onDismiss: () -> Unit, confirming: Boolean = false,
     title: String = "Sign out all other devices?", description: String? = null, note: String? = null,
-    confirmText: String = "Sign out other devices", cancelText: String = "Cancel",
+    confirmText: String = "Sign out other devices", cancelText: String = ArecaTheme.labels.cancel,
 )
 @Composable fun RevokeSessionSheet(
     session: SessionItem?,                                 // non-null = shown
     onConfirm: (SessionItem) -> Unit, onDismiss: () -> Unit, confirming: Boolean = false,
     title: String = "Sign out this device?", note: String? = null,
-    confirmText: String = "Sign out device", cancelText: String = "Cancel",
+    confirmText: String = "Sign out device", cancelText: String = ArecaTheme.labels.cancel,
     description: @Composable (session: SessionItem) -> String? = { listOfNotNull(it.name, it.client, it.seen).joinToString(" · ") },
 )
 @Composable fun DeleteAccountSheet(
     visible: Boolean, onConfirm: () -> Unit, onDismiss: () -> Unit, confirming: Boolean = false,
-    confirmationPhrase: String? = null,                    // "DELETE": a box that must hold it (case and spaces ignored)
+    confirmationPhrase: String? = null,                    // "DELETE": a box that must hold it (case and surrounding spaces ignored)
     description: String? = null,                           // say whether deletion is instant, scheduled or reversible
     title: String = "Delete this account?", note: String? = null,
-    confirmText: String = "Delete account", cancelText: String = "Cancel",
+    confirmText: String = "Delete account", cancelText: String = ArecaTheme.labels.cancel,
     confirmationPrompt: @Composable (phrase: String) -> String = { "Type $it to confirm." },
-)
+)   // drawn in ConfirmSheetStyle.Danger: the danger tile and a danger confirm button
 ```
 
 ## Rules
@@ -257,7 +259,7 @@ AvatarSourceOptions.remove(label: String = "Remove current photo", onClick: () -
   `LocalAvatarImageLoader` above the app. Without it, `AvatarImageLoader.None` answers `Failed` →
   initials. `Failed` always shows initials, never an empty circle. Hand decoded pictures directly with
   `ProfileAvatar(name, state = AvatarImageState.Ready(painter))`.
-- **Cards on the canvas:** pad with `Modifier.horizontalContentInsets()` and space from the list with
+- **Cards on the page:** pad with `Modifier.horizontalContentInsets()` and space from the list with
   `ArecaTheme.spacing.lg`. When the app restyles sections via `Settings(styles = …)`, compose the cards
   inside that `Settings` as its first children so they take its fill and corner.
 - `separated = false` on a `Section` whose every row has a leading tile. Leading visuals:
@@ -268,6 +270,12 @@ AvatarSourceOptions.remove(label: String = "Remove current photo", onClick: () -
   closing (`visible = false`) or by setting `confirming = true` until the work ends — a sheet left up
   with neither takes no further press. `AvatarSourceSheet` does not close itself: every option's
   `onClick` clears the flag.
+- **Sheets are flat and size to their content.** `AvatarSourceSheet` lists its options as plain
+  `ListItem` rows straight on the sheet's ground — a leading glyph, danger ink for a destructive
+  one — under a modal bar with a close cross; the confirmation sheets are foundation `ConfirmSheet`s
+  and `BirthdayRow`'s calendar a `FlowModal` with Save in its `FlowModalActionBar`. Every one is a
+  `rememberFlowModal()` sheet, as tall as what it holds and clear of the navigation bar on its own:
+  never wrap the options in a card and never add `navigationBarsPadding()` or a bottom spacer.
 - Offer only sources the platform can complete in `AvatarSourceSheet` (no camera option without a
   camera); `remove` only when `summary.avatar != null`.
 - **Upload is separate from the form:** keep `AvatarUploadState` apart from the edit form's state; a
@@ -290,8 +298,9 @@ AvatarSourceOptions.remove(label: String = "Remove current photo", onClick: () -
   gutters the cards and sections already draw. `ProfileLoadFailure` is a whole screen and caps itself.
 - **Settings on a tablet or desktop** is a foundation `ListDetail`: summary card and section rows in
   the list pane, the open page in the detail pane, back action only when `!isTwoPane` (recipe below).
-- `BirthdayRow` is bounded to today by default; move `maxDate` back for an age requirement. Save stays
-  disabled until a day is tapped.
+- `BirthdayRow` is bounded to today by default; move `maxDate` back for an age requirement. A tap
+  marks a day and Save commits it; with no date set Save stays disabled until a day is tapped. Beside
+  Save is Remove while a date is set (Cancel when `removable = false` or no date is set).
 - Put `SignOutRow` and `DeleteAccountRow` each in a `Section` of its own with no header.
 - Key `AccountRow`s by account id inside `forEach`; pass `onClick = null` for the current account.
 - Neutral by default: nothing is brand-coloured; pass brand accents through `SettingsDefaults.styles`.
@@ -300,7 +309,9 @@ AvatarSourceOptions.remove(label: String = "Remove current photo", onClick: () -
 
 - Required words default to English (titles, button labels, sheet questions, `changePhotoLabel`,
   `verifiedDescription`, `currentDescription`, placeholders of rows); pass the app's strings for every
-  one. Optional words (`subtitle`, `footer`, `description`, `note`, `hint`, click labels) default to
+  one. The shared ones — every sheet's `cancelText`, `BirthdayRow`'s `cancelLabel` / `removeLabel`,
+  `AvatarSourceSheet`'s `closeLabel`, `AvatarUploadStatus`'s `dismissLabel` — come from the theme's
+  `ArecaLabels`: localise them once in `ArecaThemeProvider(labels = …)`. Optional words (`subtitle`, `footer`, `description`, `note`, `hint`, click labels) default to
   `null` and draw nothing.
 - Anything that embeds a value is a function: `availableText`, `takenText`, `confirmationPrompt`,
   `RevokeSessionSheet.description`, `formatProgress` (all `@Composable`, so they can call
@@ -573,7 +584,7 @@ enum class AccountPage(val title: StringResource) { EditProfile(Res.string.edit_
 
 @Composable
 fun AccountSettings(summary: ProfileSummary, deviceCount: Int, confirmingSignOut: Boolean,
-    onSignOut: () -> Unit, onSignOutDismissed: () -> Unit,
+    onSignOut: () -> Unit, onSignOutConfirmed: () -> Unit, onSignOutDismissed: () -> Unit,
     editProfile: @Composable () -> Unit, devices: @Composable () -> Unit) {   // the recipes above, unchanged
     var open by rememberSaveable { mutableStateOf<AccountPage?>(null) }       // the app's state
     ListDetail(
@@ -616,7 +627,7 @@ fun AccountSettings(summary: ProfileSummary, deviceCount: Int, confirmingSignOut
         },
     )
     SignOutSheet(visible = confirmingSignOut, description = signOutDescription,
-        onConfirm = onSignOutDismissed, onDismiss = onSignOutDismissed)
+        onConfirm = onSignOutConfirmed, onDismiss = onSignOutDismissed)
 }
 ```
 

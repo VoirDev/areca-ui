@@ -24,6 +24,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
+import dev.voir.areca.theme.ProvideSurface
 import dev.voir.areca.foundation.LocalContentColor
 import dev.voir.areca.keyboard.key.KeyboardGrid
 import dev.voir.areca.keyboard.key.KeyboardKeys
@@ -96,17 +97,21 @@ public fun KeyboardLayout(
             .windowInsetsPadding(windowInsets)
             .padding(size.padding),
     ) {
-        CompositionLocalProvider(LocalContentColor provides style.content) {
-            if (header != null) {
-                header()
-                Spacer(Modifier.height(size.headerGap))
-            }
+        // The keys take the roles of the bar they sit on, not of the page under the keyboard: on a
+        // dark page the page's well is the bar's own shade, and digit keys would lose their fill.
+        ProvideSurface(fill = style.bg) {
+            CompositionLocalProvider(LocalContentColor provides style.content) {
+                if (header != null) {
+                    header()
+                    Spacer(Modifier.height(size.headerGap))
+                }
 
-            content()
+                content()
 
-            if (footer != null) {
-                Spacer(Modifier.height(size.footerGap))
-                footer()
+                if (footer != null) {
+                    Spacer(Modifier.height(size.footerGap))
+                    footer()
+                }
             }
         }
     }

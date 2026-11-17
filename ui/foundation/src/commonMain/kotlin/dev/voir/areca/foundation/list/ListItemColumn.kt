@@ -225,8 +225,8 @@ private data class RowSeparatorElement(
 }
 
 /**
- * Draws one hairline per recorded row boundary, over the rows: from the text of the row below it
- * — where that row is a [ListItem] — or from the group inset, to the group inset at the far edge.
+ * Draws one hairline per recorded row boundary, over the rows: from the text of the row below it to
+ * the far edge where that row is a [ListItem], otherwise inset by [inset] at both ends.
  *
  * @property boundaries Boundaries recorded by the group layout, observed while the node is
  *   attached.
@@ -290,12 +290,16 @@ private class RowSeparatorNode(
         val coordinates = requireLayoutCoordinates()
 
         boundaries.offsets.forEach { boundary ->
-            val start = rowAnchors.textStartAt(coordinates, boundary, rtl)?.coerceAtLeast(insetPx) ?: insetPx
-            val lineWidth = size.width - start - insetPx
+            // From the text of a ListItem to the far edge, as a settings section draws it; any other
+            // row is inset by the list's separator inset at both ends.
+            val textStart = rowAnchors.textStartAt(coordinates, boundary, rtl)
+            val start = textStart ?: insetPx
+            val end = if (textStart != null) 0f else insetPx
+            val lineWidth = size.width - start - end
             if (lineWidth <= 0f) return@forEach
             drawRect(
                 color = color,
-                topLeft = Offset(if (rtl) insetPx else start, boundary - lineThickness / 2f),
+                topLeft = Offset(if (rtl) end else start, boundary - lineThickness / 2f),
                 size = Size(lineWidth, lineThickness),
             )
         }

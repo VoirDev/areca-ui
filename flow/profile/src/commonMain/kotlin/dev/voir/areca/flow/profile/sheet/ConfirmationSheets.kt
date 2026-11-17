@@ -24,6 +24,7 @@ import dev.voir.areca.foundation.field.FieldGroup
 import dev.voir.areca.foundation.field.FieldLabelPlacement
 import dev.voir.areca.foundation.field.TextField
 import dev.voir.areca.foundation.overlay.ConfirmSheet
+import dev.voir.areca.foundation.overlay.ConfirmSheetStyle
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.theme.ArecaTheme
 
@@ -216,6 +217,8 @@ public fun DeleteAccountSheet(
     ConfirmSheet(
         visible = visible,
         icon = BundledIcons.Trash,
+        // Deleting an account cannot be taken back: the danger tile and a danger confirm button.
+        style = ConfirmSheetStyle.Danger,
         title = title,
         description = description,
         confirmText = confirmText,

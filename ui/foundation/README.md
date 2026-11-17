@@ -90,6 +90,7 @@ A container of your own, in `dev.voir.areca.theme`:
 | --- | --- |
 | `RaisedSurface` | Content drawn on a fill of your own in `ArecaTheme.surface.raised`: puts it one level up, as a card does |
 | `ProvideSurface(level, root)` | Content at a chosen `SurfaceLevel` (`Page`, `Card`, `Inset`) of the current ladder, or of a `SurfaceRoot` (`Screen`, `Sheet`) — a white panel across a grey page is `SurfaceLevel.Card` |
+| `ProvideSurface(fill)` | Content on the surface a fill of your own stands for — a bar painted `surfaces.bar` — so the fills inside it step from that fill |
 
 ```kotlin
 Box(Modifier.background(ArecaTheme.surface.raised, ArecaTheme.shapes.surface)) {
@@ -1333,7 +1334,7 @@ Settings {
 A list owns the group's surface and the hairlines between its rows; never draw a divider between two
 rows by hand. Each hairline starts where the text of the `ListItem` under it starts — past its
 leading icon — and runs to the far edge, as in a settings section; a row that is not a `ListItem`
-gets `ListSize.separatorInset`. A row is one accessibility node. `Settings` hands its rows the styles and sizes in
+is inset by `ListSize.separatorInset` at both ends. A row is one accessibility node. `Settings` hands its rows the styles and sizes in
 `LocalSettingsStyles` and `LocalSettingsSizes` — provide `SettingsDefaults.styles(…)` and
 `SettingsDefaults.sizes(…)` there once for the whole app — or, unprovided, the defaults; it does not
 scroll, so put it in a scrolling container.

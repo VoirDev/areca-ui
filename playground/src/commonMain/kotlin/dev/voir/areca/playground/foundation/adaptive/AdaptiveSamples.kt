@@ -44,12 +44,12 @@ internal class Transaction(
 
 /** The sample finance app's recent transactions, newest first. */
 internal val Transactions: List<Transaction> = listOf(
-    Transaction(1, "Lidl", "Groceries", "−€42.80", "Today, 18:12", "Main account"),
+    Transaction(1, "Corner Market", "Groceries", "−€42.80", "Today, 18:12", "Main account"),
     Transaction(2, "Café Central", "Eating out", "−€6.40", "Today, 08:47", "Main account"),
     Transaction(3, "Northwind GmbH", "Salary", "+€3,200.00", "28 Oct", "Main account"),
-    Transaction(4, "Netflix", "Subscriptions", "−€15.99", "27 Oct", "Travel card"),
+    Transaction(4, "Streamly", "Subscriptions", "−€15.99", "27 Oct", "Travel card"),
     Transaction(5, "Rent", "Housing", "−€950.00", "25 Oct", "Main account"),
-    Transaction(6, "Uber", "Transport", "−€14.20", "24 Oct", "Travel card"),
+    Transaction(6, "City Taxi", "Transport", "−€14.20", "24 Oct", "Travel card"),
 )
 
 /** Olfactory family a perfume is filed under. */

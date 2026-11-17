@@ -9,6 +9,7 @@ import dev.voir.areca.foundation.button.ButtonStyle
 import dev.voir.areca.indication.FocusOutline
 import dev.voir.areca.indication.TouchIndication
 import dev.voir.areca.theme.ArecaTheme
+import dev.voir.areca.theme.ProvideSurface
 
 /**
  * The look of each [KeyRole] on a keyboard.
@@ -80,7 +81,7 @@ public data class KeyStyle(
         @Composable
         public fun default(
             shape: Shape = ArecaTheme.shapes.lg,
-            digit: ButtonStyle = ButtonStyle.soft(ActionColor.Neutral, shape),
+            digit: ButtonStyle = digitKey(shape),
             action: ButtonStyle = ButtonStyle.soft(ActionColor.Brand, shape),
             confirm: ButtonStyle = ButtonStyle.solid(ActionColor.Brand, shape),
             destructive: ButtonStyle = ButtonStyle.soft(ActionColor.Danger, shape),
@@ -96,6 +97,26 @@ public data class KeyStyle(
             info = info,
             ghost = ghost,
         )
+
+        /**
+         * The neutral key look, filled with the well of the bar the keyboard is drawn on.
+         *
+         * A soft neutral fill takes the well of the surface it is built on. A keyboard's style is
+         * built where the keyboard is hosted — on the page — while its keys sit on the bar; on a
+         * dark page the page's well is the bar's own shade, and the keys would lose their fill. So
+         * the look is built on the bar's surface.
+         *
+         * @param shape Container shape.
+         * @return A soft neutral key style for the bar.
+         */
+        @Composable
+        private fun digitKey(shape: Shape): ButtonStyle {
+            var style: ButtonStyle? = null
+            ProvideSurface(fill = ArecaTheme.surfaces.bar) {
+                style = ButtonStyle.soft(ActionColor.Neutral, shape)
+            }
+            return checkNotNull(style)
+        }
 
         /**
          * The info-tinted key look.

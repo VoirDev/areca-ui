@@ -61,14 +61,19 @@ interface MediaImageLoader {
     placeholder: MediaPlaceholder = MediaPlaceholder.Skeleton, zoom: ZoomBehavior = ZoomBehavior.None,
     onClick: (() -> Unit)? = null, onClickLabel: String? = null, scrim: MediaScrim = MediaScrim.None,
     failedText: String? = "Couldn't load this picture", retryLabel: String = "Retry",
-    zoomLabels: ZoomLabels = ZoomLabels(), style: MediaFrameStyle = …, size: MediaFrameSize = …,
+    zoomLabels: ZoomLabels = ZoomLabels(), transition: MediaTransitionState? = null,
+    transitionKey: Any? = null,
+    style: MediaFrameStyle = LocalMediaFrameStyle.current ?: MediaFrameStyle.Default,
+    size: MediaFrameSize = LocalMediaFrameSize.current ?: MediaFrameSize.Default,
+    pictureOverlay: (@Composable MediaPictureScope.() -> Unit)? = null,
     overlay: @Composable BoxScope.() -> Unit = {})
 // `zoom = Sticky` is treated as None in a frame; use MediaImage for a viewer.
 
 @Composable fun MediaFrame(modifier: Modifier = Modifier, aspectRatio: Float? = null,
     state: MediaState = MediaState.Ready, onRetry: (() -> Unit)? = null, onClick: (() -> Unit)? = null,
-    onClickLabel: String? = null, scrim: MediaScrim = MediaScrim.None, failedText: String? = …,
-    retryLabel: String = "Retry", style: MediaFrameStyle = …, size: MediaFrameSize = …,
+    onClickLabel: String? = null, scrim: MediaScrim = MediaScrim.None,
+    failedText: String? = "Couldn't load this picture", retryLabel: String = "Retry",
+    style: MediaFrameStyle = …, size: MediaFrameSize = …,
     overlay: @Composable BoxScope.() -> Unit = {}, content: @Composable BoxScope.() -> Unit)
 // Slot content is not inset; pad it by size.inset for a whole picture.
 
@@ -76,16 +81,19 @@ interface MediaImageLoader {
     fit: MediaFit = MediaFit.Whole, placeholder: MediaPlaceholder = MediaPlaceholder.Skeleton,
     zoom: ZoomBehavior = ZoomBehavior.None, zoomState: ZoomState = rememberZoomState(),
     onTap: (() -> Unit)? = null, onEdgeSwipe: ((direction: Int) -> Unit)? = null,
-    failedText: String? = …, retryLabel: String = "Retry", zoomLabels: ZoomLabels = ZoomLabels(),
-    style: MediaFrameStyle = …, size: MediaFrameSize = …,
+    failedText: String? = "Couldn't load this picture", retryLabel: String = "Retry",
+    zoomLabels: ZoomLabels = ZoomLabels(), style: MediaFrameStyle = …, size: MediaFrameSize = …,
     pictureOverlay: (@Composable MediaPictureScope.() -> Unit)? = null,
     failure: (@Composable BoxScope.(retry: () -> Unit) -> Unit)? = null)   // replaces the failed face
 
 
 // MediaFit: Whole, Fill. MediaScrim: None, Top, Bottom, Both. MediaState: Loading, Ready, Failed.
 // MediaPlaceholder: Skeleton, Blurred(model), None.
-// MediaFrameStyle(bg, shape, content, scrim): Default, default(…), circle(bg), bare(content).
-// MediaFrameSize(inset, failureGlyph, compactBelow): Default, Product, default(…).
+// MediaFrameStyle(bg, shape, content, scrim): Default, default(bg = surface.well, shape = shapes.md,
+//     content = fgMuted, scrim = black at 55%), circle(bg = surface.well), bare(content = fgMuted)
+//     (no fill, no corners: a picture on a ground of its own, the viewer's).
+// MediaFrameSize(inset, failureGlyph, compactBelow): Default (inset none), Product (inset spacing.xl3),
+//     default(inset, failureGlyph = spacing.xl3, compactBelow = 144.dp: narrower frames fail without words).
 
 @Composable fun rememberZoomState(maxScale: Float = 5f): ZoomState
 // ZoomState: maxScale, scale, offset, isZoomed, canZoomIn, frame, content, zoomIn(), zoomOut(), reset(),
@@ -117,17 +125,21 @@ interface MediaImageLoader {
     modifier: Modifier = Modifier, orientation: Orientation = Orientation.Horizontal,
     contentPadding: PaddingValues = PaddingValues(0.dp),
     label: (index: Int, count: Int) -> String = { i, n -> "Picture ${i + 1} of $n" },
-    style: ThumbnailStripStyle = …, size: ThumbnailStripSize = …, thumbnail: @Composable (index: Int) -> Unit)
-// ThumbnailStripStyle(ring, shape, otherAlpha): Default, default(…), onDark(), onLight().
-// ThumbnailStripSize(side, spacing, ringWidth, ringGap): Default, default(…).
+    style: ThumbnailStripStyle = LocalThumbnailStripStyle.current ?: ThumbnailStripStyle.Default,
+    size: ThumbnailStripSize = LocalThumbnailStripSize.current ?: ThumbnailStripSize.Default,
+    thumbnail: @Composable (index: Int) -> Unit)
+// The selected thumbnail is ringed, the others dimmed to otherAlpha.
+// ThumbnailStripStyle(ring, shape, otherAlpha): Default, default(ring = fgBase, shape = shapes.md,
+//     otherAlpha = 0.6f), onDark() (white ring, over a dark viewer), onLight() (black ring).
+// ThumbnailStripSize(side, spacing, ringWidth, ringGap): Default, default(side = 56.dp,
+//     spacing = spacing.md, ringWidth = 2.dp, ringGap = spacing.xs2).
 ```
 
 ```kotlin
 @Composable fun Hotspot(onClick: () -> Unit, contentDescription: String, modifier: Modifier = Modifier,
     text: String? = null, selected: Boolean = false, style: HotspotStyle = HotspotStyle.default())
-// MediaPictureScope.pinned(x, y): x and y are fractions of the picture, 0f..1f. HotspotStyle(bg, content, ring).
-// MediaFrame(model, …, transition: MediaTransitionState? = null, transitionKey: Any? = null,
-//     pictureOverlay: (@Composable MediaPictureScope.() -> Unit)? = null, overlay = …); MediaImage takes pictureOverlay too.
+// MediaPictureScope.pinned(x, y): x and y are fractions of the picture, 0f..1f.
+// HotspotStyle(bg, content, ring): default(bg = white, content = black, ring = accentBase).
 
 @Composable fun rememberMediaTransitionState(): MediaTransitionState
 fun Modifier.mediaTransitionSource(state: MediaTransitionState, key: Any, pictureSize: Size = Size.Unspecified): Modifier
@@ -137,7 +149,7 @@ fun Modifier.mediaTransitionSource(state: MediaTransitionState, key: Any, pictur
     onIndexChange: ((index: Int) -> Unit)? = null, onIndexSettle: ((index: Int) -> Unit)? = null,
     chrome: MediaViewerChrome = MediaViewerChrome.TapToToggle, bars: MediaViewerBars = MediaViewerBars.Overlay,
     notice: String? = null, onNoticeDismiss: (() -> Unit)? = null, noticeDuration: Duration = 3.seconds,
-    showChromeLabel: String = "Show controls", closeLabel: String = "Close",
+    showChromeLabel: String = "Show controls", closeLabel: String = ArecaTheme.labels.close,
     style: MediaViewerStyle = LocalMediaViewerStyle.current ?: MediaViewerStyle.dark(),
     backdrop: (@Composable BoxScope.(index: Int) -> Unit)? = null,
     topBar: @Composable BoxScope.(state: MediaViewerState) -> Unit = {},
@@ -146,7 +158,8 @@ fun Modifier.mediaTransitionSource(state: MediaTransitionState, key: Any, pictur
 // MediaViewerState: itemCount, currentIndex, currentIndexOffset, isChromeVisible, isZoomed,
 // toggleChrome(), showChrome(), goTo(index, animated = true), dismiss().
 // MediaViewerPageScope: zoomState, isCurrent, onTap(), onEdgeSwipe(direction).
-// MediaViewerStyle(bg, bgChromeHidden, content, scrim, noticeBg, noticeContent, dark): dark(bg), light(bg);
+// MediaViewerStyle(bg, bgChromeHidden, content, scrim, noticeBg, noticeContent, dark):
+//     dark(bg = black) (the default), light(bg = white; black while the bars are hidden);
 // topBar(): the TopBarStyle for a foundation TopBar over the pictures (Scrim actions dark, Floating light).
 // MediaViewerChrome: TapToToggle, Always. MediaViewerBars: Overlay (over pictures, scrims), Docked (above and below; documents).
 @Composable fun MediaViewerPageScope.MediaViewerImage(model: Any?, contentDescription: String?,
@@ -157,14 +170,16 @@ fun Modifier.mediaTransitionSource(state: MediaTransitionState, key: Any, pictur
 
 @Composable fun ComparePair(first: @Composable BoxScope.() -> Unit, second: @Composable BoxScope.() -> Unit,
     modifier: Modifier = Modifier, arrangement: CompareArrangement = CompareArrangement.Column,
-    aspectRatio: Float = …, labels: CompareLabels? = null, captions: CompareLabels? = null,
-    onOpen: ((index: Int) -> Unit)? = null, openLabel: String = "Open picture", style: CompareStyle = …)
+    aspectRatio: Float = /* 4f / 3f in a Column, 3f / 4f in a Row */, labels: CompareLabels? = null,
+    captions: CompareLabels? = null, onOpen: ((index: Int) -> Unit)? = null,
+    openLabel: String = "Open picture", style: CompareStyle = CompareStyle.default())
 @Composable fun CompareSlider(before: @Composable BoxScope.() -> Unit, after: @Composable BoxScope.() -> Unit,
     modifier: Modifier = Modifier, aspectRatio: Float = 3f / 2f, orientation: Orientation = Orientation.Horizontal,
     initialPosition: Float = 0.5f, labels: CompareLabels? = CompareLabels(),
     contentDescription: String = "Before and after", style: CompareStyle = …)
 @Composable fun CompareSideBySide(before, after, modifier: Modifier = Modifier,
-    arrangement: CompareArrangement = CompareArrangement.Row, aspectRatio: Float = …,
+    arrangement: CompareArrangement = CompareArrangement.Row,
+    aspectRatio: Float = /* 3f / 4f in a Row, 3f / 2f in a Column */,
     labels: CompareLabels? = CompareLabels(), maxScale: Float = 5f, zoomLabels: ZoomLabels = ZoomLabels(), style = …)
 @Composable fun CompareHold(before, after, modifier: Modifier = Modifier, aspectRatio: Float = 3f / 2f,
     labels: CompareLabels? = CompareLabels(), holdLabel: String = "Hold to see before", style = …)
@@ -172,7 +187,8 @@ fun Modifier.mediaTransitionSource(state: MediaTransitionState, key: Any, pictur
     initialFraction: Float = 0.5f, labels: CompareLabels? = CompareLabels(),
     contentDescription: String = "Fade between before and after", style = …)
 // CompareLabels(first = "Before", second = "After"). CompareArrangement: Column, Row.
-// CompareStyle(shape, bg, divider, knob, knobContent, labelBg, labelContent): default(shape, bg).
+// CompareStyle(shape, bg, divider, knob, knobContent, labelBg, labelContent):
+//     default(shape = shapes.lg, bg = surface.well); divider and knob white, labels white on translucent black.
 ```
 
 ## Rules
@@ -188,7 +204,18 @@ fun Modifier.mediaTransitionSource(state: MediaTransitionState, key: Any, pictur
 - The viewer's bars are the app's — foundation's `TopBar` above, flow-gallery's caption, author and
   action below: close with `state.dismiss()` so the picture shrinks back into its frame; follow the
   viewer with `onIndexChange` so that frame is on screen.
-- Draw compared pictures the same way (`fit = MediaFit.Fill`) so their parts line up.
+- Draw compared pictures the same way (`fit = MediaFit.Fill`, `style = MediaFrameStyle.bare()`) so
+  their parts line up.
+- A frame's fill, a comparison's ground and a picture's placeholder are the `well` of the surface
+  they sit on (`ArecaTheme.surface.well`), so a frame reads on a grey page, in a white card and in a
+  sheet alike; pass `bg` only to fix one.
+- Compose `MediaViewer` only while it is open (`open?.let { MediaViewer(…) }`) and clear the state
+  in `onDismiss`; it is a window of its own over the screen, with its ground, pager, zoom, the swipe
+  down that closes it and the transition. Fetch on `onIndexSettle`, the page it comes to rest on, not
+  on every page swiped past. `bars = MediaViewerBars.Docked` for documents read to their edges;
+  `sheets` draws above the viewer inside its window.
+- `ThumbnailStrip` under a viewer takes `ThumbnailStripStyle.onDark()` (`onLight()` on a light
+  viewer); give it `selectedIndex = viewer.currentIndex` and `onSelect = viewer::goTo`.
 - Never build a viewer bar or a label of your own: `TopBar(style = viewerStyle.topBar())` with
   `CloseAction` and the named actions, and `Badge` in a frame's `overlay`.
 - `Hover` only where a mouse is the pointer (desktop, web); it does nothing on touch.

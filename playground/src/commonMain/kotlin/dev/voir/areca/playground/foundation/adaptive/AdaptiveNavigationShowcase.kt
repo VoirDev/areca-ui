@@ -513,7 +513,7 @@ private fun AdaptiveNavigationScope.FinanceScreen(
     }
     Column(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
         AdaptiveToolbar(
-            title = if (open) "Lidl" else tab.label,
+            title = if (open) "Corner Market" else tab.label,
             onBack = if (open) onBack else null,
             actions = actions,
         )

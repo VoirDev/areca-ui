@@ -51,7 +51,8 @@ class RefreshGate(
     timeSource: TimeSource = TimeSource.Monotonic,     // TestTimeSource in tests
 ) {
     companion object { val DEFAULT_COOLDOWN: Duration }
-    fun tryReserve(onAccepted: () -> Unit): Boolean    // false while one runs or cools down
+    fun tryReserve(onAccepted: () -> Unit): Boolean    // false while one runs or cools down; the
+                                                       // cooldown starts when runReserved returns
     suspend fun <T> runReserved(block: suspend () -> T): T
     // Throws IllegalStateException without a held reservation. Every successful tryReserve must
     // reach exactly one runReserved; if onAccepted throws, the reservation is released.
@@ -73,8 +74,11 @@ abstract class BaseListViewModel<A : Any, E : Any, ITEM : Any, FILTER : Any, SOR
 
     protected suspend fun handleLoad()                 // full-screen load of page 1
     protected suspend fun handleRetry()                // the same, for a "Try again" button
-    protected suspend fun handleRefresh()              // keeps items; full-screen without content
-    protected fun handleLoadNextPage()                 // appends in an owned job; returns at once
+    protected suspend fun handleRefresh()              // keeps items; full-screen from a Loading or
+                                                       // Error screen; ignored while refreshing
+    protected fun handleLoadNextPage()                 // appends in an owned job; returns at once;
+                                                       // ignored without Display, at the end, or while
+                                                       // any operation is in progress
     protected fun handleRetryLoadNextPage()            // clears nextPageError, loads the page again
     protected suspend fun handleUpdateFilters(filters: FILTER,
         strategy: ReloadStrategy = ReloadStrategy.FullScreen)
@@ -87,6 +91,7 @@ abstract class BaseSimpleListViewModel<A : Any, E : Any, ITEM : Any>(
     pageSize: Int = DEFAULT_PAGE_SIZE,
 ) : BaseListViewModel<A, E, ITEM, Unit, Unit> {
     protected abstract suspend fun fetchPage(page: Int): PageResult<ITEM>
+    // The three-argument fetchPage is final here and delegates to this one.
 }
 ```
 
@@ -102,6 +107,9 @@ data class ListState<ITEM, FILTER, SORT>(
     val nextPageError: Throwable? = null,
     val refreshError: Throwable? = null,    // failed refresh or inline reload; items kept
 )
+
+typealias NoFilter = Unit                // FILTER of a list with no filters
+typealias NoSort = Unit                  // SORT of a list with no sorting
 
 // Extensions on ListState<ITEM, FILTER, SORT>:
 val isEmpty: Boolean                    // loaded (currentPage > 0) and no items: the empty state

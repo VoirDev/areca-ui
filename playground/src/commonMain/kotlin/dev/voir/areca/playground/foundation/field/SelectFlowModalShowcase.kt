@@ -44,11 +44,11 @@ private val Cities = listOf(
 private fun cityOptions(): List<SelectOption<String>> =
     Cities.map { SelectOption(key = it, value = it, label = it) }
 
-private val PopularBrands = listOf("Apple", "Bosch", "IKEA", "Samsung")
+private val PopularBrands = listOf("Apple", "Bosch", "Home Store", "Samsung")
 
 private val AllBrands = listOf(
     "3M", "Acer", "Apple", "Asus", "Bosch", "Braun", "Brother", "Canon", "Dell", "DeLonghi",
-    "Dyson", "Epson", "HP", "IKEA", "Karcher", "Lenovo", "LG", "Makita", "Miele", "Nikon",
+    "Dyson", "Epson", "HP", "Home Store", "Karcher", "Lenovo", "LG", "Makita", "Miele", "Nikon",
     "Philips", "Samsung", "Sony", "Xiaomi",
 )
 

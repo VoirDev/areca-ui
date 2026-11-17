@@ -439,15 +439,19 @@ internal fun Modifier.topSeparator(
     val lineThickness = thickness.toPx().coerceAtLeast(1f)
     val insetPx = inset.toPx()
     val rtl = layoutDirection == LayoutDirection.Rtl
-    val start = rowAnchors?.textStartOfOnlyRow(rtl)?.coerceAtLeast(insetPx) ?: insetPx
-    val lineWidth = size.width - start - insetPx
+    // From the text of a ListItem to the far edge, as a settings section draws it; any other row is
+    // inset by [inset] at both ends.
+    val textStart = rowAnchors?.textStartOfOnlyRow(rtl)
+    val start = textStart ?: insetPx
+    val end = if (textStart != null) 0f else insetPx
+    val lineWidth = size.width - start - end
     if (lineWidth <= 0f) return@drawWithContent
 
     // Drawn over the row, like the group layout does, so a hover tint runs underneath the line
     // rather than covering it.
     drawRect(
         color = color,
-        topLeft = Offset(if (rtl) insetPx else start, 0f),
+        topLeft = Offset(if (rtl) end else start, 0f),
         size = Size(lineWidth, lineThickness),
     )
 }

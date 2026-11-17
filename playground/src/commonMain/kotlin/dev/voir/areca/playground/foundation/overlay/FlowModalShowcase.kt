@@ -151,9 +151,9 @@ fun FlowModalShowcase() = ShowcaseScaffold(
         ) {
             ModalRecipe(
                 openLabel = "Open",
-                controller = rememberFlowModal(allowPartial = false, maxHeightFraction = 0.92f),
+                controller = rememberFlowModal(maxHeightFraction = 0.92f),
                 title = "Expanded-only modal",
-                subtitle = "allowPartial = false",
+                subtitle = "The default: no partial height",
                 partial = false,
             )
         }

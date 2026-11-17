@@ -172,7 +172,9 @@ fun KeyEvent.toKeyAction(decimalSeparator: Char = '.'): KeyAction?   // null for
   without a predefined key-click effect the tap may be silent — Areca does not fall back to the
   vibrator, which would need the `VIBRATE` permission.
 - The keyboard surface defaults to the theme's bar surface (`ArecaTheme.surfaces.bar`), like the
-  other surfaces docked to the bottom edge.
+  other surfaces docked to the bottom edge. Digit keys (`ButtonStyle.soft(Neutral)`) and the other
+  neutral keys take their fill from the `well` of the surface in scope (`ArecaTheme.surface.well`);
+  never restyle them with a fixed grey such as `bgSubtle` or `bgMuted`.
 
 ## Accessibility and words
 
@@ -185,12 +187,14 @@ fun KeyEvent.toKeyAction(decimalSeparator: Char = '.'): KeyAction?   // null for
 
 | Type | Local | Presets / factories |
 | --- | --- | --- |
-| `KeyboardStyle(bg, content, border, borderWidth, shape, elevation, divider, keys: KeyStyle)` | `LocalKeyboardStyle` | `Default`, `default(…)`, `flat(bg, border, keys)` — square, no elevation, top hairline, for a permanently docked keyboard |
+| `KeyboardStyle(bg, content, border, borderWidth, shape, elevation, divider, keys: KeyStyle)` | `LocalKeyboardStyle` | `Default`, `default(bg = surfaces.bar, content = fgBase, border = transparent, borderWidth = 1.dp, shape = top corners radius.xl, elevation = elevation.lg, divider = transparent, keys = KeyStyle.Default)`, `flat(bg = bgSurface, border = borderSubtle, keys)` — square, no elevation, top hairline, for a permanently docked keyboard |
 | `KeyStyle(digit, action, confirm, destructive, caution, info, ghost)` — each a `ButtonStyle`; `of(role)` | via `KeyboardStyle.keys` | `Default`, `default(shape, digit, …)`; one key: `Key(style = …)` |
 | `KeyboardSize(padding, rowGap, keyGap, keyHeight, headerGap, footerGap, key: ButtonSize, keyLabelMaxLines = 1)` | `LocalKeyboardSize` | `Default`, `Compact` (short screens), `default(…)` (every parameter defaulted; `keyHeight = 52.dp`) |
-| `KeyboardAnimation(enter, exit, scrimEnter, scrimExit, insetEnter, insetExit)` | — | `Default`, `default(duration, enterEasing, exitEasing)` |
+| `KeyboardAnimation(enter, exit, scrimEnter, scrimExit, insetEnter, insetExit)` | — | `Default`, `default(duration = motion.slow, enterEasing = motion.enter, exitEasing = motion.exit)` |
 
-`ArecaThemeProvider` does not seed `LocalKeyboardStyle` / `LocalKeyboardSize`; provide them:
+`ArecaThemeProvider` does not seed `LocalKeyboardStyle` / `LocalKeyboardSize`. Provide an app-wide
+one in the provider's `componentDefaults`, so it also reaches inside an `ArecaDarkTheme`:
+`ComponentDefaults { arrayOf(LocalKeyboardStyle provides KeyboardStyle.flat()) }`; for one screen,
 `CompositionLocalProvider(LocalKeyboardStyle provides KeyboardStyle.flat()) { … }`.
 
 ## Snippets

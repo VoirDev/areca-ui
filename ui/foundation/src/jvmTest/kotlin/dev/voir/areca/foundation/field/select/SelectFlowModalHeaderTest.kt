@@ -17,7 +17,7 @@ import kotlin.test.assertFalse
 /** What [SelectFlowModal]'s `headerBottom` adds under the stock title, and that the stock close stays. */
 @OptIn(ExperimentalTestApi::class)
 class SelectFlowModalHeaderTest {
-    private val options = listOf("Monzo", "Revolut", "Starling").map { name ->
+    private val options = listOf("Riverbank", "Northbank", "Harbour Bank").map { name ->
         SelectOption(key = name, value = name, label = name)
     }
     private val sections = listOf(SelectOptionSection(key = "all", title = null, options = options))

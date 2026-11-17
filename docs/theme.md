@@ -274,13 +274,14 @@ bars docked to a screen's edges (`TabBar`, `BottomActionBar`, `NavRail`, the col
 | --- | --- | --- |
 | `ground` | The surface's own fill | `BaseLayout`'s page, `TopBar`, `Table` rows, `WheelPicker`, a skeleton's highlight, a chart's marker ring |
 | `raised` | A card laid on this surface | `Card` (default style), a settings `Section`, a subtle `Notice`, a `ContentList` inset group, an `ExpandableListItem` with the `Soft` container |
-| `well` | Something set into this surface | Filled, soft and solid-neutral fields, soft `Neutral` buttons, icon buttons and featured icons, `CardStyle.softNeutral()`, a neutral card footer, a section's band, the tracks of `SlidingSelector`, `Tabs` and `ProgressBar`, `Skeleton`, `WheelPicker`'s highlight, an empty `Avatar`, `PageCounter`, `BadgeStyle.FilledChip`, picture placeholders |
+| `well` | Something set into this surface | Filled, soft and solid-neutral fields, soft `Neutral` buttons, icon buttons and featured icons, `CardStyle.softNeutral()`, the tracks of `SlidingSelector`, `Tabs` and `ProgressBar`, `Skeleton`, `WheelPicker`'s highlight, an empty `Avatar`, `PageCounter`, `BadgeStyle.FilledChip`, picture placeholders |
 | `onWell` | Something raised inside a well | The thumb of `SlidingSelector` and `Tabs` |
 | `separator` | A hairline on this surface | The hairlines of a settings section, a `List`, a `ListItemColumn` and an inset group |
+| `band` | A strip along a card's edge | A neutral card footer (`CardFooterStyle.soft(Neutral)`) and a settings section's band. A step past the `well` in light, so a white card's band does not merge with a grey page |
 | `field` | An outlined field or a stepper | `FieldStyle.outlined()`, a filled field while focused, `NumberStepper`, a soft `Badge`. White wherever it is in light |
 
 `surface[role]` reads a role named by a `SurfaceRole` (`Ground`, `Raised`, `Well`, `OnWell`,
-`Separator`, `Field`).
+`Separator`, `Band`, `Field`).
 
 ### Levels and nesting
 
@@ -304,6 +305,7 @@ Fill a container of your own with a role, and put what is inside it on the match
 | --- | --- |
 | `RaisedSurface { … }` | Puts its content one level up: on the surface a card laid on the current one takes. Use it around content drawn on `ArecaTheme.surface.raised` |
 | `ProvideSurface(level, root) { … }` | Puts its content at a chosen level of the current ladder, or of `root`'s — a white panel across a grey page is `SurfaceLevel.Card` |
+| `ProvideSurface(fill) { … }` | Puts its content on the surface a fill of your own stands for — a docked bar painted `surfaces.bar`, a panel — so soft buttons and tracks inside it stay visible on it |
 
 ```kotlin
 // A tile of the app's own inside a card: the card's raised fill, and the card's next level inside it
@@ -327,7 +329,7 @@ ProvideSurface(SurfaceLevel.Card) {
 ramp, so a re-themed palette re-themes them. To set every ground by hand, pass a whole value:
 `ArecaThemeProvider(surfaces = ArecaSurfaces(layout, screen, sheet, bar))`, where `screen` and
 `sheet` are `SurfaceLadder(page, card, inset)` of `ArecaSurface(ground, raised, well, onWell,
-separator, field)`. A value built for one direction is used for that direction only; build one per
+separator, field, band)`. A value built for one direction is used for that direction only; build one per
 `darkTheme`, as with `colors`.
 
 ## Typography
