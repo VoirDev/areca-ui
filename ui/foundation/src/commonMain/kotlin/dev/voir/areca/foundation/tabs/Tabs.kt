@@ -190,14 +190,14 @@ public data class TabsStyle(
             contentSelected: Color = ArecaTheme.colors.fgBase,
             contentDisabled: Color = ArecaTheme.colors.fgDisabled,
             bg: Color = Color.Transparent,
-            bgSelected: Color = ArecaTheme.colors.bgMuted,
+            bgSelected: Color = ArecaTheme.surface.well,
             bgDisabled: Color = Color.Transparent,
             divider: Color = ArecaTheme.colors.borderBase,
             indicator: Color = ArecaTheme.colors.fgBase,
-            track: Color = ArecaTheme.colors.bgNeutralMuted,
+            track: Color = ArecaTheme.surface.well,
             // Raised means lighter in both themes: white on the light track, and a step lighter than
             // the track in dark, where the surface colour sits darker than it.
-            thumb: Color = if (ArecaTheme.isDark) ArecaTheme.colors.bgNeutralBase else ArecaTheme.colors.bgSurface,
+            thumb: Color = ArecaTheme.surface.onWell,
         ): TabsStyle = TabsStyle(
             content = content,
             contentSelected = contentSelected,
@@ -412,8 +412,23 @@ internal fun <T : Any> tabsStateSaver(): Saver<TabsState<T>, T> = Saver(
 /** Default [TabsStyle] in scope, seeded by [dev.voir.areca.theme.ArecaThemeProvider]. */
 public val LocalTabsStyle: ProvidableCompositionLocal<TabsStyle?> = compositionLocalOf { null }
 
-/** Default [TabsSize] in scope, seeded by [dev.voir.areca.theme.ArecaThemeProvider]. */
+/**
+ * Default [TabsSize] in scope, seeded by [dev.voir.areca.theme.ArecaThemeProvider]. Read by every
+ * variant but [TabsVariant.Segmented], which takes [TabsSize.Segmented] unless given a size.
+ */
 public val LocalTabsSize: ProvidableCompositionLocal<TabsSize?> = compositionLocalOf { null }
+
+/**
+ * The metrics a strip takes when its caller names none.
+ *
+ * @param variant The strip's variant.
+ * @return [TabsSize.Segmented] for [TabsVariant.Segmented], otherwise the theme's size.
+ */
+@Composable
+private fun defaultTabsSize(variant: TabsVariant): TabsSize = when (variant) {
+    TabsVariant.Segmented -> TabsSize.Segmented
+    TabsVariant.Underline, TabsVariant.Button -> LocalTabsSize.current ?: TabsSize.Default
+}
 
 /**
  * A strip of tabs, one of which is selected.
@@ -438,7 +453,8 @@ public val LocalTabsSize: ProvidableCompositionLocal<TabsSize?> = compositionLoc
  *   disabled tab, nor for the tab that is already selected.
  * @param modifier Modifier applied to the strip.
  * @param style Colors. Defaults to the theme's.
- * @param size Metrics. Defaults to the theme's.
+ * @param size Metrics. `null` takes the variant's own: [TabsSize.Segmented] for
+ *   [TabsVariant.Segmented], otherwise the theme's.
  * @param variant How much surface the strip draws.
  * @param orientation Which way the strip runs.
  * @param horizontalPosition Edge carrying the divider and indicator, when horizontal.
@@ -454,13 +470,14 @@ public fun <T> Tabs(
     onValueSelected: (T) -> Unit,
     modifier: Modifier = Modifier,
     style: TabsStyle = LocalTabsStyle.current ?: TabsStyle.Default,
-    size: TabsSize = LocalTabsSize.current ?: TabsSize.Default,
+    size: TabsSize? = null,
     variant: TabsVariant = TabsVariant.Underline,
     orientation: TabsOrientation = TabsOrientation.Horizontal,
     horizontalPosition: TabsHorizontalPosition = TabsHorizontalPosition.Bottom,
     verticalPosition: TabsVerticalPosition = TabsVerticalPosition.Start,
     fillWidth: Boolean = false,
 ) {
+    val size = size ?: defaultTabsSize(variant)
     val horizontal = orientation == TabsOrientation.Horizontal
     val selectedIndex = tabs.indexOfFirst { it.value == selectedValue }
     val selectorStyle = selectorStyleOf(
@@ -580,7 +597,7 @@ private fun selectorStyleOf(
  * @param state Selection, from [rememberTabsState].
  * @param modifier Modifier applied to the strip.
  * @param style Colors. Defaults to the theme's.
- * @param size Metrics. Defaults to the theme's.
+ * @param size Metrics. `null` takes the variant's own; see the other overload.
  * @param variant How much surface the strip draws.
  * @param orientation Which way the strip runs.
  * @param horizontalPosition Edge carrying the divider and indicator, when horizontal.
@@ -593,7 +610,7 @@ public fun <T> Tabs(
     state: TabsState<T>,
     modifier: Modifier = Modifier,
     style: TabsStyle = LocalTabsStyle.current ?: TabsStyle.Default,
-    size: TabsSize = LocalTabsSize.current ?: TabsSize.Default,
+    size: TabsSize? = null,
     variant: TabsVariant = TabsVariant.Underline,
     orientation: TabsOrientation = TabsOrientation.Horizontal,
     horizontalPosition: TabsHorizontalPosition = TabsHorizontalPosition.Bottom,

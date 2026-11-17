@@ -32,7 +32,7 @@ public data class ListStyle(
 ) {
     /** Theme-backed presets and builders. */
     public companion object {
-        /** Theme default: no surface of its own, with base-border hairlines when separated. */
+        /** Theme default: no surface of its own, with the hairlines of the surface it is drawn on. */
         public val Default: ListStyle
             @Composable
             get() = default()
@@ -42,14 +42,15 @@ public data class ListStyle(
          *
          * @param bg Background behind every row.
          * @param border Border around the whole list.
-         * @param separator Hairline drawn between rows.
+         * @param separator Hairline drawn between rows. [Color.Unspecified], the default, takes the
+         *   separator of the surface the list is drawn on.
          * @return A list style containing the supplied colors.
          */
         @Composable
         public fun default(
             bg: Color = Color.Unspecified,
             border: Color = Color.Unspecified,
-            separator: Color = ArecaTheme.colors.borderBase,
+            separator: Color = Color.Unspecified,
         ): ListStyle = ListStyle(bg = bg, border = border, separator = separator)
     }
 }
@@ -64,7 +65,8 @@ public data class ListStyle(
  *   corners.
  * @property borderWidth Width of the list's border. `0.dp` draws none.
  * @property separatorThickness Thickness of the hairlines between rows.
- * @property separatorInset Distance between each hairline and both list edges.
+ * @property separatorInset Distance between each hairline and the list's far edge, and its start
+ *   for a row that is not a [ListItem]; a `ListItem`'s hairline starts at its text.
  */
 @Immutable
 public data class ListSize(
@@ -86,7 +88,8 @@ public data class ListSize(
          * @param shape Shape of the list's surface.
          * @param borderWidth Width of the list's border.
          * @param separatorThickness Thickness of the hairlines between rows.
-         * @param separatorInset Distance between each hairline and both list edges.
+         * @param separatorInset Distance between each hairline and the far edge, and its start for a
+         *   row that is not a [ListItem].
          * @return A list size containing the supplied metrics.
          */
         @Composable

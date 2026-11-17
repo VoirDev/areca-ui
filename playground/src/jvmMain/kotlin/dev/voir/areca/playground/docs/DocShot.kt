@@ -24,7 +24,7 @@ internal class DocPanel(
 /**
  * One documentation image, written as `<name>-light.png` and `<name>-dark.png`.
  *
- * @property name File name stem, as `docs/plans/documentation-redesign.md` lists it.
+ * @property name File name stem, as the docs reference it under `docs/images`.
  * @property panels Columns of the image, left to right, all as tall as the image.
  * @property height Logical height of the image, or `null` to fit the tallest panel's content. A panel
  *   that fills its height — a screen with a bar at the bottom, a window — needs a fixed one.

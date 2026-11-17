@@ -1,9 +1,11 @@
 # Screen recipes
 
 Open this when building a whole screen or a common interaction from foundation: a settings
-screen, a validated form, a remote list, a confirmation, a tabbed shell, pickers, a sheet, a menu,
-a dark region, a subscription card with a footer, a custom pressable surface, or an analytics overview
-built on the charts module, at the latest `dev.voir.areca:foundation` and `dev.voir.areca:icons`
+screen, a validated form, a form with a docked action, a pushed screen with a floating action and
+toasts, a remote list, a panel page, a confirmation, a tabbed shell, pickers, a sheet, a menu,
+a dark region, a subscription card with a footer, a custom pressable surface, an analytics overview
+built on the charts module, a plan picker for a paywall, a catalogue with filters, or a product
+page, at the latest `dev.voir.areca:foundation` and `dev.voir.areca:icons`
 release. Also open it to review UI against the [anti-pattern table](#anti-patterns).
 
 Screens built from a flow module have their recipes in that module's reference:
@@ -53,7 +55,6 @@ import dev.voir.areca.foundation.topbar.rememberTopBarScrollState
 import dev.voir.areca.icons.ArecaIcons
 import dev.voir.areca.icons.Bell
 import dev.voir.areca.theme.ArecaTheme
-import dev.voir.areca.theme.horizontalContentInsets
 ```
 
 ```kotlin
@@ -73,7 +74,6 @@ fun NotificationSettingsScreen(
     val scrollState = rememberTopBarScrollState()
 
     BaseLayout(
-        bg = ArecaTheme.colors.bgCanvas,
         contentWindowInsets = WindowInsets.safeDrawing.only(
             WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal,
         ),
@@ -93,7 +93,6 @@ fun NotificationSettingsScreen(
                 .nestedScroll(scrollState.nestedScrollConnection)
                 .verticalScroll(rememberScrollState())
                 .padding(padding)
-                .horizontalContentInsets()
                 .padding(vertical = ArecaTheme.spacing.xl3),
         ) {
             Section(
@@ -129,6 +128,9 @@ fun NotificationSettingsScreen(
 
 - The status-bar inset goes to the top bar and the rest to `contentWindowInsets`; the two add up.
 - `Settings` does not scroll; the caller scrolls it and applies `BaseLayout`'s `padding`.
+- Each `Section` keeps itself to the screen's gutter (`SettingsSectionSize.outerPadding`), so never
+  add `horizontalContentInsets()` or side padding around `Settings`: the inset would double. On a
+  sheet a section draws flat, its rows edge to edge.
 - `SettingsRowStatus.Loading` shows a spinner in place of the value while a change saves;
   `SettingsRowStatus.Error(message)` shows the failure under the row.
 
@@ -216,6 +218,128 @@ fun SignUpForm(
 Give a whole form one look with `CompositionLocalProvider(LocalFieldStyle provides
 FieldStyle.filled()) { … }` rather than passing `style` to each field.
 
+## Form with a docked action
+
+The action sits in a `BottomActionBar` at the bottom edge. `ready` softens it until the form is
+complete, but a press still runs validation and puts each error under its field — a disabled button
+would only leave the person guessing. `caption` says what to know before committing.
+
+```kotlin
+@Composable
+fun NewWalletScreen(
+    saving: Boolean,
+    onCreate: (name: String) -> Unit,
+    onBack: () -> Unit,
+) {
+    var name by rememberSaveable { mutableStateOf("") }
+    var attempted by rememberSaveable { mutableStateOf(false) }
+    val complete = name.isNotBlank()
+    val nameError = "Give the wallet a name.".takeIf { attempted && !complete }
+
+    BaseLayout(
+        contentWindowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal),
+        topBar = {
+            TopBar(
+                title = "New wallet",
+                windowInsets = WindowInsets.safeDrawing.only(
+                    WindowInsetsSides.Top + WindowInsetsSides.Horizontal,
+                ),
+                leading = { BackAction(onClick = onBack, contentDescription = "Back") },
+            )
+        },
+        bottomBar = {
+            BottomActionBar(
+                actionText = "Create wallet",
+                onAction = {
+                    attempted = true
+                    if (complete) onCreate(name.trim())
+                },
+                loading = saving,
+                caption = "You can rename it later.",
+                ready = complete,
+            )
+        },
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(padding)
+                .contentInsets(),
+            verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.xl),
+        ) {
+            FieldGroup(label = "Name", required = true, error = nameError) { field ->
+                TextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    field = field,
+                    singleLine = true,
+                )
+            }
+        }
+    }
+}
+```
+
+`BottomActionBar` clears the navigation bar and the keyboard itself, so `contentWindowInsets` leaves
+the bottom out. Use `enabled = false` with a `hint` only for an action that must not happen at all.
+
+## Pushed screen
+
+A screen opened over another: a back control, a floating primary action, toasts. The frame places
+the floating action above the navigation bar and adds its height to `padding`, and draws the toasts
+above it. The parent's effect collector shows messages through the same `ToastState`.
+
+```kotlin
+@Composable
+fun WalletScreen(
+    wallet: Wallet,
+    toasts: ToastState,
+    onBack: () -> Unit,
+    onAdd: () -> Unit,
+    onOpen: (Transaction) -> Unit,
+) {
+    BaseLayout(
+        contentWindowInsets = WindowInsets.safeDrawing.only(
+            WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal,
+        ),
+        topBar = {
+            TopBar(
+                title = wallet.name,
+                windowInsets = WindowInsets.safeDrawing.only(
+                    WindowInsetsSides.Top + WindowInsetsSides.Horizontal,
+                ),
+                leading = { BackAction(onClick = onBack, contentDescription = "Back") },
+            )
+        },
+        floatingAction = {
+            Button(
+                text = "Add",
+                onClick = onAdd,
+                leading = { Icon(ArecaIcons.Plus, contentDescription = null) },
+            )
+        },
+        toastState = toasts,
+    ) { padding ->
+        LazyList(contentPadding = padding) {
+            wallet.transactions.forEach { transaction ->
+                item(
+                    key = transaction.id,
+                    title = { Text(transaction.merchant) },
+                    value = { Text(transaction.amount) },
+                    onClick = { onOpen(transaction) },
+                    onClickLabel = "Open transaction",
+                )
+            }
+        }
+    }
+}
+```
+
+The stateful parent creates `val toasts = rememberToastState()` and calls `toasts.show("Transaction
+saved")` from its effects. A screen with a `BottomActionBar` gets its floating action above the bar.
+
 ## List screen with refresh, empty and error states
 
 `PagedContentList` shows the loading face, the error face with retry, the empty face or the items,
@@ -233,8 +357,10 @@ fun InvoicesScreen(
     onOpen: (Invoice) -> Unit,
     onCreate: () -> Unit,
 ) {
+    val listState = rememberLazyListState()
+    listState.ScrollToTopOnTabReselect()
+
     BaseLayout(
-        bg = ArecaTheme.colors.bgCanvas,
         contentWindowInsets = WindowInsets.safeDrawing.only(
             WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal,
         ),
@@ -251,6 +377,7 @@ fun InvoicesScreen(
         PagedContentList(
             state = state,
             contentPadding = padding,
+            listState = listState,
             labels = ContentListLabels(
                 emptyTitle = "No invoices yet",
                 errorTitle = "Couldn’t load invoices",
@@ -263,10 +390,17 @@ fun InvoicesScreen(
             itemKey = { it.id },
             emptyContent = {
                 Fallback(
-                    top = { FeaturedIcon(ArecaIcons.Inbox, contentDescription = null) },
-                    heading = { Text("No invoices yet") },
-                    body = { Text("Invoices you send appear here.") },
-                    content = { Button(text = "New invoice", onClick = onCreate) },
+                    title = "No invoices yet",
+                    body = "Invoices you send appear here. Create one with +.",
+                )
+            },
+            initialErrorContent = { message, retry ->
+                Fallback(
+                    title = "Couldn’t load invoices",
+                    body = message,
+                    tone = FallbackTone.Failure,
+                    actionText = "Try again",
+                    onAction = retry,
                 )
             },
         ) { invoice ->
@@ -282,9 +416,57 @@ fun InvoicesScreen(
 }
 ```
 
+The empty face's button, when it has one, is a neutral way back ("Clear filters"); the create
+action stays in the top bar. `listState.ScrollToTopOnTabReselect()` takes the list back to the top
+when its tab is tapped again.
+
 For a list outside `ContentList`, wrap the scroller in
-`PullToRefreshLayout(isRefreshing, onRefresh) { … }` (opt in to `ExperimentalArecaApi`) and show
-`Fallback` yourself when the screen's state says the content is missing or failed.
+`PullToRefreshLayout(isRefreshing, onRefresh) { … }` (opt in to `ExperimentalArecaApi`) and draw
+the faces yourself. `rememberSettledLoading` keeps a fast load from flashing its skeleton:
+
+```kotlin
+@Composable
+fun RecentInvoicesSection(
+    state: RecentInvoicesState,
+    onRetry: () -> Unit,
+    onOpen: (Invoice) -> Unit,
+) {
+    val showSkeleton = rememberSettledLoading(state.loading)
+    when {
+        showSkeleton -> SkeletonGroup(contentDescription = "Loading invoices") {
+            repeat(3) { ListItemSkeleton() }
+        }
+        state.loading -> Unit // under the delay: draw nothing, not the empty face
+        state.error != null -> Fallback(
+            title = "Couldn’t load invoices",
+            body = state.error,
+            tone = FallbackTone.Failure,
+            actionText = "Try again",
+            onAction = onRetry,
+        )
+        state.invoices.isEmpty() -> Fallback(
+            title = "No invoices yet",
+            body = "Invoices you send appear here.",
+            horizontalAlignment = Alignment.Start,
+        )
+        else -> ListItemColumn {
+            state.invoices.forEach { invoice ->
+                NavigationListItem(
+                    title = { Text(invoice.customer) },
+                    onClick = { onOpen(invoice) },
+                    value = { Text(invoice.amount) },
+                    onClickLabel = "Open invoice",
+                )
+            }
+        }
+    }
+}
+```
+
+A placeholder for something that is not a row — an avatar, a thumbnail, a card — is a
+`SkeletonBlock` sized by its modifier: `SkeletonBlock(Modifier.size(48.dp), shape =
+ArecaTheme.shapes.full)`, `SkeletonBlock(Modifier.fillMaxWidth().aspectRatio(2f), shape =
+ArecaTheme.shapes.surface)`.
 
 With `dev.voir.areca:viewmodel`, map its list state to the foundation list state in the UI module,
 and wire `onRefresh`, `onLoadNextPage`, `onRetryInitial` and `onRetryLoadMore` to the ViewModel's
@@ -300,6 +482,9 @@ fun <T> UiState<ListState<T, *, *>>.toPagedContentListState(
         PagedContentListState(items = emptyList(), hasNextPage = false, initialError = message)
     is UiState.Display -> PagedContentListState(
         items = data.items,
+        // A list ViewModel starts at Display(initial) with no page loaded: show the loading face
+        // until the first page arrives, or every list flashes its empty face first.
+        loadingInitial = data.pagingMeta.currentPage == 0,
         hasNextPage = data.pagingMeta.hasNextPage,
         loadingNextPage = data.isLoadingNextPage,
         loadMoreError = loadMoreErrorText.takeIf { data.nextPageError != null },
@@ -307,6 +492,67 @@ fun <T> UiState<ListState<T, *, *>>.toPagedContentListState(
     )
 }
 ```
+
+## Panel page
+
+A total over its breakdown: the header on the page's ground, the content on a rounded panel that
+runs to the bottom edge however short it is. The page scrolls as one column and goes back to the
+top when its tab is tapped again.
+
+```kotlin
+@Composable
+fun SpendingScreen(month: MonthSpending, onOpenCategory: (Category) -> Unit) {
+    BaseLayout(
+        contentWindowInsets = WindowInsets.safeDrawing.only(
+            WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal,
+        ),
+        topBar = {
+            TopBar(
+                title = "Spending",
+                windowInsets = WindowInsets.safeDrawing.only(
+                    WindowInsetsSides.Top + WindowInsetsSides.Horizontal,
+                ),
+            )
+        },
+    ) { padding ->
+        PanelLayout(
+            contentPadding = padding,
+            header = {
+                Stat(
+                    label = "Spent in ${month.name}",
+                    value = month.total,
+                    modifier = Modifier.contentInsets(),
+                    note = month.comparison,
+                    size = StatSize.Large,
+                )
+            },
+            panel = {
+                // Rows carry their own 16dp start padding; only the heading takes the gutter, so
+                // the heading and the rows' content line up.
+                Column(
+                    modifier = Modifier.padding(vertical = ArecaTheme.spacing.xl),
+                    verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md),
+                ) {
+                    Heading(title = { Text("By category") }, modifier = Modifier.horizontalContentInsets())
+                    ListItemColumn {
+                        month.categories.forEach { category ->
+                            NavigationListItem(
+                                title = { Text(category.name) },
+                                onClick = { onOpenCategory(category) },
+                                value = { Text(category.amount) },
+                                onClickLabel = "Open category",
+                            )
+                        }
+                    }
+                }
+            },
+        )
+    }
+}
+```
+
+What is on the panel is drawn on its raised surface, so cards and rows there take that ladder's
+fills. Put no lazy list inside a `PanelLayout`; a long, open-ended list is a list screen.
 
 ## Confirmation flow
 
@@ -327,7 +573,6 @@ fun SecurityScreen(
     val toasts = rememberToastState()
 
     BaseLayout(
-        bg = ArecaTheme.colors.bgCanvas,
         contentWindowInsets = WindowInsets.safeDrawing.only(
             WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal,
         ),
@@ -340,7 +585,7 @@ fun SecurityScreen(
                 leading = { BackAction(onClick = onBack, contentDescription = "Back") },
             )
         },
-        overlay = { ToastHost(state = toasts) },
+        toastState = toasts,
     ) { padding ->
         Column(
             modifier = Modifier.padding(padding).contentInsets(),
@@ -408,7 +653,6 @@ fun MainScreen() {
     var destination by rememberSaveable { mutableStateOf(Destination.Home) }
 
     BaseLayout(
-        bg = ArecaTheme.colors.bgCanvas,
         topBar = {
             TopBar(
                 title = destination.label,
@@ -486,7 +730,7 @@ fun NoteFilters(
         SlidingSelector(
             items = Level.entries.map { SelectorItem(it) { Text(it.label) } },
             selected = level,
-            onSelect = { if (it != null) onLevelChange(it) },
+            onSelectedChange = onLevelChange,
         )
         for (filter in notes) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -520,29 +764,27 @@ with `animateDpAsState`: every selector, tab strip and floating tab bar shares t
 
 ## Bottom sheet with its own action bar
 
+A sheet that state opens is `FlowModal(visible = …)`; its header is `FlowModalTopBar`.
+
 ```kotlin
 @Composable
 fun FilterSheet(onApply: (unpaidOnly: Boolean) -> Unit) {
-    val modal = rememberFlowModal(allowPartial = false, autoHeight = true)
+    var open by rememberSaveable { mutableStateOf(false) }
     var unpaidOnly by remember { mutableStateOf(false) }
 
-    Button(text = "Filters", onClick = { modal.show() }, style = ButtonStyle.soft())
+    Button(text = "Filters", onClick = { open = true }, style = ButtonStyle.soft())
 
     FlowModal(
-        controller = modal,
-        header = {
-            TopBar(
-                "Filters",
-                windowInsets = FlowModalHeaderInsets,
-                trailing = { CloseAction(onClick = { modal.hide() }) },
-            )
-        },
+        visible = open,
+        onDismissRequest = { open = false },
+        controller = rememberFlowModal(),
+        header = { FlowModalTopBar("Filters", onClose = { open = false }, closeContentDescription = "Close") },
         footer = {
             FlowModalActionBar(
                 confirmText = "Apply",
                 onConfirm = {
                     onApply(unpaidOnly)
-                    modal.hide()
+                    open = false
                 },
             )
         },
@@ -553,6 +795,85 @@ fun FilterSheet(onApply: (unpaidOnly: Boolean) -> Unit) {
             title = { Text("Unpaid only") },
         )
     }
+}
+```
+
+A sheet about one thing takes the thing. It is open while `item` is not `null` and keeps drawing the
+last item while it slides out, so deleting the transaction from the sheet does not cut it off:
+
+```kotlin
+FlowModal(
+    item = editing,
+    onDismissRequest = { editing = null },
+    header = { transaction ->
+        FlowModalTopBar(transaction.merchant, onClose = { editing = null })
+    },
+    footer = { transaction ->
+        FlowModalActionBar(
+            confirmText = "Delete",
+            onConfirm = {
+                onDelete(transaction)
+                editing = null
+            },
+            style = FlowModalActionBarStyle.default(confirm = ButtonStyle.soft(ActionColor.Danger)),
+        )
+    },
+) { transaction ->
+    TransactionDetails(transaction)
+}
+```
+
+A choice made in a sheet is never built by hand: `SelectFlowModal` sizes the sheet to the options,
+lays them flat with a brand tick, pins a search above a long list and closes on a single pick.
+
+```kotlin
+val themePicker = rememberFlowModal()
+
+SelectFlowModal(
+    controller = themePicker,
+    title = "Appearance",
+    values = setOf(theme),
+    options = listOf(
+        SelectOption(Theme.System, Theme.System, "System", description = "Follows the device",
+            leading = { SettingsRowIcon(ArecaIcons.Monitor, hue = ArecaTheme.hues.gray) }),
+        SelectOption(Theme.Light, Theme.Light, "Light",
+            leading = { SettingsRowIcon(ArecaIcons.Sun, hue = ArecaTheme.hues.orange) }),
+        SelectOption(Theme.Dark, Theme.Dark, "Dark",
+            leading = { SettingsRowIcon(ArecaIcons.MoonStar, hue = ArecaTheme.hues.indigo) }),
+    ),
+    onChange = { picked -> picked.firstOrNull()?.let(onTheme) },
+)
+
+// Many options: pass onQueryChange and filter; the search is pinned and the sheet takes its cap.
+SelectFlowModal(
+    controller = currencyPicker,
+    title = "Currency",
+    values = setOf(currency.code),
+    sections = listOf(
+        SelectOptionSection("recent", "Recent", recent.map { it.option() }),
+        SelectOptionSection("all", "All currencies", matching.map { it.option() }, indexed = true),
+    ),
+    onChange = { picked -> picked.firstOrNull()?.let(onCurrency) },
+    state = search,
+    onQueryChange = onSearch,
+)
+// fun Currency.option() = SelectOption(code, code, "$code · $name", detail = symbol)
+```
+
+A sheet that code drives — a step of an imperative flow — keeps the controller form. Navigate only
+once it has left:
+
+```kotlin
+val picker = rememberFlowModal()
+val scope = rememberCoroutineScope()
+
+FlowModal(picker, header = { FlowModalTopBar("Choose a wallet", onClose = { picker.hide() }) }) {
+    WalletRows(onPick = { wallet ->
+        scope.launch {
+            picker.hideAndWait()
+            onOpenWallet(wallet)
+        }
+    })
 }
 ```
 
@@ -603,7 +924,6 @@ fun PhotoViewer(photo: Painter, onClose: () -> Unit) {
     ArecaDarkTheme {
         SystemBars(color = ArecaTheme.colors.bgCanvas)
         BaseLayout(
-            bg = ArecaTheme.colors.bgCanvas,
             topBar = {
                 TopBar(
                     title = "Photo",
@@ -626,31 +946,43 @@ read `ArecaTheme.darkColors`. In a dialog, pair `SystemBars` with `edgeToEdgeDia
 
 ## Subscription card
 
-The plan in the card's body, its renewal and the way to change it in a footer. The footer's style
-inks the copy and the button, so neither is styled here; a failed payment swaps the style and the
-words, not the layout.
+A card for one subscription, plan or budget: what it is in the body, its state along the bottom as
+a footer band. The band states; it holds a button only when the card has one action of its own.
+Neutral is the resting state, so a list of cards that need nothing stays quiet and colour appears
+only on the cards that have something to say. The state swaps the band's style, glyph and words,
+never the layout.
 
 ```kotlin
+enum class SubscriptionState { Active, DueSoon, Overdue, Renewed }
+
 @Composable
 fun SubscriptionCard(
     plan: PlanUi,
-    onManage: () -> Unit,
-    onUpdateCard: () -> Unit,
+    onOpen: () -> Unit,
+    onPayNow: () -> Unit,
+    statusIcon: (SubscriptionState) -> ImageVector,
     modifier: Modifier = Modifier,
 ) {
-    val failed = plan.paymentFailed
+    // One mapping per app, shared by every card with a status band, so a colour means the same
+    // thing on each.
+    val footerStyle = when (plan.state) {
+        SubscriptionState.Active -> CardFooterStyle.plain()
+        SubscriptionState.DueSoon -> CardFooterStyle.soft(ActionColor.Warning)
+        SubscriptionState.Overdue -> CardFooterStyle.soft(ActionColor.Danger)
+        SubscriptionState.Renewed -> CardFooterStyle.soft(ActionColor.Success)
+    }
 
     Card(
         modifier = modifier.fillMaxWidth(),
-        style = CardStyle.Outlined,
-        footerStyle = CardFooterStyle.soft(if (failed) ActionColor.Danger else ActionColor.Brand),
+        onClick = onOpen,
+        onClickLabel = plan.openLabel,
+        footerStyle = footerStyle,
         footer = {
-            Text(
-                text = if (failed) plan.failureLine else plan.renewalLine,
-                modifier = Modifier.weight(1f),
-            )
-            Button(onClick = if (failed) onUpdateCard else onManage) {
-                Text(if (failed) "Update card" else "Manage")
+            // The band inks its glyph, words and button; none of them is styled here.
+            Icon(statusIcon(plan.state), contentDescription = null)
+            Text(plan.statusLine, modifier = Modifier.weight(1f), maxLines = 1)
+            if (plan.state == SubscriptionState.Overdue) {
+                Button(text = plan.payNowLabel, onClick = onPayNow)
             }
         },
     ) { padding ->
@@ -663,19 +995,27 @@ fun SubscriptionCard(
 }
 ```
 
+- `plain()` for the resting state, `soft(Warning)` for something coming up, `soft(Danger)` for
+  something past due or failed, `soft(Success)` for something just settled. `solid(color)` only for
+  the one card on a screen whose band is its call to action.
+- The status line is one line: the date or amount it reports ("Due tomorrow", "€9.99 on 3 Dec").
+- Leave the card's own `style` to the theme (`LocalCardStyle`): every card of this kind has the
+  same corner (`shapes.surface`) and takes the `raised` ground of whatever it sits on.
+
 ## Custom pressable surface
 
 Only when no component fits. Fill with `background(color, shape)`, never `clip`, and give the
-indication the same shape so the focus ring draws outside the bounds.
+indication the same shape so the focus ring draws outside the bounds. Take the fill from a surface
+role, never a ground token.
 
 ```kotlin
 @Composable
 fun Tile(label: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    val shape = ArecaTheme.shapes.lg
+    val shape = ArecaTheme.shapes.surface
     Box(
         modifier = modifier
             .minimumTouchTarget()
-            .background(ArecaTheme.colors.bgSurface, shape)
+            .background(ArecaTheme.surface.raised, shape)
             .clickCursor()
             .clickable(
                 interactionSource = null,
@@ -685,10 +1025,14 @@ fun Tile(label: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
             )
             .padding(ArecaTheme.spacing.xl),
     ) {
-        Text(label)
+        RaisedSurface { Text(label) }
     }
 }
 ```
+
+The tile takes the `raised` fill of the surface it sits on, like a `Card`: white on a grouped page,
+grey on a plain one or in a sheet (where a card is emphasis only). `RaisedSurface` puts its content on that fill's surface, so a
+chip or a track inside it takes the right `well`.
 
 ## Analytics overview
 
@@ -708,6 +1052,9 @@ It needs `dev.voir.areca:charts` beside `foundation`, and `icons` for the glyph.
   `lastVisibleIndex`.
 - A row whose meter belongs to it goes in `ExpandableListItem`'s `bottom` slot, so tapping the
   meter opens the row; what it reveals goes in its content.
+- A row's amount is an `Amount` the presentation layer formatted for the locale, drawn with
+  `AmountText` in the row's `value` (or `trailing`) slot with no `style`: it takes the slot's type,
+  with tabular figures so the column of amounts lines up and the cents a step smaller.
 - Elsewhere on such a tab: a day-by-day month is a `Calendar` with `CalendarHeatDay` in its `day`
   slot and `calendarHeatLevel` mapping amounts to shades; a running total against another period is
   a `LineChart`; a filter sheet's foot is `FlowModalActionBar(layout = FlowModalActionBarLayout.Split(),
@@ -731,12 +1078,12 @@ data class PeriodSummary(
 @Immutable
 data class CategoryShare(
     val name: String,
-    val amount: String,
+    val amount: Amount,
     val detail: String,
     val share: Float,
     val usualShare: Float,
     val usualAmount: String,
-    val subcategories: List<Pair<String, String>>,
+    val subcategories: List<Pair<String, Amount>>,
 )
 
 /**
@@ -769,7 +1116,7 @@ fun AnalyticsOverview(
             SlidingSelector(
                 items = listOf("Week", "Month", "Year").map { SelectorItem(it) { Text(it) } },
                 selected = step,
-                onSelect = { if (it != null) step = it },
+                onSelectedChange = { step = it },
                 layout = SelectorLayout.Hug,
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -833,7 +1180,8 @@ fun AnalyticsOverview(
                     expanded = open == category.name,
                     onExpandedChange = { open = if (it) category.name else null },
                     title = { Text(category.name) },
-                    value = { Text(category.amount) },
+                    // Formatted parts, drawn in the slot's type: no style, no fontWeight.
+                    value = { AmountText(category.amount) },
                     // The meter is part of the row, so a tap on it opens the category too.
                     bottom = {
                         Column(verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md)) {
@@ -851,7 +1199,7 @@ fun AnalyticsOverview(
                     onClickLabel = "Show subcategories",
                 ) {
                     category.subcategories.forEach { (name, amount) ->
-                        ListItem(title = { Text(name) }, value = { Text(amount) }, nestingLevel = 1)
+                        ListItem(title = { Text(name) }, value = { AmountText(amount) }, nestingLevel = 1)
                     }
                 }
             }
@@ -860,11 +1208,379 @@ fun AnalyticsOverview(
 }
 ```
 
+## Plan picker (paywall)
+
+A choice of plans, each a card with its price, committed by the screen's docked action. The cards
+are one radio group; the badge marks the plan to recommend.
+
+```kotlin
+enum class Plan { Yearly, Monthly }
+
+@Composable
+fun PlanPicker(
+    plan: Plan,
+    onPlanChange: (Plan) -> Unit,
+    onSubscribe: () -> Unit,
+    onClose: () -> Unit,
+    subscribing: Boolean,
+) {
+    BaseLayout(
+        topBar = { TopBar("Premium", leading = { CloseAction(onClick = onClose, contentDescription = "Close") }) },
+        bottomBar = {
+            BottomActionBar(
+                actionText = "Subscribe",
+                onAction = onSubscribe,
+                loading = subscribing,
+                caption = "Cancel any time in Settings.",
+            )
+        },
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .padding(padding)
+                .horizontalContentInsets()
+                .selectableGroup(),
+            verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg),
+        ) {
+            ChoiceCard(
+                selected = plan == Plan.Yearly,
+                onClick = { onPlanChange(Plan.Yearly) },
+                badge = { Badge(style = BadgeStyle.Brand) { Text("Best value") } },
+                trailing = { AmountText(Amount(whole = "39", fraction = "99", symbol = "€")) },
+            ) {
+                Text("Yearly", variant = TextVariant.LabelLarge)
+                Text("€3.33 a month", variant = TextVariant.BodySmall, color = TextColor.Subtle)
+            }
+            ChoiceCard(
+                selected = plan == Plan.Monthly,
+                onClick = { onPlanChange(Plan.Monthly) },
+                trailing = { AmountText(Amount(whole = "4", fraction = "99", symbol = "€")) },
+            ) {
+                Text("Monthly", variant = TextVariant.LabelLarge)
+                Text("Cancel any time", variant = TextVariant.BodySmall, color = TextColor.Subtle)
+            }
+        }
+    }
+}
+```
+
+- `selectableGroup()` on the column makes the cards one radio group; each card is announced as a
+  radio button with its state. `mode = ChoiceCardMode.Multiple` for add-ons that combine.
+- The chosen card wears the accent ring; leave the cards' fill and corner to the surface.
+- The prices come from the store, formatted for the user's locale, and are passed as parts.
+- One solid button on the screen: the bar's. A plan is chosen by its card, never by a button in it.
+
+## Catalogue with filters
+
+A searchable list with filters: the query under the title, the count of filters in force on the
+bar's `FilterAction`, those filters as chips that remove themselves, and a sheet that edits a draft
+of them. The view model owns the filters and the draft; the sheet is open while there is a draft,
+so it is `FlowModal(item = draft)` and slides out with the last draft shown. Filtering that the
+person must confirm ("Show results") edits the draft; a chip removed applies at once.
+
+```kotlin
+/** How the catalogue is ordered. */
+enum class CatalogueSort { Popular, Newest, Price }
+
+/**
+ * The filters in force, owned by the screen's view model.
+ *
+ * @property query The search text.
+ * @property families The families chosen; empty for all.
+ * @property sort The order.
+ * @property inStockOnly Whether only items in stock are listed.
+ */
+@Immutable
+data class CatalogueFilters(
+    val query: String = "",
+    val families: Set<String> = emptySet(),
+    val sort: CatalogueSort = CatalogueSort.Popular,
+    val inStockOnly: Boolean = false,
+) {
+    /** How many filters are in force, for the top bar's count. */
+    val count: Int get() = families.size + (if (inStockOnly) 1 else 0)
+}
+
+/**
+ * One item of the catalogue.
+ *
+ * @property id Its identity.
+ * @property name Its name.
+ * @property detail A line under the name.
+ */
+@Immutable
+data class CatalogueItem(val id: String, val name: String, val detail: String)
+
+/**
+ * A searchable catalogue: the query under the title, the filters in force as chips that remove
+ * themselves, the list, and a sheet that edits the filters.
+ *
+ * @param filters The filters in force.
+ * @param draft The filters being edited in the sheet, or `null` while the sheet is closed.
+ * @param families Every family that can be chosen.
+ * @param items The items the filters let through.
+ * @param onQueryChange Called with the new search text.
+ * @param onFiltersChange Called with filters to apply at once — a chip removed.
+ * @param onOpenFilters Opens the sheet with the current filters as its draft.
+ * @param onDraftChange Called with the draft as it is edited.
+ * @param onApplyDraft Applies the draft and closes the sheet.
+ * @param onDismissFilters Closes the sheet and drops the draft.
+ * @param onOpenItem Opens an item.
+ */
+@Composable
+fun CatalogueScreen(
+    filters: CatalogueFilters,
+    draft: CatalogueFilters?,
+    families: List<String>,
+    items: List<CatalogueItem>,
+    onQueryChange: (String) -> Unit,
+    onFiltersChange: (CatalogueFilters) -> Unit,
+    onOpenFilters: () -> Unit,
+    onDraftChange: (CatalogueFilters) -> Unit,
+    onApplyDraft: () -> Unit,
+    onDismissFilters: () -> Unit,
+    onOpenItem: (CatalogueItem) -> Unit,
+) {
+    val listState = rememberLazyListState()
+    listState.ScrollToTopOnTabReselect()
+
+    BaseLayout(
+        topBar = {
+            TopBar(
+                title = "Catalogue",
+                trailing = { FilterAction(onClick = onOpenFilters, badge = filters.count.takeIf { it > 0 }?.toString(), contentDescription = "Filters") },
+                bottom = {
+                    SearchField(
+                        value = filters.query,
+                        onValueChange = onQueryChange,
+                        modifier = Modifier.horizontalContentInsets(),
+                        placeholder = { Text("Search perfumes") },
+                    )
+                },
+            )
+        },
+    ) { padding ->
+        LazyColumn(state = listState, contentPadding = padding) {
+            if (filters.families.isNotEmpty() || filters.inStockOnly) {
+                item(key = "applied") {
+                    // The filters in force, each with its own way out.
+                    LazyRow(
+                        contentPadding = PaddingValues(horizontal = ArecaTheme.spacing.horizontalContentInsets),
+                        horizontalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md),
+                    ) {
+                        items(filters.families.toList(), key = { it }) { family ->
+                            Chip(
+                                label = family,
+                                onRemove = { onFiltersChange(filters.copy(families = filters.families - family)) },
+                                removeContentDescription = "Remove $family",
+                            )
+                        }
+                        if (filters.inStockOnly) {
+                            item(key = "stock") {
+                                Chip(
+                                    label = "In stock",
+                                    onRemove = { onFiltersChange(filters.copy(inStockOnly = false)) },
+                                    removeContentDescription = "Remove In stock",
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+            if (items.isEmpty()) {
+                item(key = "empty") {
+                    Fallback(
+                        title = "Nothing matches",
+                        body = "Try fewer filters or another search.",
+                        actionText = "Clear filters",
+                        onAction = { onFiltersChange(CatalogueFilters(query = filters.query)) },
+                    )
+                }
+            } else {
+                items(items, key = { it.id }) { item ->
+                    ListItem(
+                        title = { Text(item.name) },
+                        subtitle = { Text(item.detail) },
+                        onClick = { onOpenItem(item) },
+                        onClickLabel = "Open ${item.name}",
+                    )
+                }
+            }
+        }
+    }
+
+    // State-driven: open while there is a draft, and the draft is what the sheet shows.
+    FlowModal(
+        item = draft,
+        onDismissRequest = onDismissFilters,
+        header = { FlowModalTopBar(title = "Filters", onClose = onDismissFilters) },
+        footer = { FlowModalActionBar(confirmText = "Show results", onConfirm = onApplyDraft) },
+    ) { edited ->
+        Column(verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg)) {
+            Text("Family", variant = TextVariant.Overline, modifier = Modifier.horizontalContentInsets())
+            FlowBadgeSelect(
+                options = families.map { BadgeOption(label = { Text(it) }, value = it) },
+                onSelect = { option ->
+                    val chosen = edited.families
+                    onDraftChange(edited.copy(families = if (option.value in chosen) chosen - option.value else chosen + option.value))
+                },
+                selected = edited.families.toList(),
+                selectionMode = BadgeSelectionMode.Multiple,
+                style = BadgeStyle.FilledChip,
+                size = BadgeSize.Chip,
+                modifier = Modifier.horizontalContentInsets(),
+            )
+            Text("Sort", variant = TextVariant.Overline, modifier = Modifier.horizontalContentInsets())
+            SlidingSelector(
+                items = CatalogueSort.entries.map { SelectorItem(it) { Text(it.name) } },
+                selected = edited.sort,
+                onSelectedChange = { onDraftChange(edited.copy(sort = it)) },
+                modifier = Modifier.horizontalContentInsets(),
+            )
+            CheckboxListItem(
+                checked = edited.inStockOnly,
+                onCheckedChange = { onDraftChange(edited.copy(inStockOnly = it)) },
+                title = { Text("In stock only") },
+            )
+        }
+    }
+}
+```
+
+- One filter vocabulary: the same chips above the list and in the sheet, the same order.
+- The empty face says what to do — "Clear filters" — and keeps the query.
+- Compiled in the playground as `CatalogueFiltersRecipe.kt`.
+
+## Product detail
+
+A product page: pictures under a transparent bar, what it is and its price, its figures, its facts
+on a section, and the one thing to do with it pinned to the bottom. The pictures run under the
+status bar and the bar, so the list takes only the bottom padding; `TopBarStyle.Scrim` sets the
+controls in dark discs that read over any picture, and the frame is square so the page never shows
+at its edges.
+
+```kotlin
+/**
+ * What a product page shows.
+ *
+ * @property name The product's name.
+ * @property maker Who makes it, the line above the name.
+ * @property price Its price, formatted by the app.
+ * @property pictures Models the media image loader understands.
+ * @property rating Its rating, formatted.
+ * @property reviews How many reviews, formatted.
+ * @property facts Label and value pairs: concentration, size, year.
+ * @property favourite Whether the person has saved it.
+ */
+@Immutable
+data class ProductUi(
+    val name: String,
+    val maker: String,
+    val price: Amount,
+    val pictures: List<Any>,
+    val rating: String,
+    val reviews: String,
+    val facts: List<Pair<String, String>>,
+    val favourite: Boolean,
+)
+
+/**
+ * A product page: its pictures under a transparent bar, what it is, its figures, its facts, and the
+ * one thing to do with it pinned to the bottom.
+ *
+ * The pictures run under the status bar and the bar, so the content takes only the bottom padding;
+ * the bar's [TopBarStyle.Scrim] puts its controls in dark discs that read over any picture.
+ *
+ * @param product What to show.
+ * @param onBack Leaves the page.
+ * @param onShare Shares the product.
+ * @param onFavouriteChange Saves or unsaves it.
+ * @param onBuy The page's primary action.
+ */
+@Composable
+fun ProductDetailScreen(
+    product: ProductUi,
+    onBack: () -> Unit,
+    onShare: () -> Unit,
+    onFavouriteChange: () -> Unit,
+    onBuy: () -> Unit,
+) {
+    val carousel = rememberCarouselState(itemCount = product.pictures.size)
+
+    BaseLayout(
+        topBar = {
+            TopBar(
+                title = "",
+                style = TopBarStyle.Scrim,
+                leading = { BackAction(onClick = onBack, contentDescription = "Back") },
+                trailing = {
+                    ShareAction(onClick = onShare, contentDescription = "Share")
+                    FavoriteAction(selected = product.favourite, onClick = onFavouriteChange, contentDescription = "Save")
+                },
+            )
+        },
+        bottomBar = { BottomActionBar(actionText = "Add to bag", onAction = onBuy) },
+    ) { padding ->
+        // The hero runs under the bar: only the bottom padding is applied.
+        LazyColumn(contentPadding = PaddingValues(bottom = padding.calculateBottomPadding())) {
+            item(key = "hero") {
+                Box {
+                    Carousel(state = carousel, contentDescription = product.name) { index ->
+                        MediaFrame(
+                            model = product.pictures[index],
+                            contentDescription = null,
+                            aspectRatio = 1f,
+                            // Full bleed: square corners, so the page never shows at its edges.
+                            style = MediaFrameStyle.default(shape = ArecaTheme.shapes.none),
+                        )
+                    }
+                    PageIndicator(
+                        pageCount = carousel.pageCount,
+                        currentPage = carousel.currentPage,
+                        currentPageOffset = carousel.currentPageOffset,
+                        style = PageIndicatorStyle.onImage(),
+                        modifier = Modifier.align(Alignment.BottomCenter).padding(ArecaTheme.spacing.lg),
+                    )
+                }
+            }
+            item(key = "title") {
+                Column(
+                    modifier = Modifier.horizontalContentInsets().padding(vertical = ArecaTheme.spacing.xl),
+                    verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.xs),
+                ) {
+                    Text(product.maker, variant = TextVariant.Overline, color = TextColor.Subtle)
+                    Text(product.name, variant = TextVariant.HeadingMedium)
+                    AmountText(product.price, style = ArecaTheme.typography.headingSmall)
+                }
+            }
+            item(key = "figures") {
+                StatGrid(modifier = Modifier.horizontalContentInsets(), columns = 2) {
+                    Stat(label = "Rating", value = product.rating)
+                    Stat(label = "Reviews", value = product.reviews)
+                }
+            }
+            item(key = "facts") {
+                Settings(modifier = Modifier.padding(top = ArecaTheme.spacing.xl)) {
+                    Section(header = { Text("Details") }) {
+                        product.facts.forEach { (label, value) ->
+                            SettingsRow(title = { Text(label) }, value = { Text(value) })
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+- The price is an `AmountText`; figures are `Stat`s; facts are a `Section` of value rows.
+- Compiled in the playground as `ProductDetailRecipe.kt` (needs `dev.voir.areca:media`).
+
 ## Anti-patterns
 
 | Don't | Do |
 | --- | --- |
-| `androidx.compose.material3.*` (`Button`, `Scaffold`, `TopAppBar`, `ModalBottomSheet`, `Snackbar`, `Switch`) | `Button`, `BaseLayout`, `TopBar`, `FlowModal` / `ConfirmSheet`, `ToastHost`, `Toggle` |
+| `androidx.compose.material3.*` (`Button`, `Scaffold`, `TopAppBar`, `ModalBottomSheet`, `Snackbar`, `Switch`) | `Button`, `BaseLayout`, `TopBar`, `FlowModal` / `ConfirmSheet`, `BaseLayout(toastState = …)`, `Toggle` |
 | `BasicText` / `Text(style = TextStyle(fontSize = 14.sp))` | `Text(text, variant = TextVariant.BodySmall)` |
 | `Color(0xFF…)`, `MaterialTheme.colorScheme.*` | `ArecaTheme.colors.*`, `TextColor.*`, `ActionColor.*` |
 | `Modifier.padding(16.dp)` around a screen | `Modifier.horizontalContentInsets()`, `contentInsets()`, `ArecaTheme.spacing.*` |
@@ -878,7 +1594,17 @@ fun AnalyticsOverview(
 | `IconButton(…, contentDescription = null)` | A localised description |
 | Relying on `"Back"`, `"Cancel"`, `ContentListLabels.English` in a localised app | Pass the app's strings |
 | `ArecaThemeProvider(darkTheme = true)` nested for a dark region | `ArecaDarkTheme { … }` |
-| `if (open) FlowModal(…)` | Call `FlowModal` always; drive it with `show()` / `hide()` |
+| `if (open) FlowModal(…)` | `FlowModal(visible = open, onDismissRequest = { open = false })`, or the controller form driven with `show()` / `hide()` |
+| `if (item != null) FlowModal(…)`, or an app `rememberLastNonNull` around a sheet | `FlowModal(item = item, onDismissRequest = { item = null }) { item -> … }` |
+| `controller.hide()` then `navigate(…)` at once | `scope.launch { controller.hideAndWait(); navigate(…) }` |
+| An app `AppModalTopBar`, or `TopBar(style = TopBarStyle.Modal, size = TopBarSize.Modal, windowInsets = FlowModalHeaderInsets, trailing = { CloseAction(…) })` in each sheet | `FlowModalTopBar(title, onClose = …)`; a pinned search in its `bottom` |
+| An app `EmptyContent` / `EmptyState` / `ErrorContent` wrapper around `Fallback` | `Fallback(title, body = …, tone = FallbackTone.Empty / Failure, actionText, onAction)` |
+| A hand-built floating button: a shadowed `Box` in `overlay` with `navigationBarsPadding()` and a magic `Spacer(Modifier.height(88.dp))` at the end of the list | `BaseLayout(floatingAction = { Button(…, leading = { Icon(…) }) })`; the frame adds its height to `padding` |
+| `ToastHost` in `overlay` lifted above a bar with `padding(bottom = …)` | `BaseLayout(toastState = toasts)` |
+| An app `LocalFloatingBarInset` or `TabReselect` local | The padding `BaseLayout` and `AdaptiveNavigation` hand their content for what the bars cover; `listState.ScrollToTopOnTabReselect()`, fed by `LocalTabReselect` |
+| `if (loading) Skeleton()` that flashes for one frame on a fast network | `if (rememberSettledLoading(loading)) …` |
+| A `Box(Modifier.size(48.dp).background(…, CircleShape))` as an avatar placeholder | `SkeletonBlock(Modifier.size(48.dp), shape = ArecaTheme.shapes.full)` in a `SkeletonGroup` |
+| A disabled submit button that never says what is missing | `BottomActionBar(ready = complete, …)`: the press runs validation and shows the errors |
 | `if (asking) ConfirmSheet(…)` | `ConfirmSheet(visible = asking, …)`, so it animates out |
 | A wrapper composable that only changes a component's colours | `style = XStyle.….copy(…)` or `LocalXStyle provides …` |
 | Ignoring `BaseLayout`'s `padding` | Apply it as `contentPadding` or `Modifier.padding(padding)` |
@@ -892,3 +1618,29 @@ fun AnalyticsOverview(
 | A `Card` with a `HorizontalDivider` and a `Row` of buttons at the bottom | `Card(footer = { … }, footerStyle = …)` |
 | `forEach` over an open-ended collection inside a `Section` | `LazyList` / `PagedContentList` of `ListItem` rows, or ask which the product wants |
 | `Box(Modifier.height(1.dp).background(…))`, a divider between two list rows | `HorizontalDivider()`; a `List` draws its own hairlines |
+| `private val SectionGap = 22.dp` used as a gap or padding | The nearest `ArecaTheme.spacing.*` step; a named literal is still a literal |
+| `Text(…, style = ArecaTheme.typography.bodySmall, color = ArecaTheme.colors.fgSubtle)` | `Text(…, variant = TextVariant.BodySmall, color = TextColor.Subtle)` |
+| `TopBar(style = TopBarStyle.default(bg = …))` repeated on every screen | `LocalTopBarStyle provides …` once in the theme's `componentDefaults` |
+| `Settings(styles = …)` wrapped in an app `SettingsList` to restyle every list | `LocalSettingsStyles provides SettingsDefaults.styles(…)` once in the theme's `componentDefaults` |
+| A wrapper that restyles `Settings` sections per screen — a grey `sectionStyle(bg = …)` for a sheet, a white one for a panel | Nothing: a section's card, hairlines and band follow the surface it is drawn on. Provide `LocalSettingsStyles` once, and only for what differs app-wide |
+| A hand-picked ground on something drawn on a surface: `Card(style = CardStyle.default(bg = ArecaTheme.colors.bgSubtle))`, `background(ArecaTheme.colors.bgSurface)` on a panel, `bgMuted` for a track | A surface role: leave the style's colour unspecified, or read `ArecaTheme.surface.raised` / `well` / `separator`, and wrap your own fill's content in `RaisedSurface` |
+| An app grey for a tile inside a card (a constant of its own), or a sheet style that greys a sheet so its cards turn white | `ArecaTheme.surface.raised` inside the card, with `RaisedSurface`; a sheet keeps its default ground and its cards follow the sheet's ladder |
+| `Box(Modifier.background(ArecaTheme.colors.bgCanvas))` around the app, or `BaseLayout(bg = ArecaTheme.colors.bgCanvas)` | Nothing: `BaseLayout` paints the page of the surface layout |
+| App-wide locals in a `CompositionLocalProvider` around the content, lost inside `ArecaDarkTheme` | `ArecaThemeProvider(componentDefaults = ComponentDefaults { arrayOf(…) })` |
+| `Icon(rememberVectorPainter(ArecaIcons.Trash), …)` | `Icon(ArecaIcons.Trash, …)` — the `ImageVector` overload |
+| `RoundedCornerShape(ArecaTheme.radius.lg)` | `ArecaTheme.shapes.lg` |
+| A pill drawn from `Text` and `Modifier.background(…, shapes.full)` — "PRO", "Best value" | `Badge(style = BadgeStyle.Brand) { Text(…) }` |
+| A label over a large number built from two `Text`s | `Stat(label, value, note)`; several in `StatGrid` |
+| `listOf(a, b).joinToString(" · ")` shown to the user | A string resource with placeholders, so a locale can reorder or re-punctuate it |
+| `ConfirmSheetStyle.Default.copy(icon = …Danger, confirm = …Danger)` | `ConfirmSheetStyle.Danger` |
+| `SlidingSelector(…, onSelect = { if (it != null) value = it })` | `SlidingSelector(…, onSelectedChange = { value = it })` |
+| `FlowBadgeSelect(…, verticalArrangement = Arrangement.spacedBy(…))` | Leave the arrangements alone: the chips' touch target already spaces the lines |
+| `Checkbox(checked = true, indeterminate = true)` only to get the dash | `indeterminate = true` draws the dash whatever `checked` is; `checked` decides what a tap asks for |
+| `if (sheetSubject != null) FlowModal(…)` for a sheet about something that can be deleted | `FlowModal(item = sheetSubject, …)`, which keeps the last subject until it has animated out |
+| An app `SettingsTint` / `HueTint` palette for settings tiles, or the `blue` ramp recoloured so `Info` reads as an accent | `SettingsRowIcon(imageVector, hue = ArecaTheme.hues.purple)`, `FeaturedIconStyle.solidHue` / `softHue`; `ArecaThemeProvider(hues = …)` to change the set |
+| An app `FitText` that shrinks a `BasicText` to fit | `Text(…, maxLines = 1, autoSize = TextAutoSize.StepBased(minFontSize = …, maxFontSize = …))`; for money `AmountText(autoSize = …)` |
+| An amount split into two `Text`s — the figures with `fontWeight`, the cents smaller — or a `fontWeight` on a figure in a row slot | `AmountText(Amount(whole, fraction, symbol = …))`, in the row's `value` or `trailing` slot without a style |
+| A radio card built from `Modifier.clip(shape).border(…).selectable(…)` — a `PlanCard`, an `OptionCard` | `ChoiceCard(selected, onClick, badge = …, trailing = …) { … }` in a `selectableGroup()` column |
+| A star `IconButton` whose `contentDescription` switches between "Add to favourites" and "Remove from favourites" | `IconToggleButton(checked, onCheckedChange, ArecaIcons.Star, contentDescription = "Favourite", checkedImageVector = …)`, announced as a toggle with its state |
+| A filter chip with a cross built from `Badge`, a `Row` and an `IconButton` | `Chip(label, onRemove = …, removeContentDescription = …, leading = { … })` |
+| Vibrating from the app on each key of a `KeyboardKeys` keyboard (and the `VIBRATE` permission it needs) | Nothing: every key press plays the platform keyboard tap through `LocalHapticFeedback`; `LocalKeyboardHaptics provides false` to silence it |

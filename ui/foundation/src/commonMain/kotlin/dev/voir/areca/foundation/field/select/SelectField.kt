@@ -101,7 +101,7 @@ public fun <Value> SelectField(
         values: Set<Value>,
         onSelect: (SelectOption<Value>) -> Unit,
     ) -> Unit = { dropdownOptions, selectedValues, onSelect ->
-        SelectFlowModalDefaults.List(
+        SelectFlowModalDefaults.MenuList(
             options = dropdownOptions,
             values = selectedValues,
             onSelect = onSelect,

@@ -158,7 +158,7 @@ public data class RadioStyle(
         @Composable
         public fun default(
             uncheckedBg: Color = Color.Transparent,
-            uncheckedBorder: Color = ArecaTheme.colors.borderBase,
+            uncheckedBorder: Color = ArecaTheme.colors.borderIntense,
             checkedBg: Color = Color.Transparent,
             checkedBorder: Color = ArecaTheme.colors.accentBase,
             dot: Color = ArecaTheme.colors.accentBase,

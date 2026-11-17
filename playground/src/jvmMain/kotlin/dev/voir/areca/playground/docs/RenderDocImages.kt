@@ -155,7 +155,7 @@ private fun renderPanel(panel: DocPanel, height: Dp?, dark: Boolean): RenderedPa
 /**
  * The root an application mounts, as the playground shell mounts it: the theme in the given
  * direction, the sample image loaders, an ISO week and clock so dates do not follow the machine,
- * and the canvas colour filling the frame.
+ * and the page ground of the surface layout filling the frame, as `BaseLayout` paints a screen.
  *
  * @param dark Whether to render in the dark theme.
  * @param content What the frame holds.
@@ -169,7 +169,7 @@ private fun DocFrame(dark: Boolean, content: @Composable () -> Unit) {
             LocalAttachmentPdfRenderer provides SampleAttachmentPdfRenderer,
             LocalDateTimeLocale provides DateTimeLocale.Iso,
         ) {
-            Box(Modifier.fillMaxSize().background(ArecaTheme.colors.bgCanvas)) { content() }
+            Box(Modifier.fillMaxSize().background(ArecaTheme.surface.ground)) { content() }
         }
     }
 }

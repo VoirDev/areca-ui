@@ -12,6 +12,7 @@ Everything about using Areca, by what you want to do. New here? Start with
 | [Customising](customising.md) | How every component takes a style and a size, presets, app-wide defaults, `ActionColor`, focus and touch targets |
 | [Accessibility](accessibility.md) | What components announce on their own and what you must supply |
 | [Localisation](localisation.md) | Every built-in string, module by module, and how to replace it |
+| [Migration](migration.md) | Moving from 1.0.0's artifacts and packages to 1.x, and what changes from 1.0.4 to 1.1.0 |
 
 ## Find a component
 

@@ -44,7 +44,7 @@ public fun StaleDetailsNotice(
         // rather than above it, so it reads as one more card in the list.
         style = NoticeStyle.of(
             tone = NoticeTone.Neutral,
-            bg = SettingsTheme.styles.section.bg,
+            bg = profileCardFill(),
             shape = SettingsTheme.styles.section.shape,
             chipShape = ArecaTheme.shapes.tile,
         ),

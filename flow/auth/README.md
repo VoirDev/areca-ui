@@ -93,7 +93,7 @@ fun SignIn(
 
 | Part | Use it for | Package |
 | --- | --- | --- |
-| `AuthScaffold` | The screen: window and keyboard insets, scrolling, the gutter, artwork, an optional `topBar`, a `footer` pinned to the bottom edge, an `overlay` slot, a column capped at `maxWidth` on larger windows | `dev.voir.areca.flow.auth.part` |
+| `AuthScaffold` | The screen: window and keyboard insets, scrolling, the gutter, artwork, an optional `topBar`, a `footer` pinned to the bottom edge, an `overlay` slot, a column capped at `maxWidth` on larger windows. In light it lies on the sheet's ground — white whatever the surface layout — which the provider buttons and the identity chip are drawn for | `dev.voir.areca.flow.auth.part` |
 | `AuthHeader` | Title (with the heading role), subtitle and an optional mark above them | `dev.voir.areca.flow.auth.part` |
 | `AuthNameField` | A full name, with autofill and keyboard set | `dev.voir.areca.flow.auth.part` |
 | `AuthEmailField` | An email address, with autofill and keyboard set; `newAccount` for registration | `dev.voir.areca.flow.auth.part` |

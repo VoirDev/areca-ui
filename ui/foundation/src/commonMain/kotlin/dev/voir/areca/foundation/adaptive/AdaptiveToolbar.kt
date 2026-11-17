@@ -121,8 +121,8 @@ public fun AdaptiveToolbar(
     modifier: Modifier = Modifier,
     onBack: (() -> Unit)? = null,
     actions: List<AdaptiveToolbarAction> = emptyList(),
-    backDescription: String = "Back",
-    moreDescription: String = "More",
+    backDescription: String = ArecaTheme.labels.back,
+    moreDescription: String = ArecaTheme.labels.more,
     windowInsets: WindowInsets = WindowInsets(0, 0, 0, 0),
 ) {
     val host = LocalEdgeColumnHost.current

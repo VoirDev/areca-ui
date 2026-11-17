@@ -28,6 +28,10 @@ import dev.voir.areca.keyboard.layout.KeyboardSize
 import dev.voir.areca.keyboard.layout.KeyboardStyle
 import dev.voir.areca.keyboard.layout.LocalKeyboardSize
 import dev.voir.areca.keyboard.layout.LocalKeyboardStyle
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.runtime.ProvidableCompositionLocal
+import androidx.compose.runtime.staticCompositionLocalOf
 
 /**
  * Draws a [KeyboardGrid] as rows of weighted keys.
@@ -51,6 +55,9 @@ import dev.voir.areca.keyboard.layout.LocalKeyboardStyle
  *   [KeyboardStyle.Default].
  * @param size Row and key spacing, the key height, and the metrics of a single key. Defaults to
  *   [LocalKeyboardSize], or [KeyboardSize.Default].
+ *
+ * Every press of an enabled key plays the platform's keyboard tap feedback, unless
+ * [LocalKeyboardHaptics] is `false`.
  */
 @Composable
 public fun KeyboardKeys(
@@ -125,8 +132,15 @@ private fun RowScope.KeyItem(
     // content is silenced and the description set on the button's own node. Clearing that node
     // instead would also erase the role, click action, and disabled state the button puts there.
 
+    val haptics = LocalHapticFeedback.current
+    val tick = LocalKeyboardHaptics.current
     Button(
-        onClick = key.onClick,
+        onClick = {
+            // The platform's own key feedback: it needs no permission and follows the user's
+            // system setting for touch feedback.
+            if (tick) haptics.performHapticFeedback(HapticFeedbackType.KeyboardTap)
+            key.onClick()
+        },
         modifier = if (description != null) {
             modifier.semantics { contentDescription = description }
         } else {
@@ -158,3 +172,9 @@ private fun RowScope.KeyItem(
         }
     }
 }
+
+/**
+ * Whether a key press plays the platform's keyboard tap feedback. `true` by default; provide `false`
+ * around a keyboard that should stay silent to the touch — one in a screenshot test, say.
+ */
+public val LocalKeyboardHaptics: ProvidableCompositionLocal<Boolean> = staticCompositionLocalOf { true }

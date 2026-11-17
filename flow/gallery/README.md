@@ -10,6 +10,11 @@ the screens, to copy and edit, each a compiled page in the playground's **Galler
 product page, product cards, rows, grid page, review photo, shop the look, photo match and the
 desktop product page.
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../../docs/images/flow-gallery-dark.png">
+  <img alt="A product page with a hero carousel, name, price and action, and the gallery it opens: a dark viewer with a caption, thumbnails and the primary action" src="../../docs/images/flow-gallery-light.png" width="720">
+</picture>
+
 ## Install
 
 ```kotlin

@@ -19,8 +19,12 @@ import androidx.compose.ui.node.ModifierNodeElement
 import androidx.compose.ui.node.invalidateDraw
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.node.requireLayoutCoordinates
 import androidx.compose.ui.unit.dp
 import dev.voir.areca.theme.ArecaTheme
+import androidx.compose.ui.graphics.takeOrElse
+import dev.voir.areca.theme.surfaceFor
 
 /**
  * A group of rows that draws a separator at every boundary between two of them.
@@ -66,6 +70,7 @@ public fun ListItemColumn(
     content: @Composable () -> Unit,
 ) {
     val boundaries = remember { RowBoundaries() }
+    val rowAnchors = remember { ListRowAnchors() }
     val groupPlacement = remember { PlacedCoordinates() }
     val groupClip = ListGroupClip(shape = listSize.shape, placement = groupPlacement)
 
@@ -75,7 +80,12 @@ public fun ListItemColumn(
         .then(
             RowSeparatorElement(
                 boundaries = boundaries,
-                color = if (separated) listStyle.separator else Color.Unspecified,
+                rowAnchors = rowAnchors,
+                color = if (separated) {
+                    listStyle.separator.takeOrElse { surfaceFor(listStyle.bg).separator }
+                } else {
+                    Color.Unspecified
+                },
                 thickness = listSize.separatorThickness,
                 inset = listSize.separatorInset,
             )
@@ -84,6 +94,7 @@ public fun ListItemColumn(
     CompositionLocalProvider(
         LocalListEnabled provides (enabled && LocalListEnabled.current),
         LocalListGroupClip provides groupClip,
+        LocalListRowAnchors provides rowAnchors,
     ) {
         Layout(modifier = groupModifier, content = content) { measurables, constraints ->
             val rowConstraints = constraints.copy(minHeight = 0, maxHeight = Constraints.Infinity)
@@ -189,12 +200,14 @@ private class RowBoundaries {
  */
 private data class RowSeparatorElement(
     val boundaries: RowBoundaries,
+    val rowAnchors: ListRowAnchors,
     val color: Color,
     val thickness: Dp,
     val inset: Dp,
 ) : ModifierNodeElement<RowSeparatorNode>() {
     override fun create(): RowSeparatorNode = RowSeparatorNode(
         boundaries = boundaries,
+        rowAnchors = rowAnchors,
         color = color,
         thickness = thickness,
         inset = inset,
@@ -203,6 +216,7 @@ private data class RowSeparatorElement(
     override fun update(node: RowSeparatorNode) {
         node.update(
             boundaries = boundaries,
+            rowAnchors = rowAnchors,
             color = color,
             thickness = thickness,
             inset = inset,
@@ -211,16 +225,19 @@ private data class RowSeparatorElement(
 }
 
 /**
- * Draws one hairline per recorded row boundary, over the rows and within the group insets.
+ * Draws one hairline per recorded row boundary, over the rows: from the text of the row below it
+ * — where that row is a [ListItem] — or from the group inset, to the group inset at the far edge.
  *
  * @property boundaries Boundaries recorded by the group layout, observed while the node is
  *   attached.
+ * @property rowAnchors Where the group's rows put their text, observed while the node is attached.
  * @property color Color of the separators; [Color.Unspecified] draws none.
  * @property thickness Thickness of the separators.
  * @property inset Distance between each separator and both group edges.
  */
 private class RowSeparatorNode(
     private var boundaries: RowBoundaries,
+    private var rowAnchors: ListRowAnchors,
     private var color: Color,
     private var thickness: Dp,
     private var inset: Dp,
@@ -228,25 +245,33 @@ private class RowSeparatorNode(
 
     override fun onAttach() {
         boundaries.observe { invalidateDraw() }
+        rowAnchors.observe { invalidateDraw() }
     }
 
     override fun onDetach() {
         boundaries.observe(null)
+        rowAnchors.observe(null)
     }
 
     /**
      * Applies new parameters to an attached node.
      *
      * @param boundaries Boundaries recorded by the group layout.
+     * @param rowAnchors Where the group's rows put their text.
      * @param color Color of the separators.
      * @param thickness Thickness of the separators.
      * @param inset Distance between each separator and both group edges.
      */
-    fun update(boundaries: RowBoundaries, color: Color, thickness: Dp, inset: Dp) {
+    fun update(boundaries: RowBoundaries, rowAnchors: ListRowAnchors, color: Color, thickness: Dp, inset: Dp) {
         if (this.boundaries !== boundaries) {
             this.boundaries.observe(null)
             this.boundaries = boundaries
             boundaries.observe { invalidateDraw() }
+        }
+        if (this.rowAnchors !== rowAnchors) {
+            this.rowAnchors.observe(null)
+            this.rowAnchors = rowAnchors
+            rowAnchors.observe { invalidateDraw() }
         }
         this.color = color
         this.thickness = thickness
@@ -261,13 +286,16 @@ private class RowSeparatorNode(
 
         val lineThickness = thickness.toPx().coerceAtLeast(1f)
         val insetPx = inset.toPx()
-        val lineWidth = size.width - insetPx * 2f
-        if (lineWidth <= 0f) return
+        val rtl = layoutDirection == LayoutDirection.Rtl
+        val coordinates = requireLayoutCoordinates()
 
         boundaries.offsets.forEach { boundary ->
+            val start = rowAnchors.textStartAt(coordinates, boundary, rtl)?.coerceAtLeast(insetPx) ?: insetPx
+            val lineWidth = size.width - start - insetPx
+            if (lineWidth <= 0f) return@forEach
             drawRect(
                 color = color,
-                topLeft = Offset(insetPx, boundary - lineThickness / 2f),
+                topLeft = Offset(if (rtl) insetPx else start, boundary - lineThickness / 2f),
                 size = Size(lineWidth, lineThickness),
             )
         }

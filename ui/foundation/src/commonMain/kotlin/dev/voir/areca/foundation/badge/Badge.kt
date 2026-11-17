@@ -104,7 +104,7 @@ public data class BadgeStyle(
         public fun default(
             bg: Color = ArecaTheme.colors.accentBase,
             bgDisabled: Color = ArecaTheme.colors.bgDisabled,
-            bgSoft: Color = ArecaTheme.colors.bgSurface,
+            bgSoft: Color = ArecaTheme.surface.field,
             content: Color = ArecaTheme.colors.fgOnFill,
             contentDisabled: Color = ArecaTheme.colors.fgDisabled,
             contentSoft: Color = ArecaTheme.colors.fgSubtle,
@@ -240,7 +240,7 @@ public data class BadgeStyle(
          */
         public val FilledChip: BadgeStyle
             @Composable
-            get() = Chip.copy(bgSoft = ArecaTheme.colors.bgSubtle)
+            get() = Chip.copy(bgSoft = ArecaTheme.surface.well)
     }
 }
 

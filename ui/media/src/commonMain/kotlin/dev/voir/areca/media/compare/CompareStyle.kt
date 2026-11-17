@@ -65,7 +65,7 @@ public data class CompareStyle(
         @Composable
         public fun default(
             shape: Shape = ArecaTheme.shapes.lg,
-            bg: Color = ArecaTheme.colors.bgSubtle,
+            bg: Color = ArecaTheme.surface.well,
         ): CompareStyle = CompareStyle(
             shape = shape,
             bg = bg,

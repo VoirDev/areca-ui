@@ -32,6 +32,8 @@ import dev.voir.areca.playground.showcase.section.Recipes
 import dev.voir.areca.playground.showcase.section.VariantLayout
 import dev.voir.areca.playground.showcase.section.Variants
 import dev.voir.areca.theme.ArecaTheme
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 
 /** Showcase for [FlowModal]. */
 @Composable
@@ -44,18 +46,13 @@ fun FlowModalShowcase() = ShowcaseScaffold(
         val allowPartial by booleanControl(
             key = "allowPartial",
             default = true,
-            description = "Whether a half-height resting position exists.",
+            description = "Whether a partial height exists, for content taller than it.",
         )
         val allowExpand by booleanControl("allowExpand", default = true)
         val allowDrag by booleanControl(
             key = "allowDrag",
             default = true,
             description = "Whether gestures can move the sheet.",
-        )
-        val autoHeight by booleanControl(
-            key = "autoHeight",
-            default = false,
-            description = "Wrap the content instead of using a fixed fraction.",
         )
         val partialMultiplier by numberControl(
             key = "partialMultiplier",
@@ -78,7 +75,6 @@ fun FlowModalShowcase() = ShowcaseScaffold(
             allowDrag = allowDrag,
             partialMultiplier = partialMultiplier,
             maxHeightFraction = maxHeightFraction,
-            autoHeight = autoHeight,
         )
 
         actionControl(
@@ -105,7 +101,7 @@ fun FlowModalShowcase() = ShowcaseScaffold(
                     )
                 },
             ) {
-                ModalBody(lines = 14)
+                ModalBody(lines = 30)
             }
         }
     }
@@ -139,19 +135,19 @@ fun FlowModalShowcase() = ShowcaseScaffold(
     Recipes(description = "The configurations product surfaces actually use.") {
         recipe(
             name = "Default flow",
-            description = "Opens partial, expands on drag or button. The general-purpose sheet.",
+            description = "Content taller than the partial height: opens partial, expands on drag or button.",
         ) {
             ModalRecipe(
                 openLabel = "Open partial",
-                controller = rememberFlowModal(maxHeightFraction = 0.92f),
+                controller = rememberFlowModal(allowPartial = true, maxHeightFraction = 0.92f),
                 title = "Order summary",
-                subtitle = "allowPartial and allowExpand",
+                subtitle = "allowPartial = true",
                 partial = true,
             )
         }
         recipe(
             name = "Expanded only",
-            description = "Hidden or full, nothing between. Dialogs and full-screen flows.",
+            description = "Hidden or full, nothing between: the default, for forms, pickers and confirmations.",
         ) {
             ModalRecipe(
                 openLabel = "Open",
@@ -168,28 +164,25 @@ fun FlowModalShowcase() = ShowcaseScaffold(
             ModalRecipe(
                 openLabel = "Open",
                 controller = rememberFlowModal(
+                    allowPartial = true,
                     allowExpand = false,
                     partialMultiplier = 0.45f,
                 ),
                 title = "Partial-only modal",
-                subtitle = "allowExpand = false",
+                subtitle = "allowPartial = true, allowExpand = false",
                 partial = true,
             )
         }
         recipe(
-            name = "Auto height",
-            description = "Wraps its content up to a cap. Action sheets, menus, short forms.",
+            name = "Short content",
+            description = "Every sheet is as tall as its content: a short one opens at its rows, with no partial height.",
         ) {
             ModalRecipe(
-                openLabel = "Open auto-height",
-                controller = rememberFlowModal(
-                    allowPartial = false,
-                    maxHeightFraction = 0.75f,
-                    autoHeight = true,
-                ),
+                openLabel = "Open",
+                controller = rememberFlowModal(maxHeightFraction = 0.75f),
                 title = "Quick actions",
-                subtitle = "autoHeight = true",
-                partial = false,
+                subtitle = "Sized to its content",
+                partial = true,
                 bodyLines = 4,
             )
         }
@@ -228,7 +221,7 @@ private fun ModalRecipe(
     title: String,
     subtitle: String,
     partial: Boolean,
-    bodyLines: Int = 12,
+    bodyLines: Int = 30,
     headerStyle: TopBarStyle = TopBarStyle.Modal,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md)) {
@@ -327,6 +320,8 @@ private fun ModalBody(lines: Int) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            // Scrolls once the sheet reaches its cap.
+            .verticalScroll(rememberScrollState())
             .padding(horizontal = ArecaTheme.spacing.xl),
         verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg),
     ) {

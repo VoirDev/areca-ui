@@ -3,6 +3,7 @@ package dev.voir.areca.foundation.settings
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -27,7 +28,8 @@ import dev.voir.areca.foundation.list.ListItemStyle
  */
 public object SettingsTheme {
     /**
-     * Colors used by the enclosing [Settings] list, or the theme defaults outside of one.
+     * Colors used by the enclosing [Settings] list, or outside of one the [LocalSettingsStyles] in
+     * scope, or the theme defaults.
      *
      * The fallback is what lets a settings row stand on its own — inside a sheet, a dialog or a
      * card of the caller's — without the list around it.
@@ -36,7 +38,10 @@ public object SettingsTheme {
         @Composable
         get() = LocalSettingsStyles.current ?: SettingsDefaults.styles()
 
-    /** Metrics used by the enclosing [Settings] list, or the theme defaults outside of one. */
+    /**
+     * Metrics used by the enclosing [Settings] list, or outside of one the [LocalSettingsSizes] in
+     * scope, or the theme defaults.
+     */
     public val sizes: SettingsSizes
         @Composable
         get() = LocalSettingsSizes.current ?: SettingsDefaults.sizes()
@@ -80,7 +85,8 @@ public enum class SettingsRowTone {
 /**
  * Colors of a settings section: its card, the copy around it and the separators between its rows.
  *
- * @property bg Card background.
+ * @property bg Card background. [Color.Unspecified] takes the raised fill of the surface the list
+ *   is drawn on — white on a grey page, grey on a white page or in a sheet.
  * @property bgDisabled Card background while the section is disabled.
  * @property border Card border color; [Color.Unspecified] draws no border.
  * @property borderDisabled Card border color while the section is disabled.
@@ -89,10 +95,11 @@ public enum class SettingsRowTone {
  * @property headerDisabled Header color while the section is disabled, in either placement.
  * @property footer Footer color.
  * @property footerDisabled Footer color while the section is disabled.
- * @property separator Color of the hairlines between rows.
+ * @property separator Color of the hairlines between rows. [Color.Unspecified] takes the card
+ *   surface's separator.
  * @property shape Shape of the card; rows clip their states to it so they keep its corners.
  * @property band Default fill of a section's band, the strip at the bottom of its card;
- * [Color.Unspecified] draws none.
+ * [Color.Unspecified] takes the card surface's band.
  */
 @Immutable
 public data class SettingsSectionStyle(
@@ -161,11 +168,7 @@ public data class SettingsStyles(
         }
         if (!interactive || !interactiveValue.isSpecified) return style
 
-        return style.copy(
-            value = interactiveValue,
-            valueActive = interactiveValue,
-            valueSelected = interactiveValue,
-        )
+        return style.withValueColor(interactiveValue)
     }
 }
 
@@ -226,11 +229,24 @@ public data class SettingsSizes(
     public val badge: BadgeSize,
 )
 
-/** Colors of the enclosing [Settings] list; `null` outside of one. */
-internal val LocalSettingsStyles = compositionLocalOf<SettingsStyles?> { null }
+/**
+ * Colors of settings lists in scope; `null` for [SettingsDefaults.styles].
+ *
+ * Provide it once, beside the theme, to give every [Settings] list and every settings row standing
+ * on its own one look — a section ground, its corner, its separators — instead of passing `styles`
+ * to each list. Each [Settings] provides its own `styles` to its rows.
+ */
+public val LocalSettingsStyles: ProvidableCompositionLocal<SettingsStyles?> =
+    compositionLocalOf { null }
 
-/** Metrics of the enclosing [Settings] list; `null` outside of one. */
-internal val LocalSettingsSizes = compositionLocalOf<SettingsSizes?> { null }
+/**
+ * Metrics of settings lists in scope; `null` for [SettingsDefaults.sizes].
+ *
+ * Provide it once, beside the theme, for an app-wide section gap or row metrics. Each [Settings]
+ * provides its own `sizes` to its rows.
+ */
+public val LocalSettingsSizes: ProvidableCompositionLocal<SettingsSizes?> =
+    compositionLocalOf { null }
 
 /** Header placement the enclosing [Settings] list gives its sections. */
 internal val LocalSettingsHeaderPlacement = compositionLocalOf { SettingsHeaderPlacement.Inside }

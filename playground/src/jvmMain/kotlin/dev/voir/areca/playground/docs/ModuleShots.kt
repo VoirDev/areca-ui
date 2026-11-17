@@ -55,7 +55,6 @@ import dev.voir.areca.foundation.button.ButtonStyle
 import dev.voir.areca.foundation.field.FieldGroup
 import dev.voir.areca.foundation.field.TextField
 import dev.voir.areca.foundation.layout.Card
-import dev.voir.areca.foundation.layout.CardStyle
 import dev.voir.areca.foundation.stat.Stat
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.foundation.text.TextColor
@@ -153,7 +152,7 @@ internal val OverviewShot = DocShot(name = "overview", width = 720.dp) {
         },
         {
             DocGroup {
-                Card(modifier = Modifier.fillMaxWidth(), style = CardStyle.Outlined) { padding ->
+                Card(modifier = Modifier.fillMaxWidth()) { padding ->
                     Column(
                         modifier = Modifier.padding(padding),
                         verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.xl),

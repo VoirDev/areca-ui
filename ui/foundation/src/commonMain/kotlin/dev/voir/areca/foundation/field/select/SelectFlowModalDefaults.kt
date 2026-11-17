@@ -27,6 +27,27 @@ import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.icon.BundledIcons
 import dev.voir.areca.icon.Plus
 import dev.voir.areca.theme.ArecaTheme
+import dev.voir.areca.foundation.field.FieldDefaults
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.ui.platform.LocalLayoutDirection
+import dev.voir.areca.modifier.thenIf
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.unit.LayoutDirection
+import dev.voir.areca.foundation.settings.SettingsTheme
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.boundsInWindow
+import androidx.compose.ui.layout.onGloballyPositioned
 
 /**
  * Stock bodies for [SelectFlowModal] and [SelectField].
@@ -40,7 +61,18 @@ import dev.voir.areca.theme.ArecaTheme
  */
 public object SelectFlowModalDefaults {
     /**
-     * The option list: one [CheckmarkListItem] per option, marked on the chosen ones.
+     * The most options [List] lays out at once rather than lazily: a short list — a language, a
+     * theme — is cheaper and simpler composed whole.
+     */
+    public const val CompactOptionCount: Int = 7
+
+    /**
+     * The option list: the options as rows laid straight on the sheet, the chosen ones ticked
+     * in the brand ink, with each option's [SelectOption.leading] mark and
+     * [SelectOption.description] line.
+     *
+     * A list of [CompactOptionCount] options or fewer is laid out at once; a longer one is lazy.
+     * Either way the sheet is as tall as the list, up to its cap.
      *
      * @param Value Type of the values being selected.
      * @param options Options to render, in display order.
@@ -48,10 +80,10 @@ public object SelectFlowModalDefaults {
      * @param onSelect Called with the option the user acted on. The caller works out what the
      *   selection becomes.
      * @param modifier Modifier applied to the list.
-     * @param state Scroll state, hoisted so a caller can scroll to the current selection.
-     * @param contentPadding Inset around the items, inside the scrolling area.
-     * @param verticalArrangement Arrangement of the items along the list.
-     * @param horizontalAlignment Alignment of the items across the list.
+     * @param state Scroll state of a long list, hoisted so a caller can scroll to the selection.
+     * @param contentPadding Inset around the rows, inside the scrolling area.
+     * @param verticalArrangement Arrangement of the rows along the list.
+     * @param horizontalAlignment Alignment of the rows across the list.
      */
     @Composable
     public fun <Value> List(
@@ -64,23 +96,70 @@ public object SelectFlowModalDefaults {
         verticalArrangement: Arrangement.Vertical = Arrangement.Top,
         horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     ) {
-        LazyColumn(
-            modifier = modifier,
-            state = state,
-            contentPadding = contentPadding,
-            verticalArrangement = verticalArrangement,
-            horizontalAlignment = horizontalAlignment,
-        ) {
-            items(options, key = { item -> item.key }) { option ->
-                val selected = values.contains(option.value)
+        if (options.size <= CompactOptionCount) {
+            Column(
+                modifier = modifier.padding(contentPadding),
+                verticalArrangement = verticalArrangement,
+                horizontalAlignment = horizontalAlignment,
+            ) {
+                options.forEachIndexed { index, option ->
+                    OptionRow(
+                        option = option,
+                        selected = values.contains(option.value),
+                        onSelect = onSelect,
+                        first = index == 0,
+                    )
+                }
+            }
+        } else {
+            LazyColumn(
+                modifier = modifier,
+                state = state,
+                contentPadding = contentPadding,
+                verticalArrangement = verticalArrangement,
+                horizontalAlignment = horizontalAlignment,
+            ) {
+                optionItems(section = Unit, options = options, values = values, onSelect = onSelect)
+            }
+        }
+    }
 
+    /**
+     * The option list of a dropdown — [SelectField], [SelectSegment]: plain rows edge to edge on the
+     * menu, the chosen ones ticked, with each option's [SelectOption.leading] mark and
+     * [SelectOption.description] line. A sheet takes [List], whose rows keep to the sheet's gutter.
+     *
+     * @param Value Type of the values being selected.
+     * @param options Options to render, in display order.
+     * @param values Currently selected values.
+     * @param onSelect Called with the option the user acted on. The caller works out what the
+     *   selection becomes.
+     * @param modifier Modifier applied to the list.
+     * @param state Scroll state, hoisted so a caller can scroll to the selection.
+     * @param contentPadding Inset around the rows, inside the scrolling area.
+     */
+    @Composable
+    public fun <Value> MenuList(
+        options: List<SelectOption<Value>>,
+        values: Set<Value>,
+        onSelect: (SelectOption<Value>) -> Unit,
+        modifier: Modifier = Modifier,
+        state: LazyListState = rememberLazyListState(),
+        contentPadding: PaddingValues = PaddingValues(0.dp),
+    ) {
+        LazyColumn(modifier = modifier, state = state, contentPadding = contentPadding) {
+            items(options, key = { item -> item.key }) { option ->
+                val leading = option.leading
                 CheckmarkListItem(
-                    selected = selected,
+                    selected = values.contains(option.value),
                     // Every activation is reported: whether choosing a chosen option clears it is
                     // the field's decision, not the row's.
                     onClick = { onSelect(option) },
                     title = { Text(option.label) },
+                    subtitle = option.description?.let { line -> { Text(line) } },
+            value = option.detail?.let { detail -> { Text(detail) } },
                     enabled = option.enabled,
+                    leading = leading?.let { mark -> { mark() } },
                 )
             }
         }
@@ -112,7 +191,7 @@ public object SelectFlowModalDefaults {
         values: Set<Value>,
         onSelect: (SelectOption<Value>) -> Unit,
         modifier: Modifier = Modifier,
-        labels: SelectFlowModalLabels = SelectFlowModalLabels.English,
+        labels: SelectFlowModalLabels = LocalSelectFlowModalLabels.current ?: SelectFlowModalLabels.English,
         query: String = "",
         onCreateOption: (() -> Unit)? = null,
         state: LazyListState = rememberLazyListState(),
@@ -145,6 +224,9 @@ public object SelectFlowModalDefaults {
                     }
                 } else {
                     optionItems(section.key, section.options, values, onSelect)
+                }
+                item(key = "${sectionHeaderKey(section.key)}:gap", contentType = GapContentType) {
+                    Spacer(Modifier.height(ArecaTheme.spacing.lg))
                 }
             }
 
@@ -224,10 +306,9 @@ public object SelectFlowModalDefaults {
      * @param placeholder Hint shown while the query is empty.
      * @param onValueChange Called with the new query on every edit.
      * @param modifier Modifier applied to the search row.
-     * @param style Color palette and shape for the field. Pill-shaped by default, so the
-     *   search reads as a control rather than as another boxed field.
-     * @param size Metrics for the field. Smaller than the list rows on purpose: the search is
-     *   how you get to the options, not one of them.
+     * @param style Color palette and shape for the field. Defaults to the app's field style in
+     *   scope, so the search above a picker looks like every other field of the app.
+     * @param size Metrics for the field. Defaults to the app's field size in scope.
      */
     @Composable
     public fun Search(
@@ -235,8 +316,8 @@ public object SelectFlowModalDefaults {
         placeholder: String,
         onValueChange: (String) -> Unit,
         modifier: Modifier = Modifier,
-        style: FieldStyle = FieldStyle.outlined(shape = CircleShape),
-        size: FieldSize = FieldSize.Small,
+        style: FieldStyle = FieldDefaults.style,
+        size: FieldSize = FieldDefaults.size,
     ) {
         Column(
             modifier = modifier
@@ -265,7 +346,7 @@ public object SelectFlowModalDefaults {
     public fun LoadingContent(
         query: String,
         modifier: Modifier = Modifier,
-        labels: SelectFlowModalLabels = SelectFlowModalLabels.English,
+        labels: SelectFlowModalLabels = LocalSelectFlowModalLabels.current ?: SelectFlowModalLabels.English,
     ) {
         Column(
             modifier = modifier
@@ -293,7 +374,7 @@ public object SelectFlowModalDefaults {
     public fun EmptyContent(
         query: String,
         modifier: Modifier = Modifier,
-        labels: SelectFlowModalLabels = SelectFlowModalLabels.English,
+        labels: SelectFlowModalLabels = LocalSelectFlowModalLabels.current ?: SelectFlowModalLabels.English,
     ) {
         Column(
             modifier = modifier
@@ -362,16 +443,19 @@ private const val SectionHeaderContentType = "select-section-header"
 private const val LetterHeaderContentType = "select-letter-header"
 
 /** Content type of option rows. */
+private const val GapContentType = "select-gap"
+
 private const val OptionContentType = "select-option"
 
 /**
- * Adds one [CheckmarkListItem] per option of a section.
+ * Adds [options] as rows on the sheet, a hairline between each and the one above; the first of a
+ * run has none, so a header or a gap opens it.
  *
  * @param Value Type of the values being selected.
- * @param section Key of the section the options belong to.
- * @param options Options to add.
+ * @param section Key of the section the rows belong to, so one option can sit in several.
+ * @param options Options to add, in order.
  * @param values Currently selected values.
- * @param onSelect Called with the option the user acted on.
+ * @param onSelect Called with the option acted on.
  */
 private fun <Value> LazyListScope.optionItems(
     section: Any,
@@ -379,16 +463,122 @@ private fun <Value> LazyListScope.optionItems(
     values: Set<Value>,
     onSelect: (SelectOption<Value>) -> Unit,
 ) {
-    items(
+    itemsIndexed(
         items = options,
-        key = { option -> optionKey(section, option.key) },
-        contentType = { OptionContentType },
-    ) { option ->
-        CheckmarkListItem(
+        key = { _, option -> optionKey(section, option.key) },
+        contentType = { _, _ -> OptionContentType },
+    ) { index, option ->
+        OptionRow(
+            option = option,
             selected = values.contains(option.value),
-            onClick = { onSelect(option) },
-            title = { Text(option.label) },
-            enabled = option.enabled,
+            onSelect = onSelect,
+            first = index == 0,
         )
+    }
+}
+
+/**
+ * One option as a row on the sheet: its mark, its label and description, its detail, and a tick
+ * in the brand ink when chosen.
+ *
+ * @param Value Type of the values being selected.
+ * @param option The option.
+ * @param selected Whether it is chosen.
+ * @param onSelect Called when it is pressed.
+ * @param first Whether it opens its run, with no hairline above it.
+ */
+@Composable
+private fun <Value> OptionRow(
+    option: SelectOption<Value>,
+    selected: Boolean,
+    onSelect: (SelectOption<Value>) -> Unit,
+    first: Boolean,
+) {
+    // Where the label starts within the row, measured, so the hairline above starts under the text
+    // rather than under the mark — as a settings section's hairlines do.
+    val textStart = remember { TextStart() }
+    OptionRowFrame(separated = !first, textStart = textStart) {
+        val leading = option.leading
+        CheckmarkListItem(
+            // The rows of a sheet are one family: a picker's rows are a settings section's rows.
+            style = SettingsTheme.styles.row,
+            size = SettingsTheme.sizes.row,
+            selected = selected,
+            onClick = { onSelect(option) },
+            title = { Text(option.label, modifier = Modifier.onGloballyPositioned(textStart::text)) },
+            subtitle = option.description?.let { line -> { Text(line) } },
+            value = option.detail?.let { detail -> { Text(detail) } },
+            enabled = option.enabled,
+            leading = leading?.let { mark -> { mark() } },
+        )
+    }
+}
+
+/** The bounds of an option row and of its label, written as they are placed and read in drawing. */
+private class TextStart {
+    /** Bounds of the row in the window; empty until placed. */
+    var row: Rect by mutableStateOf(Rect.Zero)
+        private set
+
+    /** Bounds of the label in the window; empty until placed. */
+    var label: Rect by mutableStateOf(Rect.Zero)
+        private set
+
+    /** Records where the row was placed. */
+    fun row(coordinates: LayoutCoordinates) {
+        row = coordinates.boundsInWindow()
+    }
+
+    /** Records where the label was placed. */
+    fun text(coordinates: LayoutCoordinates) {
+        label = coordinates.boundsInWindow()
+    }
+}
+
+/**
+ * One row laid straight on the sheet: edge to edge, so its press feedback spans the sheet, and a
+ * hairline along its top from where the label starts to the sheet's edge.
+ *
+ * @param separated Whether a hairline runs along the row's top.
+ * @param textStart Where the row and its label were placed.
+ * @param content The row.
+ */
+@Composable
+private fun OptionRowFrame(
+    separated: Boolean,
+    textStart: TextStart,
+    content: @Composable () -> Unit,
+) {
+    val separator = ArecaTheme.surface.separator
+    val fallback = SettingsTheme.sizes.row.contentPadding
+        .calculateStartPadding(LocalLayoutDirection.current)
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .onGloballyPositioned(textStart::row)
+            .thenIf(separated) {
+                drawWithContent {
+                    drawContent()
+                    val rtl = layoutDirection == LayoutDirection.Rtl
+                    val row = textStart.row
+                    val label = textStart.label
+                    val measured = if (row.isEmpty || label.isEmpty) {
+                        Float.NaN
+                    } else if (rtl) {
+                        row.right - label.right
+                    } else {
+                        label.left - row.left
+                    }
+                    val start = if (measured.isNaN()) fallback.toPx() else measured
+                    drawRect(
+                        color = separator,
+                        topLeft = Offset(if (rtl) 0f else start, 0f),
+                        size = Size(size.width - start, 1.dp.toPx()),
+                    )
+                }
+            },
+    ) {
+        content()
     }
 }

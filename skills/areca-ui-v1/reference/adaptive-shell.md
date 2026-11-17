@@ -140,6 +140,10 @@ How the toolbar lands in each case:
 The column shows the toolbar of the screen drawn most recently, so a screen pushed over another
 takes it over and hands it back when it leaves; nothing has to be cleared by hand.
 
+A tap on the destination already selected reaches its screen through `LocalTabReselect`: a scrolling
+screen calls `listState.ScrollToTopOnTabReselect()` (or the `ScrollState` / `LazyGridState` form),
+or `OnTabReselect { … }` for another response. Switching destinations never emits.
+
 ## A shell of your own
 
 The parts are public. Put full-bleed content in a `Box`, draw the `FloatingSidebar` over it and the

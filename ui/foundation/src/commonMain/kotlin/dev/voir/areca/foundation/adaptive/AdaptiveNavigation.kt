@@ -26,6 +26,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import dev.voir.areca.foundation.button.ActionColor
 import dev.voir.areca.foundation.button.IconButton
@@ -46,6 +47,10 @@ import dev.voir.areca.window.ActionReach
 import dev.voir.areca.window.HeightClass
 import dev.voir.areca.window.WidthClass
 import dev.voir.areca.window.WindowClassBox
+import kotlinx.coroutines.flow.MutableSharedFlow
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.getValue
+import dev.voir.areca.foundation.navigation.LocalTabReselect
 
 /** Which family of forms an [AdaptiveNavigation] takes on a medium window and wider. */
 public enum class AdaptiveNavigationStyle {
@@ -183,7 +188,8 @@ public interface AdaptiveNavigationScope {
  * @param footer Content at the foot of the rail and the sidebars.
  * @param bottomBar The bar a compact window draws in place of the [TabBar], over the bottom of the
  *   content. `null` draws the [TabBar].
- * @param content The selected destination's screen.
+ * @param content The selected destination's screen. A tap on its destination while it is already
+ *   selected reaches it through [LocalTabReselect]: `listState.ScrollToTopOnTabReselect()`.
  */
 @Composable
 public fun <T : Any> AdaptiveNavigation(
@@ -197,7 +203,60 @@ public fun <T : Any> AdaptiveNavigation(
     onSidebarVisibleChange: ((Boolean) -> Unit)? = null,
     sidebarToggleDescription: String = if (sidebarVisible) "Hide navigation" else "Show navigation",
     onSearch: (() -> Unit)? = null,
-    searchDescription: String = "Search",
+    searchDescription: String = ArecaTheme.labels.search,
+    status: (@Composable AdaptiveNavigationScope.() -> Unit)? = null,
+    header: (@Composable AdaptiveNavigationScope.() -> Unit)? = null,
+    sidebarSections: (@Composable ColumnScope.() -> Unit)? = null,
+    footer: (@Composable AdaptiveNavigationScope.() -> Unit)? = null,
+    bottomBar: (@Composable AdaptiveNavigationScope.() -> Unit)? = null,
+    content: @Composable AdaptiveNavigationScope.() -> Unit,
+) {
+    // A tap on the destination already selected reaches its screen through LocalTabReselect.
+    val reselects = remember { MutableSharedFlow<Unit>(extraBufferCapacity = 1) }
+    val currentSelected by rememberUpdatedState(selectedValue)
+    val currentOnValueSelected by rememberUpdatedState(onValueSelected)
+    val select: (T) -> Unit = remember {
+        { value ->
+            if (value == currentSelected) reselects.tryEmit(Unit)
+            currentOnValueSelected(value)
+        }
+    }
+    CompositionLocalProvider(LocalTabReselect provides reselects) {
+        AdaptiveNavigationShell(
+            destinations = destinations,
+            selectedValue = selectedValue,
+            onValueSelected = select,
+            modifier = modifier,
+            style = style,
+            edgeSide = edgeSide,
+            sidebarVisible = sidebarVisible,
+            onSidebarVisibleChange = onSidebarVisibleChange,
+            sidebarToggleDescription = sidebarToggleDescription,
+            onSearch = onSearch,
+            searchDescription = searchDescription,
+            status = status,
+            header = header,
+            sidebarSections = sidebarSections,
+            footer = footer,
+            bottomBar = bottomBar,
+            content = content,
+        )
+    }
+}
+
+@Composable
+private fun <T : Any> AdaptiveNavigationShell(
+    destinations: List<NavDestination<T>>,
+    selectedValue: T?,
+    onValueSelected: (T) -> Unit,
+    modifier: Modifier = Modifier,
+    style: AdaptiveNavigationStyle = AdaptiveNavigationStyle.EdgeColumn,
+    edgeSide: EdgeColumnSide = EdgeColumnSide.Auto,
+    sidebarVisible: Boolean = style == AdaptiveNavigationStyle.Rail,
+    onSidebarVisibleChange: ((Boolean) -> Unit)? = null,
+    sidebarToggleDescription: String = if (sidebarVisible) "Hide navigation" else "Show navigation",
+    onSearch: (() -> Unit)? = null,
+    searchDescription: String = ArecaTheme.labels.search,
     status: (@Composable AdaptiveNavigationScope.() -> Unit)? = null,
     header: (@Composable AdaptiveNavigationScope.() -> Unit)? = null,
     sidebarSections: (@Composable ColumnScope.() -> Unit)? = null,
@@ -267,6 +326,8 @@ public fun <T : Any> AdaptiveNavigation(
             // screen's full height and the screen learns what the bar covers.
             BaseLayout(
                 modifier = modifier,
+                // The shell only places the bar; each destination paints its own page.
+                bg = Color.Transparent,
                 bottomBar = { scope.bottomBar() },
             ) { padding ->
                 val padded = remember(padding) { AdaptiveNavigationScopeImpl(layout, padding) }
@@ -447,7 +508,7 @@ private fun <T : Any> Sidebar(
     footer: (@Composable () -> Unit)?,
 ) {
     val spacing = ArecaTheme.spacing
-    Row(modifier = Modifier.fillMaxHeight().background(ArecaTheme.colors.bgCanvas)) {
+    Row(modifier = Modifier.fillMaxHeight().background(ArecaTheme.surfaces.bar)) {
         Column(
             modifier = Modifier
                 .fillMaxHeight()

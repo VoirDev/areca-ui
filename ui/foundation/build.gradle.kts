@@ -56,6 +56,7 @@ mavenPublishing {
 
 extra["bundledIconsPackage"] = "dev.voir.areca.icon"
 extra["bundledIcons"] = listOf(
+    "AlertCircle",
     "Bell",
     "Check",
     "ChevronLeft",
@@ -74,6 +75,7 @@ extra["bundledIcons"] = listOf(
     "Settings",
     "Share",
     "Trash",
+    "Tray",
     "XClose",
 )
 apply(from = rootProject.file("gradle/bundled-icons.gradle.kts"))

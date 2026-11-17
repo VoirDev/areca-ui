@@ -155,7 +155,7 @@ public data class DateRangeStyle(
         @Composable
         public fun default(
             track: Color = ArecaTheme.colors.bgBrandMuted,
-            previewTrack: Color = ArecaTheme.colors.bgSubtle,
+            previewTrack: Color = ArecaTheme.surface.well,
             capBg: Color = ArecaTheme.colors.bgBrandBase,
             capContent: Color = ArecaTheme.colors.fgOnFill,
             previewCapBg: Color = ArecaTheme.colors.bgBrandMuted,

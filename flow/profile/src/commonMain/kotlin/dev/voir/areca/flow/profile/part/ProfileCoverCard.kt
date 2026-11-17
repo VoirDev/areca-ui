@@ -58,7 +58,7 @@ public fun ProfileCoverCard(
     cover: (@Composable BoxScope.() -> Unit)? = null,
     actions: (@Composable RowScope.() -> Unit)? = null,
 ) {
-    val cardFill = SettingsTheme.styles.section.bg
+    val cardFill = profileCardFill()
     val avatarSize = coverAvatarSize()
     val overlap = avatarSize.container / 2
 

@@ -29,6 +29,7 @@ import dev.voir.areca.foundation.LocalContentColor
 import dev.voir.areca.foundation.LocalTextStyle
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.theme.ArecaTheme
+import androidx.compose.ui.graphics.takeOrElse
 
 /**
  * Where a divider's label sits along the line.
@@ -88,13 +89,14 @@ public data class DividerStyle(
         /**
          * Builds a style from the current theme.
          *
-         * @param line Color of the rule.
+         * @param line Color of the rule. [Color.Unspecified], the default, takes the separator of the
+         *   surface the divider is drawn on.
          * @param text Color of the optional label.
          * @return A divider style containing the supplied colors.
          */
         @Composable
         public fun default(
-            line: Color = ArecaTheme.colors.borderBase,
+            line: Color = Color.Unspecified,
             text: Color = ArecaTheme.colors.fgMuted,
         ): DividerStyle = DividerStyle(line = line, text = text)
     }
@@ -196,7 +198,7 @@ public fun HorizontalDivider(
                     DividerSlot.Line -> DividerLine(
                         modifier = Modifier.weight(1f).height(size.thickness),
                         horizontal = true,
-                        color = style.line,
+                        color = style.line.takeOrElse { ArecaTheme.surface.separator },
                         thickness = size.thickness,
                         dash = size.dash,
                     )
@@ -253,7 +255,7 @@ public fun VerticalDivider(
                     DividerSlot.Line -> DividerLine(
                         modifier = Modifier.weight(1f).width(size.thickness),
                         horizontal = false,
-                        color = style.line,
+                        color = style.line.takeOrElse { ArecaTheme.surface.separator },
                         thickness = size.thickness,
                         dash = size.dash,
                     )

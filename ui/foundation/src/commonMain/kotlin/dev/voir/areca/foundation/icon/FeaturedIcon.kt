@@ -32,11 +32,13 @@ import dev.voir.areca.foundation.button.ActionColor
 import dev.voir.areca.foundation.button.IconButton
 import dev.voir.areca.foundation.button.filledBackground
 import dev.voir.areca.foundation.button.mutedBackground
+import dev.voir.areca.foundation.button.softFill
 import dev.voir.areca.foundation.button.onFilled
 import dev.voir.areca.foundation.button.outlineBorder
 import dev.voir.areca.modifier.gradientBorder
 import dev.voir.areca.theme.ArecaColors
 import dev.voir.areca.theme.ArecaTheme
+import androidx.compose.ui.graphics.lerp
 
 /**
  * Container and content colors for [FeaturedIcon].
@@ -132,14 +134,46 @@ public data class FeaturedIconStyle(
             )
 
         /**
-         * Tinted fill in [color]'s muted step, with the glyph in the family's icon foreground.
+         * Tinted fill in [color]'s muted step — for [ActionColor.Neutral], the well of the surface
+         * it is drawn on — with the glyph in the family's icon foreground.
          *
          * @param color Color family.
          * @return The soft style for [color].
          */
         @Composable
         public fun soft(color: ActionColor = ActionColor.Brand): FeaturedIconStyle =
-            soft(color, ArecaTheme.colors)
+            soft(color, ArecaTheme.colors).copy(bg = color.softFill())
+
+        /**
+         * A categorical tile: [hue] filled, the glyph white — a settings menu's or a category's own
+         * colour. Pick hues from [ArecaTheme.hues][dev.voir.areca.theme.ArecaTheme.hues].
+         *
+         * @param hue The tile's colour; dark enough for a white glyph, as every theme hue is.
+         * @return The solid style for [hue].
+         */
+        @Composable
+        public fun solidHue(hue: Color): FeaturedIconStyle =
+            FeaturedIconStyle(bg = hue, content = ArecaTheme.colors.fgOnFill)
+
+        /**
+         * A categorical tile, quietly: [hue] mixed lightly into the surface, the glyph in a deeper
+         * step of it. For a list where solid tiles would be the loudest thing on the screen.
+         *
+         * @param hue The tile's colour.
+         * @return The soft style for [hue].
+         */
+        @Composable
+        public fun softHue(hue: Color): FeaturedIconStyle = if (ArecaTheme.isDark) {
+            FeaturedIconStyle(
+                bg = lerp(ArecaTheme.surface.ground, hue, DarkHueFill),
+                content = lerp(hue, Color.White, DarkHueGlyphLift),
+            )
+        } else {
+            FeaturedIconStyle(
+                bg = lerp(ArecaTheme.surface.field, hue, LightHueFill),
+                content = lerp(hue, Color.Black, LightHueGlyphDeepen),
+            )
+        }
 
         /**
          * [soft] resolved against an explicit palette rather than the theme in scope.
@@ -426,3 +460,15 @@ private fun FeaturedIconContent(
         )
     }
 }
+
+/** Share of a hue in a light soft tile's fill. */
+private const val LightHueFill = 0.14f
+
+/** How far a light soft tile's glyph is taken towards black, to read on the pale fill. */
+private const val LightHueGlyphDeepen = 0.1f
+
+/** Share of a hue in a dark soft tile's fill. */
+private const val DarkHueFill = 0.24f
+
+/** How far a dark soft tile's glyph is taken towards white, to read on the dark fill. */
+private const val DarkHueGlyphLift = 0.3f

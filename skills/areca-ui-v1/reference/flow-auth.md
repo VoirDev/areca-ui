@@ -22,7 +22,7 @@ finish registering, invitation, confirm address) and provider (SSO) buttons.
 
 | Need | Use | Types |
 | --- | --- | --- |
-| The screen frame: insets, keyboard inset, scrolling, gutter, artwork, top bar, pinned footer, a column capped on larger windows | `AuthScaffold(branding, topBar, footer) { … }` (body is a `ColumnScope`) | `AuthBranding`, `AuthLayout`, `AuthScaffoldDefaults` |
+| The screen frame: insets, keyboard inset, scrolling, gutter, artwork, top bar, pinned footer, a column capped on larger windows; a white page in light whatever the surface layout (never repaint it) | `AuthScaffold(branding, topBar, footer) { … }` (body is a `ColumnScope`) | `AuthBranding`, `AuthLayout`, `AuthScaffoldDefaults` |
 | Title, subtitle and an optional mark; title is a heading | `AuthHeader(title, subtitle = …, icon = …)` | — |
 | Name, email, password boxes with autofill, keyboard and IME set | `AuthNameField`, `AuthEmailField`, `AuthPasswordField` | — |
 | A code by email or text, a digit per cell, one-time-code autofill, `onComplete` on the last digit | `AuthCodeField(value, onValueChange, onComplete = …)` | — |

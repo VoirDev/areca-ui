@@ -31,6 +31,9 @@ import dev.voir.areca.foundation.slot.SlotRowLayout
 import dev.voir.areca.modifier.thenIf
 import dev.voir.areca.theme.ArecaTheme
 import dev.voir.areca.theme.tween
+import androidx.compose.ui.graphics.takeOrElse
+import androidx.compose.runtime.ProvidableCompositionLocal
+import androidx.compose.runtime.staticCompositionLocalOf
 
 /**
  * A screen's heading bar: a title between the controls on either side of it, over an optional band.
@@ -66,7 +69,8 @@ import dev.voir.areca.theme.tween
  * @param modifier Modifier applied to the bar.
  * @param style Background, content, control and rule colors. Defaults to the theme's.
  * @param size Padding, gaps, glyph size, height and text styles. Defaults to the theme's.
- * @param titleAlignment Where the title sits between the controls.
+ * @param titleAlignment Where the title sits between the controls. Defaults to
+ *   [LocalTopBarTitleAlignment], at the start unless the app provides another.
  * @param layout How the three slots share the bar's width. Defaults to what [titleAlignment] asks
  *   for; pass one only to override that.
  * @param windowInsets Platform insets the bar pads itself by, so its fill runs under the status bar
@@ -85,7 +89,7 @@ public fun TopBar(
     modifier: Modifier = Modifier,
     style: TopBarStyle = LocalTopBarStyle.current ?: TopBarStyle.Default,
     size: TopBarSize = LocalTopBarSize.current ?: TopBarSize.Default,
-    titleAlignment: TopBarTitleAlignment = TopBarTitleAlignment.Start,
+    titleAlignment: TopBarTitleAlignment = LocalTopBarTitleAlignment.current,
     layout: SlotRowLayout = titleAlignment.slotRowLayout(size.gap),
     windowInsets: WindowInsets = WindowInsets(0, 0, 0, 0),
     scrollState: TopBarScrollState? = null,
@@ -142,7 +146,7 @@ public fun TopBar(
     subtitle: String? = null,
     style: TopBarStyle = LocalTopBarStyle.current ?: TopBarStyle.Default,
     size: TopBarSize = LocalTopBarSize.current ?: TopBarSize.Default,
-    titleAlignment: TopBarTitleAlignment = TopBarTitleAlignment.Start,
+    titleAlignment: TopBarTitleAlignment = LocalTopBarTitleAlignment.current,
     layout: SlotRowLayout = titleAlignment.slotRowLayout(size.gap),
     windowInsets: WindowInsets = WindowInsets(0, 0, 0, 0),
     scrollState: TopBarScrollState? = null,
@@ -218,7 +222,7 @@ internal fun TopBarSurface(
                     onSizeChanged { scrollState?.updateCollapseRange(it.height.toFloat()) }
                         .graphicsLayer { translationY = scrollState?.offsetPx ?: 0f }
                 }
-                .background(style.bg)
+                .background(style.bg.takeOrElse { ArecaTheme.surface.ground })
                 .thenIf(rule != Color.Transparent && size.borderWidth > 0.dp) {
                     bottomRule(color = rule, width = size.borderWidth)
                 }
@@ -300,3 +304,11 @@ internal fun Modifier.bottomRule(color: Color, width: Dp): Modifier = drawBehind
         strokeWidth = thickness,
     )
 }
+
+/**
+ * Where a [TopBar]'s title sits when the bar is not told: at the start by default. Provide
+ * [TopBarTitleAlignment.Center] once, in the theme's `componentDefaults`, for an app whose screens
+ * centre their titles, instead of passing it to every bar.
+ */
+public val LocalTopBarTitleAlignment: ProvidableCompositionLocal<TopBarTitleAlignment> =
+    staticCompositionLocalOf { TopBarTitleAlignment.Start }

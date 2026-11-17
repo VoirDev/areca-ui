@@ -8,6 +8,9 @@ import androidx.compose.ui.graphics.Shape
 import dev.voir.areca.foundation.button.ActionColor
 import dev.voir.areca.foundation.button.IconButtonStyle
 import dev.voir.areca.theme.ArecaTheme
+import androidx.compose.ui.graphics.takeOrElse
+import dev.voir.areca.theme.ArecaSurface
+import dev.voir.areca.theme.SurfaceRole
 
 /**
  * Which edges of the container carry the border.
@@ -85,7 +88,13 @@ public data class FieldMessageStyle(
  * and every role maps from that, so the container, the value, the label and the message cannot
  * disagree about which state the field is in.
  *
- * @property bg Container background at rest.
+ * @property bg Container background at rest. [Color.Unspecified] takes [bgRole] of the surface the
+ *   field is drawn on, resolved there — so one style, provided once for the whole app, is right on a
+ *   grey page, in a white card and in a sheet. Every other background left unspecified does the
+ *   same.
+ * @property bgRole The surface role an unspecified background takes: [SurfaceRole.Field] for an
+ *   outlined box, [SurfaceRole.Well] for a filled one.
+ * @property bgFocusedRole The surface role an unspecified [bgFocused] takes.
  * @property bgDisabled Background when the field rejects input entirely.
  * @property bgReadOnly Background when the value can be read and selected but not changed.
  * @property bgHovered Background while the pointer is over the field and nothing else applies.
@@ -139,6 +148,8 @@ public data class FieldMessageStyle(
 @Stable
 public data class FieldStyle(
     public val bg: Color,
+    public val bgRole: SurfaceRole = SurfaceRole.Field,
+    public val bgFocusedRole: SurfaceRole = bgRole,
     public val bgDisabled: Color = bg,
     public val bgReadOnly: Color = bg,
     public val bgHovered: Color = bg,
@@ -240,7 +251,8 @@ public data class FieldStyle(
         )
 
         /**
-         * The default: a canvas-colored box behind a one-pixel border that carries the state.
+         * The default: a box in the field fill of the surface it is drawn on — white in the light
+         * theme wherever it is — behind a one-pixel border that carries the state.
          *
          * @param shape Container shape.
          * @return Style whose border reports focus and status, and whose background reports only
@@ -250,7 +262,7 @@ public data class FieldStyle(
         public fun outlined(
             shape: Shape = RoundedCornerShape(ArecaTheme.radius.md),
         ): FieldStyle = FieldStyle(
-            bg = ArecaTheme.colors.bgCanvas,
+            bg = Color.Unspecified,
             bgDisabled = ArecaTheme.colors.bgDisabled,
             bgReadOnly = ArecaTheme.colors.bgDisabled,
             border = ArecaTheme.colors.borderBase,
@@ -292,11 +304,12 @@ public data class FieldStyle(
         public fun soft(
             shape: Shape = RoundedCornerShape(ArecaTheme.radius.md),
         ): FieldStyle = FieldStyle(
-            bg = ArecaTheme.colors.bgSubtle,
+            bg = Color.Unspecified,
+            bgRole = SurfaceRole.Well,
             bgDisabled = ArecaTheme.colors.bgDisabled,
             bgReadOnly = ArecaTheme.colors.bgDisabled,
             bgHovered = ArecaTheme.colors.bgMuted,
-            bgFocused = ArecaTheme.colors.bgSubtle,
+            bgFocused = Color.Unspecified,
             bgError = ArecaTheme.colors.bgDangerMuted,
             bgWarning = ArecaTheme.colors.bgWarnMuted,
             bgSuccess = ArecaTheme.colors.bgSuccessMuted,
@@ -334,11 +347,13 @@ public data class FieldStyle(
         public fun filled(
             shape: Shape = RoundedCornerShape(ArecaTheme.radius.md),
         ): FieldStyle = FieldStyle(
-            bg = ArecaTheme.colors.bgSubtle,
+            bg = Color.Unspecified,
+            bgRole = SurfaceRole.Well,
+            bgFocusedRole = SurfaceRole.Field,
             bgDisabled = ArecaTheme.colors.bgDisabled,
             bgReadOnly = ArecaTheme.colors.bgDisabled,
             bgHovered = ArecaTheme.colors.bgMuted,
-            bgFocused = ArecaTheme.colors.bgCanvas,
+            bgFocused = Color.Unspecified,
             bgError = ArecaTheme.colors.bgDangerMuted,
             bgWarning = ArecaTheme.colors.bgWarnMuted,
             bgSuccess = ArecaTheme.colors.bgSuccessMuted,
@@ -420,7 +435,8 @@ public data class FieldStyle(
         public fun solidNeutral(
             shape: Shape = RoundedCornerShape(ArecaTheme.radius.md),
         ): FieldStyle = FieldStyle(
-            bg = ArecaTheme.colors.bgSubtle,
+            bg = Color.Unspecified,
+            bgRole = SurfaceRole.Well,
             bgFocused = ArecaTheme.colors.bgMuted,
             bgDisabled = ArecaTheme.colors.bgDisabled,
             bgReadOnly = ArecaTheme.colors.bgDisabled,
@@ -513,21 +529,23 @@ internal fun fieldVisualState(
  *
  * @param style Palette to read the colors from.
  * @param state State the field is drawn in.
+ * @param surface The surface the field is drawn on, which an unspecified fill resolves against.
  * @return The single color that applies.
  */
 internal fun resolveBackgroundColor(
     style: FieldStyle,
     state: FieldVisualState,
-) = when (state) {
+    surface: ArecaSurface,
+): Color = when (state) {
     FieldVisualState.Disabled -> style.bgDisabled
     FieldVisualState.ReadOnly -> style.bgReadOnly
     FieldVisualState.Error -> style.bgError
     FieldVisualState.Warning -> style.bgWarning
     FieldVisualState.Success -> style.bgSuccess
-    FieldVisualState.Focused -> style.bgFocused
+    FieldVisualState.Focused -> style.bgFocused.takeOrElse { surface[style.bgFocusedRole] }
     FieldVisualState.Hovered -> style.bgHovered
     FieldVisualState.Rest -> style.bg
-}
+}.takeOrElse { surface[style.bgRole] }
 
 /**
  * Picks the container border color for the state the field is in.

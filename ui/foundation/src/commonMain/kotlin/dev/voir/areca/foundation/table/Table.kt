@@ -54,6 +54,7 @@ import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.foundation.text.TextColor
 import dev.voir.areca.foundation.text.TextVariant
 import dev.voir.areca.theme.ArecaTheme
+import androidx.compose.ui.graphics.takeOrElse
 
 /**
  * One column of a [Table] or [LazyTable].
@@ -113,14 +114,15 @@ public data class TableStyle(
          * Builds a style from the current theme.
          *
          * @param headerBg Fill of the header row.
-         * @param rowBg Fill of every body row.
+         * @param rowBg Fill of every body row. [Color.Unspecified], the default, is the ground of
+         *   the surface the table is drawn on.
          * @param divider Rules under the header and between rows of a separated table.
          * @return The style.
          */
         @Composable
         public fun default(
             headerBg: Color = ArecaTheme.colors.bgMuted,
-            rowBg: Color = ArecaTheme.colors.bgCanvas,
+            rowBg: Color = Color.Unspecified,
             divider: Color = ArecaTheme.colors.borderBase,
         ): TableStyle = TableStyle(headerBg = headerBg, rowBg = rowBg, divider = divider)
     }
@@ -452,7 +454,7 @@ private fun <T> TableBodyRow(
         modifier = Modifier
             .fillMaxWidth()
             .defaultMinSize(minHeight = size.rowMinHeight)
-            .background(style.rowBg)
+            .background(style.rowBg.takeOrElse { ArecaTheme.surface.ground })
             .then(
                 if (drawRule) {
                     Modifier.tableRule(color = style.divider, thickness = size.dividerThickness, atTop = true)

@@ -33,6 +33,9 @@ import dev.voir.areca.playground.showcase.chrome.ChromeTextRole
 import dev.voir.areca.playground.showcase.chrome.ChromeTone
 import dev.voir.areca.theme.ArecaTheme
 import dev.voir.areca.theme.ArecaThemeProvider
+import dev.voir.areca.theme.ProvideSurface
+import dev.voir.areca.theme.SurfaceLevel
+import dev.voir.areca.theme.SurfaceRoot
 
 /**
  * Whether the playground shell is currently rendering in the dark theme.
@@ -149,7 +152,7 @@ fun PreviewCanvas(
         }
 
         // Inside the override, so the canvas ground and border belong to the theme being previewed.
-        ArecaThemeProvider(darkTheme = dark) {
+        ArecaThemeProvider(darkTheme = dark, surfaceLayout = ArecaTheme.surfaces.layout) {
             val shape = RoundedCornerShape(ArecaTheme.radius.md)
 
             Box(
@@ -177,7 +180,8 @@ fun PreviewCanvas(
                         .padding(ArecaTheme.spacing.xl3),
                     contentAlignment = contentAlignment,
                 ) {
-                    content()
+                    // A component in the canvas reads the surface the canvas paints.
+                    ProvideSurface(state.background.level, SurfaceRoot.Screen) { content() }
                 }
             }
         }
@@ -269,12 +273,22 @@ private val PreviewBackground.label: String
         PreviewBackground.Checkerboard -> "Checker"
     }
 
+/** The step of the screen ladder a canvas background stands for. */
+private val PreviewBackground.level: SurfaceLevel
+    get() = when (this) {
+        PreviewBackground.Surface -> SurfaceLevel.Card
+        PreviewBackground.Canvas,
+        PreviewBackground.Subtle,
+        PreviewBackground.Contrast,
+        PreviewBackground.Checkerboard -> SurfaceLevel.Page
+    }
+
 private val PreviewBackground.color: Color
     @Composable
     @ReadOnlyComposable
     get() = when (this) {
-        PreviewBackground.Surface -> ArecaTheme.colors.bgSurface
-        PreviewBackground.Canvas -> ArecaTheme.colors.bgCanvas
+        PreviewBackground.Surface -> ArecaTheme.surfaces.screen.card.ground
+        PreviewBackground.Canvas -> ArecaTheme.surfaces.screen.page.ground
         PreviewBackground.Subtle -> ArecaTheme.colors.bgSubtle
         PreviewBackground.Contrast -> ArecaTheme.colors.bgContrast
         PreviewBackground.Checkerboard -> Color.Transparent

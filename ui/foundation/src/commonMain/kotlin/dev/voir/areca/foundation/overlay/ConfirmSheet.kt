@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -42,6 +41,11 @@ import dev.voir.areca.theme.ArecaTheme
 import dev.voir.areca.foundation.adaptive.AdaptiveDefaults
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.isSpecified
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.layout.layout
+import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.ui.unit.dp
 
 /**
  * Colors and shapes of a [ConfirmSheet].
@@ -68,12 +72,27 @@ public data class ConfirmSheetStyle(
     public val confirm: ButtonStyle,
     public val cancel: ButtonStyle,
 ) {
-    /** The theme's default [ConfirmSheetStyle], and [default] for building a variation on it. */
+    /**
+     * The theme's default [ConfirmSheetStyle], [Danger] for a question whose yes destroys
+     * something, and [default] for building a variation on it.
+     */
     public companion object {
         /** Theme default. */
         public val Default: ConfirmSheetStyle
             @Composable
             get() = default()
+
+        /**
+         * For a question whose yes cannot be undone — delete, erase, leave: the tile and the
+         * confirming button in the danger family's soft fill, so the sheet says what the answer
+         * costs before the note is read. The cancel and the sheet are the default's.
+         */
+        public val Danger: ConfirmSheetStyle
+            @Composable
+            get() = default(
+                icon = FeaturedIconStyle.soft(ActionColor.Danger),
+                confirm = ButtonStyle.soft(ActionColor.Danger, shape = CircleShape),
+            )
 
         /**
          * Builds a style from the current theme.
@@ -259,7 +278,9 @@ public data class ConfirmSheetSize(
  * @param cancelText Caption of the cancelling button — the answer that keeps things as they are.
  * @param style Colors of the sheet, its text and its buttons. Defaults to the theme's.
  * @param size Spacing, type and button size. Defaults to the theme's.
- * @param extra Drawn between the note and the buttons — a box to type into, say.
+ * @param extra Drawn between the note and the buttons — a box to type into, say — inside the
+ *   sheet's side padding, as the buttons are. Wrap choice rows in [ConfirmSheetRows] so they run
+ *   edge to edge, as rows do on any sheet.
  */
 @Composable
 public fun ConfirmSheet(
@@ -275,7 +296,7 @@ public fun ConfirmSheet(
     noteColor: Color = ArecaTheme.colors.fgSubtle,
     confirming: Boolean = false,
     confirmEnabled: Boolean = true,
-    cancelText: String = "Cancel",
+    cancelText: String = ArecaTheme.labels.cancel,
     style: ConfirmSheetStyle = LocalConfirmSheetStyle.current ?: ConfirmSheetStyle.Default,
     size: ConfirmSheetSize = LocalConfirmSheetSize.current ?: ConfirmSheetSize.Default,
     extra: (@Composable ColumnScope.() -> Unit)? = null,
@@ -289,7 +310,6 @@ public fun ConfirmSheet(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .navigationBarsPadding()
                 .padding(
                     start = padding.calculateStartPadding(layoutDirection),
                     end = padding.calculateEndPadding(layoutDirection),
@@ -345,7 +365,14 @@ public fun ConfirmSheet(
 
             if (extra != null) {
                 Spacer(Modifier.height(size.extraGap))
-                extra()
+                CompositionLocalProvider(
+                    LocalConfirmSheetInsets provides PaddingValues(
+                        start = padding.calculateStartPadding(layoutDirection),
+                        end = padding.calculateEndPadding(layoutDirection),
+                    ),
+                ) {
+                    extra()
+                }
             }
 
             Spacer(Modifier.height(size.actionsGap))
@@ -395,7 +422,7 @@ public fun ConfirmSheet(
         return
     }
 
-    val controller = rememberFlowModal(autoHeight = true)
+    val controller = rememberFlowModal()
 
     LaunchedEffect(visible) {
         if (visible) controller.show() else controller.hide()
@@ -446,3 +473,49 @@ public val LocalConfirmSheetStyle: ProvidableCompositionLocal<ConfirmSheetStyle?
  */
 public val LocalConfirmSheetSize: ProvidableCompositionLocal<ConfirmSheetSize?> =
     compositionLocalOf { null }
+
+/** The side padding of the [ConfirmSheet] in scope, which [ConfirmSheetRows] runs past. */
+private val LocalConfirmSheetInsets = staticCompositionLocalOf { PaddingValues(0.dp) }
+
+/**
+ * Rows inside a [ConfirmSheet]'s `extra` — the choices a question offers, "cancel now" or "after one
+ * more payment" — run edge to edge on the sheet, past its side padding, as rows do on any sheet:
+ * their own padding puts the text on the sheet's gutter, and their press tint spans the sheet. A
+ * button or a field beside them keeps the sheet's padding.
+ *
+ * ```kotlin
+ * ConfirmSheet(…, extra = {
+ *     ConfirmSheetRows {
+ *         RadioListItem(selected = !later, onSelect = { later = false }, title = { Text("Now") })
+ *         RadioListItem(selected = later, onSelect = { later = true }, title = { Text("After the next payment") })
+ *     }
+ * })
+ * ```
+ *
+ * @param modifier Modifier applied to the column of rows.
+ * @param content The rows.
+ */
+@Composable
+public fun ConfirmSheetRows(
+    modifier: Modifier = Modifier,
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    val insets = LocalConfirmSheetInsets.current
+    val layoutDirection = LocalLayoutDirection.current
+    val start = insets.calculateStartPadding(layoutDirection)
+    val end = insets.calculateEndPadding(layoutDirection)
+    Column(
+        modifier = modifier
+            .layout { measurable, constraints ->
+                val extra = (start + end).roundToPx()
+                val width = if (constraints.hasBoundedWidth) constraints.maxWidth + extra else constraints.maxWidth
+                val placeable = measurable.measure(constraints.copy(minWidth = width, maxWidth = width))
+                layout(constraints.maxWidth, placeable.height) {
+                    placeable.placeRelative(-start.roundToPx(), 0)
+                }
+            }
+            .selectableGroup(),
+        content = content,
+    )
+}
+

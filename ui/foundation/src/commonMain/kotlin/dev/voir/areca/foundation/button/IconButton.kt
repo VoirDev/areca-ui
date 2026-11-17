@@ -135,7 +135,7 @@ public data class IconButtonStyle(
         ): IconButtonStyle {
             val colors = ArecaTheme.colors
             return IconButtonStyle(
-                bg = color.mutedBackground(colors),
+                bg = color.softFill(),
                 bgDisabled = colors.bgDisabled,
                 border = Color.Transparent,
                 content = color.onMuted(colors),
@@ -380,7 +380,7 @@ public fun IconButton(
     size: IconButtonSize = LocalIconButtonSize.current ?: IconButtonSize.Medium,
     enabled: Boolean = true,
     loading: Boolean = false,
-    loadingStateDescription: String = "Busy",
+    loadingStateDescription: String = ArecaTheme.labels.busy,
     interactionSource: MutableInteractionSource? = null,
     content: @Composable BoxScope.() -> Unit,
 ) {
@@ -525,7 +525,7 @@ public fun IconButton(
     size: IconButtonSize = LocalIconButtonSize.current ?: IconButtonSize.Medium,
     enabled: Boolean = true,
     loading: Boolean = false,
-    loadingStateDescription: String = "Busy",
+    loadingStateDescription: String = ArecaTheme.labels.busy,
     interactionSource: MutableInteractionSource? = null,
 ) {
     IconButtonLayout(
@@ -569,7 +569,7 @@ public fun IconButton(
     size: IconButtonSize = LocalIconButtonSize.current ?: IconButtonSize.Medium,
     enabled: Boolean = true,
     loading: Boolean = false,
-    loadingStateDescription: String = "Busy",
+    loadingStateDescription: String = ArecaTheme.labels.busy,
     interactionSource: MutableInteractionSource? = null,
 ) {
     IconButtonLayout(
@@ -613,7 +613,7 @@ public fun IconButton(
     size: IconButtonSize = LocalIconButtonSize.current ?: IconButtonSize.Medium,
     enabled: Boolean = true,
     loading: Boolean = false,
-    loadingStateDescription: String = "Busy",
+    loadingStateDescription: String = ArecaTheme.labels.busy,
     interactionSource: MutableInteractionSource? = null,
 ) {
     IconButtonLayout(

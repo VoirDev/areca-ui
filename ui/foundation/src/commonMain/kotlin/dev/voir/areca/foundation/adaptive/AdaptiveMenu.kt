@@ -93,7 +93,7 @@ public fun AdaptiveMenu(
             )
         }
     } else {
-        val controller = rememberFlowModal(allowPartial = false, autoHeight = true)
+        val controller = rememberFlowModal(allowPartial = false)
         LaunchedEffect(state.isOpen) {
             if (state.isOpen) controller.show(partial = false) else controller.hide()
         }

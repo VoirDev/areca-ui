@@ -54,24 +54,27 @@ public data class ArecaBaseTypography(
          * Derives the type scale, applying [fonts] to every step.
          *
          * Line heights are set explicitly rather than left to the font's own metrics, so a change of
-         * family does not shift vertical rhythm.
+         * family does not shift vertical rhythm, and sit on a 4-point grid up to `xl4`. The steps
+         * leave their text direction unset: Areca's `Text` lays every paragraph out in the
+         * interface's direction, so a line that starts in another script keeps the interface's
+         * order.
          *
          * @param fonts Families the styles are rendered with.
          * @return Complete type scale.
          */
         public fun from(fonts: ArecaFonts = ArecaFonts()): ArecaBaseTypography = ArecaBaseTypography(
             xxs = TextStyle(fontSize = 10.sp, lineHeight = 12.sp, fontFamily = fonts.primary),
-            xs = TextStyle(fontSize = 12.sp, lineHeight = 14.sp, fontFamily = fonts.primary),
-            sm = TextStyle(fontSize = 14.sp, lineHeight = 17.sp, fontFamily = fonts.primary),
-            md = TextStyle(fontSize = 16.sp, lineHeight = 20.sp, fontFamily = fonts.primary),
-            lg = TextStyle(fontSize = 18.sp, lineHeight = 24.sp, fontFamily = fonts.primary),
-            xl = TextStyle(fontSize = 22.sp, lineHeight = 26.sp, fontFamily = fonts.primary),
-            xl2 = TextStyle(fontSize = 26.sp, lineHeight = 30.sp, fontFamily = fonts.primary),
-            xl3 = TextStyle(fontSize = 32.sp, lineHeight = 38.sp, fontFamily = fonts.primary),
+            xs = TextStyle(fontSize = 12.sp, lineHeight = 16.sp, fontFamily = fonts.primary),
+            sm = TextStyle(fontSize = 14.sp, lineHeight = 20.sp, fontFamily = fonts.primary),
+            md = TextStyle(fontSize = 16.sp, lineHeight = 24.sp, fontFamily = fonts.primary),
+            lg = TextStyle(fontSize = 18.sp, lineHeight = 26.sp, fontFamily = fonts.primary),
+            xl = TextStyle(fontSize = 22.sp, lineHeight = 28.sp, fontFamily = fonts.primary),
+            xl2 = TextStyle(fontSize = 26.sp, lineHeight = 32.sp, fontFamily = fonts.primary),
+            xl3 = TextStyle(fontSize = 32.sp, lineHeight = 40.sp, fontFamily = fonts.primary),
             xl4 = TextStyle(fontSize = 40.sp, lineHeight = 48.sp, fontFamily = fonts.primary),
             xl5 = TextStyle(fontSize = 50.sp, lineHeight = 60.sp, fontFamily = fonts.primary),
             xl6 = TextStyle(fontSize = 64.sp, lineHeight = 72.sp, fontFamily = fonts.primary),
-            xl7 = TextStyle(fontSize = 72.sp, lineHeight = 90.sp, fontFamily = fonts.primary),
+            xl7 = TextStyle(fontSize = 72.sp, lineHeight = 80.sp, fontFamily = fonts.primary),
         )
     }
 }

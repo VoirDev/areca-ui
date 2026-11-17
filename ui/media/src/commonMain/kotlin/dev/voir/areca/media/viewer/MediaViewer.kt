@@ -167,7 +167,7 @@ public fun MediaViewer(
     onNoticeDismiss: (() -> Unit)? = null,
     noticeDuration: Duration = 3.seconds,
     showChromeLabel: String = "Show controls",
-    closeLabel: String = "Close",
+    closeLabel: String = ArecaTheme.labels.close,
     style: MediaViewerStyle = LocalMediaViewerStyle.current ?: MediaViewerStyle.dark(),
     backdrop: (@Composable BoxScope.(index: Int) -> Unit)? = null,
     topBar: @Composable BoxScope.(state: MediaViewerState) -> Unit = {},

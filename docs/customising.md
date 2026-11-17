@@ -65,9 +65,30 @@ Button(
 ```
 
 Most presets and every `default(...)` are `@Composable`: they read the theme where they are called,
-so a style built inside `ArecaDarkTheme` is a dark one.
+so a style built inside `ArecaDarkTheme` is a dark one, and a style that reads `ArecaTheme.surface`
+takes the surface it was built on.
 
 Never wrap a component only to restyle it. Pass a style, or provide one for the subtree.
+
+### Unspecified colours
+
+A style colour that is `Color.Unspecified` means "the surface role, resolved where the component is
+drawn" (see [Surfaces](theme.md#surfaces)). One style then serves every place the component
+appears: a card style provided once for the app is white on a grouped page and grey in a sheet.
+
+| Style field | Unspecified takes |
+| --- | --- |
+| `CardStyle.bg`, the default in `CardStyle.default()` | The surface's `raised` |
+| `CardFooterStyle.soft(ActionColor.Neutral)`'s `bg` | The card's `well` |
+| `SettingsDefaults.sectionStyle(bg, separator, band)`, `Section(bandColor)` | `raised`; the section's `separator`; the section's `well` |
+| `FieldStyle.bg` and the other field backgrounds | `bgRole` of the surface: `SurfaceRole.Field` for `outlined()`, `SurfaceRole.Well` for `filled()`, `soft()` and `solidNeutral()`. `bgFocused` takes `bgFocusedRole`: `filled()` turns to `Field` while focused |
+| `ListStyle.separator`, `ContentListStyle.group`'s `bg` and `separator` | The surface's `separator`; `raised` and its `separator` |
+| `BaseLayout(bg)` | The page `ground` of the ladder in scope |
+| `TopBarStyle.default(bg)` | The `ground` of the surface the bar is drawn on |
+| `TableStyle.default(rowBg)` | The `ground` of the surface the table is drawn on |
+
+Pass a colour to fix one. To keep a role but change which one, set `FieldStyle.bgRole`:
+`FieldStyle.outlined().copy(bgRole = SurfaceRole.Well)`.
 
 ## Defaults for a subtree
 
@@ -76,8 +97,15 @@ to `LocalButtonStyle.current ?: ButtonStyle.solid()` and its `size` to
 `LocalButtonSize.current ?: ButtonSize.Medium`; every component follows the same pattern with its
 own `LocalXStyle` and `LocalXSize`, in the component's package.
 
-`ArecaThemeProvider` seeds the locals. Provide your own to change a default for a subtree — a
-toolbar of small outlined buttons, a dense form:
+`ArecaThemeProvider` seeds the locals. A few are seeded `null` so the component builds its style
+where it is drawn, from the surface under it: `LocalAvatarStyle`, `LocalBadgeStyle`,
+`LocalProgressBarStyle`, `LocalSkeletonStyle`, `LocalSlidingSelectorStyle`, `LocalTabsStyle`,
+`LocalWheelPickerStyle` and `LocalPageCounterStyle`. A track, a skeleton or an empty avatar is a
+step past its own ground, so a style built once at the root would be wrong inside a card. Provide
+one of them only where every instance below should look the same.
+
+Provide your own locals to change a default for a subtree — a toolbar of small outlined buttons, a
+dense form:
 
 ```kotlin
 CompositionLocalProvider(
@@ -91,10 +119,25 @@ CompositionLocalProvider(
 }
 ```
 
-- **For the whole application**, provide the locals just inside the application's
-  `ArecaThemeProvider`.
-- **A nested `ArecaThemeProvider` or `ArecaDarkTheme`** seeds every local again, so an override made
-  above one does not reach inside it. Provide it again inside.
+- **For the whole application**, pass the locals as the provider's `componentDefaults` (see
+  [Theme](theme.md#app-wide-component-defaults)):
+
+  ```kotlin
+  ArecaThemeProvider(
+      componentDefaults = ComponentDefaults {
+          arrayOf(
+              LocalButtonSize provides ButtonSize.Large,
+              LocalFieldStyle provides FieldStyle.filled(),
+          )
+      },
+  ) { AppNavigation() }
+  ```
+
+- **`ArecaDarkTheme`** seeds every local again and then applies the provider's `componentDefaults`
+  again, so app-wide defaults given there reach inside it. A local provided anywhere else above an
+  `ArecaDarkTheme` does not; provide it again inside.
+- **A nested `ArecaThemeProvider`** starts from its own parameters: pass `componentDefaults` to it
+  too.
 - **The fallback after `?:`** is what a component uses with no provider at all, as in a preview.
 
 A few families resolve their defaults differently:
@@ -104,7 +147,7 @@ A few families resolve their defaults differently:
 | Fields (`TextField`, `PasswordField`, `SearchField`, `SelectField`, …, and `FieldGroup`) | `FieldDefaults.style` and `FieldDefaults.size`, which read `LocalFieldStyle` and `LocalFieldSize` | `CompositionLocalProvider(LocalFieldStyle provides FieldStyle.filled())` for a whole form. The looks are `outlined()` (the default), `filled()`, `soft()`, `solidNeutral()`, `underlined()` and `inline()` |
 | `Notice` | Its `tone` and `emphasis`, through `NoticeStyle.of(...)`. `LocalNoticeStyle` is `null` | Provide `LocalNoticeStyle` only where every notice should look the same: it replaces the tone's colours |
 | `ConfirmSheet` | The flow modal's style and size in scope where it is drawn. `LocalConfirmSheetStyle` and `LocalConfirmSheetSize` are `null` | Change `LocalFlowModalStyle` and every sheet follows, or provide the confirm sheet locals |
-| `Settings` and its rows | `styles = SettingsDefaults.styles(...)` and `sizes = SettingsDefaults.sizes(...)`, which the list hands to its rows | Pass them to `Settings` |
+| `Settings` and its rows | `LocalSettingsStyles` and `LocalSettingsSizes`, `null` unless provided, else `SettingsDefaults.styles()` and `SettingsDefaults.sizes()`; the list hands them to its rows | Provide the locals once for the app, or pass `styles` / `sizes` to one `Settings` |
 | `charts`, `datetime` | Their own locals (`LocalColumnChartStyle`, `LocalCalendarStyle`, …), which `ArecaThemeProvider` does not seed — it lives in `foundation` | Provide them around the screens that want other defaults; unprovided, each falls back to its type's `Default` |
 
 ```kotlin
@@ -244,7 +287,7 @@ fun PlayButton(onPlay: () -> Unit, modifier: Modifier = Modifier) {
         modifier = modifier
             .minimumTouchTarget()
             .size(32.dp)
-            .background(ArecaTheme.colors.bgMuted, ArecaTheme.shapes.full)
+            .background(ArecaTheme.surface.well, ArecaTheme.shapes.full)
             .clickCursor()
             .clickable(
                 interactionSource = null,

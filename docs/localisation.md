@@ -31,6 +31,33 @@ BackAction(onClick = onBack, contentDescription = stringResource(Res.string.back
 
 ## foundation
 
+### Shared words: `ArecaLabels`
+
+The words many components say — `back`, `close`, `dismiss`, `busy`, `cancel`, `more`, `remove`,
+`search`, `clearSearch`, `showPassword`, `hidePassword` — default to `ArecaTheme.labels`. Give them
+once, beside the theme:
+
+```kotlin
+ArecaThemeProvider(
+    labels = ArecaLabels(
+        back = stringResource(Res.string.back),
+        close = stringResource(Res.string.close),
+        dismiss = stringResource(Res.string.dismiss),
+        busy = stringResource(Res.string.busy),
+        cancel = stringResource(Res.string.cancel),
+        more = stringResource(Res.string.more),
+        remove = stringResource(Res.string.remove),
+        search = stringResource(Res.string.search),
+        clearSearch = stringResource(Res.string.clear_search),
+        showPassword = stringResource(Res.string.show_password),
+        hidePassword = stringResource(Res.string.hide_password),
+    ),
+) { App() }
+```
+
+Every single-string parameter in the tables below whose default is one of these words reads it from
+`ArecaLabels`; a value passed at the call site still wins. `ArecaDarkTheme` keeps the labels.
+
 ### Single strings
 
 | Component | Parameter | Default |

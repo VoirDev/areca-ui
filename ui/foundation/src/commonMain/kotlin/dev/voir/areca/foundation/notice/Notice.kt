@@ -43,6 +43,7 @@ import dev.voir.areca.foundation.icon.FeaturedIcon
 import dev.voir.areca.foundation.icon.Icon
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.modifier.thenIf
+import dev.voir.areca.theme.SurfaceOf
 
 /**
  * A block set off from the page to say one thing: what happened, or what is true, and what follows
@@ -121,7 +122,9 @@ public fun Notice(
             LocalContentColor provides style.body,
             LocalTextStyle provides size.bodyTextStyle,
         ) {
-            Column(verticalArrangement = Arrangement.spacedBy(size.lineGap), content = content)
+            SurfaceOf(style.bg) {
+                Column(verticalArrangement = Arrangement.spacedBy(size.lineGap), content = content)
+            }
         }
     }
 

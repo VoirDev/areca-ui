@@ -147,7 +147,7 @@ public fun ProfileCardAction(
     Column(
         modifier = modifier
             .heightIn(min = MinimumTouchTarget)
-            .background(ArecaTheme.colors.bgCanvas, shape)
+            .background(ArecaTheme.surface.field, shape)
             .clickCursor(enabled)
             .clickable(
                 enabled = enabled,

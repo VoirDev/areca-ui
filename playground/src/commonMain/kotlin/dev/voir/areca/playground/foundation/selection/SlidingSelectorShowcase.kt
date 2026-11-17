@@ -379,6 +379,7 @@ private fun WithReducedMotion(content: @Composable () -> Unit) {
         darkTheme = ArecaTheme.isDark,
         baseColors = ArecaTheme.baseColors,
         colors = ArecaTheme.colors,
+        surfaces = ArecaTheme.surfaces,
         radius = ArecaTheme.radius,
         shapes = ArecaTheme.shapes,
         spacing = ArecaTheme.spacing,

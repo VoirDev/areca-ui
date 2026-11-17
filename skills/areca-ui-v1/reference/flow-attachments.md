@@ -17,7 +17,7 @@ viewer that swipes through them.
 | `dev.voir.areca.flow.attachments` | `AttachmentItem`, `AttachmentFormat`, `AttachmentState`, `AttachmentImageLoader` (deprecated), `AttachmentImageState`, `LocalAttachmentImageLoader`, `AttachmentPdfRenderer`, `AttachmentPdfDocument`, `LocalAttachmentPdfRenderer` |
 | `dev.voir.areca.flow.attachments.part` | `AttachmentThumbnail`, `AttachmentTile`, `AttachmentAddTile`, `AttachmentStrip`, `AttachmentIndicator`, `AttachmentTileStyle`, `LocalAttachmentTileStyle` |
 | `dev.voir.areca.flow.attachments.row` | `AttachmentRow` |
-| `dev.voir.areca.flow.attachments.sheet` | `AttachmentSourceSheet`, `AttachmentSourceOptions`, `PendingAttachmentSheet`, `PendingAttachment`, `AttachmentTagChips`, `AttachmentOptionsSheet`, `AttachmentOptions`, `AttachmentRenameSheet`, `AttachmentChoice` |
+| `dev.voir.areca.flow.attachments.sheet` | `AttachmentSourceSheet`, `AttachmentSourceOptions`, `PendingAttachmentSheet`, `PendingAttachment`, `AttachmentTagChips`, `AttachmentOptionsSheet`, `AttachmentOptions`, `AttachmentRenameSheet`, `AttachmentChoice`, `AttachmentChoiceLayout` |
 | `dev.voir.areca.flow.attachments.viewer` | `AttachmentViewer`, `AttachmentViewerPage`, `AttachmentViewerStyle`, `LocalAttachmentViewerStyle` |
 
 ## Choose a part
@@ -31,6 +31,7 @@ viewer that swipes through them.
 | One file as a settings row, for files read by name | `AttachmentRow(item, onClick)` in a `Section` | — |
 | A paperclip (and count) on something that has files | `AttachmentIndicator(count = …)` | — |
 | Where a new file comes from | `AttachmentSourceSheet(visible, options, onDismiss)` | `AttachmentSourceOptions`, `AttachmentChoice` |
+| Where a new file comes from, as cards with one leading — the camera of an expense tracker | `AttachmentSourceSheet(…, layout = AttachmentChoiceLayout.Bento)` | `AttachmentChoice(description, hue)` |
 | After a pick: the file, a question, Attach; or why it cannot be attached | `PendingAttachmentSheet(file, onAttach, onDismiss)` | `PendingAttachment` |
 | What a file is, one tap from the product's tags | `AttachmentTagChips(tags, selected, onSelect, label)` | — |
 | What can be done to one file | `AttachmentOptionsSheet(item, choices, onDismiss)` | `AttachmentOptions`, `AttachmentChoice` |
@@ -72,8 +73,16 @@ PendingAttachment(
     isCopying: Boolean = false,                 // Attach shows a spinner and waits
     problem: String? = null,                    // worded refusal: shown instead of the question, only Close
 )
-class AttachmentChoice(label: String, icon: ImageVector, onClick: () -> Unit, isDestructive: Boolean = false)
-AttachmentSourceOptions.camera(label = "Take a photo") { } · library(label = "Choose from library") { } · files(label = "Choose a file") { }
+class AttachmentChoice(label: String, icon: ImageVector, onClick: () -> Unit, isDestructive: Boolean = false,
+    description: String? = null,                // a line on what it is for; bento cards only
+    hue: Color = Color.Unspecified)             // its bento card's colour (ArecaTheme.hues); Unspecified: source default, else gray
+AttachmentSourceOptions.camera(label = "Take a photo", description = "Snap a receipt or a page", hue = Unspecified /* blue */) { }
+    · library(label = "Choose from library", description = "From your photos", hue = Unspecified /* purple */) { }
+    · files(label = "Choose a file", description = "PDF or document", hue = Unspecified /* orange */) { }
+AttachmentChoiceLayout.Rows        // default: glyph-and-label rows flat on the sheet; description and hue unused
+    | Bento                        // cards: the first full width and larger, the rest in one row of equal height
+                                   // (two choices share the row as halves); each washed in its hue with a
+                                   // solid-hue disc, label and description; subtitle centred under the cards
 AttachmentOptions.rename(label = "Rename") { } · share(label = "Share") { } · save(label = "Save to device") { }
     · openElsewhere(label = "Open in another app") { } · remove(label = "Remove attachment") { }
 
@@ -156,7 +165,10 @@ interface AttachmentPdfDocument : AutoCloseable {
 @Composable fun AttachmentSourceSheet(
     visible: Boolean, options: List<AttachmentChoice>, onDismiss: () -> Unit,
     title: String = "Add attachment", subtitle: String? = null, closeLabel: String = "Close",
+    layout: AttachmentChoiceLayout = AttachmentChoiceLayout.Rows,   // Bento: cards, the first leads
 )
+// A sheet on a phone, a centred dialog on a wide window, in either layout. Bento is a deliberate
+// exception to flat sheets: keep it to two to four fixed sources, and pass localised `description`s.
 @Composable fun PendingAttachmentSheet(
     file: PendingAttachment?,                   // non-null = shown
     onAttach: () -> Unit, onDismiss: () -> Unit,
@@ -170,7 +182,7 @@ interface AttachmentPdfDocument : AutoCloseable {
 )
 @Composable fun <T> AttachmentTagChips(
     tags: List<T>, selected: T?, onSelect: (T) -> Unit, label: (T) -> String,
-    modifier: Modifier = Modifier, bg: Color = ArecaTheme.colors.bgSubtle, enabled: Boolean = true,
+    modifier: Modifier = Modifier, bg: Color = ArecaTheme.surface.well, enabled: Boolean = true,
 )
 @Composable fun AttachmentOptionsSheet(
     item: AttachmentItem?,                      // non-null = shown
@@ -233,8 +245,8 @@ interface AttachmentPdfDocument : AutoCloseable {
   leave them out at a limit or where files are only shown. With no files, no `onAdd` and no `failure`
   the strip draws nothing, title included. Place it full width (not inset): it scrolls under both
   edges while its first square keeps to `gutter`; pass `bleed = true` inside an already-padded sheet.
-- On a grey ground pass `style = AttachmentTileStyle.default(bg = ArecaTheme.colors.bgSurface)` or
-  provide `LocalAttachmentTileStyle` once. `LocalAttachmentTileStyle` and `LocalAttachmentViewerStyle`
+- The squares take the well of the surface they are drawn on; pass
+  `style = AttachmentTileStyle.default(bg = …)` only for another fill, or provide `LocalAttachmentTileStyle` once. `LocalAttachmentTileStyle` and `LocalAttachmentViewerStyle`
   are **not seeded** by `ArecaThemeProvider`.
 - **Sheets are state-driven:** `visible` or the item they are about (`file`, `item`); they report
   `onDismiss` and **do not close themselves** on a choice — every choice clears the state that shows it.
@@ -367,7 +379,7 @@ fun AttachmentSheets(state: AttachmentsState, actions: AttachmentActions, confir
 
 ```kotlin
 Column(
-    Modifier.fillMaxSize().background(ArecaTheme.colors.bgCanvas).verticalScroll(rememberScrollState())
+    Modifier.fillMaxSize().background(ArecaTheme.surface.ground).verticalScroll(rememberScrollState())
         .windowInsetsPadding(WindowInsets.systemBars).imePadding(),
 ) {
     Settings {
@@ -426,7 +438,7 @@ var filesOpen by remember { mutableStateOf(false) }   // read only below 920dp
 SupportingPane(
     supportingVisible = filesOpen,
     onSupportingDismissRequest = { filesOpen = false },
-    modifier = Modifier.fillMaxSize().background(ArecaTheme.colors.bgCanvas).windowInsetsPadding(WindowInsets.systemBars),
+    modifier = Modifier.fillMaxSize().background(ArecaTheme.surface.ground).windowInsetsPadding(WindowInsets.systemBars),
     supportingHeader = {
         TopBar(title = attachmentsTitle, subtitle = countOfLimit, size = TopBarSize.Compact, windowInsets = FlowModalHeaderInsets)
     },

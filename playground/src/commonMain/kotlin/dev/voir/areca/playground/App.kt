@@ -40,6 +40,7 @@ import dev.voir.areca.playground.showcase.chrome.ChromeTone
 import dev.voir.areca.theme.ArecaTheme
 import dev.voir.areca.theme.ArecaThemeProvider
 import dev.voir.areca.window.InputMode
+import dev.voir.areca.theme.SurfaceLayout
 
 private val SidebarWidth = 264.dp
 
@@ -52,6 +53,9 @@ private enum class ShellTheme { Light, Dark }
  */
 private enum class ShellInput { Touch, Pointer }
 
+/** Which of a screen's page and its cards is grey, for every page of the playground. */
+private enum class ShellLayout { Grouped, Plain }
+
 /**
  * The Areca playground.
  *
@@ -63,10 +67,15 @@ private enum class ShellInput { Touch, Pointer }
 fun App() {
     var shellTheme by rememberSaveable { mutableStateOf(ShellTheme.Light) }
     var shellInput by rememberSaveable { mutableStateOf(ShellInput.Touch) }
+    var shellLayout by rememberSaveable { mutableStateOf(ShellLayout.Grouped) }
     val dark = shellTheme == ShellTheme.Dark
 
     ArecaThemeProvider(
         darkTheme = dark,
+        surfaceLayout = when (shellLayout) {
+            ShellLayout.Grouped -> SurfaceLayout.Grouped
+            ShellLayout.Plain -> SurfaceLayout.Plain
+        },
         inputMode = when (shellInput) {
             ShellInput.Touch -> InputMode.Touch
             ShellInput.Pointer -> InputMode.Pointer
@@ -106,6 +115,8 @@ fun App() {
                         onThemeChange = { shellTheme = it },
                         input = shellInput,
                         onInputChange = { shellInput = it },
+                        layout = shellLayout,
+                        onLayoutChange = { shellLayout = it },
                     )
 
                     ShowcaseSidebar(
@@ -144,6 +155,8 @@ private fun ShellHeader(
     onThemeChange: (ShellTheme) -> Unit,
     input: ShellInput,
     onInputChange: (ShellInput) -> Unit,
+    layout: ShellLayout,
+    onLayoutChange: (ShellLayout) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -179,6 +192,14 @@ private fun ShellHeader(
             options = ShellInput.entries,
             selected = input,
             onSelect = onInputChange,
+            label = { it.name },
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        ChromeSegmented(
+            options = ShellLayout.entries,
+            selected = layout,
+            onSelect = onLayoutChange,
             label = { it.name },
             modifier = Modifier.fillMaxWidth(),
         )

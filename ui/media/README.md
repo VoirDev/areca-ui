@@ -9,6 +9,11 @@ Words on a picture are foundation's `Badge`, its indicators are foundation's `Pa
 `PageCounter`, and a viewer's bar is foundation's `TopBar` — media does not repeat them. Pages of an
 onboarding tour are foundation's `SwipePager`; `Carousel` is for pictures and other items in a row.
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../../docs/images/media-dark.png">
+  <img alt="A carousel with its page indicator, a thumbnail strip, picture frames with badges and a failed picture, a captioned scene and a before-and-after compare slider" src="../../docs/images/media-light.png" width="720">
+</picture>
+
 ## Install
 
 ```kotlin

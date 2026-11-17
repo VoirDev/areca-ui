@@ -227,7 +227,7 @@ public fun TopBarActionScope.BackAction(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     label: String? = null,
-    contentDescription: String? = "Back",
+    contentDescription: String? = ArecaTheme.labels.back,
     color: ActionColor = ActionColor.Neutral,
     enabled: Boolean = true,
     interactionSource: MutableInteractionSource? = null,
@@ -270,7 +270,7 @@ public fun TopBarActionScope.BackAction(
 public fun TopBarActionScope.CloseAction(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    contentDescription: String? = "Close",
+    contentDescription: String? = ArecaTheme.labels.close,
     color: ActionColor = ActionColor.Neutral,
     enabled: Boolean = true,
     interactionSource: MutableInteractionSource? = null,
@@ -339,7 +339,7 @@ public fun TopBarActionScope.MenuAction(
 public fun TopBarActionScope.OverflowAction(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    contentDescription: String? = "More",
+    contentDescription: String? = ArecaTheme.labels.more,
     color: ActionColor = ActionColor.Neutral,
     enabled: Boolean = true,
     interactionSource: MutableInteractionSource? = null,

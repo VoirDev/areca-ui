@@ -101,37 +101,37 @@ public object SettingsDefaults {
     /**
      * Colors of a section.
      *
-     * The card is the grouped-region fill, `bgSubtle`: place the list on `bgCanvas` and the cards
-     * separate from it in both themes.
+     * The card, its hairlines and its band follow the surface the list is drawn on, resolved where
+     * the section is drawn: a white card on a grey page, a grey one on a white page or in a sheet,
+     * each with the hairline and band fill that read on it. Pass a colour to fix one.
      *
-     * The hairlines between rows take `borderOnSubtle`, one step past the card's fill in each theme;
-     * `borderBase` sits level with the light card and would vanish on it.
-     *
-     * @param bg Card background.
+     * @param bg Card background. [Color.Unspecified] takes the surface's raised fill.
      * @param border Card border color; [Color.Unspecified] draws no border.
      * @param header Header color inside the card.
      * @param headerOutside Header color above the card.
      * @param headerDisabled Header color while the section is disabled.
      * @param footer Footer color.
      * @param footerDisabled Footer color while the section is disabled.
-     * @param separator Color of the hairlines between rows.
+     * @param separator Color of the hairlines between rows. [Color.Unspecified] takes the card
+     *   surface's separator.
      * @param shape Shape of the card.
-     * @param band Fill of a section's band: a step past the card, so the band reads as the card's
-     * closing strip. Pass the danger tint for a band that holds a danger row.
+     * @param band Fill of a section's band. [Color.Unspecified] takes the card surface's band, a
+     * step past the card, so the band reads as the card's closing strip. Pass the danger tint for a
+     * band that holds a danger row.
      * @return Colors of a section.
      */
     @Composable
     public fun sectionStyle(
-        bg: Color = ArecaTheme.colors.bgSubtle,
+        bg: Color = Color.Unspecified,
         border: Color = Color.Unspecified,
         header: Color = ArecaTheme.colors.fgSubtle,
         headerOutside: Color = ArecaTheme.colors.fgSubtle,
         headerDisabled: Color = ArecaTheme.colors.fgDisabled,
         footer: Color = ArecaTheme.colors.fgMuted,
         footerDisabled: Color = ArecaTheme.colors.fgDisabled,
-        separator: Color = ArecaTheme.colors.borderOnSubtle,
-        shape: Shape = ArecaTheme.shapes.lg,
-        band: Color = ArecaTheme.colors.bgMuted,
+        separator: Color = Color.Unspecified,
+        shape: Shape = ArecaTheme.shapes.surface,
+        band: Color = Color.Unspecified,
     ): SettingsSectionStyle = SettingsSectionStyle(
         bg = bg,
         border = border,

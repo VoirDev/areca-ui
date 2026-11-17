@@ -35,6 +35,12 @@ import dev.voir.areca.foundation.list.LocalListGroupClip
 import dev.voir.areca.foundation.list.PlacedCoordinates
 import dev.voir.areca.foundation.list.recordPlacement
 import dev.voir.areca.modifier.thenIf
+import androidx.compose.ui.graphics.takeOrElse
+import dev.voir.areca.theme.ArecaTheme
+import dev.voir.areca.theme.SurfaceOf
+import dev.voir.areca.theme.onSheetGround
+import androidx.compose.ui.graphics.RectangleShape
+import dev.voir.areca.theme.surfaceFor
 
 /** Receiver of the content of a [Section], where its rows are declared. */
 @SettingsDsl
@@ -82,7 +88,7 @@ public class SettingsSectionScope internal constructor() {
  * @param enabled Whether the rows of the section accept input and use their enabled colors.
  * @param separated Whether hairlines are drawn between adjacent rows.
  * @param headerPlacement Where [header] is drawn.
- * @param bandColor Fill of [band].
+ * @param bandColor Fill of [band]. [Color.Unspecified] takes the card surface's band.
  * @param band Content of the strip along the bottom of the card, or `null` for none.
  * @param content Rows of the section, top to bottom.
  */
@@ -101,6 +107,15 @@ public fun SettingsScope.Section(
     val styles = SettingsTheme.styles.section
     val sizes = SettingsTheme.sizes.section
     val sectionEnabled = enabled && LocalListEnabled.current
+    val styledBg = if (sectionEnabled) styles.bg else styles.bgDisabled
+    // On a sheet's ground a section is no card: its rows lie on the sheet, edge to edge, with the
+    // header above them. A colour given to the section keeps the card, for emphasis.
+    val flat = styledBg == Color.Unspecified && onSheetGround()
+    val cardBg = if (flat) ArecaTheme.surface.ground else styledBg.takeOrElse { ArecaTheme.surface.raised }
+    val cardShape = if (flat) RectangleShape else styles.shape
+    val cardSurface = surfaceFor(cardBg)
+    val resolvedBand = bandColor.takeOrElse { cardSurface.band }
+    val separatorColor = styles.separator.takeOrElse { cardSurface.separator }
     val cardPlacement = remember { PlacedCoordinates() }
     // Where the band starts within the card, written when it is placed and read while drawing.
     var bandTop by remember { mutableFloatStateOf(Float.NaN) }
@@ -108,7 +123,7 @@ public fun SettingsScope.Section(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(sizes.outerPadding),
+            .thenIf(!flat) { padding(sizes.outerPadding) },
     ) {
         if (header != null && headerPlacement == SettingsHeaderPlacement.Outside) {
             SectionCopy(
@@ -125,26 +140,23 @@ public fun SettingsScope.Section(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(
-                    color = if (sectionEnabled) styles.bg else styles.bgDisabled,
-                    shape = styles.shape,
-                )
+                .thenIf(!flat) { background(color = cardBg, shape = styles.shape) }
                 .thenIf(band != null) {
                     // The band is drawn by the card, inside its outline, so it follows the bottom
                     // corners without the card clipping its rows and their focus rings.
                     drawBehind {
-                        if (bandTop.isNaN() || bandColor == Color.Unspecified) return@drawBehind
-                        val outline = styles.shape.createOutline(size, layoutDirection, this)
+                        if (bandTop.isNaN()) return@drawBehind
+                        val outline = cardShape.createOutline(size, layoutDirection, this)
                         clipPath(Path().apply { addOutline(outline) }) {
                             drawRect(
-                                color = bandColor,
+                                color = resolvedBand,
                                 topLeft = Offset(0f, bandTop),
                                 size = Size(size.width, size.height - bandTop),
                             )
                         }
                     }
                 }
-                .thenIf(sizes.borderWidth > 0.dp && styles.border != Color.Unspecified) {
+                .thenIf(!flat && sizes.borderWidth > 0.dp && styles.border != Color.Unspecified) {
                     border(
                         width = sizes.borderWidth,
                         color = if (sectionEnabled) styles.border else styles.borderDisabled,
@@ -153,6 +165,7 @@ public fun SettingsScope.Section(
                 }
                 .recordPlacement(cardPlacement),
         ) {
+            SurfaceOf(cardBg) {
             if (header != null && headerPlacement == SettingsHeaderPlacement.Inside) {
                 SectionCopy(
                     color = if (sectionEnabled) styles.header else styles.headerDisabled,
@@ -167,13 +180,13 @@ public fun SettingsScope.Section(
             CompositionLocalProvider(
                 LocalListEnabled provides sectionEnabled,
                 LocalListGroupClip provides ListGroupClip(
-                    shape = styles.shape,
+                    shape = cardShape,
                     placement = cardPlacement,
                 ),
             ) {
                 SettingsRowColumn(
                     modifier = Modifier.fillMaxWidth(),
-                    separatorColor = if (separated) styles.separator else Color.Unspecified,
+                    separatorColor = if (separated) separatorColor else Color.Unspecified,
                     separatorThickness = sizes.separatorThickness,
                     fallbackInset = sizes.separatorInset,
                 ) {
@@ -189,6 +202,7 @@ public fun SettingsScope.Section(
                         band()
                     }
                 }
+            }
             }
         }
 

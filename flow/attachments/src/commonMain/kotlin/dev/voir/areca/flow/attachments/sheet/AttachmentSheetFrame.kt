@@ -2,9 +2,7 @@ package dev.voir.areca.flow.attachments.sheet
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -24,6 +22,7 @@ import dev.voir.areca.foundation.topbar.TopBarSize
 import dev.voir.areca.foundation.topbar.TopBarStyle
 import dev.voir.areca.foundation.topbar.TopBarTitleAlignment
 import dev.voir.areca.theme.ArecaTheme
+import dev.voir.areca.theme.horizontalContentInsets
 
 /**
  * The frame every attachment sheet is drawn in: a modal sized to its content, a heading bar,
@@ -75,12 +74,7 @@ internal fun AttachmentSheetFrame(
             title = title,
             subtitle = subtitle,
             modifier = Modifier.fillMaxWidth(),
-            size = TopBarSize.Modal.copy(
-                padding = PaddingValues(
-                    horizontal = ArecaTheme.spacing.xl3,
-                    vertical = ArecaTheme.spacing.md,
-                ),
-            ),
+            size = TopBarSize.Modal,
             style = TopBarStyle.Modal,
             windowInsets = FlowModalHeaderInsets,
             titleAlignment = titleAlignment,
@@ -93,13 +87,9 @@ internal fun AttachmentSheetFrame(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .navigationBarsPadding()
-                .padding(
-                    start = ArecaTheme.spacing.xl3,
-                    top = ArecaTheme.spacing.sm,
-                    end = ArecaTheme.spacing.xl3,
-                    bottom = ArecaTheme.spacing.xl3,
-                ),
+                // No side padding: a list of choices runs edge to edge on the sheet, and the rest
+                // keeps to the sheet's gutter with [sheetGutter].
+                .padding(top = ArecaTheme.spacing.sm, bottom = ArecaTheme.spacing.xl),
         ) {
             content()
         }
@@ -130,7 +120,7 @@ internal fun AttachmentSheetFrame(
         return
     }
 
-    val controller = rememberFlowModal(autoHeight = true)
+    val controller = rememberFlowModal()
 
     LaunchedEffect(visible) {
         if (visible) controller.show() else controller.hide()
@@ -177,3 +167,12 @@ private class LastValue<T : Any> {
     /** The last non-null value applied, or `null` before the first. */
     var value: T? = null
 }
+
+/**
+ * Keeps content that is not a row — a line of copy, a field, a file — to the sheet's gutter, where
+ * the title and the rows' own text start.
+ */
+@Composable
+internal fun Modifier.sheetGutter(): Modifier =
+    padding(horizontal = ArecaTheme.spacing.horizontalContentInsets)
+

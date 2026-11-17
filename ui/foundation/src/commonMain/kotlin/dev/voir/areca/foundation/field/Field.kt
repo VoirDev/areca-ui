@@ -40,6 +40,7 @@ import dev.voir.areca.foundation.feedback.Spinner
 import dev.voir.areca.foundation.feedback.SpinnerStyle
 import dev.voir.areca.foundation.icon.LocalIconSize
 import dev.voir.areca.modifier.clickCursor
+import dev.voir.areca.theme.ArecaTheme
 
 /**
  * The container every field in this package is drawn inside.
@@ -123,7 +124,7 @@ public fun Field(
     // field that gains focus or turns red does not snap. See [FieldVisualState] for the order.
     val colorSpec = fieldColorSpec()
     val backgroundColor by animateColorAsState(
-        targetValue = resolveBackgroundColor(style, visualState),
+        targetValue = resolveBackgroundColor(style, visualState, ArecaTheme.surface),
         animationSpec = colorSpec,
         label = "fieldBg",
     )

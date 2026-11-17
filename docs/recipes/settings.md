@@ -71,7 +71,6 @@ fun NotificationSettingsScreen(
     val scrollState = rememberTopBarScrollState()
 
     BaseLayout(
-        bg = ArecaTheme.colors.bgCanvas,
         contentWindowInsets = WindowInsets.safeDrawing.only(
             WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal,
         ),

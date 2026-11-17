@@ -1,6 +1,8 @@
 package dev.voir.areca.foundation.field.select
 
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.ProvidableCompositionLocal
+import androidx.compose.runtime.compositionLocalOf
 
 /**
  * Copy a [SelectFlowModal] shows in its stock search field, faces and rows.
@@ -42,3 +44,13 @@ public data class SelectFlowModalLabels(
         )
     }
 }
+
+/**
+ * The [SelectFlowModalLabels] in scope, read by every [SelectFlowModal] and the
+ * [SelectFlowModalDefaults] bodies that take labels; `null` falls back to
+ * [SelectFlowModalLabels.English]. Provide the app's words once — in `componentDefaults` of
+ * `ArecaThemeProvider` — rather than at every picker.
+ */
+public val LocalSelectFlowModalLabels: ProvidableCompositionLocal<SelectFlowModalLabels?> =
+    compositionLocalOf { null }
+

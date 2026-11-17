@@ -67,7 +67,7 @@ public data class ProgressBarStyle(
          */
         @Composable
         public fun default(
-            track: Color = ArecaTheme.colors.bgSubtle,
+            track: Color = ArecaTheme.surface.well,
             fill: Color = ArecaTheme.colors.accentBase,
             label: Color = ArecaTheme.colors.fgBase,
         ): ProgressBarStyle = ProgressBarStyle(track = track, fill = fill, label = label)

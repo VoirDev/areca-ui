@@ -185,7 +185,9 @@ public fun <T> BadgeSelect(
  * the selection — [onSelect] reports the chip pressed, and the caller updates [selected].
  *
  * A chip is drawn filled when it is chosen and soft when it is not. Every chip reserves
- * [BadgeSize.touchTarget].
+ * [BadgeSize.touchTarget], which already leaves room above and below a chip drawn shorter than it;
+ * the lines therefore add no gap of their own by default, and the chips on a line are spaced by
+ * `spacing.lg` so the gap across matches the gap down.
  *
  * @param T Type of the values the choices stand for.
  * @param options Every choice, in the order shown.
@@ -193,8 +195,9 @@ public fun <T> BadgeSelect(
  * @param selected Values of the chosen choices.
  * @param modifier Modifier applied to the group, which fills the available width.
  * @param selectionMode Whether one or many choices can be on at once.
- * @param horizontalArrangement How the chips on one line are spaced.
- * @param verticalArrangement How the lines are spaced.
+ * @param horizontalArrangement How the chips on one line are spaced. Defaults to `spacing.lg`.
+ * @param verticalArrangement How the lines are spaced, beyond the room each chip's touch target
+ *   already reserves. Defaults to none.
  * @param itemVerticalAlignment How chips of different heights line up within a line.
  * @param maxItemsInEachRow Most chips on one line.
  * @param maxLines Most lines; chips past the last are not shown.
@@ -211,7 +214,7 @@ public fun <T> FlowBadgeSelect(
     selected: List<T>,
     modifier: Modifier = Modifier,
     selectionMode: BadgeSelectionMode = BadgeSelectionMode.Single,
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(ArecaTheme.spacing.lg),
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     itemVerticalAlignment: Alignment.Vertical = Alignment.Top,
     maxItemsInEachRow: Int = Int.MAX_VALUE,

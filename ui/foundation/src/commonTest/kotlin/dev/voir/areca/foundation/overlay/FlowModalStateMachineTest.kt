@@ -33,7 +33,6 @@ class FlowModalStateMachineTest {
             phase = phase,
             partialHeight = 200f,
             expandedHeight = 400f,
-            autoHeight = false,
         )
 
         assertEquals(400f, height)
@@ -65,7 +64,7 @@ class FlowModalStateMachineTest {
 
     @Test
     fun `a drag released on the target of an interrupted opening still completes it`() {
-        val controller = FlowModalController()
+        val controller = FlowModalController(allowPartial = true)
         controller.show(partial = true)
 
         controller.settle(FlowModalState.PartiallyOpened)
@@ -86,7 +85,7 @@ class FlowModalStateMachineTest {
 
     @Test
     fun `a hide is possible after a drag interrupted the opening`() {
-        val controller = FlowModalController()
+        val controller = FlowModalController(allowPartial = true)
         controller.show(partial = true)
         controller.settle(FlowModalState.PartiallyOpened)
 
@@ -97,7 +96,7 @@ class FlowModalStateMachineTest {
 
     @Test
     fun `a completion that arrives after a newer request is ignored`() {
-        val controller = FlowModalController()
+        val controller = FlowModalController(allowPartial = true)
         controller.show(partial = true)
         val opening = controller.phase
 
@@ -109,7 +108,7 @@ class FlowModalStateMachineTest {
 
     @Test
     fun `retargeting an opening modal changes its observable target`() {
-        val controller = FlowModalController()
+        val controller = FlowModalController(allowPartial = true)
         controller.show(partial = true)
 
         controller.expand()
@@ -124,8 +123,7 @@ class FlowModalStateMachineTest {
             height = 60f,
             partialHeight = 200f,
             expandedHeight = 400f,
-            allowPartial = true,
-            allowExpand = true,
+            hasPartial = true,
         )
 
         assertEquals(FlowModalState.Hidden, target)
@@ -137,8 +135,7 @@ class FlowModalStateMachineTest {
             height = height,
             partialHeight = 200f,
             expandedHeight = 400f,
-            allowPartial = true,
-            allowExpand = true,
+            hasPartial = true,
         )
 
         assertEquals(FlowModalState.PartiallyOpened, targetAt(250f))
@@ -147,13 +144,12 @@ class FlowModalStateMachineTest {
     }
 
     @Test
-    fun `a sheet with only an expanded height stays open past half of it`() {
+    fun `a sheet with one height stays open past half of it`() {
         fun targetAt(height: Float) = FlowModalStateMachine.dragTarget(
             height = height,
-            partialHeight = 200f,
+            partialHeight = 400f,
             expandedHeight = 400f,
-            allowPartial = false,
-            allowExpand = true,
+            hasPartial = false,
         )
 
         assertEquals(FlowModalState.Expanded, targetAt(201f))
@@ -161,16 +157,47 @@ class FlowModalStateMachineTest {
     }
 
     @Test
-    fun `a sheet with only a partial height stays open past half of it`() {
-        fun targetAt(height: Float) = FlowModalStateMachine.dragTarget(
-            height = height,
-            partialHeight = 200f,
-            expandedHeight = 400f,
-            allowPartial = true,
-            allowExpand = false,
-        )
+    fun `a partial request on a sheet too short for one opens it fully`() {
+        val controller = FlowModalController(allowPartial = true)
+        controller.show(partial = true)
 
-        assertEquals(FlowModalState.PartiallyOpened, targetAt(380f))
-        assertEquals(FlowModalState.Hidden, targetAt(90f))
+        controller.dropPartial()
+
+        assertEquals(FlowModalState.Opening, controller.state)
+        assertEquals(FlowModalState.Expanded, controller.targetState)
+    }
+
+    @Test
+    fun `a sheet resting partially that loses its partial height moves to its full one`() {
+        val next = FlowModalStateMachine.withoutPartial(FlowModalStateMachine.resting(FlowModalState.PartiallyOpened))
+
+        assertEquals(FlowModalPhase(FlowModalState.Opening, FlowModalState.Expanded), next)
+    }
+
+    @Test
+    fun `dropping a partial height leaves a full or hidden sheet alone`() {
+        val expanded = FlowModalStateMachine.resting(FlowModalState.Expanded)
+        val hidden = FlowModalStateMachine.resting(FlowModalState.Hidden)
+
+        assertEquals(expanded, FlowModalStateMachine.withoutPartial(expanded))
+        assertEquals(hidden, FlowModalStateMachine.withoutPartial(hidden))
+    }
+
+    @Test
+    fun `expanding works whatever the configuration`() {
+        val controller = FlowModalController(allowPartial = true, allowExpand = false)
+
+        controller.expand()
+
+        assertEquals(FlowModalState.Expanded, controller.targetState)
+    }
+
+    @Test
+    fun `a sheet opens fully by default`() {
+        val controller = FlowModalController()
+
+        controller.show(partial = true)
+
+        assertEquals(FlowModalState.Expanded, controller.targetState)
     }
 }

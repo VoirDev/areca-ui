@@ -17,26 +17,26 @@ Every foundation symbol is imported from its family's package. Extension composa
 
 | Package | Holds |
 | --- | --- |
-| `dev.voir.areca.theme` | `ArecaThemeProvider`, `ArecaDarkTheme`, `ArecaTheme`, `ArecaSizing`, `contentInsets`, `horizontalContentInsets`, `verticalContentInsets`, `tween` |
+| `dev.voir.areca.theme` | `ArecaThemeProvider`, `ArecaDarkTheme`, `ArecaTheme`, `ArecaHues`, `ArecaSizing`, `ComponentDefaults`, `ArecaSurfaces`, `ArecaSurface`, `SurfaceLadder`, `SurfaceLayout`, `SurfaceLevel`, `SurfaceRoot`, `SurfaceRole`, `RaisedSurface`, `ProvideSurface`, `contentInsets`, `horizontalContentInsets`, `verticalContentInsets`, `tween` |
 | `dev.voir.areca.foundation` | `LocalContentColor`, `LocalTextStyle`, `AnnounceOnChange` |
-| `….foundation.button` | `Button`, `IconButton`, `ButtonStyle`, `ButtonSize`, `IconButtonStyle`, `IconButtonSize`, `ActionColor`, `LocalButtonStyle`, `LocalButtonSize` |
-| `….foundation.text` | `Text`, `TextVariant`, `TextColor`, `Heading`, `TextLink`, `TextLinkPrompt`, `SensitiveText` |
+| `….foundation.button` | `Button`, `IconButton`, `IconToggleButton`, `ButtonStyle`, `ButtonSize`, `IconButtonStyle`, `IconButtonSize`, `ActionColor`, `LocalButtonStyle`, `LocalButtonSize` |
+| `….foundation.text` | `Text`, `TextVariant`, `TextColor`, `Heading`, `TextLink`, `TextLinkPrompt`, `SensitiveText`, `AmountText`, `Amount`, `AmountSymbolPlacement` |
 | `….foundation.icon` | `Icon`, `IconSize`, `LocalIconSize`, `FeaturedIcon`, `FeaturedIconStyle`, `FeaturedIconSize`, `Chevron`, `ChevronDirection` |
 | `….foundation.field` | `TextField`, `PasswordField`, `SearchField`, `AffixTextField`, `OtpField`, `FieldGroup`, `FieldGroupLayout`, `FieldRow`, `TextSegment`, `Field`, `FieldScope`, `FieldStatus`, `FieldStyle`, `FieldSize`, `FieldDefaults`, `LocalFieldStyle`, `LocalFieldSize`, `FieldLabelPlacement` |
 | `….foundation.field.select` | `SelectField`, `SelectOption`, `SelectSelectionMode`, `SelectFieldLabels`, `SelectFlowModal`, `SelectOptionSection`, `SelectFlowModalLabels`, `rememberSelectFlowModalState`, `SelectFlowModalDefaults`, `SelectSegment` |
 | `….foundation.selection` | `Checkbox`, `Radio`, `Toggle`, `ToggleState`, `BinaryToggleCycle`, `TriStateToggleCycle`, `NumberStepper`, `NumberStepperLabels`, `SlidingSelector`, `SelectorItem`, `SelectorItemScope`, `SelectorMode`, `SelectorLayout`, `SelectorOrientation`, `SelectorThumbKind`, `SelectorEdge`, `SlidingSelectorStyle`, `SlidingSelectorSize`, `Swatch`, `SwatchPicker`, `ColorShade`, `ColorItem` |
 | `….foundation.list` | `List`, `LazyList`, `ListItem`, `NavigationListItem`, `CheckboxListItem`, `RadioListItem`, `ToggleListItem`, `CheckmarkListItem`, `ExpandableListItem`, `ExpandableListItemContainer`, `ListItemColumn`, `ListItemSkeleton`, `ListItemChevron`, `ListItemCheckmark`, `ListItemStyle`, `ListItemSize` |
 | `….foundation.settings` | `Settings`, `Section`, `SettingsRow`, `SettingsToggleRow`, `SettingsSelectRow`, `SettingsTextFieldRow`, `SettingsTextFieldSuffix`, `SettingsOptionRow`, `SettingsBlock`, `SettingsRowIcon`, `SettingsRowTile`, `SettingsRowLink`, `SettingsRowStatus`, `SettingsRowTone`, `SettingsRowSkeleton`, `SettingsDefaults` |
-| `….foundation.layout` | `BaseLayout`, `Card`, `CardStyle`, `CardSize`, `CardFooterStyle`, `HorizontalDivider`, `VerticalDivider`, `Expandable`, `rememberExpandableState`, `PullToRefreshLayout`, `PullToRefreshIndicator`, `rememberPullToRefreshState`, `CollapsingHeaderLayout`, `CollapsingHeaderState`, `rememberCollapsingHeaderState`, `Overlay`, `RelativePositionLayout`, `RelativePosition`, `VerticalScrollbar`, `HorizontalScrollbar` |
+| `….foundation.layout` | `BaseLayout`, `BottomActionBar`, `BottomActionBarStyle`, `PanelLayout`, `ChoiceCard`, `ChoiceCardMode`, `Card`, `CardStyle`, `CardSize`, `CardFooterStyle`, `HorizontalDivider`, `VerticalDivider`, `Expandable`, `rememberExpandableState`, `PullToRefreshLayout`, `PullToRefreshIndicator`, `rememberPullToRefreshState`, `CollapsingHeaderLayout`, `CollapsingHeaderState`, `rememberCollapsingHeaderState`, `Overlay`, `RelativePositionLayout`, `RelativePosition`, `VerticalScrollbar`, `HorizontalScrollbar` |
 | `….foundation.topbar` | `TopBar`, `LargeTopBar`, `rememberTopBarScrollState`, `TopBarScrollBehavior`, `TopBarStyle`, `TopBarSize`, `TopBarActionStyle`, the `…Action` controls, `TopBarProgress` |
 | `….foundation.tabbar`, `….foundation.tabs` | `TabBar`, `FloatingTabBar`, `FloatingTabBarItemContent`, `TabBarItem`, `rememberTabBarState`; `Tabs`, `TabItem`, `TabsVariant`, `TabsStyle`, `TabsSize`, `rememberTabsState` |
-| `….foundation.overlay` | `Dialog`, `ModalDefaults`, `ConfirmationDialog`, `ConfirmSheet`, `FlowModal`, `rememberFlowModal`, `FlowModalController`, `FlowModalActionBar`, `FlowModalActionBarLayout`, `FlowModalSecondaryAction`, `DropdownPopup`, `rememberDropdownPopup`, `anchored`, `AnchoredPlacement`, `TooltipBox`, `edgeToEdgeDialogProperties` |
-| `….foundation.feedback` | `ToastHost`, `rememberToastState`, `Toast`, `Fallback`, `Skeleton`, `Spinner`, `ProgressBar`, `StepIndicator`, `RequirementList`, `Requirement`, `RequirementState` |
+| `….foundation.overlay` | `Dialog`, `ModalDefaults`, `ConfirmationDialog`, `ConfirmSheet`, `FlowModal`, `rememberFlowModal`, `FlowModalController`, `hideAndWait`, `rememberLastNonNull`, `FlowModalTopBar`, `FlowModalHeaderInsets`, `FlowModalActionBar`, `FlowModalActionBarLayout`, `FlowModalSecondaryAction`, `DropdownPopup`, `rememberDropdownPopup`, `anchored`, `AnchoredPlacement`, `TooltipBox`, `edgeToEdgeDialogProperties` |
+| `….foundation.feedback` | `ToastHost`, `rememberToastState`, `ToastState`, `Toast`, `Fallback`, `FallbackTone`, `Skeleton`, `SkeletonBlock`, `SkeletonGroup`, `rememberSettledLoading`, `Spinner`, `ProgressBar`, `StepIndicator`, `RequirementList`, `Requirement`, `RequirementState` |
 | `….foundation.notice`, `….foundation.status` | `Notice`, `NoticeText`, `NoticeTone`, `NoticeEmphasis`, `AnimatedNotice`; `StatusScene`, `StatusSceneActions`, `StatusMark`, `StatusMarkState` |
-| `….foundation.badge`, `….foundation.avatar` | `Badge`, `BadgeStyle`, `BadgeSize`, `NotificationBadge`, `IndicatorDot`, `BadgeSelect`, `LazyBadgeSelect`, `FlowBadgeSelect`, `BadgeOption`, `BadgeSelectionMode`; `Avatar` |
+| `….foundation.badge`, `….foundation.avatar` | `Badge`, `BadgeStyle`, `BadgeSize`, `NotificationBadge`, `IndicatorDot`, `BadgeSelect`, `LazyBadgeSelect`, `FlowBadgeSelect`, `BadgeOption`, `BadgeSelectionMode`, `Chip`; `Avatar` |
 | `….foundation.stat` | `Stat`, `StatGrid`, `StatStyle`, `StatSize`, `LocalStatStyle`, `LocalStatSize` |
 | `….foundation.collection`, `….foundation.table` | `ContentList`, `PagedContentList`, `GroupedContentList`, `GroupedPagedContentList`, `LimitedContentListState`, `PagedContentListState`, `ContentListGroup`, `ContentListGroupLayout`, `ContentListLabels`, `ContentListDefaults`, `LazyVerticalGroupedGrid`, `LazyHorizontalGroupedGrid`, `GroupedGridData`; `Table`, `LazyTable`, `TableColumn` |
-| `….foundation.navigation`, `….foundation.wheel`, `….foundation.slot` | `NavList`, `NavNode`, `NavData`, `NavItem`, `SwipePager`, `PagerControls`, `PageIndicator`, `PageIndicatorVariant`, `PageIndicatorStyle`, `PageIndicatorSize`, `PageCounter`, `PageCounterStyle`, `PageCounterSize`, `rememberPagerController`; `WheelPicker`, `WheelPickerColumn`, `WheelPickerItem`, `WheelPickerHighlight`, `WheelPickerEdgeFade`, `rememberWheelPickerColumnState`; `SlotRow`, `SlotRowLayout` (`Default`, `Auto`, `Center`, `Top`, `FirstLine`, `Centered`, `Fill`, `wrap(…)`), `SlotRowAlignment`, `Modifier.firstLineCenter(textStyle)`, `FirstLineCenter` |
+| `….foundation.navigation`, `….foundation.wheel`, `….foundation.slot` | `LocalTabReselect`, `OnTabReselect`, `ScrollToTopOnTabReselect`, `NavList`, `NavNode`, `NavData`, `NavItem`, `SwipePager`, `PagerControls`, `PageIndicator`, `PageIndicatorVariant`, `PageIndicatorStyle`, `PageIndicatorSize`, `PageCounter`, `PageCounterStyle`, `PageCounterSize`, `rememberPagerController`; `WheelPicker`, `WheelPickerColumn`, `WheelPickerItem`, `WheelPickerHighlight`, `WheelPickerEdgeFade`, `rememberWheelPickerColumnState`; `SlotRow`, `SlotRowLayout` (`Default`, `Auto`, `Center`, `Top`, `FirstLine`, `Centered`, `Fill`, `wrap(…)`), `SlotRowAlignment`, `Modifier.firstLineCenter(textStyle)`, `FirstLineCenter` |
 | `dev.voir.areca.indication`, `.modifier`, `.platform`, `.shape` | `TouchIndication`, `FadeIndication`, `StrokeIndication`, `LiquidSweepIndication`, `FocusOutline`; `clickCursor`, `minimumTouchTarget`, `thenIf`; `SystemBars`; `SquircleShape` |
 | `….foundation.adaptive` | `AdaptiveNavigation`, `AdaptiveNavigationStyle`, `AdaptiveNavigationLayout`, `AdaptiveNavigationScope`, `AdaptiveToolbar`, `AdaptiveToolbarAction`, `EdgeColumn`, `EdgeColumnSide`, `EdgeColumnStyle`, `EdgeColumnSize`, `EdgeButton`, `EdgeButtonEmphasis`, `VerticalTabBar`, `EdgeStatus`, `FloatingSidebar`, `NavRail`, `NavDestination`, `NavRailStyle`, `NavRailSize`, `ListDetail`, `ListDetailScope`, `SupportingPane`, `SupportingPaneScope`, `ContentColumn`, `AdaptiveGrid`, `AdaptiveSheet`, `AdaptiveMenu`, `AdaptiveMenuItem`, `contextMenu`, `AdaptiveDefaults` |
 | `dev.voir.areca.window` | `WindowClass`, `WindowFold`, `FoldOrientation`, `FoldState`, `WidthClass`, `HeightClass`, `InputMode`, `WindowProfile`, `adaptive`, `AdaptiveContent`, `WindowClassBox`, `ProvideWindowClass` |
@@ -44,9 +44,23 @@ Every foundation symbol is imported from its family's package. Extension composa
 
 ## Theme and helpers
 
-`ArecaThemeProvider(darkTheme, baseColors, colors, radius, shapes, spacing, elevation, motion,
-fonts, baseTypography, inputMode, sizing, typography, content)` and every token, `ArecaSizing`
-included: [theme.md](theme.md).
+`ArecaThemeProvider(darkTheme, baseColors, colors, surfaceLayout, surfaces, hues, radius, shapes,
+spacing, elevation, motion, fonts, baseTypography, inputMode, sizing, typography,
+componentDefaults, content)` and every token, `ArecaSizing` and the surface types included:
+[theme.md](theme.md). `surfaceLayout` defaults to `SurfaceLayout.Grouped` (grey page, white cards);
+`componentDefaults: ComponentDefaults = ComponentDefaults.None`; `hues: ArecaHues = ArecaHues()`,
+read as `ArecaTheme.hues` (categorical tile colours — theme.md, "Hues").
+
+```kotlin
+// dev.voir.areca.theme — put content on a surface of your own
+fun RaisedSurface(content: @Composable () -> Unit)
+// Content one level up the ladder (Page → Card → Inset → Card): around content drawn on a fill of
+// your own in ArecaTheme.surface.raised, as Card, Section and Notice do for theirs.
+fun ProvideSurface(level: SurfaceLevel, root: SurfaceRoot = /* the current ladder */,
+    content: @Composable () -> Unit)
+// Content at a chosen level: ProvideSurface(SurfaceLevel.Card) { … } for a white panel across a
+// grey page; root = SurfaceRoot.Sheet for the sheet's ladder.
+```
 
 ```kotlin
 // dev.voir.areca.window — read the one in scope as ArecaTheme.window
@@ -165,8 +179,9 @@ fun SupportingPane(supportingVisible: Boolean, onSupportingDismissRequest: () ->
 // Inline pane from a 920dp container (SupportingPaneScope.isSupportingInline), else an AdaptiveSheet.
 fun ContentColumn(modifier: Modifier = Modifier, maxWidth: Dp = AdaptiveDefaults.ReadableWidth,
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
-    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start, gutter: Boolean = true,
     content: @Composable ColumnScope.() -> Unit)
+// `gutter = false` for children that inset themselves (settings sections, cards).
 fun AdaptiveGrid(modifier: Modifier = Modifier, minCellWidth: Dp = AdaptiveDefaults.GridMinCellWidth,
     maxColumns: Int = Int.MAX_VALUE, maxWidth: Dp = AdaptiveDefaults.ContentWidth,
     state: LazyGridState = rememberLazyGridState(), contentPadding: PaddingValues = PaddingValues(),
@@ -236,6 +251,17 @@ fun IconButton(imageVector: ImageVector, contentDescription: String?, onClick: (
 // image and no `contentDescription`, with a trailing `content: @Composable BoxScope.() -> Unit`.
 // IconButtonSize.Tiny | ExtraSmall | Small | Medium | Large | ExtraLarge
 
+fun IconToggleButton(checked: Boolean, onCheckedChange: (Boolean) -> Unit,
+    imageVector: ImageVector, contentDescription: String, modifier: Modifier = Modifier,
+    checkedImageVector: ImageVector = imageVector,
+    style: IconButtonStyle = IconButtonStyle.plain(ActionColor.Neutral),
+    checkedStyle: IconButtonStyle = IconButtonStyle.plain(ActionColor.Brand),
+    size: IconButtonSize = LocalIconButtonSize.current ?: IconButtonSize.Medium,
+    enabled: Boolean = true, interactionSource: MutableInteractionSource? = null)
+// An icon that is on or off (favourite, pin, mute): role Checkbox, so it is announced as a toggle
+// with its state. `contentDescription` names the thing ("Favourite") and stays the same in both
+// states. Draws `checkedImageVector` in `checkedStyle` while checked. In a top bar: FavoriteAction.
+
 fun Text(text: CharSequence, variant: TextVariant, modifier: Modifier = Modifier,
     color: TextColor = TextColor.Base, fontSize: TextUnit = TextUnit.Unspecified,
     lineHeight: TextUnit = TextUnit.Unspecified, fontWeight: FontWeight? = null,
@@ -243,7 +269,9 @@ fun Text(text: CharSequence, variant: TextVariant, modifier: Modifier = Modifier
     letterSpacing: TextUnit = TextUnit.Unspecified, textDecoration: TextDecoration? = null,
     textAlign: TextAlign = TextAlign.Unspecified, overflow: TextOverflow = TextOverflow.Clip,
     softWrap: Boolean = true, maxLines: Int = Int.MAX_VALUE, minLines: Int = 1,
-    onTextLayout: ((TextLayoutResult) -> Unit)? = null)
+    onTextLayout: ((TextLayoutResult) -> Unit)? = null, autoSize: TextAutoSize? = null)
+// `autoSize` (androidx.compose.foundation.text.TextAutoSize) shrinks the text to fit its box; with
+// maxLines = 1, `TextAutoSize.StepBased(minFontSize = 12.sp, maxFontSize = …)` keeps a figure on one line.
 // Overload for slots and computed styles: `style: TextStyle = LocalTextStyle.current`,
 // `color: Color = LocalContentColor.current` after `modifier`, in place of `variant` and `TextColor`.
 // Prefer the variant overload; in a component slot, plain `Text("…")` inherits the slot's style.
@@ -267,6 +295,25 @@ fun SensitiveText(text: String, modifier: Modifier = Modifier, revealed: Boolean
     onRevealedChange: ((Boolean) -> Unit)? = null, variant: TextVariant = TextVariant.BodyMedium,
     color: TextColor = TextColor.Base, …, concealedDescription: String = "Hidden", …)
 
+data class Amount(whole: String, fraction: String? = null, decimalMark: String = ".",
+    symbol: String? = null, symbolPlacement: AmountSymbolPlacement = AmountSymbolPlacement.Before,
+    sign: String? = null, spokenText: String? = null)
+// The app's formatted amount in parts: whole with its grouping ("1,284"), fraction without the mark
+// ("50"), the mark, a currency symbol or unit ("€", "د.إ", "kg"), a sign ("−", "+"), and what a
+// screen reader says (null reads the parts as drawn). AmountSymbolPlacement.Before | After. A
+// currency sign before the figures sits against them (€12); letters (CHF 12) or After get a gap.
+
+fun AmountText(amount: Amount, modifier: Modifier = Modifier,
+    style: TextStyle = LocalTextStyle.current, color: Color = LocalContentColor.current,
+    minorScale: Float = 0.7f, masked: Boolean = false,
+    textAlign: TextAlign = TextAlign.Unspecified, maxLines: Int = 1,
+    autoSize: TextAutoSize? = null)
+// Tabular figures (tnum); fraction and symbol at `minorScale` of the figures; the sign, the symbol
+// and the figures are separate texts in a left-to-right row (no control characters), so
+// "د.إ 1 284,50" keeps its order; read as one phrase (`spokenText` or the parts); `masked` draws
+// "••••" and drops the fraction; with `autoSize` it shrinks (clip) instead of ellipsizing. Areca
+// formats nothing: the app formats for the locale and passes the parts.
+
 fun Icon(imageVector: ImageVector, contentDescription: String?, modifier: Modifier = Modifier,
     tint: Color = LocalContentColor.current, size: Dp = LocalIconSize.current)
 // Overloads: `painter: Painter` or `bitmap: ImageBitmap` in place of `imageVector`.
@@ -277,6 +324,9 @@ fun FeaturedIcon(imageVector: ImageVector, contentDescription: String?,
     size: FeaturedIconSize = LocalFeaturedIconSize.current ?: FeaturedIconSize.Medium,
     shape: Shape = ArecaTheme.shapes.md)
 // Overload: `painter: Painter`. FeaturedIconStyle.solid / soft / outlined(color: ActionColor = Brand).
+// FeaturedIconStyle.solidHue(hue: Color): the hue filled, a white (fgOnFill) glyph.
+// FeaturedIconStyle.softHue(hue: Color): the hue mixed into the surface, a deeper glyph (lighter in
+// dark). Pass a hue from ArecaTheme.hues, for colour that only tells things apart.
 
 fun Chevron(direction: ChevronDirection, modifier: Modifier = Modifier,
     color: Color = LocalContentColor.current,
@@ -378,9 +428,13 @@ fun <Value> SelectField(values: Set<Value>, onChange: (Set<Value>) -> Unit,
     valueContent: (@Composable RowScope.(selectedEntries: List<SelectOption<Value>>) -> Unit)? =
         null,
     content: @Composable (options: List<SelectOption<Value>>, values: Set<Value>,
-        onSelect: (SelectOption<Value>) -> Unit) -> Unit = { … SelectFlowModalDefaults.List(…) })
-// SelectOption(key: Any, value: T, label: String, enabled: Boolean = true)
-// SelectSelectionMode.Single | Multiple. In Single, choosing the selected option clears it.
+        onSelect: (SelectOption<Value>) -> Unit) -> Unit = { … SelectFlowModalDefaults.MenuList(…) })
+// SelectOption(key: Any, value: T, label: String, enabled: Boolean = true,
+//     description: String? = null, leading: (@Composable () -> Unit)? = null,
+//     detail: String? = null) — a line under the label, a mark before it (SettingsRowIcon, a flag
+//     in SettingsRowTile; all options or none) and a short value at the end (a currency symbol).
+// SelectSelectionMode.Single | Multiple. In a Single SelectField or SelectSegment, choosing the selected
+// option clears it; in a SelectFlowModal it keeps it unless `clearable = true`.
 
 fun <Value> SelectFlowModal(controller: FlowModalController, values: Set<Value>,
     options: List<SelectOption<Value>>, modifier: Modifier = Modifier,
@@ -388,15 +442,26 @@ fun <Value> SelectFlowModal(controller: FlowModalController, values: Set<Value>,
     state: SelectFlowModalState = rememberSelectFlowModalState(),
     selectionMode: SelectSelectionMode = SelectSelectionMode.Single,
     style: FlowModalStyle = …, size: FlowModalSize = …,
-    labels: SelectFlowModalLabels = SelectFlowModalLabels.English,
-    header: (@Composable () -> Unit)? = null,
+    labels: SelectFlowModalLabels = LocalSelectFlowModalLabels.current ?: English, title: String? = null,
+    header: (@Composable () -> Unit)? = null, headerBottom: (@Composable () -> Unit)? = null,
     footer: (@Composable (draftValues: Set<Value>) -> Unit)? = null,
+    closeOnSelect: Boolean = selectionMode == Single && footer == null,
+    clearable: Boolean = false,
     onQueryChange: ((String) -> Unit)? = null, searchPlaceholder: String = labels.search,
     emptyContent: (@Composable (query: String) -> Unit)? = { … EmptyContent(query, labels) },
     loadingContent: (@Composable (query: String) -> Unit)? = { … LoadingContent(query, labels) },
     content: @Composable (options: List<SelectOption<Value>>, values: Set<Value>,
         onSelect: (SelectOption<Value>) -> Unit) -> Unit = { … SelectFlowModalDefaults.List(…) })
-// A picker in a sheet, opened with controller.show(). Search is opt-in and done by the caller:
+// A picker in a sheet, opened with controller.show(). As tall as its content, like every sheet: a
+// few options at their rows' height (theme, language, week start), a long list up to the cap, a
+// search over the whole sheet. Rows lie flat on the sheet, hairlines from the text,
+// with a brand tick. `title` draws FlowModalTopBar(title, onClose = hide); `headerBottom` goes in
+// its `bottom` slot under the title (a region pill), keeping that close; `header` replaces it. A
+// single choice without `footer` closes the sheet itself (closeOnSelect) — don't hide in onChange.
+// A single choice is required: pressing the chosen option keeps it (clearable = true to allow
+// clearing) — no caller-side guard. Closing clears the search and calls onQueryChange("") and
+// hides the keyboard. LocalSelectFlowModalLabels: provide the app's labels once in componentDefaults.
+// Search is opt-in and done by the caller:
 // pass `onQueryChange` to get a search field, then filter or fetch and pass the matching
 // `options`; set `state.isSearching` while results are outstanding. Without it, no search field.
 // `footer` receives the draft selection, which an apply button commits. `labels` localizes the
@@ -408,10 +473,12 @@ fun <Value> SelectFlowModal(controller: FlowModalController, values: Set<Value>,
     onChange: (Set<Value>) -> Unit = {}, state: SelectFlowModalState = …,
     selectionMode: SelectSelectionMode = SelectSelectionMode.Single,
     style: FlowModalStyle = …, size: FlowModalSize = …,
-    labels: SelectFlowModalLabels = SelectFlowModalLabels.English,
-    header: (@Composable () -> Unit)? = null,
+    labels: SelectFlowModalLabels = LocalSelectFlowModalLabels.current ?: English, title: String? = null,
+    header: (@Composable () -> Unit)? = null, headerBottom: (@Composable () -> Unit)? = null,
     footer: (@Composable (draftValues: Set<Value>) -> Unit)? = null,
-    onQueryChange: ((String) -> Unit)? = null, onCreateOption: ((query: String) -> Unit)? = null,
+    closeOnSelect: Boolean = …, clearable: Boolean = false,
+    onQueryChange: ((String) -> Unit)? = null, searchPlaceholder: String = labels.search,
+    onCreateOption: ((query: String) -> Unit)? = null,
     emptyContent: … = { … }, loadingContent: … = { … },
     content: @Composable (sections, values, onSelect, onCreate: (() -> Unit)?) -> Unit =
         { … SelectFlowModalDefaults.SectionedList(…) })
@@ -428,6 +495,14 @@ fun <Value> SelectFlowModal(controller: FlowModalController, values: Set<Value>,
 //     SelectFlowModalLabels.English. SelectFlowModalDefaults.SectionedList(sections, values,
 //     onSelect, modifier, labels, query = "", onCreateOption: (() -> Unit)? = null, state,
 //     contentPadding) and .CreateOptionRow(text, onClick) build a custom `content`.
+// SelectFlowModalDefaults.Search(value: String, placeholder: String, onValueChange: (String) -> Unit,
+//     modifier: Modifier = Modifier, style: FieldStyle = FieldDefaults.style,
+//     size: FieldSize = FieldDefaults.size): the search above the options, in the app's field look.
+// SelectFlowModalDefaults.List(options, values, onSelect, modifier, state, contentPadding, …) —
+//     the sheet body: flat rows in the settings row metrics, laid out at once up to
+//     CompactOptionCount (7), lazy beyond.
+//     SelectFlowModalDefaults.MenuList(options, values, onSelect, modifier, state, contentPadding) —
+//     plain rows for a dropdown (SelectField, SelectSegment).
 
 fun FieldRow(modifier: Modifier = Modifier, style: FieldStyle = FieldDefaults.style,
     size: FieldSize = FieldDefaults.size, field: FieldScope? = null,
@@ -485,6 +560,10 @@ fun FieldGroupLayout(modifier: Modifier = Modifier, label: (@Composable () -> Un
 
 Field looks are `FieldStyle.outlined()` (default), `filled()`, `soft()`, `solidNeutral()`,
 `underlined()` and `inline()`; provide one for a form with `LocalFieldStyle provides …`.
+`FieldStyle(bg: Color, bgRole: SurfaceRole = SurfaceRole.Field, bgFocusedRole: SurfaceRole =
+bgRole, bgDisabled = bg, …)`: a background left `Color.Unspecified` takes `bgRole` (focused:
+`bgFocusedRole`) of the surface the field is drawn on. `outlined()` is `Field` (white in light);
+`filled()`, `soft()` and `solidNeutral()` are `Well`, and `filled()` turns to `Field` while focused.
 
 ## Selection controls
 
@@ -518,6 +597,7 @@ fun NumberStepper(value: Int, onValueChange: (Int) -> Unit, modifier: Modifier =
     decreaseContent: @Composable () -> Unit = { … "−" }, increaseContent: … = { … "+" },
     valueContent: @Composable BoxScope.(Int) -> Unit = { … })
 // NumberStepperLabels(decrease: String, increase: String); English = "Decrease" / "Increase".
+// NumberStepperStyle.default(bg = ArecaTheme.surface.field, …): white anywhere in light.
 
 fun Swatch(modifier: Modifier = Modifier, style: SwatchStyle = …, size: SwatchSize = …,
     shape: Shape = ArecaTheme.shapes.full, selected: Boolean? = null,
@@ -545,6 +625,12 @@ fun <T> SlidingSelector(items: List<SelectorItem<T>>, selected: T?, onSelect: (T
     size: SlidingSelectorSize = LocalSlidingSelectorSize.current ?: SlidingSelectorSize.Default,
     layout: SelectorLayout = SelectorLayout.Fill,
     orientation: SelectorOrientation = SelectorOrientation.Horizontal)
+fun <T : Any> SlidingSelector(items: List<SelectorItem<T>>, selected: T,
+    onSelectedChange: (T) -> Unit, modifier: Modifier = Modifier, style: SlidingSelectorStyle = …,
+    size: SlidingSelectorSize = …, layout: SelectorLayout = SelectorLayout.Fill,
+    orientation: SelectorOrientation = SelectorOrientation.Horizontal)
+// The required form: one option is always chosen, nothing to unwrap. Use it for segments and
+// period switches; the first form with `mode = SelectorMode.Optional` for has / avoid / either.
 // SelectorItem(value: T, enabled: Boolean = true, thumb: Color = Color.Unspecified,
 //     contentSelected: Color = Color.Unspecified, contentDescription: String? = null,
 //     content: @Composable SelectorItemScope.() -> Unit); SelectorItemScope has `selected`, `enabled`.
@@ -554,6 +640,8 @@ fun <T> SlidingSelector(items: List<SelectorItem<T>>, selected: T?, onSelect: (T
 // null) | Optional (switches; tapping the chosen option calls onSelect(null)).
 // SelectorLayout.Fill (equal shares, fills the width) | Hug (each option its content) | Scroll
 // (overflows and keeps the chosen option in view). SelectorOrientation.Horizontal | Vertical.
+// SlidingSelectorStyle.default(track = ArecaTheme.surface.well, thumb = ArecaTheme.surface.onWell,
+// …); LocalSlidingSelectorStyle is seeded null, so the style is built where the selector is drawn.
 // SlidingSelectorStyle presets: Segmented (Default: track + raised capsule), Pill (no track, a
 // capsule under the words, fgOnFill on it), Underline (divider + sliding bar), Button (flat fill,
 // no track); default(content, contentSelected, contentDisabled, track, trackBorder, trackShape,
@@ -581,12 +669,13 @@ fun <T> BadgeSelect(options: List<BadgeOption<T>>, onSelect: (option: BadgeOptio
 fun <T> FlowBadgeSelect(options: List<BadgeOption<T>>, onSelect: (BadgeOption<T>) -> Unit,
     selected: List<T>, modifier: Modifier = Modifier,
     selectionMode: BadgeSelectionMode = BadgeSelectionMode.Single,
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(ArecaTheme.spacing.lg),
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     itemVerticalAlignment: Alignment.Vertical = Alignment.Top,
     maxItemsInEachRow: Int = Int.MAX_VALUE, maxLines: Int = Int.MAX_VALUE,
     style: BadgeStyle = …, size: BadgeSize = …, shape: Shape = ArecaTheme.shapes.full)
-// Wraps onto further lines.
+// Wraps onto further lines. The touch target already spaces the lines; leave the arrangements
+// alone so the gap across matches the gap down.
 
 fun <T> LazyBadgeSelect(options: List<BadgeOption<T>>, onSelect: (BadgeOption<T>) -> Unit,
     selected: List<T>, modifier: Modifier = Modifier,
@@ -601,6 +690,20 @@ fun <T> LazyBadgeSelect(options: List<BadgeOption<T>>, onSelect: (BadgeOption<T>
 // BadgeSelectionMode.Single (radio semantics) | Multiple (checkboxes). The group holds no
 // selection: `onSelect` reports the pressed option and the caller updates `selected`.
 // Chips: style = BadgeStyle.Chip (or FilledChip), size = BadgeSize.Chip.
+
+fun Chip(label: String, modifier: Modifier = Modifier, selected: Boolean = false,
+    onSelectedChange: ((Boolean) -> Unit)? = null, onClick: (() -> Unit)? = null,
+    onRemove: (() -> Unit)? = null, removeContentDescription: String = "Remove",
+    enabled: Boolean = true, style: ChipStyle = LocalChipStyle.current ?: ChipStyle.Default,
+    size: ChipSize = LocalChipSize.current ?: ChipSize.Default,
+    leading: (@Composable () -> Unit)? = null)
+// One chip: in the surface's well (ChipStyle.bg Unspecified), bgSelected (contrast) when chosen.
+// `onSelectedChange`: a toggle (role Checkbox). `onClick`: a button — a suggestion. Only
+// `onRemove`: the whole chip removes it, the cross only marks it; `onRemove` with either of the
+// others: the cross is its own 48dp target. `removeContentDescription` localized ("Remove Food").
+// ChipStyle.default(bg, bgSelected, content, contentSelected, contentDisabled, shape);
+// ChipSize.default(padding, gap, crossSize, textStyle). A set that selects stays
+// BadgeSelect / FlowBadgeSelect / LazyBadgeSelect.
 ```
 
 ## Lists
@@ -673,11 +776,13 @@ fun ExpandableListItem(expanded: Boolean, onExpandedChange: (Boolean) -> Unit,
     value: …, enabled: Boolean = true, selected: Boolean = false, nestingLevel: Int = 0,
     style: …, size: …, layout: …, interactionSource: …, onClickLabel: String? = null,
     transition: ExpandableTransition = ExpandableTransition.Default, leading: …,
+    trailing: (@Composable BoxScope.() -> Unit)? = null,
     bottom: (@Composable ColumnScope.() -> Unit)? = null, showChevron: Boolean = true,
     container: ExpandableListItemContainer = ExpandableListItemContainer.None,
     content: @Composable ColumnScope.() -> Unit)
-// ExpandableListItemContainer.None | Soft: a `bgSoft` block of `shapes.lg` behind the row and its
-// content while expanded; keep the row's style transparent. `showChevron = false` only when the
+// `trailing`: a control of the row's own before the chevron (a checkbox for the whole group).
+// ExpandableListItemContainer.None | Soft: a block in ArecaTheme.surface.raised, of
+// `shapes.surface`, behind the row and its content while expanded; keep the row's style transparent. `showChevron = false` only when the
 // row already says it opens. `bottom` sits under the row's text, inside the row and its hit area —
 // a meter under a category's name — unlike `content`, which is revealed under the row.
 
@@ -726,12 +831,34 @@ fun ListItemSkeleton(modifier: Modifier = Modifier, size: ListItemSize = …,
 
 fun ListItemChevron(modifier: Modifier = Modifier,
     direction: ChevronDirection = ChevronDirection.Right,
-    size: ChevronSize = currentListItemSize().chevron, hoverOffset: Dp = 2.dp)
+    size: ChevronSize = currentListItemSize().chevron, hoverOffset: Dp = 2.dp,
+    color: Color = Color.Unspecified)
 fun ListItemCheckmark(modifier: Modifier = Modifier,
     selected: Boolean = LocalListItemState.current.selected,
     size: Dp = currentListItemSize().icon, color: Color = LocalContentColor.current,
     strokeWidth: Dp = 2.dp)
-// Trailing glyphs for a hand-built ListItem: the row's chevron, and its selection tick.
+// Trailing glyphs for a hand-built ListItem: the row's chevron, and its selection tick. The
+// chevron's ink is the row's ListItemStyle.chevron for its state, else the trailing slot's.
+```
+
+```kotlin
+// ListItemStyle: a data class of inks per state — bg…, title…, subtitle…, overline…,
+// value / valueActive / valueSelected / valueDisabled, extra / extraActive / extraSelected /
+// extraDisabled (leading and trailing slots), border…, selectedRail, shape, indication, and
+// chevron / chevronActive / chevronSelected / chevronDisabled (Color.Unspecified, the default:
+// the slot's ink for that state). A selected row keeps its …Selected inks under hover and press.
+ListItemStyle.plain(color: ListItemColor = Neutral, shape: Shape = RectangleShape)  // the default
+ListItemStyle.surface(color, shape) · outlined(color, shape, borderWidth) · soft(color = Brand, shape)
+ListItemStyle.ghost(color, shape)                                                  // menus, no rail
+ListItemStyle.flood(fill: Color = colors.bgBrandBase, content: Color = colors.fgOnFill,
+    color: ListItemColor = Neutral, shape: Shape = RectangleShape)
+// A plain row at rest that fills with `fill` when selected, title, value, slots and chevron in
+// `content`, no rail: a chosen subcategory in its category's colour.
+fun ListItemStyle.withValueColor(color: Color, active: Color = color, selected: Color = color): ListItemStyle
+fun ListItemStyle.withChevronColor(color: Color, active: Color = color, selected: Color = color,
+    disabled: Color = Color.Unspecified): ListItemStyle
+// Re-ink every state of one ink in a step. `copy(value = x)` moves the rest ink alone: the active
+// and selected defaults were taken from the old value when the style was built.
 ```
 
 Elided list-row parameters (`…`) have the same names, types and defaults as in `ListItem`.
@@ -739,8 +866,9 @@ Elided list-row parameters (`…`) have the same names, types and defaults as in
 ## Settings
 
 ```kotlin
-fun Settings(modifier: Modifier = Modifier, styles: SettingsStyles = SettingsDefaults.styles(),
-    sizes: SettingsSizes = SettingsDefaults.sizes(),
+fun Settings(modifier: Modifier = Modifier,
+    styles: SettingsStyles = LocalSettingsStyles.current ?: SettingsDefaults.styles(),
+    sizes: SettingsSizes = LocalSettingsSizes.current ?: SettingsDefaults.sizes(),
     headerPlacement: SettingsHeaderPlacement = SettingsHeaderPlacement.Inside,
     content: @Composable SettingsScope.() -> Unit)
 
@@ -751,6 +879,13 @@ fun SettingsScope.Section(modifier: Modifier = Modifier, header: (@Composable ()
     content: @Composable SettingsSectionScope.() -> Unit)
 // `band`: a strip at the bottom of the card for the section's closing action — one row, usually a
 // SettingsRow in the matching tone; `bandColor = ArecaTheme.colors.bgDangerMuted` under a danger row.
+// Color.Unspecified (the default band) takes the card's well.
+// SettingsDefaults.sectionStyle(bg = Color.Unspecified, border = Color.Unspecified, header, headerOutside,
+//     headerDisabled, footer, footerDisabled, separator = Color.Unspecified,
+//     shape = ArecaTheme.shapes.surface, band = Color.Unspecified): unspecified bg, separator and
+//     band take the surface's raised, the card's separator and the card's well, resolved where the
+//     section is drawn — a white card on a grouped page, a grey one on a plain page; on a sheet's
+//     ground (FlowModal, Dialog, DropdownPopup) a section with no bg draws flat, rows edge to edge.
 
 fun SettingsRow(title: @Composable () -> Unit, modifier: Modifier = Modifier,
     subtitle: (@Composable () -> Unit)? = null, caption: (@Composable () -> Unit)? = null,
@@ -812,6 +947,12 @@ fun SettingsRowIcon(imageVector: ImageVector, modifier: Modifier = Modifier,
     color: ActionColor = ActionColor.Neutral, contentDescription: String? = null,
     shape: Shape = ArecaTheme.shapes.tile, size: FeaturedIconSize = SettingsTheme.sizes.iconTile)
 // Overload: `style: FeaturedIconStyle` after `imageVector`, in place of `color`.
+
+fun SettingsRowIcon(imageVector: ImageVector, hue: Color, modifier: Modifier = Modifier,
+    soft: Boolean = false, contentDescription: String? = null,
+    shape: Shape = ArecaTheme.shapes.tile, size: FeaturedIconSize = SettingsTheme.sizes.iconTile)
+// A tile in a categorical hue from ArecaTheme.hues: FeaturedIconStyle.solidHue, or softHue with
+// `soft = true`. For a menu whose rows are different things; one hue per concept.
 // SettingsRowStatus.Idle | Loading | Error(message); SettingsRowTone.Default | Brand | Danger.
 
 fun SettingsRowTile(modifier: Modifier = Modifier, shape: Shape = ArecaTheme.shapes.tile,
@@ -840,24 +981,59 @@ A row built by hand next to settings rows reads its type and ink from `SettingsT
 ## Layout
 
 ```kotlin
-fun BaseLayout(modifier: Modifier = Modifier, bg: Color = Color.Transparent,
+fun BaseLayout(modifier: Modifier = Modifier, bg: Color = Color.Unspecified,
     contentWindowInsets: WindowInsets = WindowInsets(0, 0, 0, 0),
     topBar: @Composable () -> Unit = {}, bottomBar: @Composable () -> Unit = {},
     background: @Composable BoxScope.() -> Unit = {}, overlay: @Composable BoxScope.() -> Unit = {},
+    floatingAction: (@Composable () -> Unit)? = null, toastState: ToastState? = null,
     content: @Composable (PaddingValues) -> Unit)
+// `floatingAction`: the screen's floating primary action (a Button with a leading glyph), placed at
+// the end edge spacing.xl above the bottom bar, or above the navigation bar when there is none; its
+// height and margin join the bottom padding handed to `content`. `toastState`: the frame draws a
+// ToastHost for it above the bottom bar and the floating action — no ToastHost in `overlay`.
+// `overlay` is composed outside the measuring pass and cannot see the bars.
+// `bg` is the page: Color.Unspecified is the page ground of the surface layout (grey for Grouped,
+// white for Plain), so a screen is opaque while navigation slides screens over each other. Its
+// content is on the page surface (SurfaceLevel.Page). Pass Color.Transparent only for a frame
+// drawn over something meant to show through.
 
 fun BottomActionBar(actionText: String, onAction: () -> Unit, modifier: Modifier = Modifier,
     enabled: Boolean = true, loading: Boolean = false, hint: String? = null,
+    caption: String? = null, ready: Boolean = true,
     style: BottomActionBarStyle = LocalBottomActionBarStyle.current ?: BottomActionBarStyle.Default,
     size: BottomActionBarSize = LocalBottomActionBarSize.current ?: BottomActionBarSize.Default,
     showDivider: Boolean = true,
     windowInsets: WindowInsets = WindowInsets.safeDrawing.only(Horizontal + Bottom),
     leading: (@Composable () -> Unit)? = null)
-// A screen's primary action as BaseLayout's `bottomBar`: opaque bgCanvas, hairline above, clears
+// A screen's primary action as BaseLayout's `bottomBar`: opaque ArecaTheme.surfaces.bar, hairline above, clears
 // the navigation bar and keyboard (insets default as TabBar's — keep the bottom insets out of
 // BaseLayout's contentWindowInsets, or they count twice). No `leading`: a full-width solid brand button. `leading`: a
 // count on the left ("3 selected"), the button at its own width. `enabled = false` + `hint`: the
-// reason under the button ("Add a name to save"). FlowModalActionBar is for sheets only.
+// reason under the button ("Add a name to save"). `caption`: a line above the button, something
+// to know before committing. `ready = false`: the button takes `style.buttonNotReady` (soft brand)
+// but stays pressable, so the press runs validation; `enabled = false` refuses the press.
+// FlowModalActionBar is for sheets only.
+// BottomActionBarStyle(bg, button, leading, hint, buttonNotReady = button, caption = hint);
+// BottomActionBarStyle.default(…, buttonNotReady = ButtonStyle.soft(), caption = fgSubtle).
+
+fun PanelLayout(modifier: Modifier = Modifier, contentPadding: PaddingValues = PaddingValues(0.dp),
+    scrollState: ScrollState = rememberScrollState(),
+    panelShape: Shape = RoundedCornerShape(topStart = ArecaTheme.radius.xl, topEnd = ArecaTheme.radius.xl),
+    header: @Composable ColumnScope.() -> Unit, panel: @Composable ColumnScope.() -> Unit)
+// A header on the page's ground over a panel on ArecaTheme.surface.raised (its content one surface
+// level up) that runs to the bottom of the viewport. One scrolling column: no lazy list inside.
+// Pass BaseLayout's padding as `contentPadding`: top above the header, bottom at the panel's foot.
+// Both slots bring their own horizontal insets. Scrolls to the top on a tab reselect.
+
+fun ChoiceCard(selected: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier,
+    mode: ChoiceCardMode = ChoiceCardMode.Single, enabled: Boolean = true, showMark: Boolean = true,
+    badge: (@Composable () -> Unit)? = null, trailing: (@Composable () -> Unit)? = null,
+    content: @Composable ColumnScope.() -> Unit)
+// One answer of a choice (a plan, an option with a price), full width: the surface's raised fill,
+// shapes.surface, an accentBase ring when selected, a borderBase hairline otherwise. Single: a radio
+// mark and the RadioButton role; Multiple: a checkbox and the Checkbox role. `showMark = false`
+// keeps ring and semantics. `badge` (a Badge) straddles the top edge at the end; `trailing` (a
+// price) sits at the end. Put a set in a Column with Modifier.selectableGroup().
 
 fun Card(modifier: Modifier = Modifier,
     style: CardStyle = LocalCardStyle.current ?: CardStyle.Default,
@@ -871,8 +1047,14 @@ fun Card(modifier: Modifier = Modifier,
 // `footer`, `expandedContent` and `content`, both
 // `@Composable ColumnScope.(padding: PaddingValues) -> Unit`.
 // CardStyle presets: Default, Outlined, SoftNeutral, GhostNeutral, SolidBrand; factories
-// outlined(shape), softNeutral(shape), …, and default(…).
-// CardFooterStyle presets: Default (= plain()), plain(divider), soft(color: ActionColor = Neutral),
+// outlined(shape), softNeutral(shape), …, and default(bg = Color.Unspecified,
+// border = Color.Unspecified, content = fgBase, shape = ArecaTheme.shapes.surface, indication).
+// Every preset's shape defaults to shapes.surface. LocalCardStyle is seeded with CardStyle.Default:
+// the raised fill of the surface the card sits on (an unspecified bg), no border. Outlined is
+// transparent with a border, keeping the surface it sits on; SoftNeutral is the surface's well;
+// GhostNeutral is transparent with a well press. The content is drawn on the card's surface.
+// CardFooterStyle presets: Default (= plain()), plain(divider), soft(color: ActionColor = Neutral;
+// Neutral takes the card's well),
 // solid(color: ActionColor = Brand), of(bg, content, divider, button) for a color of your own. The footer
 // hands its `content` color and its `button` style to what is inside it.
 
@@ -946,6 +1128,8 @@ fun CollapsingHeaderLayout(header: @Composable () -> Unit, pinned: @Composable (
 given (a lazy list's `contentPadding`, or `Modifier.padding`). The top bar's height and
 `contentWindowInsets` add up, so give the status-bar inset to the top bar's `windowInsets` and the
 rest to `contentWindowInsets`. A `Card`'s content is handed its padding rather than padded for it.
+A floating action and toasts belong to `BaseLayout(floatingAction, toastState)`, never to `overlay`
+with a hand-made offset.
 
 ## Bars and tabs
 
@@ -953,14 +1137,18 @@ rest to `contentWindowInsets`. A `Card`'s content is handed its padding rather t
 fun TopBar(title: String, modifier: Modifier = Modifier, subtitle: String? = null,
     style: TopBarStyle = LocalTopBarStyle.current ?: TopBarStyle.Default,
     size: TopBarSize = LocalTopBarSize.current ?: TopBarSize.Default,
-    titleAlignment: TopBarTitleAlignment = TopBarTitleAlignment.Start,
+    titleAlignment: TopBarTitleAlignment = LocalTopBarTitleAlignment.current,
     layout: SlotRowLayout = titleAlignment.slotRowLayout(size.gap),
     windowInsets: WindowInsets = WindowInsets(0, 0, 0, 0), scrollState: TopBarScrollState? = null,
     leading: (@Composable TopBarActionScope.() -> Unit)? = null,
     trailing: (@Composable TopBarActionScope.() -> Unit)? = null,
     bottom: (@Composable () -> Unit)? = null)
 // Overload: no `title` / `subtitle`; a trailing `content: @Composable () -> Unit` instead.
-// TopBarStyle presets: Default, Tonal, Floating, Modal, Scrim.
+// LocalTopBarTitleAlignment (Start by default): provide Center once in componentDefaults for an app
+// whose bars centre their titles.
+// TopBarStyle presets: Default, Tonal, Floating, Modal, Scrim. TopBarStyle.default(bg =
+// Color.Unspecified, …): the ground of the surface the bar is drawn on — the page under a screen,
+// the sheet in a sheet.
 
 fun LargeTopBar(title: String, scrollState: TopBarScrollState, modifier: Modifier = Modifier,
     subtitle: String? = null, style: TopBarStyle = …, size: TopBarSize = …,
@@ -1008,16 +1196,15 @@ fun FloatingTabBarItemContent(modifier: Modifier = Modifier, label: String? = nu
 
 fun <T> Tabs(tabs: List<TabItem<T>>, selectedValue: T, onValueSelected: (T) -> Unit,
     modifier: Modifier = Modifier, style: TabsStyle = LocalTabsStyle.current ?: TabsStyle.Default,
-    size: TabsSize = LocalTabsSize.current ?: TabsSize.Default,
-    variant: TabsVariant = TabsVariant.Underline,
+    size: TabsSize? = null, variant: TabsVariant = TabsVariant.Underline,
     orientation: TabsOrientation = TabsOrientation.Horizontal,
     horizontalPosition: TabsHorizontalPosition = TabsHorizontalPosition.Bottom,
     verticalPosition: TabsVerticalPosition = TabsVerticalPosition.Start, fillWidth: Boolean = false)
 // Overload: `state: TabsState<T>` (from `rememberTabsState(initialValue)`, read
 // `state.selectedValue`) in place of `selectedValue` / `onValueSelected`; it takes `fillWidth` too.
 // TabsVariant.Underline (views within a screen) | Button | Segmented (a setting). Segmented: tabs
-// in a `TabsStyle.track` capsule with a raised `thumb` sliding to the selection; pair it with
-// `size = TabsSize.Segmented` — the size does not follow the variant. Button: a flat
+// in a `TabsStyle.track` capsule (surface.well) with a raised `thumb` (surface.onWell) sliding to the selection; `size = null`
+// takes TabsSize.Segmented for it and the theme's LocalTabsSize for the others. Button: a flat
 // `bgSelected` fill that slides. `fillWidth = true`: equal shares of the width, no scrolling.
 // Built on SlidingSelector; the indicator moves on ArecaTheme.motion.slide() unless
 // `TabsSize.indicatorDuration` differs from `motion.medium` (then a tween of that length). For a
@@ -1097,6 +1284,17 @@ Controls without a `color` parameter draw in `ActionColor.Neutral`, except `Done
 ## Navigation and paging
 
 ```kotlin
+val LocalTabReselect: ProvidableCompositionLocal<Flow<Unit>> // emptyFlow() outside a shell
+fun OnTabReselect(action: suspend () -> Unit)
+fun ScrollState.ScrollToTopOnTabReselect()
+fun LazyListState.ScrollToTopOnTabReselect()
+fun LazyGridState.ScrollToTopOnTabReselect()
+// Taps on the destination already selected. AdaptiveNavigation provides LocalTabReselect to the
+// selected screen; switching destinations never emits. ScrollToTopOnTabReselect animates to 0 /
+// item 0. An app drawing its own TabBar or FloatingTabBar provides
+// `LocalTabReselect provides reselects` (a MutableSharedFlow<Unit>(extraBufferCapacity = 1)) and
+// calls reselects.tryEmit(Unit) when onValueSelected reports the value already selected.
+
 fun NavList(nodes: List<NavNode>, selectedId: String?, onItemClick: (NavData) -> Unit,
     modifier: Modifier = Modifier, size: NavListSize = LocalNavListSize.current ?: NavListSize.Default)
 // NavNode.Item(item: NavData) | NavNode.Section(trigger: NavData, children: List<NavData>,
@@ -1212,11 +1410,21 @@ fun ConfirmationDialog(confirmText: @Composable () -> Unit, onConfirm: suspend (
     declineText: (@Composable () -> Unit)? = null,
     footer: (@Composable ColumnScope.() -> Unit)? = null)
 
-fun rememberFlowModal(allowPartial: Boolean = true, allowExpand: Boolean = true,
+fun rememberFlowModal(allowPartial: Boolean = false, allowExpand: Boolean = true,
     allowDrag: Boolean = true, partialMultiplier: Float = 0.5f,
-    @FloatRange(from = 0.0, to = 1.0) maxHeightFraction: Float = 0.9f, autoHeight: Boolean = false,
+    @FloatRange(from = 0.0, to = 1.0) maxHeightFraction: Float = 0.9f,
+    autoHeight: Boolean = false /* deprecated, ignored */,
     dialogProperties: DialogProperties = flowModalDialogProperties(),
     animationSpec: AnimationSpec<Float>? = null): FlowModalController
+// Every sheet is as tall as its content, up to maxHeightFraction of the window: a short form opens
+// at its height, a long list caps and scrolls with header and footer fixed. To be tall whatever it
+// holds, the body fills (a lazy list, Modifier.fillMaxHeight()). A sheet opens at its full height;
+// a partial height (partialMultiplier of the cap) is opt-in with allowPartial = true — for a long
+// list that may peek, never a form, a calendar or a confirmation — and exists only for content
+// taller than it; a partial show() on shorter content opens fully and state is Expanded. allowExpand = false with
+// allowPartial caps the sheet at the partial height. Content that grows while the sheet opens (data
+// replacing a placeholder) bends the opening toward the new height. Never pass autoHeight, never size a sheet's
+// body to a fixed height, never wrap a FlowModal in your own height logic.
 
 fun FlowModal(controller: FlowModalController, modifier: Modifier = Modifier,
     style: FlowModalStyle = LocalFlowModalStyle.current ?: FlowModalStyle.Default,
@@ -1224,12 +1432,49 @@ fun FlowModal(controller: FlowModalController, modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit = { controller.hide() },
     overlayContentDescription: String = "Dismiss", header: (@Composable () -> Unit)? = null,
     footer: (@Composable () -> Unit)? = null, content: @Composable () -> Unit)
-// FlowModalController: show(partial: Boolean = true), expand(), collapse(), hide(), isVisible.
+// FlowModalController: show(partial: Boolean = true), expand(), collapse(), hide(), isVisible,
+// state: FlowModalState (Hidden, Opening, PartiallyOpened, …).
+suspend fun FlowModalController.hideAndWait()
+// Hides the sheet and returns once it is Hidden; returns at once if it already is. Navigate after it.
 // FlowModal composes nothing while hidden, so call it unconditionally.
 // The drag handle floats over the top of the sheet: `header` starts at the sheet's top edge, so its
-// fill runs under the handle, and clears it with `FlowModalHeaderInsets` (a WindowInsets, zero when
-// the sheet cannot be dragged): `TopBar(…, windowInsets = FlowModalHeaderInsets)`. Without a header
+// fill runs under the handle. FlowModalTopBar clears it; a header of your own uses
+// `FlowModalHeaderInsets` (a WindowInsets, zero when the sheet cannot be dragged). Without a header
 // the body starts below the handle.
+
+fun FlowModal(visible: Boolean, onDismissRequest: () -> Unit, modifier: Modifier = Modifier,
+    style: FlowModalStyle = LocalFlowModalStyle.current ?: FlowModalStyle.Default,
+    size: FlowModalSize = LocalFlowModalSize.current ?: FlowModalSize.Default,
+    controller: FlowModalController = rememberFlowModal(), partial: Boolean = true,
+    overlayContentDescription: String = "Dismiss", header: (@Composable () -> Unit)? = null,
+    footer: (@Composable () -> Unit)? = null, content: @Composable () -> Unit)
+// Shown while `visible`; false slides it out. `onDismissRequest` (back, scrim, drag down) clears the
+// state. `controller` carries the partial height, the cap and drag: rememberFlowModal().
+// `partial`: open at the partial height, when the controller allows one.
+
+fun <T : Any> FlowModal(item: T?, onDismissRequest: () -> Unit, modifier: Modifier = Modifier,
+    style: FlowModalStyle = …, size: FlowModalSize = …,
+    controller: FlowModalController = rememberFlowModal(), partial: Boolean = true,
+    overlayContentDescription: String = "Dismiss", header: (@Composable (T) -> Unit)? = null,
+    footer: (@Composable (T) -> Unit)? = null, content: @Composable (T) -> Unit)
+// Shown while `item` is not null; the slots get the item shown, which stays the last non-null one
+// while the sheet slides out. Never wrap it in `if (item != null)`.
+
+fun <T : Any> rememberLastNonNull(value: T?): T?
+// `value`, or the last non-null value before it; null only until there has been one. For an
+// overlay of your own about something that can disappear.
+
+fun FlowModalTopBar(title: String, modifier: Modifier = Modifier, onClose: (() -> Unit)? = null,
+    closeContentDescription: String = "Close",
+    leading: (@Composable TopBarActionScope.() -> Unit)? = null,
+    trailing: (@Composable TopBarActionScope.() -> Unit)? = null,
+    bottom: (@Composable () -> Unit)? = null, style: TopBarStyle = TopBarStyle.Modal,
+    size: TopBarSize = TopBarSize.Modal,
+    titleAlignment: TopBarTitleAlignment = TopBarTitleAlignment.Center)
+// Every sheet's header: TopBar with TopBarStyle.Modal, TopBarSize.Modal, a centred title and
+// FlowModalHeaderInsets. `onClose` draws a CloseAction (null: none — a sheet with a Cancel in its
+// footer). `trailing` replaces the cross. `leading`: a way back in a step of a flow. `bottom`:
+// content under the title inside the header — a SearchField pinned above a list.
 // FlowModalSize.default(dragPadding, dragWidth = 44.dp, dragHeight = 4.dp,
 //     maxWidth: Dp = Dp.Unspecified): `maxWidth` caps the sheet, centred along the bottom edge; the
 // scrim still covers the window. A sheet opens in its own window, so an app that keeps a phone
@@ -1255,6 +1500,10 @@ fun ConfirmSheet(visible: Boolean, icon: ImageVector?, title: String, descriptio
     style: ConfirmSheetStyle = LocalConfirmSheetStyle.current ?: ConfirmSheetStyle.Default,
     size: ConfirmSheetSize = LocalConfirmSheetSize.current ?: ConfirmSheetSize.Default,
     extra: (@Composable ColumnScope.() -> Unit)? = null)
+// `extra` sits inside the sheet's side padding, as the buttons do. Choices there (cancel now / after
+// one more payment) are rows: wrap them in ConfirmSheetRows so they run edge to edge — never
+// ChoiceCards or rows with their own side padding.
+fun ConfirmSheetRows(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit)
 
 fun rememberDropdownPopup(initialOpen: Boolean = false,
     placement: AnchoredPlacement = AnchoredPlacement.BelowStart,
@@ -1280,7 +1529,9 @@ fun TooltipBox(text: String, modifier: Modifier = Modifier,
 
 `LocalConfirmSheetStyle` and `LocalConfirmSheetSize` stay `null` unless provided: a confirm sheet
 builds its default from the `LocalFlowModalStyle` / `LocalFlowModalSize` in scope where it is drawn,
-so restyle sheets there.
+so restyle sheets there. `ConfirmSheetStyle.Danger` is the preset for a yes that destroys something
+(delete, erase): the tile and the confirming button in the danger family's soft fill; never copy
+`Default` to recolour it.
 
 ## Feedback, status, display
 
@@ -1289,8 +1540,9 @@ fun ToastHost(state: ToastState, modifier: Modifier = Modifier,
     animation: ToastAnimation = ToastAnimation.Slide,
     style: ToastStyle = LocalToastStyle.current ?: ToastStyle.Default,
     windowInsets: WindowInsets = WindowInsets.safeDrawing)
-// rememberToastState(): ToastState. ToastHost fills its parent and keeps clear of the insets:
-// put it in BaseLayout(overlay = { … }).
+// rememberToastState(): ToastState. Under a BaseLayout pass BaseLayout(toastState = …), which draws
+// the host above the bottom bar and the floating action. A ToastHost of your own fills its parent
+// and keeps clear of `windowInsets`.
 // ToastState: show(...): Long, dismiss(id: Long), dismiss(), dismissAll().
 fun show(label: CharSequence, caption: CharSequence? = null, color: ToastColor? = null,
     shape: Shape? = null, duration: Duration? = 2.seconds,
@@ -1320,7 +1572,9 @@ fun <T : Any> AnimatedNotice(value: T?, modifier: Modifier = Modifier,
     content: @Composable (T) -> Unit)
 // NoticeTone.Neutral | Info | Success | Warning | Danger; NoticeEmphasis.Subtle | Filled.
 // LocalNoticeStyle is null by default, so each notice follows its tone; providing a style gives
-// every notice in the subtree that one look.
+// every notice in the subtree that one look. NoticeStyle.of(tone, emphasis, bg =
+// ArecaTheme.surface.raised, shape = ArecaTheme.shapes.surface, chipShape): `bg` is a subtle
+// notice's ground; the content sits one surface level up.
 
 fun RequirementList(requirements: List<Requirement>, modifier: Modifier = Modifier,
     columns: Int = 1, labels: RequirementListLabels = RequirementListLabels.English,
@@ -1332,8 +1586,26 @@ fun RequirementList(requirements: List<Requirement>, modifier: Modifier = Modifi
 fun Fallback(modifier: Modifier = Modifier,
     style: FallbackStyle = LocalFallbackStyle.current ?: FallbackStyle.Default,
     size: FallbackSize = LocalFallbackSize.current ?: FallbackSize.Default,
+    horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
     top: (@Composable () -> Unit)? = null, heading: (@Composable () -> Unit)? = null,
     body: (@Composable () -> Unit)? = null, content: (@Composable () -> Unit)? = null)
+// Centred by default; `Alignment.Start` for a message that belongs to a section, aligned to the
+// gutter. The text follows the alignment.
+
+fun Fallback(title: String, modifier: Modifier = Modifier, body: String? = null,
+    tone: FallbackTone = FallbackTone.Empty,
+    icon: ImageVector? = /* Empty: a tray; Failure: an alert circle, both bundled */ …,
+    actionText: String? = null, onAction: (() -> Unit)? = null,
+    actionLoading: Boolean = false, actionStyle: ButtonStyle? = null,
+    horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
+    style: FallbackStyle = LocalFallbackStyle.current ?: FallbackStyle.Default,
+    size: FallbackSize = LocalFallbackSize.current ?: /* by tone */ …)
+// The title is announced as a heading (both overloads). `actionLoading` for a retry in flight;
+// `actionStyle` overrides the tone's button.
+// The stock empty state and failure. FallbackTone.Empty: neutral soft featured icon, soft neutral
+// button (a way back: "Clear filters"), padding spacing.xl across and spacing.xl6 above and below.
+// FallbackTone.Failure: danger soft featured icon, soft brand button ("Try again"),
+// FallbackSize.Default. `icon = null` draws no mark. The button needs both actionText and onAction.
 
 fun StatusScene(title: String, modifier: Modifier = Modifier,
     mark: (@Composable () -> Unit)? = null, message: String? = null, footnote: String? = null,
@@ -1352,6 +1624,22 @@ fun Skeleton(modifier: Modifier = Modifier, count: Int = 1,
     height: Dp? = null, textStyle: TextStyle? = null, contentDescription: String? = null,
     animated: Boolean = true, reversed: Boolean = false, style: SkeletonStyle = …,
     size: SkeletonSize = …)
+
+fun SkeletonBlock(modifier: Modifier = Modifier, shape: Shape? = null, animated: Boolean = true,
+    reversed: Boolean = false, style: SkeletonStyle = LocalSkeletonStyle.current ?: SkeletonStyle.Default,
+    size: SkeletonSize = LocalSkeletonSize.current ?: SkeletonSize.Default)
+// One shimmering shape exactly the size its modifier gives it: Modifier.size(48.dp),
+// fillMaxWidth().aspectRatio(1f). `shape` defaults to `size.shape`; ArecaTheme.shapes.full for an
+// avatar or a chip, shapes.surface for a card. Silent to assistive technology.
+
+fun SkeletonGroup(contentDescription: String, modifier: Modifier = Modifier,
+    content: @Composable ColumnScope.() -> Unit)
+// A Column of placeholders read once as `contentDescription` ("Loading transactions").
+
+fun rememberSettledLoading(loading: Boolean, delay: Duration = 150.milliseconds,
+    minimumDuration: Duration = 400.milliseconds): Boolean
+// Whether to show the loading face: false for a load shorter than `delay`; once true, stays true
+// at least `minimumDuration`.
 
 fun Spinner(modifier: Modifier = Modifier, style: SpinnerStyle = …, size: SpinnerSize = …,
     contentDescription: String? = null, period: Duration = 900.milliseconds)
@@ -1386,9 +1674,13 @@ fun IndicatorDot(modifier: Modifier = Modifier, color: Color = LocalContentColor
 fun Avatar(modifier: Modifier = Modifier,
     style: AvatarStyle = LocalAvatarStyle.current ?: AvatarStyle.Default,
     size: AvatarSize = LocalAvatarSize.current ?: AvatarSize.Default,
-    shape: Shape = ArecaTheme.shapes.full, letters: String? = null,
+    shape: Shape = ArecaTheme.shapes.full, letters: String? = null, maxLetters: Int = 2,
     contentDescription: String? = null, loading: Boolean = false,
     content: (@Composable BoxScope.() -> Unit)? = null)
+// `maxLetters`: how many characters a single-word `letters` keeps — 4 for "USDT" beside "USDC".
+// `content` wins over `letters`: the initials show only when `content` is null. A logo, a bank or a
+// currency with a monogram fallback: Avatar(shape = ArecaTheme.shapes.tile, letters = name,
+// content = if (logo != null) { { Image(logo, null, Modifier.fillMaxSize(), contentScale = ContentScale.Crop) } } else null).
 
 fun Stat(label: String, value: String, modifier: Modifier = Modifier, note: String? = null,
     onClick: (() -> Unit)? = null, onClickLabel: String? = null, enabled: Boolean = true,
@@ -1452,8 +1744,9 @@ fun <G, T> GroupedPagedContentList(state: PagedContentListState<ContentListGroup
 // ContentListGroup(key: Any, group: G, items: List<T>): a header ("Today") over its items.
 // Both take `groupLayout: ContentListGroupLayout = Plain` after `fillAvailableHeight`. `Inset`
 // draws each group on its own card, the header inside — a ListItemColumn with a heading. The card
-// is `style.group: ListStyle` (bg bgSubtle, separator borderOnSubtle; border not drawn) and
-// `size.group: ListSize` (shape shapes.lg, separators inset to a row's text); header in
+// is `style.group: ListStyle` (bg and separator Color.Unspecified: the surface's raised fill and
+// its separator; border not drawn) and `size.group: ListSize` (shape shapes.surface, separators
+// inset to a row's text); header in
 // style.groupHeader / size.groupHeaderTextStyle with size.groupHeaderPadding; cards
 // size.groupSpacing apart, inset by size.groupOuterPadding. A paged list stays lazy and its headers
 // stop sticking.
@@ -1486,6 +1779,7 @@ fun <T> LazyTable(items: List<T>, columns: List<TableColumn<T>>, modifier: Modif
     style: TableStyle = …, size: TableSize = …, separated: Boolean = true,
     key: ((index: Int, item: T) -> Any)? = null)
 // Table composes every row; LazyTable composes rows as they scroll in.
+// TableStyle.default(rowBg = Color.Unspecified, …): the ground of the surface the table is drawn on.
 // TableColumn(id: String, title: String, width: Dp? = null, minWidth: Dp = 80.dp,
 //     maxWidth: Dp? = null, expandWeight: Float = 1f, value: (T) -> Any? = { "" },
 //     cell: (@Composable (T) -> Unit)? = null, header: (@Composable () -> Unit)? = null)

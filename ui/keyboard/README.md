@@ -68,7 +68,7 @@ Three layers, each usable without the one above it:
 
 Alongside them: `rememberKeyboardController`, `rememberKeyboardTarget`, `Modifier.keyboardTarget`
 and `Modifier.keyboardAnchor` in `dev.voir.areca.keyboard`; `Key`, `KeyRow`, `KeyboardGrid`,
-`KeyboardGrids`, `KeyAction`, `KeyRole`, `KeyStyle` and `toKeyAction` in
+`KeyboardGrids`, `KeyAction`, `KeyRole`, `KeyStyle`, `toKeyAction` and `LocalKeyboardHaptics` in
 `dev.voir.areca.keyboard.key`; `KeyboardStyle` and `KeyboardSize` in
 `dev.voir.areca.keyboard.layout`.
 
@@ -200,6 +200,23 @@ KeyboardGrid(
   rejected.
 - A label stays on one line (`KeyboardSize.keyLabelMaxLines`) and ends in an ellipsis.
 - Rows keep their left-to-right order in a right-to-left locale, as keypads do.
+
+### Haptics
+
+Every press of an enabled key plays the platform's keyboard tap feedback
+(`HapticFeedbackType.KeyboardTap`) through `LocalHapticFeedback`, before the key's action runs. It
+needs no `VIBRATE` permission and follows the user's system setting for touch feedback, so the app
+adds no vibration of its own. `KeyboardLayout(grid = …)` draws its keys through `KeyboardKeys` and
+behaves the same.
+
+`LocalKeyboardHaptics` (`true` by default) turns it off for the keyboards below it — in a
+screenshot test, say:
+
+```kotlin
+CompositionLocalProvider(LocalKeyboardHaptics provides false) {
+    KeyboardKeys(grid = KeyboardGrids.numeric(onAction = ::onKeyAction))
+}
+```
 
 ### Roles
 

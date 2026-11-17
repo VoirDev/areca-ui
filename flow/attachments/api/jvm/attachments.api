@@ -262,12 +262,22 @@ public final class dev/voir/areca/flow/attachments/row/AttachmentRowKt {
 
 public final class dev/voir/areca/flow/attachments/sheet/AttachmentChoice {
 	public static final field $stable I
-	public fun <init> (Ljava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;Lkotlin/jvm/functions/Function0;Z)V
-	public synthetic fun <init> (Ljava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;Lkotlin/jvm/functions/Function0;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;Lkotlin/jvm/functions/Function0;ZLjava/lang/String;JILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;Lkotlin/jvm/functions/Function0;ZLjava/lang/String;JLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getDescription ()Ljava/lang/String;
+	public final fun getHue-0d7_KjU ()J
 	public final fun getIcon ()Landroidx/compose/ui/graphics/vector/ImageVector;
 	public final fun getLabel ()Ljava/lang/String;
 	public final fun getOnClick ()Lkotlin/jvm/functions/Function0;
 	public final fun isDestructive ()Z
+}
+
+public final class dev/voir/areca/flow/attachments/sheet/AttachmentChoiceLayout : java/lang/Enum {
+	public static final field Bento Ldev/voir/areca/flow/attachments/sheet/AttachmentChoiceLayout;
+	public static final field Rows Ldev/voir/areca/flow/attachments/sheet/AttachmentChoiceLayout;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/flow/attachments/sheet/AttachmentChoiceLayout;
+	public static fun values ()[Ldev/voir/areca/flow/attachments/sheet/AttachmentChoiceLayout;
 }
 
 public final class dev/voir/areca/flow/attachments/sheet/AttachmentOptions {
@@ -296,16 +306,16 @@ public final class dev/voir/areca/flow/attachments/sheet/AttachmentRenameSheetKt
 public final class dev/voir/areca/flow/attachments/sheet/AttachmentSourceOptions {
 	public static final field $stable I
 	public static final field INSTANCE Ldev/voir/areca/flow/attachments/sheet/AttachmentSourceOptions;
-	public final fun camera (Ljava/lang/String;Lkotlin/jvm/functions/Function0;)Ldev/voir/areca/flow/attachments/sheet/AttachmentChoice;
-	public static synthetic fun camera$default (Ldev/voir/areca/flow/attachments/sheet/AttachmentSourceOptions;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Ldev/voir/areca/flow/attachments/sheet/AttachmentChoice;
-	public final fun files (Ljava/lang/String;Lkotlin/jvm/functions/Function0;)Ldev/voir/areca/flow/attachments/sheet/AttachmentChoice;
-	public static synthetic fun files$default (Ldev/voir/areca/flow/attachments/sheet/AttachmentSourceOptions;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Ldev/voir/areca/flow/attachments/sheet/AttachmentChoice;
-	public final fun library (Ljava/lang/String;Lkotlin/jvm/functions/Function0;)Ldev/voir/areca/flow/attachments/sheet/AttachmentChoice;
-	public static synthetic fun library$default (Ldev/voir/areca/flow/attachments/sheet/AttachmentSourceOptions;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Ldev/voir/areca/flow/attachments/sheet/AttachmentChoice;
+	public final fun camera-9LQNqLg (Ljava/lang/String;Ljava/lang/String;JLkotlin/jvm/functions/Function0;)Ldev/voir/areca/flow/attachments/sheet/AttachmentChoice;
+	public static synthetic fun camera-9LQNqLg$default (Ldev/voir/areca/flow/attachments/sheet/AttachmentSourceOptions;Ljava/lang/String;Ljava/lang/String;JLkotlin/jvm/functions/Function0;ILjava/lang/Object;)Ldev/voir/areca/flow/attachments/sheet/AttachmentChoice;
+	public final fun files-9LQNqLg (Ljava/lang/String;Ljava/lang/String;JLkotlin/jvm/functions/Function0;)Ldev/voir/areca/flow/attachments/sheet/AttachmentChoice;
+	public static synthetic fun files-9LQNqLg$default (Ldev/voir/areca/flow/attachments/sheet/AttachmentSourceOptions;Ljava/lang/String;Ljava/lang/String;JLkotlin/jvm/functions/Function0;ILjava/lang/Object;)Ldev/voir/areca/flow/attachments/sheet/AttachmentChoice;
+	public final fun library-9LQNqLg (Ljava/lang/String;Ljava/lang/String;JLkotlin/jvm/functions/Function0;)Ldev/voir/areca/flow/attachments/sheet/AttachmentChoice;
+	public static synthetic fun library-9LQNqLg$default (Ldev/voir/areca/flow/attachments/sheet/AttachmentSourceOptions;Ljava/lang/String;Ljava/lang/String;JLkotlin/jvm/functions/Function0;ILjava/lang/Object;)Ldev/voir/areca/flow/attachments/sheet/AttachmentChoice;
 }
 
 public final class dev/voir/areca/flow/attachments/sheet/AttachmentSourceSheetKt {
-	public static final fun AttachmentSourceSheet (ZLjava/util/List;Lkotlin/jvm/functions/Function0;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Landroidx/compose/runtime/Composer;II)V
+	public static final fun AttachmentSourceSheet (ZLjava/util/List;Lkotlin/jvm/functions/Function0;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ldev/voir/areca/flow/attachments/sheet/AttachmentChoiceLayout;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class dev/voir/areca/flow/attachments/sheet/AttachmentTagChipsKt {

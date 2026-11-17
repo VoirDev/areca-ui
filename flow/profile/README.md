@@ -58,7 +58,7 @@ fun Profile(summary: ProfileSummary, phone: String, onSignOut: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(ArecaTheme.colors.bgCanvas)
+            .background(ArecaTheme.surface.ground)
             .verticalScroll(rememberScrollState())
             .windowInsetsPadding(WindowInsets.systemBars),
     ) {
@@ -199,7 +199,7 @@ fun ProfileScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(ArecaTheme.colors.bgCanvas)
+            .background(ArecaTheme.surface.ground)
             .verticalScroll(rememberScrollState())
             .windowInsetsPadding(WindowInsets.systemBars)
             // On a tablet or a desktop the column stops at a readable width, centred; a phone is narrower.
@@ -279,7 +279,7 @@ The picture with its upload status, the names, a bio, the details, Save, and del
 Column(
     modifier = Modifier
         .fillMaxSize()
-        .background(ArecaTheme.colors.bgCanvas)
+        .background(ArecaTheme.surface.ground)
         .verticalScroll(rememberScrollState())
         .windowInsetsPadding(WindowInsets.systemBars)
         // The keyboard lifts the fields rather than covering them.
@@ -576,7 +576,7 @@ fun AccountSettings(
         showDetail = open != null,
         modifier = Modifier
             .fillMaxSize()
-            .background(ArecaTheme.colors.bgCanvas)
+            .background(ArecaTheme.surface.ground)
             .windowInsetsPadding(WindowInsets.systemBars),
         detailPlaceholder = {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {

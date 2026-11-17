@@ -166,7 +166,7 @@ public data class CalendarStyle(
             selectedDisabledBg: Color = ArecaTheme.colors.bgDisabled,
             selectedDisabledContent: Color = ArecaTheme.colors.fgDisabled,
             adjacentContent: Color = ArecaTheme.colors.fgMuted,
-            adjacentSelectedBg: Color = ArecaTheme.colors.bgSubtle,
+            adjacentSelectedBg: Color = ArecaTheme.surface.well,
             monthControl: IconButtonStyle = IconButtonStyle.plain(ActionColor.Neutral),
             monthPickerToggle: ButtonStyle = ButtonStyle
                 .plain(color = ActionColor.Neutral, shape = ArecaTheme.shapes.full)

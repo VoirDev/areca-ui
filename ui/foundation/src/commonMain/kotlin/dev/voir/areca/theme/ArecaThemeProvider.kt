@@ -2,6 +2,9 @@ package dev.voir.areca.theme
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.ProvidedValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -244,6 +247,13 @@ import dev.voir.areca.window.currentInputMode
  *   [colors] and exposed as [ArecaTheme.isDark]; an explicit [colors] wins over it.
  * @param baseColors Raw palette the semantic colors are derived from.
  * @param colors Semantic color tokens. Defaults to [baseColors] mapped for [darkTheme].
+ * @param surfaceLayout Which of a screen's page and its cards is grey: [SurfaceLayout.Grouped], a
+ *   grey page with white cards, or [SurfaceLayout.Plain], a white page with grey cards.
+ * @param labels The words components say on their own — back, close, busy, cancel — in the app's
+ *   language; see [ArecaLabels].
+ * @param hues Categorical colours for tiles that tell unrelated rows apart; see [ArecaHues].
+ * @param surfaces Grounds of screens, sheets and bars by role. Defaults to [baseColors]' neutral
+ *   ramp laid out for [surfaceLayout] and [darkTheme].
  * @param radius Corner radius lengths.
  * @param shapes Corner shapes. Defaults to shapes built from [radius].
  * @param spacing Spacing scale and screen gutters.
@@ -259,6 +269,11 @@ import dev.voir.areca.window.currentInputMode
  *   [ArecaSizing.pointer] under a pointer; pass one to force a density whatever the input.
  * @param typography Named text styles. Defaults to styles built on [baseTypography], a step smaller
  *   for body copy and control labels when [sizing] is dense.
+ * @param componentDefaults The application's own component defaults — `LocalButtonStyle provides …`
+ *   and the like — built inside the theme, so they read its tokens. [ArecaDarkTheme] builds them
+ *   again for its dark region, so an always-dark viewer keeps the application's buttons and cards.
+ *   Provide app-wide component locals here rather than in a `CompositionLocalProvider` around
+ *   [content].
  * @param content Content composed with the provided tokens.
  */
 @OptIn(ExperimentalArecaApi::class)
@@ -271,6 +286,10 @@ public fun ArecaThemeProvider(
     } else {
         ArecaColors.light(baseColors)
     },
+    surfaceLayout: SurfaceLayout = SurfaceLayout.Grouped,
+    surfaces: ArecaSurfaces = ArecaSurfaces.from(baseColors, surfaceLayout, darkTheme),
+    hues: ArecaHues = ArecaHues(),
+    labels: ArecaLabels = ArecaLabels(),
     radius: ArecaRadius = ArecaRadius(),
     shapes: ArecaShapes = ArecaShapes.from(radius),
     spacing: ArecaSpacing = ArecaSpacing(),
@@ -281,12 +300,17 @@ public fun ArecaThemeProvider(
     inputMode: InputMode? = null,
     sizing: ArecaSizing = ArecaSizing.forInput(inputMode ?: currentInputMode()),
     typography: ArecaTypography = ArecaTypography.from(baseTypography, dense = sizing.dense),
+    componentDefaults: ComponentDefaults = ComponentDefaults.None,
     content: @Composable () -> Unit,
 ) {
     CompositionLocalProvider(
         LocalIsDarkTheme provides darkTheme,
         LocalBaseColors provides baseColors,
         LocalColors provides colors,
+        LocalSurfaces provides surfaces,
+        LocalHues provides hues,
+        LocalLabels provides labels,
+        LocalComponentDefaults provides componentDefaults,
         LocalRadius provides radius,
         LocalShapes provides shapes,
         LocalSpacing provides spacing,
@@ -311,26 +335,26 @@ public fun ArecaThemeProvider(
             LocalSpinnerStyle provides SpinnerStyle(colors.accentBase),
             LocalSpinnerSize provides SpinnerSize.Default,
             LocalAvatarSize provides AvatarSize.Default,
-            LocalAvatarStyle provides AvatarStyle.Default,
-            LocalBadgeStyle provides BadgeStyle.Default,
+            LocalAvatarStyle provides null,
+            LocalBadgeStyle provides null,
             LocalBadgeSize provides BadgeSize.Default,
             LocalNotificationBadgeSize provides NotificationBadgeSize.Medium,
             LocalNotificationBadgeStyle provides BadgeStyle.Brand,
             LocalButtonSize provides ButtonSize.Medium,
             LocalButtonStyle provides ButtonStyle.solid(ActionColor.Brand),
             LocalCardSize provides CardSize.Default,
-            LocalCardStyle provides CardStyle.Outlined,
+            LocalCardStyle provides CardStyle.Default,
             LocalCheckboxSize provides CheckboxSize.Default,
             LocalCheckboxStyle provides CheckboxStyle.Default,
             LocalChevronSize provides ChevronSize.Medium,
             LocalProgressBarSize provides ProgressBarSize.Default,
-            LocalProgressBarStyle provides ProgressBarStyle.Default,
+            LocalProgressBarStyle provides null,
             LocalStepIndicatorSize provides StepIndicatorSize.Compact,
             LocalStepIndicatorStyle provides StepIndicatorStyle.Default,
             LocalPageIndicatorSize provides PageIndicatorSize.Default,
             LocalPageIndicatorStyle provides PageIndicatorStyle.Default,
             LocalPageCounterSize provides PageCounterSize.Default,
-            LocalPageCounterStyle provides PageCounterStyle.Default,
+            LocalPageCounterStyle provides null,
             LocalRadioSize provides RadioSize.Default,
             LocalRadioStyle provides RadioStyle.Default,
             LocalDividerSize provides DividerSize.Default,
@@ -364,7 +388,7 @@ public fun ArecaThemeProvider(
             LocalBottomActionBarSize provides BottomActionBarSize.Default,
             LocalBottomActionBarStyle provides BottomActionBarStyle.Default,
             LocalSkeletonSize provides SkeletonSize.Default,
-            LocalSkeletonStyle provides SkeletonStyle.Default,
+            LocalSkeletonStyle provides null,
             LocalStatusMarkSize provides StatusMarkSize.Default,
             LocalStatusMarkStyle provides StatusMarkStyle.Default,
             LocalStatusSceneSize provides StatusSceneSize.Default,
@@ -374,7 +398,7 @@ public fun ArecaThemeProvider(
             LocalSensitiveTextSize provides SensitiveTextSize.Default,
             LocalSensitiveTextStyle provides SensitiveTextStyle.Default,
             LocalSlidingSelectorSize provides SlidingSelectorSize.Default,
-            LocalSlidingSelectorStyle provides SlidingSelectorStyle.Default,
+            LocalSlidingSelectorStyle provides null,
             LocalSwatchSize provides SwatchSize.Default,
             LocalSwatchStyle provides SwatchStyle.Default,
             LocalFloatingTabBarSize provides FloatingTabBarSize.Default,
@@ -384,12 +408,12 @@ public fun ArecaThemeProvider(
             LocalStatSize provides StatSize.Default,
             LocalStatStyle provides StatStyle.Default,
             LocalTabsSize provides TabsSize.Default,
-            LocalTabsStyle provides TabsStyle.Default,
+            LocalTabsStyle provides null,
             LocalToastStyle provides ToastStyle.Default,
             LocalToggleSize provides ToggleSize.Default,
             LocalToggleStyle provides ToggleStyle.Default,
             LocalWheelPickerSize provides WheelPickerSize.Default,
-            LocalWheelPickerStyle provides WheelPickerStyle.Default,
+            LocalWheelPickerStyle provides null,
             LocalTopBarSize provides TopBarSize.Default,
             LocalTopBarStyle provides TopBarStyle.Default,
             LocalContentListSize provides ContentListSize.Default,
@@ -420,8 +444,45 @@ public fun ArecaThemeProvider(
             // sheet builds its default where it is drawn, from the flow modal defaults in scope.
             LocalConfirmSheetSize provides null,
             LocalConfirmSheetStyle provides null,
+            // The styles above seeded with null read the surface they are drawn on — a track, a
+            // chip, a skeleton is a step past *its* ground — so each is built where it is drawn.
         ) {
-            ProvideThemeWindowClass(inputMode = inputMode, content = content)
+            CompositionLocalProvider(values = componentDefaults.provide()) {
+                ProvideThemeWindowClass(inputMode = inputMode, content = content)
+            }
         }
     }
 }
+
+/**
+ * An application's own component defaults, built inside the theme they belong to.
+ *
+ * ```kotlin
+ * ArecaThemeProvider(
+ *     darkTheme = dark,
+ *     componentDefaults = ComponentDefaults {
+ *         arrayOf(
+ *             LocalButtonSize provides ButtonSize.Large,
+ *             LocalCardStyle provides CardStyle.default(shape = ArecaTheme.shapes.xl),
+ *         )
+ *     },
+ * ) { App() }
+ * ```
+ *
+ * The lambda runs inside the theme, so the styles it builds read that theme's tokens, and
+ * [ArecaDarkTheme] runs it again for a region that is always dark.
+ */
+@Immutable
+public fun interface ComponentDefaults {
+    /** @return The values to provide. */
+    @Composable
+    public fun provide(): Array<ProvidedValue<*>>
+
+    /** Holder of [None]. */
+    public companion object {
+        /** No component defaults beyond the theme's own. */
+        public val None: ComponentDefaults = ComponentDefaults { emptyArray() }
+    }
+}
+
+internal val LocalComponentDefaults = staticCompositionLocalOf { ComponentDefaults.None }

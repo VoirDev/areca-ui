@@ -45,6 +45,9 @@ import dev.voir.areca.foundation.topbar.LocalTopBarStyle
 import dev.voir.areca.foundation.topbar.TopBarSize
 import dev.voir.areca.foundation.topbar.TopBarStyle
 import dev.voir.areca.theme.ArecaTheme
+import dev.voir.areca.theme.ProvideSurface
+import dev.voir.areca.theme.SurfaceLevel
+import dev.voir.areca.theme.SurfaceRoot
 import dev.voir.areca.window.WidthClass
 import dev.voir.areca.window.WindowClassBox
 
@@ -84,6 +87,10 @@ public object AuthScaffoldDefaults {
  * Owns the window insets, the keyboard inset, the scroll container, the horizontal gutter, the
  * placement of the hero and the footer pinned to the bottom edge. A screen passes its form and,
  * when it is not the first screen of the flow, a bar with its way back.
+ *
+ * In the light theme the screen lies on the sheet's ground, white whatever the surface layout: the
+ * provider buttons and the identity chip are greys drawn for a white page, and on a grouped
+ * layout's grey page they would vanish. In the dark theme it keeps the screen's own ground.
  *
  * **The bar is a foundation [dev.voir.areca.foundation.topbar.TopBar]**, pinned above the
  * scrolling form rather than scrolling with it. The scaffold sets the defaults every bar inside it
@@ -158,77 +165,82 @@ public fun AuthScaffold(
         else -> BodyAtTop
     }
 
-    BaseLayout(
-        modifier = modifier,
-        bg = ArecaTheme.colors.bgCanvas,
-        contentWindowInsets = windowInsets,
-        // Full-bleed artwork is the page background, so it is painted below the insets rather than
-        // inside them — otherwise it would stop short of the status bar and read as a banner.
-        background = {
-            if (hero != null && onHero) {
-                Box(modifier = Modifier.fillMaxSize()) { hero() }
-            }
-        },
-        overlay = overlay ?: {},
-    ) { insets ->
-        // The split's panel runs under the bars, edge to edge like full-bleed artwork, so the start
-        // inset is the panel's and the pane beside it keeps only the other three.
-        val direction = LocalLayoutDirection.current
-        val paneInsets = if (splitHero == null) {
-            insets
-        } else {
-            PaddingValues(
-                top = insets.calculateTopPadding(),
-                end = insets.calculateEndPadding(direction),
-                bottom = insets.calculateBottomPadding(),
-            )
-        }
-
-        // One row whatever the layout, so the form keeps its place — and its scroll position — when
-        // a resized window crosses the split's breakpoint.
-        Row(modifier = Modifier.fillMaxSize()) {
-            if (splitHero != null) {
-                HeroPanel(fraction = layout.heroFraction ?: AuthLayout.DefaultHeroFraction, content = splitHero)
+    // The sign-in parts are drawn for a white page: Google's neutral pill and the read-only
+    // identity chip are greys that vanish on a grouped layout's grey page. So in light the screen
+    // takes the sheet's ground, white whatever the layout; in dark every part is a step lighter
+    // than the page already, and the screen's own ground stays.
+    AuthGround {
+        BaseLayout(
+            modifier = modifier,
+            contentWindowInsets = windowInsets,
+            // Full-bleed artwork is the page background, so it is painted below the insets rather than
+            // inside them — otherwise it would stop short of the status bar and read as a banner.
+            background = {
+                if (hero != null && onHero) {
+                    Box(modifier = Modifier.fillMaxSize()) { hero() }
+                }
+            },
+            overlay = overlay ?: {},
+        ) { insets ->
+            // The split's panel runs under the bars, edge to edge like full-bleed artwork, so the start
+            // inset is the panel's and the pane beside it keeps only the other three.
+            val direction = LocalLayoutDirection.current
+            val paneInsets = if (splitHero == null) {
+                insets
+            } else {
+                PaddingValues(
+                    top = insets.calculateTopPadding(),
+                    end = insets.calculateEndPadding(direction),
+                    bottom = insets.calculateBottomPadding(),
+                )
             }
 
-            // Consumed as well as applied, so the keyboard inset below is measured past the
-            // navigation bar this padding already clears rather than adding its height a second time.
-            BoxWithConstraints(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight()
-                    .padding(paneInsets)
-                    .consumeWindowInsets(paneInsets),
-            ) {
-                // The pane's own width: `maxWidth` alone would read the parameter, not the scope.
-                val paneWidth = this.maxWidth
-                // The bar's controls line up with the column, which sits centred once it stops
-                // growing.
-                val margin = if (columnMaxWidth.isSpecified) {
-                    ((paneWidth - columnMaxWidth) / 2).coerceAtLeast(0.dp)
-                } else {
-                    0.dp
+            // One row whatever the layout, so the form keeps its place — and its scroll position — when
+            // a resized window crosses the split's breakpoint.
+            Row(modifier = Modifier.fillMaxSize()) {
+                if (splitHero != null) {
+                    HeroPanel(fraction = layout.heroFraction ?: AuthLayout.DefaultHeroFraction, content = splitHero)
                 }
 
-                Column(modifier = Modifier.fillMaxSize()) {
-                    topBar?.let { bar ->
-                        AuthTopBarDefaults(inset = gutter + margin, onHero = onHero, content = bar)
+                // Consumed as well as applied, so the keyboard inset below is measured past the
+                // navigation bar this padding already clears rather than adding its height a second time.
+                BoxWithConstraints(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .padding(paneInsets)
+                        .consumeWindowInsets(paneInsets),
+                ) {
+                    // The pane's own width: `maxWidth` alone would read the parameter, not the scope.
+                    val paneWidth = this.maxWidth
+                    // The bar's controls line up with the column, which sits centred once it stops
+                    // growing.
+                    val margin = if (columnMaxWidth.isSpecified) {
+                        ((paneWidth - columnMaxWidth) / 2).coerceAtLeast(0.dp)
+                    } else {
+                        0.dp
                     }
 
-                    AuthColumn(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f),
-                        branding = branding,
-                        layout = layout,
-                        onHero = onHero,
-                        gutter = gutter,
-                        columnMaxWidth = columnMaxWidth,
-                        arrangement = arrangement,
-                        firstOnScreen = topBar == null,
-                        footer = footer,
-                        content = content,
-                    )
+                    Column(modifier = Modifier.fillMaxSize()) {
+                        topBar?.let { bar ->
+                            AuthTopBarDefaults(inset = gutter + margin, onHero = onHero, content = bar)
+                        }
+
+                        AuthColumn(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                            branding = branding,
+                            layout = layout,
+                            onHero = onHero,
+                            gutter = gutter,
+                            columnMaxWidth = columnMaxWidth,
+                            arrangement = arrangement,
+                            firstOnScreen = topBar == null,
+                            footer = footer,
+                            content = content,
+                        )
+                    }
                 }
             }
         }
@@ -482,5 +494,20 @@ private fun HeroBox(
         contentAlignment = Alignment.Center,
     ) {
         content()
+    }
+}
+
+/**
+ * The ground the sign-in screens are drawn on: the sheet's in light, white whatever the surface
+ * layout, and the screen's own in dark.
+ *
+ * @param content The screen.
+ */
+@Composable
+private fun AuthGround(content: @Composable () -> Unit) {
+    if (ArecaTheme.isDark) {
+        content()
+    } else {
+        ProvideSurface(level = SurfaceLevel.Page, root = SurfaceRoot.Sheet, content = content)
     }
 }

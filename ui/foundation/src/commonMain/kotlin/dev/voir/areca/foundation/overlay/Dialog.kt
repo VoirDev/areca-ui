@@ -27,6 +27,8 @@ import dev.voir.areca.modifier.thenIf
 import dev.voir.areca.theme.ArecaTheme
 import dev.voir.areca.theme.tween
 import androidx.compose.ui.window.Dialog as ComposeDialog
+import dev.voir.areca.theme.SurfaceOf
+import dev.voir.areca.theme.SurfaceRoot
 
 /**
  * A surface that interrupts the screen to ask something, over a scrim.
@@ -75,7 +77,7 @@ public fun Dialog(
     dismissOnOverlayClick: Boolean = true,
     dismissOnBackPress: Boolean = true,
     dismissOnClickOutside: Boolean = true,
-    overlayContentDescription: String = "Dismiss",
+    overlayContentDescription: String = ArecaTheme.labels.dismiss,
     header: (@Composable () -> Unit)? = null,
     footer: (@Composable () -> Unit)? = null,
     overlay: @Composable BoxScope.() -> Unit = {},
@@ -141,10 +143,12 @@ public fun Dialog(
                         // button and put it in the focus order.
                         .pointerInput(Unit) { detectDismissTap { } },
                 ) {
-                    Column(modifier = Modifier.fillMaxWidth()) {
-                        header?.invoke()
-                        content()
-                        footer?.invoke()
+                    SurfaceOf(style.bg, root = SurfaceRoot.Sheet) {
+                        Column(modifier = Modifier.fillMaxWidth()) {
+                            header?.invoke()
+                            content()
+                            footer?.invoke()
+                        }
                     }
                 }
             }

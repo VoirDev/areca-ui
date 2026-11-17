@@ -110,7 +110,8 @@ public data class TopBarStyle(
         /**
          * Builds a style from the current theme, with no bottom rule.
          *
-         * @param bg Fill behind the whole bar.
+         * @param bg Fill behind the whole bar. [Color.Unspecified], the default, is the ground of
+         *   the surface the bar is drawn on: the page under a screen's bar, the sheet in a sheet.
          * @param content Color of the title.
          * @param subtitle Color of the subtitle.
          * @param actions Appearance of every control in the bar.
@@ -120,7 +121,7 @@ public data class TopBarStyle(
          */
         @Composable
         public fun default(
-            bg: Color = ArecaTheme.colors.bgCanvas,
+            bg: Color = Color.Unspecified,
             content: Color = ArecaTheme.colors.fgBase,
             subtitle: Color = ArecaTheme.colors.fgSubtle,
             actions: TopBarActionStyle = TopBarActionStyle.Plain,

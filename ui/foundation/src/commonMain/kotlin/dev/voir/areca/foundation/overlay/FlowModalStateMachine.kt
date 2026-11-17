@@ -81,17 +81,15 @@ internal object FlowModalStateMachine {
      *
      * @param phase Phase to measure.
      * @param partialHeight Height of a partially opened sheet, in pixels.
-     * @param expandedHeight Height of an expanded sheet, in pixels.
-     * @param autoHeight Whether the sheet sizes to its content, which makes partial mean expanded.
+     * @param expandedHeight Height of an expanded sheet — its content's, up to the cap — in pixels.
      * @return Target height in pixels.
      */
     fun heightOf(
         phase: FlowModalPhase,
         partialHeight: Float,
         expandedHeight: Float,
-        autoHeight: Boolean,
     ): Float = when (anchorOf(phase)) {
-        FlowModalState.PartiallyOpened -> if (autoHeight) expandedHeight else partialHeight
+        FlowModalState.PartiallyOpened -> partialHeight
         FlowModalState.Expanded -> expandedHeight
         else -> 0f
     }
@@ -100,55 +98,63 @@ internal object FlowModalStateMachine {
      * Opens a hidden or hiding modal; leaves an open one where it is.
      *
      * @param phase Current phase.
+     * A partial request stands until the sheet has measured its content: one too short to have a
+     * partial height is moved on to its full height by [withoutPartial].
+     *
      * @param partial Whether to open at the partial height when the modal allows it.
      * @param allowPartial Whether the modal has a partial height.
-     * @param autoHeight Whether the sheet sizes to its content.
      * @return Next phase.
      */
     fun show(
         phase: FlowModalPhase,
         partial: Boolean,
         allowPartial: Boolean,
-        autoHeight: Boolean,
     ): FlowModalPhase {
         if (phase.state != FlowModalState.Hidden && phase.state != FlowModalState.Hiding) return phase
-        val target = when {
-            autoHeight -> FlowModalState.Expanded
-            partial && allowPartial -> FlowModalState.PartiallyOpened
-            else -> FlowModalState.Expanded
-        }
+        val target = if (partial && allowPartial) FlowModalState.PartiallyOpened else FlowModalState.Expanded
         return FlowModalPhase(state = FlowModalState.Opening, targetState = target)
     }
 
     /**
-     * Moves the modal to its expanded height, opening it if it is hidden.
+     * Moves the modal to its full height — its content's, up to the cap — opening it if it is
+     * hidden. Every sheet has one.
      *
      * @param phase Current phase.
-     * @param allowExpand Whether the modal has an expanded height of its own.
-     * @param autoHeight Whether the sheet sizes to its content, which always allows expanding.
      * @return Next phase.
      */
-    fun expand(phase: FlowModalPhase, allowExpand: Boolean, autoHeight: Boolean): FlowModalPhase =
-        if (allowExpand || autoHeight) {
-            FlowModalPhase(state = FlowModalState.Opening, targetState = FlowModalState.Expanded)
+    fun expand(phase: FlowModalPhase): FlowModalPhase =
+        FlowModalPhase(state = FlowModalState.Opening, targetState = FlowModalState.Expanded)
+
+    /**
+     * Moves the modal to its partial height, opening it if it is hidden. A sheet whose content is
+     * too short to have one is moved on to its full height by [withoutPartial].
+     *
+     * @param phase Current phase.
+     * @param allowPartial Whether the modal has a partial height.
+     * @return Next phase.
+     */
+    fun collapse(phase: FlowModalPhase, allowPartial: Boolean): FlowModalPhase =
+        if (allowPartial) {
+            FlowModalPhase(state = FlowModalState.Opening, targetState = FlowModalState.PartiallyOpened)
         } else {
             phase
         }
 
     /**
-     * Moves the modal to its partial height, opening it if it is hidden.
+     * The phase of a sheet that turned out to have no partial height — its content is no taller
+     * than the partial height — so that a partial request opens it fully and the state says what
+     * is on screen.
      *
      * @param phase Current phase.
-     * @param allowPartial Whether the modal has a partial height.
-     * @param autoHeight Whether the sheet sizes to its content, which has no partial height.
-     * @return Next phase.
+     * @return The phase heading to, or resting at, the full height instead of the partial one; any
+     *   other phase unchanged.
      */
-    fun collapse(phase: FlowModalPhase, allowPartial: Boolean, autoHeight: Boolean): FlowModalPhase =
-        if (!autoHeight && allowPartial) {
-            FlowModalPhase(state = FlowModalState.Opening, targetState = FlowModalState.PartiallyOpened)
-        } else {
-            phase
-        }
+    fun withoutPartial(phase: FlowModalPhase): FlowModalPhase = when {
+        phase.state == FlowModalState.PartiallyOpened ||
+            (phase.state == FlowModalState.Opening && phase.targetState == FlowModalState.PartiallyOpened) ->
+            FlowModalPhase(state = FlowModalState.Opening, targetState = FlowModalState.Expanded)
+        else -> phase
+    }
 
     /**
      * Starts hiding a visible modal; leaves a hidden or hiding one alone.
@@ -197,15 +203,15 @@ internal object FlowModalStateMachine {
     /**
      * Resting state a drag released at [height] settles on.
      *
-     * Dragged below a fixed share of the partial height, the sheet is dismissed. A sheet with one
-     * open height stays open past half of it; one with both settles on the nearest of hidden,
-     * partial and expanded, preferring the lower on a tie.
+     * A sheet with one open height — every sheet whose content is no taller than the partial
+     * height — stays open past half of it. One with both is dismissed below a fixed share of the
+     * partial height and otherwise settles on the nearest of hidden, partial and expanded,
+     * preferring the lower on a tie.
      *
      * @param height Sheet height when the finger lifted, in pixels.
      * @param partialHeight Height of a partially opened sheet, in pixels.
      * @param expandedHeight Height of an expanded sheet, in pixels.
-     * @param allowPartial Whether the sheet can rest at [partialHeight].
-     * @param allowExpand Whether the sheet can rest at [expandedHeight].
+     * @param hasPartial Whether the sheet has a partial height to rest at.
      * @return [FlowModalState.Hidden], [FlowModalState.PartiallyOpened] or
      *   [FlowModalState.Expanded].
      */
@@ -213,24 +219,12 @@ internal object FlowModalStateMachine {
         height: Float,
         partialHeight: Float,
         expandedHeight: Float,
-        allowPartial: Boolean,
-        allowExpand: Boolean,
+        hasPartial: Boolean,
     ): FlowModalState = when {
+        !hasPartial ->
+            if (height > expandedHeight * KeepOpenFraction) FlowModalState.Expanded else FlowModalState.Hidden
+
         height <= DismissFraction * partialHeight -> FlowModalState.Hidden
-
-        !allowPartial ->
-            if (allowExpand && height > expandedHeight * KeepOpenFraction) {
-                FlowModalState.Expanded
-            } else {
-                FlowModalState.Hidden
-            }
-
-        !allowExpand ->
-            if (height > partialHeight * KeepOpenFraction) {
-                FlowModalState.PartiallyOpened
-            } else {
-                FlowModalState.Hidden
-            }
 
         else -> nearestOf(
             value = height,

@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.graphics.luminance
 
 /**
  * Semantic color tokens for a single theme direction.
@@ -273,7 +274,9 @@ public data class ArecaColors(
 
             fgBase = baseColors.neutral100,
             fgSubtle = baseColors.neutral80,
-            fgMuted = baseColors.neutral60,
+            // A fifth of the way to neutral70: neutral60 itself falls under 4.5:1 on the grey page of a
+            // grouped layout, where section footers and captions sit.
+            fgMuted = lerp(baseColors.neutral60, baseColors.neutral70, 0.2f),
 
             fgOnContrast = baseColors.baseWhite,
             fgOnFill = baseColors.baseWhite,
@@ -282,7 +285,9 @@ public data class ArecaColors(
             fgDisabled = baseColors.neutral50,
 
             fgBrand = baseColors.brand60,
-            fgBrandText = baseColors.brand70,
+            // The brand's text step on its soft fill: brand70, or a darker step for a light brand
+            // (a yellow) whose brand70 would not read on brand20.
+            fgBrandText = readableOn(baseColors.brand20, listOf(baseColors.brand70, baseColors.brand80, baseColors.brand90)),
             fgDanger = baseColors.red60,
             fgDangerText = baseColors.red70,
             fgSuccess = baseColors.green60,
@@ -353,28 +358,29 @@ public data class ArecaColors(
             bgOverlayLight = baseColors.baseWhite.copy(alpha = 0.2f),
             bgDisabled = baseColors.neutral80,
 
-            bgBrandMuted = baseColors.brand90,
+            bgBrandMuted = darkTint(baseColors, baseColors.brand60),
             bgBrandBase = baseColors.brand60,
             bgBrandIntense = baseColors.brand50,
 
-            bgDangerMuted = baseColors.red90,
+            bgDangerMuted = darkTint(baseColors, baseColors.red60),
             bgDangerBase = baseColors.red60,
             bgDangerIntense = baseColors.red50,
 
-            bgSuccessMuted = baseColors.green90,
+            bgSuccessMuted = darkTint(baseColors, baseColors.green60),
             bgSuccessBase = baseColors.green60,
             bgSuccessIntense = baseColors.green50,
 
-            bgWarnMuted = baseColors.yellow90,
+            bgWarnMuted = darkTint(baseColors, baseColors.yellow50),
             bgWarnBase = baseColors.yellow40,
             bgWarnIntense = baseColors.yellow30,
 
-            bgInfoMuted = baseColors.blue90,
+            bgInfoMuted = darkTint(baseColors, baseColors.blue60),
             bgInfoBase = baseColors.blue60,
             bgInfoIntense = baseColors.blue50,
 
             bgNeutralMuted = baseColors.neutral80,
-            bgNeutralBase = baseColors.neutral70,
+            // One step past a card, as the light band is; neutral70 was a block of mid grey on it.
+            bgNeutralBase = baseColors.neutral80,
             bgNeutralIntense = baseColors.neutral60,
 
             fgBase = baseColors.neutral10,
@@ -416,7 +422,7 @@ public data class ArecaColors(
             accentStrong = baseColors.brand40,
             accentIntense = baseColors.brand30,
             accentSubtle = baseColors.brand70,
-            accentMuted = baseColors.brand90,
+            accentMuted = darkTint(baseColors, baseColors.brand60),
             // Read from the dark end, so the faintest shade still sits nearest the canvas.
             accentScale = listOf(
                 baseColors.brand90, baseColors.brand80, baseColors.brand70, baseColors.brand60,
@@ -428,3 +434,43 @@ public data class ArecaColors(
 
 /** Semantic colors in scope. Read them through [ArecaTheme.colors]. */
 internal val LocalColors = staticCompositionLocalOf { ArecaColors.light() }
+
+/**
+ * A tone's quiet fill in the dark theme: the tone mixed lightly into a dark card rather than its
+ * ramp's deepest step, which is a saturated brown, wine or forest on near-black — the loudest thing
+ * on a screen whose fills should only hint at their tone and leave the type on them to state it.
+ *
+ * @param baseColors The palette.
+ * @param tone The tone's mid step.
+ * @return The fill.
+ */
+private fun darkTint(baseColors: ArecaBaseColors, tone: Color): Color =
+    lerp(baseColors.neutral90, tone, DarkTintShare)
+
+/** How much of its tone a dark muted fill carries over the card. */
+private const val DarkTintShare = 0.14f
+
+/**
+ * The first of [inks] that reads on [bg] at the WCAG AA ratio for body text, 4.5:1, or the last of
+ * them when none does.
+ *
+ * @param bg The fill the ink is drawn on.
+ * @param inks Candidates, lightest first.
+ * @return The ink to use.
+ */
+internal fun readableOn(bg: Color, inks: List<Color>): Color =
+    inks.firstOrNull { ink -> wcagContrast(ink, bg) >= 4.5f } ?: inks.last()
+
+/**
+ * The WCAG contrast ratio between two opaque colours.
+ *
+ * @param a One colour.
+ * @param b The other.
+ * @return From 1 (the same) to 21 (black on white).
+ */
+internal fun wcagContrast(a: Color, b: Color): Float {
+    val la = a.luminance()
+    val lb = b.luminance()
+    return (maxOf(la, lb) + 0.05f) / (minOf(la, lb) + 0.05f)
+}
+

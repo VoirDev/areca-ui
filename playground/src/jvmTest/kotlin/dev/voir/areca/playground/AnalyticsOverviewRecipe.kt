@@ -99,7 +99,7 @@ fun AnalyticsOverview(
             SlidingSelector(
                 items = listOf("Week", "Month", "Year").map { SelectorItem(it) { Text(it) } },
                 selected = step,
-                onSelect = { if (it != null) step = it },
+                onSelectedChange = { step = it },
                 layout = SelectorLayout.Hug,
             )
             Row(verticalAlignment = Alignment.CenterVertically) {

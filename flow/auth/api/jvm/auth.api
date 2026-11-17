@@ -172,7 +172,7 @@ public final class dev/voir/areca/flow/auth/part/AuthScaffoldKt {
 public final class dev/voir/areca/flow/auth/part/ComposableSingletons$AuthScaffoldKt {
 	public static final field INSTANCE Ldev/voir/areca/flow/auth/part/ComposableSingletons$AuthScaffoldKt;
 	public fun <init> ()V
-	public final fun getLambda$-1031448077$auth ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-653039793$auth ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class dev/voir/areca/flow/auth/part/LegalConsentKt {

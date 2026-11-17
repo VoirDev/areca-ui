@@ -47,6 +47,9 @@ import dev.voir.areca.theme.ArecaTheme
  * @property button The action.
  * @property leading Color of the copy in the leading slot — a count of what the action applies to.
  * @property hint Color of the line under the button that says why the action is not available yet.
+ * @property buttonNotReady The action while the form behind it is not complete yet: the same family,
+ *   softened, still pressable so a press can run validation and say what is missing.
+ * @property caption Color of the line above the button.
  */
 @Immutable
 public data class BottomActionBarStyle(
@@ -54,6 +57,8 @@ public data class BottomActionBarStyle(
     public val button: ButtonStyle,
     public val leading: Color,
     public val hint: Color,
+    public val buttonNotReady: ButtonStyle = button,
+    public val caption: Color = hint,
 ) {
     /** The theme's default [BottomActionBarStyle], and [default] for building a variation on it. */
     public companion object {
@@ -69,23 +74,29 @@ public data class BottomActionBarStyle(
          * [dev.voir.areca.foundation.overlay.FlowModalActionBar], whose commit sits over a screen
          * that already has one.
          *
-         * @param bg Fill of the bar.
+         * @param bg Fill of the bar. Defaults to the theme's bar surface.
          * @param button The action.
          * @param leading Color of the leading copy.
          * @param hint Color of the hint line.
+         * @param buttonNotReady The action while the form is not complete: the soft brand button.
+         * @param caption Color of the line above the button.
          * @return Style built from the supplied colors.
          */
         @Composable
         public fun default(
-            bg: Color = ArecaTheme.colors.bgCanvas,
+            bg: Color = ArecaTheme.surfaces.bar,
             button: ButtonStyle = ButtonStyle.solid(),
             leading: Color = ArecaTheme.colors.fgBase,
             hint: Color = ArecaTheme.colors.fgMuted,
+            buttonNotReady: ButtonStyle = ButtonStyle.soft(),
+            caption: Color = ArecaTheme.colors.fgSubtle,
         ): BottomActionBarStyle = BottomActionBarStyle(
             bg = bg,
             button = button,
             leading = leading,
             hint = hint,
+            buttonNotReady = buttonNotReady,
+            caption = caption,
         )
     }
 }
@@ -186,6 +197,11 @@ public val LocalBottomActionBarSize: ProvidableCompositionLocal<BottomActionBarS
  * @param loading Shows the button's spinner and refuses presses while the action runs.
  * @param hint Line under the button, already localized, or `null` for none. Usually passed only
  *   while the action is not [enabled]; it is announced when it appears.
+ * @param caption Line above the button, already localized, or `null` for none: something worth
+ *   knowing before committing — "The file uploads when the import starts".
+ * @param ready Whether the form behind the action is complete. `false` softens the button but keeps
+ *   it pressable, so a press can run validation and put each complaint under its field; use
+ *   [enabled] for an action that must not happen at all.
  * @param style Colors of the bar and its button.
  * @param size Metrics of the bar and its button.
  * @param showDivider Whether the hairline above the bar is drawn.
@@ -203,6 +219,8 @@ public fun BottomActionBar(
     enabled: Boolean = true,
     loading: Boolean = false,
     hint: String? = null,
+    caption: String? = null,
+    ready: Boolean = true,
     style: BottomActionBarStyle = LocalBottomActionBarStyle.current ?: BottomActionBarStyle.Default,
     size: BottomActionBarSize = LocalBottomActionBarSize.current ?: BottomActionBarSize.Default,
     showDivider: Boolean = true,
@@ -224,12 +242,24 @@ public fun BottomActionBar(
                 .windowInsetsPadding(windowInsets)
                 .padding(size.padding),
         ) {
+            val buttonStyle = if (ready) style.button else style.buttonNotReady
+            if (caption != null) {
+                Text(
+                    text = caption,
+                    modifier = Modifier.fillMaxWidth(),
+                    style = size.hintTextStyle,
+                    color = style.caption,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Spacer(Modifier.height(size.hintGap))
+            }
             if (leading == null) {
                 Button(
                     text = actionText,
                     onClick = onAction,
                     modifier = Modifier.fillMaxWidth(),
-                    style = style.button,
+                    style = buttonStyle,
                     size = size.button,
                     enabled = enabled,
                     loading = loading,
@@ -252,7 +282,7 @@ public fun BottomActionBar(
                     Button(
                         text = actionText,
                         onClick = onAction,
-                        style = style.button,
+                        style = buttonStyle,
                         size = size.button,
                         enabled = enabled,
                         loading = loading,

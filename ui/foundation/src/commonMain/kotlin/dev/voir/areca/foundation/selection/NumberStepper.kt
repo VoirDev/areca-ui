@@ -145,7 +145,7 @@ public data class NumberStepperStyle(
         /**
          * Builds a style from the current theme.
          *
-         * @param bg Fill of the stepper.
+         * @param bg Fill of the stepper. Defaults to the field fill of the surface it is built on.
          * @param content Color of the value.
          * @param border Outline of the stepper.
          * @param button Style of the decrease and increase buttons.
@@ -156,7 +156,7 @@ public data class NumberStepperStyle(
          */
         @Composable
         public fun default(
-            bg: Color = ArecaTheme.colors.bgCanvas,
+            bg: Color = ArecaTheme.surface.field,
             content: Color = ArecaTheme.colors.fgBase,
             border: Color = ArecaTheme.colors.borderBase,
             button: ButtonStyle = ButtonStyle.solid(ActionColor.Neutral),

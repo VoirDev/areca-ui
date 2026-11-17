@@ -88,7 +88,7 @@ public data class AttachmentTileStyle(
          */
         @Composable
         public fun default(
-            bg: Color = ArecaTheme.colors.bgSubtle,
+            bg: Color = ArecaTheme.surface.well,
             shape: Shape = RoundedCornerShape(ArecaTheme.radius.lg),
             glyph: Color = ArecaTheme.colors.fgSubtle,
             extension: Color = ArecaTheme.colors.fgMuted,

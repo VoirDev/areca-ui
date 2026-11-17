@@ -68,4 +68,10 @@ class InitialsOfTest {
     fun `a single word that uppercases longer is cut to two characters`() {
         assertEquals("SS", initialsOf("ßa"))
     }
+
+    @Test
+    fun `a code keeps as many characters as asked`() {
+        assertEquals("USDT", initialsOf("USDT", maxLetters = 4))
+        assertEquals("US", initialsOf("USDT"))
+    }
 }

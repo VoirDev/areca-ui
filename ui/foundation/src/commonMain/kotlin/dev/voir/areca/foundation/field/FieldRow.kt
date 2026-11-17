@@ -51,6 +51,7 @@ import dev.voir.areca.foundation.feedback.SpinnerStyle
 import dev.voir.areca.foundation.icon.LocalIconSize
 import dev.voir.areca.modifier.clickCursor
 import dev.voir.areca.modifier.thenIf
+import dev.voir.areca.theme.ArecaTheme
 
 /**
  * One part of a [FieldRow]: a slot with its own padding, its own click, and its own decoration,
@@ -236,7 +237,7 @@ public fun FieldRow(
 
     val colorSpec = fieldColorSpec()
     val backgroundColor by animateColorAsState(
-        targetValue = resolveBackgroundColor(style, visualState),
+        targetValue = resolveBackgroundColor(style, visualState, ArecaTheme.surface),
         animationSpec = colorSpec,
         label = "fieldRowBg",
     )

@@ -31,6 +31,7 @@ import dev.voir.areca.foundation.button.onFilled
 import dev.voir.areca.foundation.button.onMuted
 import dev.voir.areca.indication.FadeIndication
 import dev.voir.areca.theme.ArecaTheme
+import androidx.compose.ui.graphics.takeOrElse
 
 /** Opacity of a disabled footer button's label on a footer of the caller's own color. */
 private const val DISABLED_CONTENT_ALPHA = 0.5f
@@ -92,9 +93,8 @@ public data class CardFooterStyle(
         /**
          * Tinted with the family's muted step, the copy in the family's text ink.
          *
-         * [ActionColor.Neutral] is a grey tint for a footer that only sets itself apart; on a
-         * [CardStyle.SoftNeutral] card, whose fill is already grey, prefer [plain] or a colored
-         * family.
+         * [ActionColor.Neutral] takes the band of the card it closes — a step past the card's fill
+         * and the page around it — for a footer that only sets itself apart.
          *
          * @param color Color family of the footer.
          * @return A tinted footer for [color].
@@ -102,7 +102,9 @@ public data class CardFooterStyle(
         @Composable
         public fun soft(color: ActionColor = ActionColor.Neutral): CardFooterStyle {
             val colors = ArecaTheme.colors
-            return of(bg = color.mutedBackground(colors), content = color.onMuted(colors))
+            // A neutral band is the band role of the card it closes, resolved inside the card.
+            val bg = if (color == ActionColor.Neutral) Color.Unspecified else color.mutedBackground(colors)
+            return of(bg = bg, content = color.onMuted(colors))
         }
 
         /**
@@ -183,7 +185,7 @@ internal fun CardFooter(
     ) {
         Row(
             modifier = Modifier
-                .background(style.bg)
+                .background(style.bg.takeOrElse { ArecaTheme.surface.band })
                 .drawBehind {
                     if (style.divider == Color.Unspecified) return@drawBehind
                     // A hairline, floored at one pixel so it never vanishes on a low-density screen.
