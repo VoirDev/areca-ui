@@ -76,9 +76,80 @@ public class CalendarState internal constructor(
     /** Month the pager has come to rest on. Unchanged while a swipe is in flight. */
     public val settledMonth: YearMonth by settledMonthState
 
-    /** Whether the month picker is showing in place of the day grid. */
-    public var isMonthPickerExpanded: Boolean by mutableStateOf(false)
+    /**
+     * What the calendar body shows: the days of [visibleMonth], the months of [browsedYear], or the
+     * page of years [browsedYears].
+     *
+     * Not saved: a calendar restored after a configuration change opens on its days.
+     */
+    public var level: CalendarLevel by mutableStateOf(CalendarLevel.Days)
         private set
+
+    /**
+     * Year the [CalendarLevel.Months] level lists, and the year [browsedYears] is built around.
+     *
+     * Set to the year of [visibleMonth] each time the calendar steps out of its days, so the months
+     * open on the year being looked at; stepped by [browseBackward] and [browseForward] after that.
+     */
+    public var browsedYear: Int by mutableStateOf(bounds.coerce(initialMonth).year)
+        private set
+
+    /** Derivation behind [browsedYears]: the page of years holding [browsedYear]. */
+    private val browsedYearsState = derivedStateOf { bounds.yearPageOf(browsedYear) }
+
+    /**
+     * Years the [CalendarLevel.Years] level lists: [YEARS_PER_PAGE] consecutive years holding
+     * [browsedYear], counted from the first year of [bounds] so the first page never starts before
+     * it. Years past the end of [bounds] are listed and refused.
+     */
+    public val browsedYears: IntRange by browsedYearsState
+
+    /** Derivation behind [canBrowseBackward]. */
+    private val canBrowseBackwardState = derivedStateOf {
+        when (level) {
+            CalendarLevel.Days -> false
+            CalendarLevel.Months -> browsedYear > bounds.yearRange.first
+            CalendarLevel.Years -> browsedYears.first > bounds.yearRange.first
+        }
+    }
+
+    /**
+     * Whether [browseBackward] has an earlier year (at [CalendarLevel.Months]) or page of years (at
+     * [CalendarLevel.Years]) to show. Always `false` at [CalendarLevel.Days], where
+     * [canScrollBackward] applies instead.
+     */
+    public val canBrowseBackward: Boolean by canBrowseBackwardState
+
+    /** Derivation behind [canBrowseForward]. */
+    private val canBrowseForwardState = derivedStateOf {
+        when (level) {
+            CalendarLevel.Days -> false
+            CalendarLevel.Months -> browsedYear < bounds.yearRange.last
+            CalendarLevel.Years -> browsedYears.last < bounds.yearRange.last
+        }
+    }
+
+    /**
+     * Whether [browseForward] has a later year or page of years to show. Always `false` at
+     * [CalendarLevel.Days], where [canScrollForward] applies instead.
+     */
+    public val canBrowseForward: Boolean by canBrowseForwardState
+
+    /** Derivation behind [canZoomOut]. */
+    private val canZoomOutState = derivedStateOf {
+        when (level) {
+            CalendarLevel.Days -> bounds.monthCount > 1
+            CalendarLevel.Months -> bounds.yearRange.first < bounds.yearRange.last
+            CalendarLevel.Years -> false
+        }
+    }
+
+    /**
+     * Whether [zoomOut] has a wider level to step to. `false` on the years, and on any level whose
+     * wider one would hold a single choice: the months of a calendar bounded to one month, the years
+     * of one bounded to one year.
+     */
+    public val canZoomOut: Boolean by canZoomOutState
 
     /** Derivation behind [canScrollBackward]: whether the current page is past the first. */
     private val canScrollBackwardState = derivedStateOf { pagerState.currentPage > 0 }
@@ -132,19 +203,72 @@ public class CalendarState internal constructor(
         animateTo(today.yearMonth)
     }
 
-    /** Shows the month picker in place of the day grid. */
-    public fun expandMonthPicker() {
-        isMonthPickerExpanded = true
+    /**
+     * Steps out one level: from the days to the months of the visible month's year, from the months
+     * to the page of years around it. Does nothing when [canZoomOut] is `false`.
+     */
+    public fun zoomOut() {
+        if (!canZoomOut) return
+        when (level) {
+            CalendarLevel.Days -> {
+                browsedYear = visibleMonth.year
+                level = CalendarLevel.Months
+            }
+            CalendarLevel.Months -> level = CalendarLevel.Years
+            CalendarLevel.Years -> Unit
+        }
     }
 
-    /** Shows the day grid again. */
-    public fun collapseMonthPicker() {
-        isMonthPickerExpanded = false
+    /** Returns to the days of [visibleMonth] without changing it — the way out of a level unchosen. */
+    public fun showDays() {
+        level = CalendarLevel.Days
     }
 
-    /** Swaps between the day grid and the month picker. */
-    public fun toggleMonthPicker() {
-        isMonthPickerExpanded = !isMonthPickerExpanded
+    /**
+     * Chooses a year on the [CalendarLevel.Years] level: shows that year's months.
+     *
+     * @param year Year chosen, clamped into [bounds].
+     */
+    public fun selectYear(year: Int) {
+        browsedYear = year.coerceIn(bounds.yearRange)
+        level = CalendarLevel.Months
+    }
+
+    /**
+     * Chooses a month on the [CalendarLevel.Months] level: shows its days.
+     *
+     * Jumps rather than animates. The days are not on screen while a month is being chosen, so an
+     * animation would page invisibly through every month in between.
+     *
+     * @param month Month chosen, clamped into [bounds].
+     */
+    public fun selectMonth(month: YearMonth) {
+        pagerState.requestScrollToPage(bounds.pageOf(month))
+        level = CalendarLevel.Days
+    }
+
+    /**
+     * Shows the previous year of months, or the previous page of years. Does nothing at
+     * [CalendarLevel.Days] or when [canBrowseBackward] is `false`.
+     */
+    public fun browseBackward() {
+        if (!canBrowseBackward) return
+        browsedYear = when (level) {
+            CalendarLevel.Years -> browsedYears.first - YEARS_PER_PAGE
+            else -> browsedYear - 1
+        }.coerceIn(bounds.yearRange)
+    }
+
+    /**
+     * Shows the next year of months, or the next page of years. Does nothing at
+     * [CalendarLevel.Days] or when [canBrowseForward] is `false`.
+     */
+    public fun browseForward() {
+        if (!canBrowseForward) return
+        browsedYear = when (level) {
+            CalendarLevel.Years -> browsedYears.first + YEARS_PER_PAGE
+            else -> browsedYear + 1
+        }.coerceIn(bounds.yearRange)
     }
 
     /** Construction helpers that stay inside the module. */
@@ -205,4 +329,32 @@ public fun rememberCalendarState(
     return rememberSaveable(bounds, today, saver = CalendarState.saver(bounds, today)) {
         CalendarState(bounds = bounds, today = today, initialMonth = openOn)
     }
+}
+
+/** What a [Calendar]'s body shows. Stepped through by [CalendarState.zoomOut] and the choices on each level. */
+public enum class CalendarLevel {
+    /** The days of the visible month. */
+    Days,
+
+    /** The twelve months of [CalendarState.browsedYear]. */
+    Months,
+
+    /** The page of years [CalendarState.browsedYears]. */
+    Years,
+}
+
+/** Years on one page of the [CalendarLevel.Years] level: three columns of four rows. */
+public const val YEARS_PER_PAGE: Int = 12
+
+/**
+ * The page of [YEARS_PER_PAGE] years holding [year], counted from the first year of the bounds.
+ *
+ * @param year Year the page must hold. Clamped into the bounds first.
+ * @return Consecutive years, starting at the bounds' first year or a multiple of [YEARS_PER_PAGE]
+ *   after it.
+ */
+internal fun CalendarBounds.yearPageOf(year: Int): IntRange {
+    val first = yearRange.first
+    val start = first + (year.coerceIn(yearRange) - first) / YEARS_PER_PAGE * YEARS_PER_PAGE
+    return start until start + YEARS_PER_PAGE
 }

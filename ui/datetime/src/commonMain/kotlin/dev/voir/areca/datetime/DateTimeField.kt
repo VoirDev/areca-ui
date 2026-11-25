@@ -277,7 +277,7 @@ public fun DateTimeField(
     val isDateOpen = datePopup.isOpen
     LaunchedEffect(isDateOpen, calendarState) {
         if (!isDateOpen) return@LaunchedEffect
-        calendarState.collapseMonthPicker()
+        calendarState.showDays()
         val month = currentValue?.date?.yearMonth ?: return@LaunchedEffect
         if (calendarState.visibleMonth != month) calendarState.scrollTo(month)
     }

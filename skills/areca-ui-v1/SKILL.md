@@ -543,6 +543,7 @@ Every foundation family, by intent. Signatures, overloads and packages:
 | Period chart that picks a period; running total through a period | `ColumnChart(columns, selectedKey, onSelect)` (`dev.voir.areca:charts`); `LineChart(series)` |
 | Amount against a usual or a target; key to a chart's colours | `MeterBar(fraction, marker = …)`; `ChartLegend(items)` with a `ChartSwatch` per series |
 | Dates and times | `dev.voir.areca:datetime`: calendars, ranges, pickers, date-time field |
+| Event dots, a count, an icon or a price under each day; a busy-month dot on month tiles | `Calendar(markers = { date -> CalendarMarker.Dots(…) })`, `monthMarkers`; `CalendarStyle.default(dayShape = CalendarDayShape.Tile)` for prices and counts — never overlay a `Box` on `CalendarDay` |
 | Heat-map month; pick a month from tiles; date as a row's leading tile | `CalendarHeatDay` in a `Calendar`'s `day` slot + `calendarHeatLevel` (`steps` = the ramp's size, `CalendarHeatStyle.ramp.size`) + `CalendarHeatLegend`; `MonthGrid`; `DateTile` (all `dev.voir.areca:datetime`; the grid and the tile take `labels: CalendarLabels`) |
 
 ## Rows, sections and cards

@@ -29,24 +29,29 @@ import kotlinx.datetime.YearMonth
  * @property dayDescription What assistive technology reads for one day. Should be unambiguous on its
  *   own, weekday included: a screen reader visits a cell without the column heading above it, so the
  *   weekday is part of the day's own description.
- * @property monthPickerAction What assistive technology reads for the control that opens the month
- *   picker.
+ * @property chooseMonthAction What assistive technology reads, after the month, for the title that
+ *   steps out from the days to the months.
  * @property monthPickerMonth What assistive technology reads for the month wheel.
  * @property monthPickerYear What assistive technology reads for the year wheel.
  * @property previousMonthAction What assistive technology reads for the back control.
  * @property nextMonthAction What assistive technology reads for the forward control.
  * @property todayAction Label of the control that returns to today.
- * @property monthPickerExpanded What assistive technology reads as the state of the month control
- *   while the month picker is open.
- * @property monthPickerCollapsed What assistive technology reads as the state of the month control
- *   while the month picker is closed.
  * @property weekdayName What assistive technology reads for a column heading: the day's full name,
  *   since the drawn [weekday] abbreviation reads aloud as a syllable rather than a day.
  * @property dayNumber The number drawn in a day cell, from `1` to `31`.
  * @property year A year as drawn on the year wheel of the [MonthYearPicker], and as a year's
  *   heading in a [MonthGrid].
- * @property shortMonth A month's short name, as drawn on a [MonthGrid] tile and a
- *   [dev.voir.areca.datetime.DateTile]: `Sep`.
+ * @property shortMonth A month's short name, as drawn on a month tile of a [Calendar], a [MonthGrid]
+ *   tile and a [dev.voir.areca.datetime.DateTile]: `Sep`.
+ * @property chooseYearAction What assistive technology reads, after the year, for the title that
+ *   steps out from the months to the years.
+ * @property pickMonthHint The hint beside the title while months are showing.
+ * @property pickYearHint The hint beside the title while years are showing.
+ * @property yearSpan The title while years are showing: the first and last year of the page.
+ * @property previousYearAction What assistive technology reads for the back control over months.
+ * @property nextYearAction What assistive technology reads for the forward control over months.
+ * @property previousYearsAction What assistive technology reads for the back control over years.
+ * @property nextYearsAction What assistive technology reads for the forward control over years.
  */
 @Immutable
 public data class CalendarLabels(
@@ -54,18 +59,24 @@ public data class CalendarLabels(
     public val monthHeader: (YearMonth) -> String,
     public val pickerMonth: (Month) -> String,
     public val dayDescription: (LocalDate) -> String,
-    public val monthPickerAction: String,
+    public val chooseMonthAction: String,
     public val monthPickerMonth: String,
     public val monthPickerYear: String,
     public val previousMonthAction: String,
     public val nextMonthAction: String,
     public val todayAction: String,
-    public val monthPickerExpanded: String = "Expanded",
-    public val monthPickerCollapsed: String = "Collapsed",
     public val weekdayName: (DayOfWeek) -> String = { it.englishName },
     public val dayNumber: (Int) -> String = { it.toString() },
     public val year: (Int) -> String = { it.toString() },
     public val shortMonth: (Month) -> String = { it.englishName.take(3) },
+    public val chooseYearAction: String = "Choose year",
+    public val pickMonthHint: String = "Pick a month",
+    public val pickYearHint: String = "Pick a year",
+    public val yearSpan: (IntRange) -> String = { "${year(it.first)} – ${year(it.last)}" },
+    public val previousYearAction: String = "Previous year",
+    public val nextYearAction: String = "Next year",
+    public val previousYearsAction: String = "Earlier years",
+    public val nextYearsAction: String = "Later years",
 ) {
     /** Ready-made label sets. */
     public companion object {
@@ -82,18 +93,24 @@ public data class CalendarLabels(
             dayDescription = {
                 "${it.dayOfWeek.englishName} ${it.day} ${it.month.englishName} ${it.year}"
             },
-            monthPickerAction = "Choose month and year",
+            chooseMonthAction = "Choose month",
             monthPickerMonth = "Month",
             monthPickerYear = "Year",
             previousMonthAction = "Previous month",
             nextMonthAction = "Next month",
             todayAction = "Today",
-            monthPickerExpanded = "Expanded",
-            monthPickerCollapsed = "Collapsed",
             weekdayName = { it.englishName },
             dayNumber = { it.toString() },
             year = { it.toString() },
             shortMonth = { it.englishName.take(3) },
+            chooseYearAction = "Choose year",
+            pickMonthHint = "Pick a month",
+            pickYearHint = "Pick a year",
+            yearSpan = { "${it.first} – ${it.last}" },
+            previousYearAction = "Previous year",
+            nextYearAction = "Next year",
+            previousYearsAction = "Earlier years",
+            nextYearsAction = "Later years",
         )
 
         /**

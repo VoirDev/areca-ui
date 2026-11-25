@@ -15,6 +15,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import dev.voir.areca.foundation.wheel.LocalWheelPickerScroll
+import dev.voir.areca.foundation.wheel.LocalWheelPickerSize
 import dev.voir.areca.foundation.wheel.LocalWheelPickerStyle
 import dev.voir.areca.foundation.wheel.WheelPicker
 import dev.voir.areca.foundation.wheel.WheelPickerColumn
@@ -84,7 +85,7 @@ public fun MonthYearPicker(
     bounds: CalendarBounds = CalendarBounds.Default,
     labels: CalendarLabels = CalendarLabels.English,
     style: WheelPickerStyle = LocalWheelPickerStyle.current ?: WheelPickerStyle.Default,
-    size: WheelPickerSize = LocalCalendarSize.current?.monthPicker ?: WheelPickerSize.Default,
+    size: WheelPickerSize = LocalWheelPickerSize.current ?: WheelPickerSize.Default,
     monthScroll: WheelPickerScroll? = LocalWheelPickerScroll.current,
     yearScroll: WheelPickerScroll? = LocalWheelPickerScroll.current,
 ) {

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,11 +19,14 @@ import androidx.compose.ui.unit.dp
 import dev.voir.areca.datetime.calendar.Calendar
 import dev.voir.areca.datetime.calendar.CalendarBounds
 import dev.voir.areca.datetime.calendar.CalendarDateRule
+import dev.voir.areca.datetime.calendar.CalendarDayShape
 import dev.voir.areca.datetime.calendar.CalendarHeatDay
 import dev.voir.areca.datetime.calendar.CalendarHeatLegend
 import dev.voir.areca.datetime.calendar.CalendarLabels
+import dev.voir.areca.datetime.calendar.CalendarMarker
 import dev.voir.areca.datetime.calendar.CalendarSelection
 import dev.voir.areca.datetime.calendar.CalendarSize
+import dev.voir.areca.datetime.calendar.CalendarStyle
 import dev.voir.areca.datetime.calendar.MonthHeader
 import dev.voir.areca.datetime.calendar.MonthYearPicker
 import dev.voir.areca.datetime.calendar.TodayButton
@@ -30,13 +34,18 @@ import dev.voir.areca.datetime.calendar.WeekdayHeader
 import dev.voir.areca.datetime.calendar.calendarHeatLevel
 import dev.voir.areca.datetime.calendar.plus
 import dev.voir.areca.datetime.calendar.rememberCalendarState
+import dev.voir.areca.foundation.list.ListItem
 import dev.voir.areca.foundation.text.Text
+import dev.voir.areca.icons.ArecaIcons
+import dev.voir.areca.icons.Gift
+import dev.voir.areca.icons.Plane
 import dev.voir.areca.foundation.text.TextColor
 import dev.voir.areca.foundation.text.TextVariant
 import dev.voir.areca.playground.showcase.ShowcaseScaffold
 import dev.voir.areca.playground.showcase.section.Anatomy
 import dev.voir.areca.playground.showcase.section.EdgeCases
 import dev.voir.areca.playground.showcase.section.Playground
+import dev.voir.areca.playground.showcase.section.Recipes
 import dev.voir.areca.playground.showcase.section.VariantLayout
 import dev.voir.areca.playground.showcase.section.Variants
 import dev.voir.areca.theme.ArecaTheme
@@ -46,6 +55,8 @@ import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
+import kotlinx.datetime.YearMonth
+import kotlinx.datetime.number
 import kotlinx.datetime.todayIn
 import kotlinx.datetime.yearMonth
 
@@ -59,8 +70,8 @@ private val DemoSpend = listOf(
 @Composable
 fun CalendarShowcase() = ShowcaseScaffold(
     title = "Calendar",
-    summary = "Month grid with an inline month and year wheel, single or multiple selection, " +
-        "selection rules and a paging range.",
+    summary = "Month grid with day, month and year levels, markers under each day, single or " +
+        "multiple selection, selection rules and a paging range.",
     module = "datetime",
 ) {
     val today = remember { Clock.System.todayIn(TimeZone.currentSystemDefault()) }
@@ -92,7 +103,19 @@ fun CalendarShowcase() = ShowcaseScaffold(
             key = "narrow bounds",
             default = false,
             description = "Limit paging to the six months around today. The chevrons disable at " +
-                "the ends and the wheel offers only those months.",
+                "the ends and the month tiles refuse the months outside.",
+        )
+        val marker by enumControl(
+            key = "markers",
+            default = DemoMarker.Dots,
+            options = DemoMarker.entries,
+            description = "What each day shows under its number. Any value but None reserves the row.",
+        )
+        val shape by enumControl(
+            key = "dayShape",
+            default = CalendarDayShape.Circle,
+            options = CalendarDayShape.entries,
+            description = "Circle fills around the number; Tile fills the whole cell, marker included.",
         )
         val weekendsBlocked by booleanControl(
             key = "weekdays only",
@@ -110,10 +133,15 @@ fun CalendarShowcase() = ShowcaseScaffold(
                 CalendarBounds.Default
             }
 
+            val markers = rememberDemoMarkers(marker)
+            val monthMarkers = rememberDemoMonthMarkers(marker)
             CalendarFrame {
                 Column(verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg)) {
                     Calendar(
                         state = rememberCalendarState(bounds = bounds),
+                        style = CalendarStyle.default(dayShape = shape),
+                        markers = markers,
+                        monthMarkers = monthMarkers,
                         selection = if (multiSelect) {
                             CalendarSelection.Multiple(multiple)
                         } else {
@@ -149,8 +177,9 @@ fun CalendarShowcase() = ShowcaseScaffold(
     Anatomy {
         slot(
             name = "header",
-            description = "The month on the left, back and forward on the right. Tapping the month " +
-                "opens the wheel; its tap target wraps the label rather than spanning the header.",
+            description = "The title on the left, back and forward on the right. Tapping the month " +
+                "steps out to the months, and tapping the year to the years; the chevrons step by " +
+                "the level shown.",
         ) {
             CalendarFrame {
                 Calendar(weekdayHeader = null, header = { MonthHeader() })
@@ -158,8 +187,8 @@ fun CalendarShowcase() = ShowcaseScaffold(
         }
         slot(
             name = "weekdayHeader",
-            description = "The Mo/Tu/We row. Fades out rather than being removed while the month " +
-                "picker is open, so the calendar keeps one height.",
+            description = "The Mo/Tu/We row. Fades out rather than being removed while months or " +
+                "years show, so the calendar keeps one height.",
         ) {
             CalendarFrame {
                 Calendar(header = null, weekdayHeader = { WeekdayHeader() })
@@ -167,11 +196,14 @@ fun CalendarShowcase() = ShowcaseScaffold(
         }
         slot(
             name = "day",
-            description = "One cell, handed a CalendarDayState. Replace it to draw event dots, " +
-                "prices, or anything else under the number.",
+            description = "One cell, handed a CalendarDayState. Draw through CalendarDay; what goes " +
+                "under the number comes from markers, or CalendarDay(marker = …) for one day.",
         ) {
             CalendarFrame {
-                Calendar(selection = CalendarSelection.Single(today))
+                Calendar(
+                    selection = CalendarSelection.Single(today),
+                    markers = rememberDemoMarkers(DemoMarker.Dots),
+                )
             }
         }
     }
@@ -222,25 +254,31 @@ fun CalendarShowcase() = ShowcaseScaffold(
     }
 
     Variants(
-        title = "Month and year picker",
-        description = "The wheel the header opens, and the same wheel used on its own.",
+        title = "Months and years",
+        description = "The levels the title steps out to. A tap on a tile is the choice; the tile " +
+            "already shown, or Escape, returns unchanged.",
         layout = VariantLayout.Vertical,
     ) {
-        variant("Standalone", detail = "MonthYearPicker") {
-            var month by remember { mutableStateOf(today.yearMonth) }
+        variant("Months", detail = "CalendarLevel.Months, with monthMarkers") {
+            val state = rememberCalendarState()
+            LaunchedEffect(state) { state.zoomOut() }
             CalendarFrame {
-                Column(verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md)) {
-                    MonthYearPicker(
-                        month = month,
-                        onMonthChange = { month = it },
-                        bounds = CalendarBounds.around(today, years = 60),
-                    )
-                    Text(
-                        text = CalendarLabels.English.monthHeader(month),
-                        variant = TextVariant.BodySmall,
-                        color = TextColor.Muted,
-                    )
-                }
+                Calendar(
+                    state = state,
+                    selection = CalendarSelection.Single(today),
+                    markers = rememberDemoMarkers(DemoMarker.Dots),
+                    monthMarkers = rememberDemoMonthMarkers(DemoMarker.Dots),
+                )
+            }
+        }
+        variant("Years", detail = "CalendarLevel.Years") {
+            val state = rememberCalendarState()
+            LaunchedEffect(state) {
+                state.zoomOut()
+                state.zoomOut()
+            }
+            CalendarFrame {
+                Calendar(state = state, selection = CalendarSelection.Single(today))
             }
         }
         variant("With a Today action", detail = "CalendarScope.TodayButton") {
@@ -257,6 +295,89 @@ fun CalendarShowcase() = ShowcaseScaffold(
                         }
                     },
                     selection = CalendarSelection.Single(today),
+                )
+            }
+        }
+        variant("Wheels on their own", detail = "MonthYearPicker, for a far jump in the app's own sheet") {
+            var month by remember { mutableStateOf(today.yearMonth) }
+            CalendarFrame {
+                Column(verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md)) {
+                    MonthYearPicker(
+                        month = month,
+                        onMonthChange = { month = it },
+                        bounds = CalendarBounds.around(today, years = 60),
+                    )
+                    Text(
+                        text = CalendarLabels.English.monthHeader(month),
+                        variant = TextVariant.BodySmall,
+                        color = TextColor.Muted,
+                    )
+                }
+            }
+        }
+    }
+
+    Variants(
+        title = "Markers",
+        description = "One row under every number, kept whether or not a day has a marker. Under " +
+            "a Circle the marker keeps its colours below the fill; inside a filled Tile it takes " +
+            "the day's ink.",
+        layout = VariantLayout.Vertical,
+    ) {
+        DemoMarker.entries.filter { it != DemoMarker.None }.forEach { kind ->
+            val shape = if (kind == DemoMarker.Label || kind == DemoMarker.Count) {
+                CalendarDayShape.Tile
+            } else {
+                CalendarDayShape.Circle
+            }
+            variant(kind.name, detail = "CalendarMarker.${kind.name}, dayShape = $shape") {
+                var picked by remember { mutableStateOf(today) }
+                CalendarFrame {
+                    Calendar(
+                        selection = CalendarSelection.Single(picked),
+                        onDateClick = { picked = it },
+                        style = CalendarStyle.default(dayShape = shape),
+                        markers = rememberDemoMarkers(kind),
+                    )
+                }
+            }
+        }
+    }
+
+    Recipes {
+        recipe("Event calendar", description = "A dot per category under each day, the day's events below.") {
+            var picked by remember { mutableStateOf(today) }
+            CalendarFrame {
+                Column(verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md)) {
+                    Calendar(
+                        selection = CalendarSelection.Single(picked),
+                        onDateClick = { picked = it },
+                        markers = rememberDemoMarkers(DemoMarker.Dots),
+                        monthMarkers = rememberDemoMonthMarkers(DemoMarker.Dots),
+                    )
+                    val events = demoEvents(picked)
+                    if (events.isEmpty()) {
+                        Text(text = "Nothing planned", variant = TextVariant.BodySmall, color = TextColor.Muted)
+                    }
+                    events.forEachIndexed { index, category ->
+                        ListItem(
+                            title = { Text(category.title) },
+                            value = { Text("${9 + index * 2}:00") },
+                        )
+                    }
+                }
+            }
+        }
+        recipe("Fare picker", description = "The price inside a tile, the cheapest in green, from today.") {
+            var checkIn by remember { mutableStateOf<LocalDate?>(null) }
+            CalendarFrame {
+                Calendar(
+                    selection = CalendarSelection.Single(checkIn),
+                    onDateClick = { checkIn = it },
+                    dateRule = CalendarDateRule { it >= today },
+                    style = CalendarStyle.default(dayShape = CalendarDayShape.Tile),
+                    markers = rememberDemoMarkers(DemoMarker.Label),
+                    monthMarkers = rememberDemoMonthMarkers(DemoMarker.Label),
                 )
             }
         }
@@ -295,15 +416,15 @@ fun CalendarShowcase() = ShowcaseScaffold(
 
     EdgeCases {
         case(
-            name = "Opening the picker keeps the height",
-            expectation = "Tap the month: the wheel is exactly as tall as the grid it replaces, so " +
-                "the line below it does not move.",
+            name = "Stepping out keeps the height",
+            expectation = "Tap the month, then the year: the tiles are exactly as tall as the grid " +
+                "they replace, so the line below does not move.",
         ) {
             CalendarFrame {
                 Column(verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.md)) {
                     Calendar(selection = CalendarSelection.Single(today))
                     Text(
-                        text = "This line must not move when the picker opens.",
+                        text = "This line must not move between days, months and years.",
                         variant = TextVariant.BodySmall,
                         color = TextColor.Muted,
                     )
@@ -313,7 +434,7 @@ fun CalendarShowcase() = ShowcaseScaffold(
         case(
             name = "Bounded paging",
             expectation = "Paging stops three months either side of today and the chevrons disable " +
-                "there. The wheel offers only those months.",
+                "there. The month tiles refuse the months outside, and there is no years level.",
         ) {
             CalendarFrame {
                 Calendar(
@@ -463,3 +584,116 @@ private fun LocalDate.plusMonths(months: Int): LocalDate =
  * @return First day of the resulting month.
  */
 private fun LocalDate.minusMonths(months: Int): LocalDate = plusMonths(-months)
+
+/** What the demo calendars draw under each day. */
+private enum class DemoMarker { None, Dots, Count, Icon, Label, Load }
+
+/** Kinds of made-up event, each with its own colour. */
+private enum class DemoCategory(val title: String) {
+    Work("Design review"),
+    Personal("Dinner with Sam"),
+    Travel("Flight to Lisbon"),
+    Health("Dentist"),
+}
+
+/**
+ * Made-up events for a day: none on most days, up to five on a few, the same every run.
+ *
+ * @param date Day to make events for.
+ * @return The categories of that day's events, in time order.
+ */
+private fun demoEvents(date: LocalDate): List<DemoCategory> =
+    when ((date.day * 7 + date.month.number * 3) % 11) {
+        4, 5 -> listOf(DemoCategory.Work)
+        6 -> listOf(DemoCategory.Personal)
+        7 -> listOf(DemoCategory.Work, DemoCategory.Travel)
+        8 -> listOf(DemoCategory.Work, DemoCategory.Personal, DemoCategory.Health)
+        9 -> listOf(DemoCategory.Work, DemoCategory.Work, DemoCategory.Personal, DemoCategory.Travel, DemoCategory.Health)
+        10 -> listOf(DemoCategory.Travel)
+        else -> emptyList()
+    }
+
+/** A made-up nightly fare in euros, the same every run. */
+private fun demoFare(date: LocalDate): Int = 70 + (date.day * 37 + date.month.number * 11) % 110
+
+/** Fares at or under this are the cheap ones, drawn emphasised. */
+private const val CheapFare = 85
+
+/**
+ * The markers of one [DemoMarker] kind, built from the theme's colours.
+ *
+ * @param kind What to draw.
+ * @return The calendar's `markers`, or `null` for [DemoMarker.None].
+ */
+@Composable
+private fun rememberDemoMarkers(kind: DemoMarker): ((LocalDate) -> CalendarMarker?)? {
+    val colors = ArecaTheme.colors
+    val palette = mapOf(
+        DemoCategory.Work to colors.bgBrandBase,
+        DemoCategory.Personal to colors.bgSuccessBase,
+        DemoCategory.Travel to colors.bgWarnBase,
+        DemoCategory.Health to colors.bgDangerBase,
+    )
+    return remember(kind, palette) {
+        when (kind) {
+            DemoMarker.None -> null
+            DemoMarker.Dots -> { date ->
+                demoEvents(date).takeIf { it.isNotEmpty() }?.let { events ->
+                    CalendarMarker.Dots(
+                        colors = events.distinct().map { palette.getValue(it) },
+                        contentDescription = "${events.size} events",
+                    )
+                }
+            }
+            DemoMarker.Count -> { date ->
+                demoEvents(date).size.takeIf { it > 0 }?.let { CalendarMarker.Count(it, "$it events") }
+            }
+            DemoMarker.Icon -> { date ->
+                val events = demoEvents(date)
+                when {
+                    DemoCategory.Travel in events -> CalendarMarker.Icon(ArecaIcons.Plane, palette[DemoCategory.Travel], "Flight")
+                    DemoCategory.Personal in events -> CalendarMarker.Icon(ArecaIcons.Gift, palette[DemoCategory.Personal], "Party")
+                    else -> null
+                }
+            }
+            DemoMarker.Label -> { date ->
+                val fare = demoFare(date)
+                CalendarMarker.Label("€$fare", emphasis = fare <= CheapFare, contentDescription = "€$fare a night")
+            }
+            DemoMarker.Load -> { date ->
+                demoEvents(date).size.takeIf { it > 0 }?.let { count ->
+                    CalendarMarker.Load(
+                        fraction = count / 5f,
+                        color = if (count >= 4) colors.bgDangerBase else null,
+                        contentDescription = "$count events",
+                    )
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Month-tile markers matching [rememberDemoMarkers]: a dot for a month with events, or the
+ * month's lowest fare.
+ *
+ * @param kind What the days draw.
+ * @return The calendar's `monthMarkers`, or `null` when the kind has none.
+ */
+@Composable
+private fun rememberDemoMonthMarkers(kind: DemoMarker): ((YearMonth) -> CalendarMarker?)? {
+    val brand = ArecaTheme.colors.bgBrandBase
+    return remember(kind, brand) {
+        when (kind) {
+            DemoMarker.None -> null
+            DemoMarker.Label -> { month ->
+                val lowest = (1..28).minOf { demoFare(LocalDate(month.year, month.month, it)) }
+                CalendarMarker.Label("from €$lowest", contentDescription = "from €$lowest")
+            }
+            else -> { month ->
+                val count = (1..28).sumOf { demoEvents(LocalDate(month.year, month.month, it)).size }
+                if (count > 0) CalendarMarker.Dots(listOf(brand), contentDescription = "$count events") else null
+            }
+        }
+    }
+}

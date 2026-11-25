@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -13,7 +14,6 @@ import androidx.compose.ui.unit.dp
 import dev.voir.areca.foundation.button.ButtonSize
 import dev.voir.areca.foundation.button.IconButtonSize
 import dev.voir.areca.foundation.icon.ChevronSize
-import dev.voir.areca.foundation.wheel.WheelPickerSize
 import dev.voir.areca.theme.ArecaTheme
 
 /**
@@ -34,14 +34,17 @@ import dev.voir.areca.theme.ArecaTheme
  * @property dayPadding Inset between a day's square cell and its circle. Larger values give smaller,
  *   more separated circles.
  * @property dayTextStyle Type of the day numbers.
+ * @property dayTilePadding Inset between a day's cell and its tile, under [CalendarDayShape.Tile].
+ *   Smaller than [dayPadding]: a tile is the whole cell, with only a hairline between neighbours.
+ * @property dayTileShape Shape of a day's tile under [CalendarDayShape.Tile].
  * @property dayBorderWidth Width of a day's outline, used to ring today.
  * @property weekdayContentPadding Inset around the weekday row.
  * @property weekdayPadding Inset inside one weekday heading.
  * @property weekdayTextStyle Type of the weekday headings.
  * @property headerContentPadding Inset around the month header.
- * @property headerTextStyle Type of the month and year. Also what [monthPickerToggle] is set in by
- *   default, so the header reads the same whether or not the month opens a picker.
- * @property monthPickerToggle Size of the control that opens the month picker: its inset, the gap
+ * @property headerTextStyle Type of the title. Also what [levelToggle] is set in by default, so the
+ *   header reads the same whether or not the title steps out a level.
+ * @property levelToggle Size of the title control that steps out a level: its inset, the gap
  *   before its chevron, and its height. Its minimum height matches [monthControl] by default, which
  *   is what keeps the label and the stepping buttons on one line rather than merely near one.
  * @property headerChevron Size of **every** chevron in the header — the disclosure beside the month
@@ -51,9 +54,18 @@ import dev.voir.areca.theme.ArecaTheme
  *   [monthControl] sizes those buttons' tap targets and is independent of this.
  * @property monthControlSpacing Gap between the previous and next month buttons.
  * @property monthControl Size of the previous and next month buttons.
- * @property monthPicker Visible row count of the [MonthYearPicker], and the row height it falls back
- *   to. Inside a [Calendar] the row height is overridden so the picker is exactly as tall as the grid
- *   it replaces.
+ * @property markerLaneHeight Height of the row each day keeps under its number once a calendar is
+ *   given markers. A day cell is then this much taller than wide.
+ * @property markerDotSize Diameter of a [CalendarMarker.Dots] dot.
+ * @property markerSpacing Gap between dots, and half a count pill's side inset.
+ * @property markerTextStyle Type of a [CalendarMarker.Label], a [CalendarMarker.Count] and a dot
+ *   overflow.
+ * @property markerIconSize Size of a [CalendarMarker.Icon].
+ * @property markerBarHeight Thickness of a [CalendarMarker.Load] bar.
+ * @property levelHintTextStyle Type of the hint beside the title while months or years are showing.
+ * @property tileSpacing Gap between month and year tiles, across and down.
+ * @property tileShape Shape of a month or year tile.
+ * @property tileTextStyle Type of a month or year tile.
  */
 @Immutable
 public data class CalendarSize(
@@ -64,17 +76,28 @@ public data class CalendarSize(
     public val weekdaySpacing: Dp,
     public val dayPadding: PaddingValues,
     public val dayTextStyle: TextStyle,
+    public val dayTilePadding: PaddingValues,
+    public val dayTileShape: Shape,
     public val dayBorderWidth: Dp,
     public val weekdayContentPadding: PaddingValues,
     public val weekdayPadding: PaddingValues,
     public val weekdayTextStyle: TextStyle,
     public val headerContentPadding: PaddingValues,
     public val headerTextStyle: TextStyle,
-    public val monthPickerToggle: ButtonSize,
+    public val levelToggle: ButtonSize,
     public val headerChevron: ChevronSize,
     public val monthControlSpacing: Dp,
     public val monthControl: IconButtonSize,
-    public val monthPicker: WheelPickerSize,
+    public val markerLaneHeight: Dp,
+    public val markerDotSize: Dp,
+    public val markerSpacing: Dp,
+    public val markerTextStyle: TextStyle,
+    public val markerIconSize: Dp,
+    public val markerBarHeight: Dp,
+    public val levelHintTextStyle: TextStyle,
+    public val tileSpacing: Dp,
+    public val tileShape: Shape,
+    public val tileTextStyle: TextStyle,
 ) {
     /** Theme-derived sizes and the builder they share. */
     public companion object {
@@ -105,10 +128,10 @@ public data class CalendarSize(
                 // headerChevron is deliberately not shrunk: Compact keeps the type, and the header
                 // chevrons are sized against the type. Only the button around them tightens.
                 monthControl = IconButtonSize.ExtraSmall,
-                monthPicker = WheelPickerSize(
-                    itemHeight = CompactMonthPickerRowHeight,
-                    visibleItemsCount = MonthPickerVisibleRows,
-                ),
+                tileSpacing = ArecaTheme.spacing.xs,
+                markerLaneHeight = 12.dp,
+                markerDotSize = 4.dp,
+                markerIconSize = 10.dp,
             )
 
         /**
@@ -124,17 +147,28 @@ public data class CalendarSize(
          * @param weekdaySpacing Gap below the weekday row.
          * @param dayPadding Inset between a day's cell and its circle.
          * @param dayTextStyle Type of the day numbers.
+         * @param dayTilePadding Inset between a day's cell and its tile.
+         * @param dayTileShape Shape of a day's tile.
          * @param dayBorderWidth Width of a day's outline.
          * @param weekdayContentPadding Inset around the weekday row.
          * @param weekdayPadding Inset inside one weekday heading.
          * @param weekdayTextStyle Type of the weekday headings.
          * @param headerContentPadding Inset around the month header.
          * @param headerTextStyle Type of the month and year.
-         * @param monthPickerToggle Size of the control that opens the month picker.
+         * @param levelToggle Size of the title control that steps out a level.
          * @param headerChevron Size of every chevron in the header.
          * @param monthControlSpacing Gap between the previous and next month buttons.
          * @param monthControl Size of the previous and next month buttons.
-         * @param monthPicker Visible row count of the month picker, and its fallback row height.
+         * @param markerLaneHeight Height of the row under each day's number once markers are given.
+         * @param markerDotSize Diameter of a dot marker.
+         * @param markerSpacing Gap between dots.
+         * @param markerTextStyle Type of label and count markers.
+         * @param markerIconSize Size of an icon marker.
+         * @param markerBarHeight Thickness of a load marker.
+         * @param levelHintTextStyle Type of the hint beside the title.
+         * @param tileSpacing Gap between month and year tiles.
+         * @param tileShape Shape of a month or year tile.
+         * @param tileTextStyle Type of a month or year tile.
          * @return Size built from the given values.
          */
         @Composable
@@ -146,6 +180,8 @@ public data class CalendarSize(
             weekdaySpacing: Dp = ArecaTheme.spacing.xs,
             dayPadding: PaddingValues = PaddingValues(ArecaTheme.spacing.xs),
             dayTextStyle: TextStyle = ArecaTheme.baseTypography.sm,
+            dayTilePadding: PaddingValues = PaddingValues(ArecaTheme.spacing.xs2),
+            dayTileShape: Shape = ArecaTheme.shapes.md,
             dayBorderWidth: Dp = DayBorderWidth,
             weekdayContentPadding: PaddingValues = PaddingValues(horizontal = ArecaTheme.spacing.xl),
             weekdayPadding: PaddingValues = PaddingValues(ArecaTheme.spacing.xs),
@@ -160,7 +196,7 @@ public data class CalendarSize(
             headerChevron: ChevronSize = ChevronSize.Small,
             monthControlSpacing: Dp = ArecaTheme.spacing.xs,
             monthControl: IconButtonSize = IconButtonSize.Small,
-            monthPickerToggle: ButtonSize = ButtonSize.Small.copy(
+            levelToggle: ButtonSize = ButtonSize.Small.copy(
                 borderWidth = 0.dp,
                 padding = PaddingValues(
                     horizontal = ArecaTheme.spacing.sm,
@@ -174,12 +210,16 @@ public data class CalendarSize(
                 // The stepping buttons' own height, so the two sit on one line.
                 minHeight = monthControl.container,
             ),
-            // Seven rows: inside a calendar the rows are stretched to fill the grid's height, and
-            // seven of them lands close enough to 40dp each that the type does not float.
-            monthPicker: WheelPickerSize = WheelPickerSize(
-                itemHeight = MonthPickerRowHeight,
-                visibleItemsCount = MonthPickerVisibleRows,
-            ),
+            markerLaneHeight: Dp = 14.dp,
+            markerDotSize: Dp = 5.dp,
+            markerSpacing: Dp = ArecaTheme.spacing.xs2,
+            markerTextStyle: TextStyle = ArecaTheme.baseTypography.xxs.merge(fontWeight = FontWeight.Medium),
+            markerIconSize: Dp = 12.dp,
+            markerBarHeight: Dp = 3.dp,
+            levelHintTextStyle: TextStyle = ArecaTheme.typography.bodyExtraSmall,
+            tileSpacing: Dp = ArecaTheme.spacing.sm,
+            tileShape: Shape = ArecaTheme.shapes.md,
+            tileTextStyle: TextStyle = dayTextStyle,
         ): CalendarSize = CalendarSize(
             contentPadding = contentPadding,
             monthSpacing = monthSpacing,
@@ -188,6 +228,8 @@ public data class CalendarSize(
             weekdaySpacing = weekdaySpacing,
             dayPadding = dayPadding,
             dayTextStyle = dayTextStyle,
+            dayTilePadding = dayTilePadding,
+            dayTileShape = dayTileShape,
             dayBorderWidth = dayBorderWidth,
             weekdayContentPadding = weekdayContentPadding,
             weekdayPadding = weekdayPadding,
@@ -197,8 +239,17 @@ public data class CalendarSize(
             headerChevron = headerChevron,
             monthControlSpacing = monthControlSpacing,
             monthControl = monthControl,
-            monthPickerToggle = monthPickerToggle,
-            monthPicker = monthPicker,
+            levelToggle = levelToggle,
+            markerLaneHeight = markerLaneHeight,
+            markerDotSize = markerDotSize,
+            markerSpacing = markerSpacing,
+            markerTextStyle = markerTextStyle,
+            markerIconSize = markerIconSize,
+            markerBarHeight = markerBarHeight,
+            levelHintTextStyle = levelHintTextStyle,
+            tileSpacing = tileSpacing,
+            tileShape = tileShape,
+            tileTextStyle = tileTextStyle,
         )
     }
 }
@@ -222,12 +273,3 @@ public val LocalCalendarSize: ProvidableCompositionLocal<CalendarSize?> =
  * with, so the calendar's one outlined state reads at the same weight as the selection controls.
  */
 private val DayBorderWidth: Dp = 1.5.dp
-
-/** Row height of the month picker in [CalendarSize.Default], before a calendar stretches it. */
-private val MonthPickerRowHeight: Dp = 40.dp
-
-/** Row height of the month picker in [CalendarSize.Compact], before a calendar stretches it. */
-private val CompactMonthPickerRowHeight: Dp = 32.dp
-
-/** Rows the month picker shows: an odd count, so one sits in the middle. */
-private const val MonthPickerVisibleRows: Int = 7

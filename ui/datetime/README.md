@@ -50,7 +50,7 @@ fun DeliveryDay() {
 | --- | --- | --- |
 | `Calendar` | A swipeable month grid that picks one day, several, or shows a range | `dev.voir.areca.datetime.calendar` |
 | `CalendarDay` | One day cell, for a custom `day` slot | `dev.voir.areca.datetime.calendar` |
-| `MonthHeader` | The default header: the month, which opens the month picker, and back and forward chevrons | `dev.voir.areca.datetime.calendar` |
+| `MonthHeader` | The default header: the title, which steps out to the months and years, and back and forward chevrons | `dev.voir.areca.datetime.calendar` |
 | `WeekdayHeader` | The row of weekday headings | `dev.voir.areca.datetime.calendar` |
 | `TodayButton` | A header control that returns to today | `dev.voir.areca.datetime.calendar` |
 | `CalendarHeatDay` | A day cell shaded by how much it held — spending or activity by day | `dev.voir.areca.datetime.calendar` |
@@ -137,7 +137,9 @@ Hoist a `CalendarState` to drive the calendar from outside:
 | `visibleMonth` | The month the header names; flips halfway through a swipe |
 | `settledMonth` | Changes only once paging comes to rest — read it to load a month's events |
 | `canScrollBackward`, `canScrollForward` | Whether an earlier or later month exists |
-| `expandMonthPicker()`, `collapseMonthPicker()`, `toggleMonthPicker()`, `isMonthPickerExpanded` | Swap the grid for the month picker |
+| `level` (`CalendarLevel.Days`, `Months`, `Years`), `zoomOut()`, `showDays()`, `canZoomOut` | What the body shows; step out a level, or back to the days unchanged |
+| `selectYear(year)`, `selectMonth(month)` | Choose on the years (shows its months) or the months (shows its days) |
+| `browsedYear`, `browsedYears`, `browseBackward()`, `browseForward()`, `canBrowseBackward`, `canBrowseForward` | The year the months show, the page of twelve years, and stepping them |
 | `today`, `bounds` | The day drawn as today, and the months the calendar can reach |
 
 Use `scrollTo` for a move that is not the user's, such as following a typed date:
@@ -209,15 +211,16 @@ A rule runs for every drawn cell: keep it to a set lookup or a comparison.
 | `fixedWeekCount` | Six rows for every month, so paging does not resize the calendar. On by default |
 | `header` | The band above the grid, `MonthHeader()` by default; `null` removes it |
 | `weekdayHeader` | The weekday row, `WeekdayHeader()` by default; `null` removes it |
+| `markers`, `monthMarkers` | What each day and month tile shows under its number or name — see [Day markers](#day-markers) |
 | `day` | One cell, from a `CalendarDayState`: `date`, `month`, `isAdjacent`, `isToday`, `isSelected`, `isEnabled` |
 
 The slots run in a `CalendarScope`, which carries `state`, `labels` and `startDayOfWeek`, and offers
-`nextMonth()`, `previousMonth()`, `goTo(month)`, `jumpTo(month)`, `goToToday()`,
-`toggleMonthPicker()` and `collapseMonthPicker()`, with `canGoBack`, `canGoForward`, `visibleMonth`
-and `isMonthPickerExpanded`.
+`nextMonth()`, `previousMonth()`, `goTo(month)`, `jumpTo(month)`, `goToToday()`, `goBack()`,
+`goForward()`, `zoomOut()` and `showDays()`, with `level`, `canGoBack`, `canGoForward` and
+`visibleMonth`. `goBack()` and `goForward()` step by the level: a month, a year, twelve years.
 
-`MonthHeader(showControls = false)` drops the chevrons, and `showMonthPicker = false` leaves the
-month as plain text. `TodayButton()` returns to today, disabled while today's month is showing:
+`MonthHeader(showControls = false)` drops the chevrons, and `zoomable = false` leaves the title as
+plain text. `TodayButton()` returns to today, disabled while today's month is showing:
 
 ```kotlin
 Calendar(
@@ -234,27 +237,58 @@ Calendar(
 ```
 
 A custom `day` slot should draw through `CalendarDay`, which carries the grid position and keyboard
-behaviour; decorate around it. `CalendarDay` ignores `onClick` on an unavailable day.
+behaviour. `CalendarDay` ignores `onClick` on an unavailable day.
+
+### Day markers
+
+What a day shows under its number — event dots, a count, an icon, a price, a load bar — is data:
+pass `markers`, a function from a date to a `CalendarMarker` or `null`. Once given, every day keeps
+a row of `CalendarSize.markerLaneHeight` under its number, with or without a marker, so the grid
+does not shift as data arrives. A marker never touches the number or the selection: under
+`CalendarDayShape.Circle` it sits below the circle in its own colours, under `CalendarDayShape.Tile`
+it sits inside the tile and takes the selected day's ink when the tile is filled. Days of a
+neighbouring month carry none; an unavailable day's marker is dimmed. `monthMarkers` does the same
+for the month tiles.
+
+| `CalendarMarker` | Draws |
+| --- | --- |
+| `Dots(colors, max = 3)` | A dot per colour; past `max` the last becomes `+` |
+| `Count(count)` | The number in a small pill |
+| `Icon(icon, tint = null)` | One small glyph |
+| `Label(text, emphasis = false)` | A few characters, such as a price; `emphasis` uses `markerEmphasis` |
+| `Load(fraction, color = null)` | A short bar filled to `fraction` |
+| `Custom { … }` | Anything, in `CalendarMarkerScope` (`isOnFill`, `contentColor`, `laneHeight`) |
+
+Each takes a `contentDescription`, read after the day (`Wednesday 25 November 2026, 3 events`).
 
 ```kotlin
+// Event calendar: a dot per category
 Calendar(
-    selection = selection,
+    selection = CalendarSelection.Single(picked),
     onDateClick = onPick,
-    day = { day ->
-        Box(contentAlignment = Alignment.BottomCenter) {
-            CalendarDay(day = day, onClick = { onPick(day.date) })
-            if (day.date in eventDays && !day.isAdjacent) {
-                Box(
-                    Modifier
-                        .padding(bottom = 4.dp)
-                        .size(4.dp)
-                        .background(ArecaTheme.colors.accentBase, CircleShape),
-                )
-            }
+    markers = { date ->
+        eventsByDay[date]?.let { events ->
+            CalendarMarker.Dots(
+                colors = events.map { it.category.color }.distinct(),
+                contentDescription = eventCountLabel(events.size),
+            )
         }
     },
 )
+
+// Fare picker: the price inside a tile, the month's cheapest emphasised
+Calendar(
+    selection = CalendarSelection.Single(checkIn),
+    onDateClick = onCheckIn,
+    style = CalendarStyle.default(dayShape = CalendarDayShape.Tile),
+    markers = { date -> fares[date]?.let { CalendarMarker.Label(formatFare(it), emphasis = it == cheapest) } },
+    monthMarkers = { month -> lowestFare(month)?.let { CalendarMarker.Label("from ${formatFare(it)}") } },
+)
 ```
+
+A custom `day` slot can override one day with `CalendarDay(day, marker = …)`; `markerFor(day)` and
+`hasMarkers` on `CalendarScope` read what the calendar was given. `DateRangeCalendar` takes the same
+`markers` and `monthMarkers`, drawn below the band. `CalendarHeatDay` has its own cell and no markers.
 
 ### Heat-map days
 
@@ -366,11 +400,22 @@ DateRangeCalendar(
 
 ---
 
-## Month and year picker
+## Months and years
 
-`MonthHeader` opens a `MonthYearPicker` in place of the grid, at the grid's height. It also works on
-its own, controlled: it reports the month the wheels rest on and follows `month` while idle. The month
-wheel holds only the months `bounds` allows in the chosen year.
+Tapping the title in `MonthHeader` steps out from the days to the twelve months of the year, and
+again to a page of twelve years. The tiles fill the grid's height, so the calendar keeps its size.
+The title names the level (`2026`, `2020 – 2031`) with a hint beside it (`Pick a month`), and the
+chevrons step a year or a page. A tap is the choice: a year shows its months, a month shows its
+days. Escape, or tapping the month already shown, returns to the days unchanged. Today's month and
+year are ringed; months and years outside the bounds are drawn flat and refused. A calendar bounded
+to one year has no years level, and one bounded to one month has no months level.
+
+## Month and year wheels
+
+`MonthYearPicker` is two wheels for a far jump, such as a year of birth, placed by the app — in a
+sheet with its own Cancel and Done, for example. It is controlled: it reports the month the wheels
+rest on and follows `month` while idle. The month wheel holds only the months `bounds` allows in the
+chosen year.
 
 ```kotlin
 var month by remember { mutableStateOf(YearMonth(2026, 9)) }
@@ -503,12 +548,15 @@ half a `TimePicker`. They share one border, focus and `status`, and take a `fiel
 | `CalendarHeatDay`, `CalendarHeatLegend` | `CalendarHeatStyle` · `LocalCalendarHeatStyle` | `CalendarHeatSize` · `LocalCalendarHeatSize` |
 | `MonthGrid` | `MonthGridStyle` · `LocalMonthGridStyle` | `MonthGridSize` · `LocalMonthGridSize` |
 | `DateTile` | `DateTileStyle` · `LocalDateTileStyle` | `DateTileSize` · `LocalDateTileSize` |
-| `MonthYearPicker` | foundation's `WheelPickerStyle` · `LocalWheelPickerStyle` | `WheelPickerSize`, from `CalendarSize.monthPicker` |
+| `MonthYearPicker` | foundation's `WheelPickerStyle` · `LocalWheelPickerStyle` | `WheelPickerSize` · `LocalWheelPickerSize` |
 | `TimePicker` | foundation's `WheelPickerStyle` · `LocalWheelPickerStyle` | `WheelPickerSize` · `LocalWheelPickerSize` |
 | `DateTimeField` | foundation's `FieldStyle` · `LocalFieldStyle` | `FieldSize` · `LocalFieldSize` |
 
 - `CalendarStyle.default(…)` takes every colour as a parameter — day, selected, today, unavailable
-  and adjacent fills and numbers, header labels, and the month controls. `DateRangeStyle.default(…)`
+  and adjacent fills and numbers, header labels, the month controls and the month and year tiles —
+  and `dayShape`: `CalendarDayShape.Circle` (the default) fills a circle around the number,
+  `CalendarDayShape.Tile` a rounded tile over the whole cell (`CalendarSize.dayTilePadding`,
+  `dayTileShape`), for days that carry a price or a count. Range days keep their own caps. `DateRangeStyle.default(…)`
   does the same for the band, the end caps and their variants.
 - `CalendarSize.Default` is the full calendar; `CalendarSize.Compact` tightens it for a dropdown or
   sidebar (the `DateTimeField` dropdown uses it). `CalendarSize.default(…)` overrides single values.
@@ -554,9 +602,12 @@ tab order; a read-only calendar has no focusable days.
   (`Tuesday 15 September 2026`), announced as unavailable when refused. A range day adds
   `DateRangeLabels.position` (`start of range`, `in range`, `end of range`); a hover preview is never
   announced as selected. Weekday headings read full names.
-- Each month the calendar settles on is announced. The month control reads the month and
-  `monthPickerAction` with an expanded or collapsed state; the chevrons read `previousMonthAction`
-  and `nextMonthAction`.
+- Each month the calendar settles on is announced. The title reads the month and `chooseMonthAction`
+  over the days, the year and `chooseYearAction` over the months, and is a heading over the years.
+  The chevrons read `previousMonthAction` and `nextMonthAction`, `previousYearAction` and
+  `nextYearAction`, or `previousYearsAction` and `nextYearsAction` by level.
+- Month and year tiles are radio buttons in one group, reading `monthHeader` or `year`; the arrow
+  keys move between them and Escape returns to the days.
 - `CalendarHeatDay` reads its day's description and then the amount; `CalendarHeatLegend` reads
   `contentDescription` or its labels in order.
 - `MonthGrid` tiles are radio buttons in one group, reading `monthHeader` and the tile's content;
@@ -613,14 +664,19 @@ val GermanCalendarLabels = CalendarLabels(
         val weekday = GermanWeekdays[date.dayOfWeek.ordinal]
         "$weekday, ${date.day}. ${GermanMonths[date.month.ordinal]} ${date.year}"
     },
-    monthPickerAction = "Monat und Jahr wählen",
+    chooseMonthAction = "Monat wählen",
     monthPickerMonth = "Monat",
     monthPickerYear = "Jahr",
     previousMonthAction = "Vorheriger Monat",
     nextMonthAction = "Nächster Monat",
     todayAction = "Heute",
-    monthPickerExpanded = "Ausgeklappt",
-    monthPickerCollapsed = "Eingeklappt",
+    chooseYearAction = "Jahr wählen",
+    pickMonthHint = "Monat wählen",
+    pickYearHint = "Jahr wählen",
+    previousYearAction = "Vorheriges Jahr",
+    nextYearAction = "Nächstes Jahr",
+    previousYearsAction = "Frühere Jahre",
+    nextYearsAction = "Spätere Jahre",
     weekdayName = { day -> GermanWeekdays[day.ordinal] },
 )
 ```
