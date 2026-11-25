@@ -55,8 +55,10 @@ fun DeliveryDay() {
 | `TodayButton` | A header control that returns to today | `dev.voir.areca.datetime.calendar` |
 | `CalendarHeatDay` | A day cell shaded by how much it held — spending or activity by day | `dev.voir.areca.datetime.calendar` |
 | `CalendarHeatLegend` | The key to a heat map's shades | `dev.voir.areca.datetime.calendar` |
+| `CalendarLegend` | The key to the dots under a calendar's days | `dev.voir.areca.datetime.calendar` |
 | `MonthYearPicker` | Month and year wheels | `dev.voir.areca.datetime.calendar` |
 | `MonthGrid` | Months as tiles, a year to a block, for picking a whole month | `dev.voir.areca.datetime.calendar` |
+| `CalendarAgenda` | A compact month joined to a long, scrolling day-by-day list the app draws, kept in step | `dev.voir.areca.datetime.calendar.agenda` |
 | `DateRangeCalendar` | A calendar that picks a run of days in two taps, under length limits | `dev.voir.areca.datetime.calendar.range` |
 | `DateRangeDay` | One day cell of a range calendar, for a custom `day` slot | `dev.voir.areca.datetime.calendar.range` |
 | `TimePicker` | Hour, minute and AM/PM wheels | `dev.voir.areca.datetime` |
@@ -140,6 +142,7 @@ Hoist a `CalendarState` to drive the calendar from outside:
 | `level` (`CalendarLevel.Days`, `Months`, `Years`), `zoomOut()`, `showDays()`, `canZoomOut` | What the body shows; step out a level, or back to the days unchanged |
 | `selectYear(year)`, `selectMonth(month)` | Choose on the years (shows its months) or the months (shows its days) |
 | `browsedYear`, `browsedYears`, `browseBackward()`, `browseForward()`, `canBrowseBackward`, `canBrowseForward` | The year the months show, the page of twelve years, and stepping them |
+| `isFolded`, `foldAnchor`, `foldFraction`, `fold(anchor, animationSpec)`, `unfold(animationSpec)`, `snapFoldTo(fraction)`, `animateFoldTo(anchor)` | Fold the days to one week — see [Folding to a week](#folding-to-a-week) |
 | `today`, `bounds` | The day drawn as today, and the months the calendar can reach |
 
 Use `scrollTo` for a move that is not the user's, such as following a typed date:
@@ -153,7 +156,7 @@ LaunchedEffect(typedDate) {
 Calendar(state = state, selection = CalendarSelection.Single(typedDate), onDateClick = onPick)
 ```
 
-The visible month is saved across configuration change and process death. Changing `bounds` builds
+The visible month and the fold are saved across configuration change and process death. Changing `bounds` builds
 a new state; changing `initialMonth` does not.
 
 **Today is read once, from `clock`**, when the state is created. Pin it in a test or screenshot with
@@ -167,6 +170,37 @@ val fixedClock = object : Clock {
 Calendar(
     state = rememberCalendarState(clock = fixedClock, timeZone = TimeZone.UTC),
     selection = CalendarSelection.Single(LocalDate(2026, 9, 18)),
+)
+```
+
+### Folding to a week
+
+`state.fold(anchor)` folds the days to the one week holding `anchor`: the grid shrinks to that row, a
+swipe no longer pages, the title stops stepping out to the months, and the chevrons step a week to
+the same weekday, kept inside the bounds — announced as `CalendarLabels.previousWeekAction` and
+`nextWeekAction`. `goToToday()` moves to today's week, and the keyboard's arrows move the week with
+the focus. `state.unfold()` opens the month again; `state.animateFoldTo(day)` moves the week, paging
+to its month and always coming to rest on a whole page. The hidden rows leave the semantics tree
+once the fold is complete.
+
+`fold` and `unfold` suspend until the fold has finished and take an `animationSpec`: pass the theme's
+motion, and `snap()` under `ArecaMotion.reduceMotion`. A later fold change interrupts one in flight.
+`state.snapFoldTo(fraction)` sets the fold at once, for a screen that folds the calendar under a
+finger as a collapsing header does. `state.foldFraction` runs from `0` (the month) to `1` (the
+week), and `state.isFolded` turns `true` past half way. The calendar reads the fraction in layout, so
+a fold moving every frame recomposes nothing; read it in a layout or drawing block to move something
+with it, such as a legend fading as the month folds away.
+
+```kotlin
+val state = rememberCalendarState()
+val scope = rememberCoroutineScope()
+val motion = ArecaTheme.motion
+val spec = if (motion.reduceMotion) snap() else motion.slow.tween<Float>(motion.standard)
+
+Calendar(state = state, selection = CalendarSelection.Single(picked), onDateClick = onPick)
+Button(
+    text = if (state.isFolded) "Show month" else "Show week",
+    onClick = { scope.launch { if (state.isFolded) state.unfold(spec) else state.fold(picked, spec) } },
 )
 ```
 
@@ -208,7 +242,7 @@ A rule runs for every drawn cell: keep it to a set lookup or a comparison.
 | --- | --- |
 | `startDayOfWeek` | The first column; from the locale by default |
 | `showAdjacentMonths` | Fill the cells before the 1st and after the last with the neighbouring months' days, muted |
-| `fixedWeekCount` | Six rows for every month, so paging does not resize the calendar. On by default |
+| `fixedWeekCount` | Six rows for every month, so paging does not resize the calendar. On by default. Off, each month takes only the weeks it has, and the calendar's height moves between two months' heights as it pages — under the finger mid-swipe and with the chevrons |
 | `header` | The band above the grid, `MonthHeader()` by default; `null` removes it |
 | `weekdayHeader` | The weekday row, `WeekdayHeader()` by default; `null` removes it |
 | `markers`, `monthMarkers` | What each day and month tile shows under its number or name — see [Day markers](#day-markers) |
@@ -219,8 +253,8 @@ The slots run in a `CalendarScope`, which carries `state`, `labels` and `startDa
 `goForward()`, `zoomOut()` and `showDays()`, with `level`, `canGoBack`, `canGoForward` and
 `visibleMonth`. `goBack()` and `goForward()` step by the level: a month, a year, twelve years.
 
-`MonthHeader(showControls = false)` drops the chevrons, and `zoomable = false` leaves the title as
-plain text. `TodayButton()` returns to today, disabled while today's month is showing:
+`MonthHeader(showControls = false)` drops the chevrons, `zoomable = false` leaves the title as
+plain text, and `actions = { … }` draws controls of your own before the chevrons. `TodayButton()` returns to today, disabled while today's month is showing:
 
 ```kotlin
 Calendar(
@@ -275,6 +309,21 @@ Calendar(
         }
     },
 )
+```
+
+`CalendarLegend(items)` is the key to the dots: a centred line of `CalendarLegendItem(color, label)`
+entries that wraps when the width runs out, read as one node (`contentDescription`, or the words in
+order). Put it under the grid, in the order the days draw their dots. Its words take
+`CalendarStyle.legendLabel`; the dot size, type and gaps are `CalendarSize.legendDotSize`,
+`legendTextStyle`, `legendSpacing`, `legendItemSpacing` and `legendPadding`.
+
+```kotlin
+Column {
+    Calendar(selection = selection, onDateClick = onPick, markers = { dotsOn(it) })
+    CalendarLegend(
+        items = categories.map { CalendarLegendItem(color = it.color, label = it.name) },
+    )
+}
 
 // Fare picker: the price inside a tile, the month's cheapest emphasised
 Calendar(
@@ -330,6 +379,84 @@ Column(verticalArrangement = Arrangement.spacedBy(ArecaTheme.spacing.lg)) {
 - Keep the amount short (`€84`, `€1.2k`): it is one clipped line.
 
 ---
+
+## Calendar agenda
+
+`CalendarAgenda` joins a compact month to a long list of days — what is planned on each day, under
+the month it falls in — and keeps the two in step. The list is the app's: `days` names the days that
+have entries, `dayHeading` and `dayContent` draw each day's heading and rows. The agenda draws no
+rows; it lays the days out in date order, pins the heading of the day at the top while its rows
+scroll (pushed up by the next one), and syncs both ways:
+
+- Tapping a day calls `onSelect`, scrolls its group to the top of the list and flashes its heading;
+  the calendar stays as it is. Scrolling does not pick days until that scroll settles. A day with no
+  entries scrolls to the next day that has some — or, with `emptyDay`, gets a placeholder group of
+  its own while it is selected.
+- Scrolling picks the day whose heading is pinned at the top, through `onSelect`; the calendar
+  follows it to its week and month, and always comes to rest on a whole page.
+- On a compact window the calendar sits above the list and collapses with it, like a collapsing top
+  bar. Scrolling the list up first folds the month to the selected week, pixel for pixel under the
+  finger, and only then scrolls the rows; pulling down at the top of the list opens the month again.
+  Let go part way and the fold finishes the way the finger was going. The `legend` folds away with
+  the month, a shadow lifts the calendar off the rows scrolled under it, and the chevrons step a
+  week (picking the same weekday and scrolling there). The handle under the calendar folds or opens
+  it with a tap.
+- From a medium window (`ArecaTheme.window.width >= WidthClass.Medium` — the pane's class inside a
+  `WindowClassBox`) the calendar is a card of `CalendarAgendaSize.calendarPaneWidth` beside a card
+  holding the list, `paneSpacing` apart. It never folds and has no handle; headings pin at the
+  list's top, and the calendar card scrolls on its own if the window is too short for it.
+- A "Today" pill (`CalendarLabels.todayAction`) appears beside the title once the selection or the
+  month leaves today.
+
+Folding and scrolling recompose nothing: the fold moves in layout, and a new selection recomposes
+only the two days whose `isSelected` changed. That holds while `dayHeading`, `dayContent` and
+`emptyDay` stay the same lambdas between recompositions — define them in the screen's composable,
+where Compose remembers them, and read changing data through the day's scope or the screen's state.
+
+```kotlin
+val state = rememberCalendarAgendaState(
+    bounds = CalendarBounds(minDate = today, maxDate = today.plus(89, DateTimeUnit.DAY)),
+)
+
+CalendarAgenda(
+    days = plan.keys.toList(),
+    selected = selected,
+    onSelect = { selected = it },
+    state = state,
+    markers = { date -> plan[date]?.let { CalendarMarker.Dots(it.kindColors(), max = 4) } },
+    legend = { CalendarLegend(items = kinds.map { CalendarLegendItem(it.color, it.label) }) },
+    monthSeparator = { month -> Text(monthTitle(month), variant = TextVariant.Overline, color = TextColor.Muted) },
+    emptyDay = { Text(nothingPlannedLabel, variant = TextVariant.BodyMedium, color = TextColor.Muted) },
+    dayHeading = {
+        Text(
+            text = dayTitle(date),
+            variant = TextVariant.LabelMedium,
+            color = if (isSelected) TextColor.Brand else TextColor.Subtle,
+        )
+    },
+) {
+    plan[date].orEmpty().forEach { payment -> PaymentRow(payment) }
+}
+```
+
+| Parameter | |
+| --- | --- |
+| `days` | Days that have entries; sorted and made distinct by the agenda |
+| `selected`, `onSelect` | The selected day, and every change to it — a tap, a scroll, a week step, Today |
+| `dayHeading`, `dayContent` | A day's heading and rows, in `CalendarAgendaDayScope`: `date`, `isSelected`, `isToday`, `isEmpty`. The agenda draws the opaque band behind the heading, pins it and flashes it |
+| `state` | `rememberCalendarAgendaState(bounds, initialMonth, clock, timeZone)`; the bounds are the window the list covers |
+| `markers`, `dateRule`, `startDayOfWeek`, `labels`, `calendarStyle`, `calendarSize` | The calendar's, as on `Calendar`. `calendarSize` defaults to `CalendarSize.Compact`; each month takes only the weeks it has |
+| `agendaLabels` | `CalendarAgendaLabels`: the handle's `showMonthAction` and `showWeekAction` |
+| `contentPadding` | Inset around the list's content; headings pin at the list's top edge |
+| `legend` | Drawn under the grid and folded away with the month — usually `CalendarLegend` |
+| `monthSeparator` | Drawn before each month's first day in the list; `null` for none |
+| `emptyDay` | Rows of a selected day with no entries; `null` gives such a day no group |
+
+`CalendarAgendaState` holds the positions, not the selection: `calendar` (the `CalendarState`,
+with its bounds, today and fold — fold or open it from code with `calendar.fold()` and
+`calendar.unfold()`), `list` (the `LazyListState`), and `requestScrollToDay(date)` (as a tap does,
+without selecting). Under `ArecaMotion.reduceMotion` the fold snaps, scrolls jump and the heading's
+flash does not fade.
 
 ## Date range
 
@@ -544,6 +671,7 @@ half a `TimePicker`. They share one border, focus and `status`, and take a `fiel
 | Component | Style · local | Size · local |
 | --- | --- | --- |
 | `Calendar`, `MonthHeader`, `WeekdayHeader`, `TodayButton`, `CalendarDay` | `CalendarStyle` · `LocalCalendarStyle` | `CalendarSize` · `LocalCalendarSize` |
+| `CalendarAgenda` | `CalendarAgendaStyle` · `LocalCalendarAgendaStyle` (`calendarBg`, `listBg`, `headingBg`, `highlight`, `handle`, `lift`), with `CalendarStyle` | `CalendarAgendaSize` · `LocalCalendarAgendaSize` (`shape`, `headingPadding`, `handleSize`, `handleHeight`, `lift`, `paneSpacing`, `calendarPaneWidth`), with `CalendarSize` |
 | `DateRangeCalendar`, `DateRangeDay` | `DateRangeStyle` · `LocalDateRangeStyle`, with `CalendarStyle` | `CalendarSize` · `LocalCalendarSize` |
 | `CalendarHeatDay`, `CalendarHeatLegend` | `CalendarHeatStyle` · `LocalCalendarHeatStyle` | `CalendarHeatSize` · `LocalCalendarHeatSize` |
 | `MonthGrid` | `MonthGridStyle` · `LocalMonthGridStyle` | `MonthGridSize` · `LocalMonthGridSize` |
@@ -558,8 +686,13 @@ half a `TimePicker`. They share one border, focus and `status`, and take a `fiel
   `CalendarDayShape.Tile` a rounded tile over the whole cell (`CalendarSize.dayTilePadding`,
   `dayTileShape`), for days that carry a price or a count. Range days keep their own caps. `DateRangeStyle.default(…)`
   does the same for the band, the end caps and their variants.
-- `CalendarSize.Default` is the full calendar; `CalendarSize.Compact` tightens it for a dropdown or
-  sidebar (the `DateTimeField` dropdown uses it). `CalendarSize.default(…)` overrides single values.
+- `CalendarSize.Default` is the full calendar; `CalendarSize.Compact` tightens it for a dropdown, a
+  sidebar or a calendar across a phone above a list (the `DateTimeField` dropdown uses it).
+  `CalendarSize.default(…)` overrides single values. A day is square up to `maxDayHeight`
+  (`Dp.Unspecified` in `Default`, 40dp in `Compact`); wider than that, the cell keeps the height and
+  its circle stays round in the middle, so a wide calendar keeps short rows.
+- The month title slides up to a later month and down to an earlier one, and fades between levels;
+  under `ArecaMotion.reduceMotion` it only fades.
 - `CalendarHeatStyle.default(…)` takes the shade `ramp` (not empty) and the empty, future, ink and
   ring colours. `CalendarHeatSize`, `MonthGridStyle`, `MonthGridSize`, `DateTileStyle` and
   `DateTileSize` each have a `Default` and a `default(…)`.
@@ -604,8 +737,9 @@ tab order; a read-only calendar has no focusable days.
   announced as selected. Weekday headings read full names.
 - Each month the calendar settles on is announced. The title reads the month and `chooseMonthAction`
   over the days, the year and `chooseYearAction` over the months, and is a heading over the years.
-  The chevrons read `previousMonthAction` and `nextMonthAction`, `previousYearAction` and
-  `nextYearAction`, or `previousYearsAction` and `nextYearsAction` by level.
+  The chevrons read `previousMonthAction` and `nextMonthAction` (`previousWeekAction` and
+  `nextWeekAction` while folded to a week), `previousYearAction` and `nextYearAction`, or
+  `previousYearsAction` and `nextYearsAction` by level.
 - Month and year tiles are radio buttons in one group, reading `monthHeader` or `year`; the arrow
   keys move between them and Escape returns to the days.
 - `CalendarHeatDay` reads its day's description and then the amount; `CalendarHeatLegend` reads
@@ -639,6 +773,7 @@ CompositionLocalProvider(LocalDateTimeLocale provides DateTimeLocale.Iso) {
 | Labels | Used by | Holds |
 | --- | --- | --- |
 | `CalendarLabels` | `Calendar`, `DateRangeCalendar`, `MonthYearPicker`, `MonthGrid`, `DateTile`, `DateTimeField` (`calendarLabels`) | Weekday headings and names, month headings and names, the spoken day, control names, digits |
+| `CalendarAgendaLabels` | `CalendarAgenda` (`agendaLabels`) | The handle's `showMonthAction` and `showWeekAction`; the Today pill reads `CalendarLabels.todayAction` |
 | `DateRangeLabels` | `DateRangeCalendar` (`rangeLabels`), `DateRangeDay` | A day's place in the range, and a range's length |
 | `TimePickerLabels` | `TimePicker`, `DateTimeField` (`timeLabels`) | Wheel names, AM and PM, how an hour is read with its period |
 | `DateTimeFieldLabels` | `DateTimeField` (`labels`) | The halves' names and states, and the placeholders |
@@ -677,6 +812,8 @@ val GermanCalendarLabels = CalendarLabels(
     nextYearAction = "Nächstes Jahr",
     previousYearsAction = "Frühere Jahre",
     nextYearsAction = "Spätere Jahre",
+    previousWeekAction = "Vorherige Woche",
+    nextWeekAction = "Nächste Woche",
     weekdayName = { day -> GermanWeekdays[day.ordinal] },
 )
 ```

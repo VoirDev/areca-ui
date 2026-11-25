@@ -34,8 +34,12 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.constrainHeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
@@ -62,6 +66,9 @@ import kotlinx.datetime.YearMonth
 import kotlinx.datetime.monthsUntil
 import kotlinx.datetime.yearMonth
 import kotlin.math.abs
+import kotlin.math.ceil
+import kotlin.math.floor
+import kotlin.math.roundToInt
 
 /**
  * Everything a day cell needs to draw itself.
@@ -152,15 +159,23 @@ public class CalendarScope internal constructor(
     public val level: CalendarLevel get() = state.level
 
     /**
-     * Whether [goBack] has somewhere to go: an earlier month at [CalendarLevel.Days], an earlier
-     * year or page of years on the other levels.
+     * Whether [goBack] has somewhere to go: an earlier month at [CalendarLevel.Days] (an earlier week
+     * while [folded][CalendarState.isFolded]), an earlier year or page of years on the other levels.
      */
     public val canGoBack: Boolean
-        get() = if (state.level == CalendarLevel.Days) state.canScrollBackward else state.canBrowseBackward
+        get() = when {
+            state.level != CalendarLevel.Days -> state.canBrowseBackward
+            state.isFolded -> state.foldAnchor.foldStep(-1, startDayOfWeek, state.bounds) != null
+            else -> state.canScrollBackward
+        }
 
     /** Whether [goForward] has somewhere to go. The forward counterpart of [canGoBack]. */
     public val canGoForward: Boolean
-        get() = if (state.level == CalendarLevel.Days) state.canScrollForward else state.canBrowseForward
+        get() = when {
+            state.level != CalendarLevel.Days -> state.canBrowseForward
+            state.isFolded -> state.foldAnchor.foldStep(1, startDayOfWeek, state.bounds) != null
+            else -> state.canScrollForward
+        }
 
     /**
      * Days drawn as chosen. Written by the calendar after each composition and read only to place
@@ -224,23 +239,47 @@ public class CalendarScope internal constructor(
         coroutineScope.launch { state.scrollTo(month) }
     }
 
-    /** Animates to the month containing today, and returns to the days if another level is showing. */
+    /**
+     * Animates to the month containing today — to today's week while folded — and returns to the
+     * days if another level is showing.
+     */
     public fun goToToday() {
         state.showDays()
-        coroutineScope.launch { state.animateToToday() }
+        coroutineScope.launch {
+            if (state.isFolded) state.animateFoldTo(state.today) else state.animateToToday()
+        }
     }
 
     /**
-     * Steps back by the current level: a month at [CalendarLevel.Days], a year at
-     * [CalendarLevel.Months], a page of years at [CalendarLevel.Years].
+     * Steps back by the current level: a month at [CalendarLevel.Days] (a week while
+     * [folded][CalendarState.isFolded], to the same weekday), a year at [CalendarLevel.Months], a
+     * page of years at [CalendarLevel.Years].
      */
     public fun goBack() {
-        if (state.level == CalendarLevel.Days) previousMonth() else state.browseBackward()
+        when {
+            state.level != CalendarLevel.Days -> state.browseBackward()
+            state.isFolded -> stepWeek(-1)
+            else -> previousMonth()
+        }
     }
 
     /** Steps forward by the current level. The forward counterpart of [goBack]. */
     public fun goForward() {
-        if (state.level == CalendarLevel.Days) nextMonth() else state.browseForward()
+        when {
+            state.level != CalendarLevel.Days -> state.browseForward()
+            state.isFolded -> stepWeek(1)
+            else -> nextMonth()
+        }
+    }
+
+    /**
+     * Moves the folded week by [weeks], to the same weekday, kept inside the bounds.
+     *
+     * @param weeks Weeks to step; negative steps back.
+     */
+    private fun stepWeek(weeks: Int) {
+        val target = state.foldAnchor.foldStep(weeks, startDayOfWeek, state.bounds) ?: return
+        coroutineScope.launch { state.animateFoldTo(target) }
     }
 
     /** Steps out one level. See [CalendarState.zoomOut]. */
@@ -268,6 +307,11 @@ public class CalendarScope internal constructor(
         if (target == from) return
         activeDate = target
         pendingFocus = target
+        if (state.isFolded) {
+            // Folded, only one week is drawn: the week follows the focus so the target is on screen.
+            coroutineScope.launch { state.animateFoldTo(target) }
+            return
+        }
         val distance = state.visibleMonth.monthsUntil(target.yearMonth)
         if (distance == 0) return
         coroutineScope.launch {
@@ -436,7 +480,7 @@ public fun Calendar(
                     state.visibleMonth.weekCount(startDayOfWeek)
                 }
                 val cellWidth = ((maxWidth - gutters) / DAYS_IN_WEEK).coerceAtLeast(0.dp)
-                val cellHeight = cellWidth + scope.markerLaneHeight(size)
+                val cellHeight = size.dayHeight(cellWidth) + scope.markerLaneHeight(size)
                 val bodyHeight = cellHeight * weeks + size.weekSpacing * (weeks - 1)
 
                 AnimatedContent(
@@ -450,6 +494,7 @@ public fun Calendar(
                     when (level) {
                         CalendarLevel.Days -> MonthPager(
                             scope = scope,
+                            foldFraction = { state.foldFraction },
                             selection = selection,
                             dateRule = dateRule,
                             showAdjacentMonths = showAdjacentMonths,
@@ -513,7 +558,12 @@ private fun MonthChangeAnnouncement(state: CalendarState, labels: CalendarLabels
  * Each page is a table to assistive technology: its rows are weeks and its columns weekdays, and
  * every built-in cell states its row and column.
  *
+ * Folding ([CalendarState.foldFraction]), each page shrinks to the row holding
+ * [CalendarState.foldAnchor] and slides it into place, and a swipe no longer pages; fully folded, the
+ * other rows leave the semantics tree.
+ *
  * @param scope Slot receiver, carrying the state the cells read.
+ * @param foldFraction How far the days are folded, `0` open to `1` one week. Read in layout.
  * @param selection Days drawn as chosen.
  * @param dateRule Decides which days accept a tap.
  * @param showAdjacentMonths Whether edge cells carry their real dates.
@@ -524,6 +574,7 @@ private fun MonthChangeAnnouncement(state: CalendarState, labels: CalendarLabels
 @Composable
 private fun MonthPager(
     scope: CalendarScope,
+    foldFraction: () -> Float,
     selection: CalendarSelection,
     dateRule: CalendarDateRule,
     showAdjacentMonths: Boolean,
@@ -532,9 +583,26 @@ private fun MonthPager(
     day: @Composable CalendarScope.(CalendarDayState) -> Unit,
 ) {
     val state = scope.state
+    val layoutDirection = LocalLayoutDirection.current
+    // Both change only at the ends of a fold, so the pager and its pages recompose twice per fold
+    // rather than on every frame of it.
+    val pagingEnabled by remember(state) { derivedStateOf { state.foldFraction == 0f } }
+    val fullyFolded by remember(state) { derivedStateOf { state.foldFraction >= 1f } }
     HorizontalPager(
         state = state.pagerState,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .monthHeight(
+                state = state,
+                startDayOfWeek = scope.startDayOfWeek,
+                fixedWeekCount = fixedWeekCount,
+                foldFraction = foldFraction,
+                gutters = size.contentPadding.calculateStartPadding(layoutDirection) +
+                    size.contentPadding.calculateEndPadding(layoutDirection),
+                size = size,
+                laneHeight = scope.markerLaneHeight(size),
+            ),
+        userScrollEnabled = pagingEnabled,
         contentPadding = size.contentPadding,
         pageSpacing = size.monthSpacing,
         beyondViewportPageCount = 1,
@@ -549,19 +617,29 @@ private fun MonthPager(
             )
         }
 
+        val foldRow = state.foldAnchor.rowIn(pageMonth, scope.startDayOfWeek)
+            .coerceAtMost(weeks.size - 1)
+        // Once fully folded, the rows out of sight are out of the semantics tree and the focus order.
+        val hideOtherRows = fullyFolded
         Column(
-            modifier = Modifier.semantics {
-                collectionInfo = CollectionInfo(rowCount = weeks.size, columnCount = DAYS_IN_WEEK)
-            },
+            modifier = Modifier
+                .foldRows(row = foldRow, rows = weeks.size, spacing = size.weekSpacing, fraction = foldFraction)
+                .semantics {
+                    collectionInfo = CollectionInfo(rowCount = weeks.size, columnCount = DAYS_IN_WEEK)
+                },
             verticalArrangement = Arrangement.spacedBy(size.weekSpacing),
         ) {
-            weeks.forEach { week ->
-                Row(modifier = Modifier.fillMaxWidth()) {
+            weeks.forEachIndexed { index, week ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .thenIf(hideOtherRows && index != foldRow) { clearAndSetSemantics { }.focusProperties { canFocus = false } },
+                ) {
                     week.forEach { date ->
                         Box(
                             modifier = Modifier
                                 .weight(1f)
-                                .dayCellSize(extraHeight = scope.markerLaneHeight(size)),
+                                .dayCellSize(size = size, extraHeight = scope.markerLaneHeight(size)),
                         ) {
                             if (date != null) {
                                 scope.day(
@@ -595,15 +673,126 @@ internal fun CalendarScope.markerLaneHeight(size: CalendarSize): Dp =
     if (hasMarkers) size.markerLaneHeight else 0.dp
 
 /**
- * Sizes a day cell as wide as its share of the row and that much tall plus [extraHeight]: square
- * without markers, and square plus the marker row with them.
+ * Gives the pager the height of the month on screen, moving between two months' heights while the
+ * pager travels between them, so a five-row month grows to a six-row one under the finger and under
+ * an animated page change alike.
  *
+ * The heights are computed from the width rather than measured, because the pager composes pages on
+ * either side of the visible one and measures to the tallest; a day cell is square plus
+ * [laneHeight], so a month's height follows from its week count. Content taller than the reported
+ * height — the taller neighbour mid-swipe — is clipped at the bottom, where pages are aligned.
+ *
+ * Folding ([CalendarState.foldFraction]) shrinks the height towards one row by [foldFraction].
+ *
+ * @param state Calendar whose pager position decides the height.
+ * @param startDayOfWeek Day each week begins on, which decides a month's week count.
+ * @param fixedWeekCount Whether every month has six rows.
+ * @param foldFraction How far the days are folded, `0` open to `1` one row.
+ * @param gutters Horizontal inset around the pages.
+ * @param size Dimensions: a day's height and the gap between weeks.
+ * @param laneHeight Height every day keeps under its number for markers.
+ * @return Modifier laying the pager out at the interpolated height.
+ */
+private fun Modifier.monthHeight(
+    state: CalendarState,
+    startDayOfWeek: DayOfWeek,
+    fixedWeekCount: Boolean,
+    foldFraction: () -> Float,
+    gutters: Dp,
+    size: CalendarSize,
+    laneHeight: Dp,
+): Modifier = clipToBounds().layout { measurable, constraints ->
+    val placeable = measurable.measure(constraints.copy(minHeight = 0, maxHeight = Constraints.Infinity))
+    val rowHeight = weekRowHeight(width = constraints.maxWidth, gutters = gutters, size = size, laneHeight = laneHeight)
+    val pager = state.pagerState
+    val position = (pager.currentPage + pager.currentPageOffsetFraction)
+        .coerceIn(0f, (state.bounds.monthCount - 1).toFloat())
+    val lower = floor(position).toInt()
+    val upper = (lower + 1).coerceAtMost(state.bounds.monthCount - 1)
+    fun weeksOf(page: Int) = if (fixedWeekCount) MAX_WEEKS_IN_MONTH else state.bounds.monthAt(page).weekCount(startDayOfWeek)
+    val monthHeight = monthGridHeight(
+        fromWeeks = weeksOf(lower),
+        toWeeks = weeksOf(upper),
+        fraction = position - lower,
+        rowHeight = rowHeight,
+        weekSpacing = size.weekSpacing.roundToPx(),
+    )
+    val height = foldedHeight(fullHeight = monthHeight, rowHeight = rowHeight, fraction = foldFraction())
+    layout(placeable.width, constraints.constrainHeight(height)) { placeable.place(0, 0) }
+}
+
+/**
+ * Folds a page of [rows] week rows towards the one at [row]: the page shrinks to that row's height
+ * and slides it to the top as [fraction] goes from `0` to `1`, clipping the rest.
+ *
+ * @param row Row that stays.
+ * @param rows Rows on the page.
+ * @param spacing Gap between rows.
+ * @param fraction How far the page is folded. Read in layout.
+ * @return Modifier laying the page out folded.
+ */
+private fun Modifier.foldRows(row: Int, rows: Int, spacing: Dp, fraction: () -> Float): Modifier =
+    clipToBounds().layout { measurable, constraints ->
+        val placeable = measurable.measure(constraints.copy(minHeight = 0, maxHeight = Constraints.Infinity))
+        val gap = spacing.roundToPx()
+        val rowHeight = (placeable.height - gap * (rows - 1)) / rows.coerceAtLeast(1)
+        val folded = fraction().coerceIn(0f, 1f)
+        val height = foldedHeight(fullHeight = placeable.height, rowHeight = rowHeight, fraction = folded)
+        layout(placeable.width, constraints.constrainHeight(height)) {
+            placeable.place(0, -((rowHeight + gap) * row * folded).roundToInt())
+        }
+    }
+
+/**
+ * Height of one week row of a calendar [width] pixels wide: a day's square (capped by
+ * [CalendarSize.maxDayHeight]) plus the marker lane.
+ *
+ * @param width The calendar's width, in pixels.
+ * @param gutters Horizontal inset around the grid.
+ * @param size Dimensions a day's height comes from.
+ * @param laneHeight Height kept under each number for markers.
+ * @return Height in pixels.
+ */
+internal fun Density.weekRowHeight(width: Int, gutters: Dp, size: CalendarSize, laneHeight: Dp): Int {
+    val pageWidth = (width - gutters.roundToPx()).coerceAtLeast(0)
+    val cellWidth = ceil(pageWidth / DAYS_IN_WEEK.toFloat()).toInt()
+    return size.dayHeight(cellWidth.toDp()).roundToPx() + laneHeight.roundToPx()
+}
+
+/**
+ * Height of a month grid part way between two months.
+ *
+ * @param fromWeeks Week count of the month the pager leaves.
+ * @param toWeeks Week count of the month it moves to.
+ * @param fraction How far it has moved, `0` to `1`.
+ * @param rowHeight Height of one week row, in pixels.
+ * @param weekSpacing Gap between week rows, in pixels.
+ * @return Height in pixels.
+ */
+internal fun monthGridHeight(
+    fromWeeks: Int,
+    toWeeks: Int,
+    fraction: Float,
+    rowHeight: Int,
+    weekSpacing: Int,
+): Int {
+    fun heightOf(weeks: Int) = rowHeight * weeks + weekSpacing * (weeks - 1)
+    val from = heightOf(fromWeeks)
+    val to = heightOf(toWeeks)
+    return (from + (to - from) * fraction.coerceIn(0f, 1f)).roundToInt()
+}
+
+/**
+ * Sizes a day cell as wide as its share of the row and as tall as [CalendarSize.dayHeight] plus
+ * [extraHeight]: square (or capped) without markers, and that plus the marker row with them.
+ *
+ * @param size Dimensions the square's height comes from.
  * @param extraHeight Height added below the square.
  * @return Modifier laying the cell out at that size.
  */
-private fun Modifier.dayCellSize(extraHeight: Dp): Modifier = layout { measurable, constraints ->
+private fun Modifier.dayCellSize(size: CalendarSize, extraHeight: Dp): Modifier = layout { measurable, constraints ->
     val width = constraints.maxWidth
-    val height = width + extraHeight.roundToPx()
+    val height = size.dayHeight(width.toDp()).roundToPx() + extraHeight.roundToPx()
     val placeable = measurable.measure(Constraints.fixed(width, height))
     layout(width, height) { placeable.place(0, 0) }
 }

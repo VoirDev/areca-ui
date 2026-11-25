@@ -1,5 +1,6 @@
 package dev.voir.areca.playground.registry
 
+import dev.voir.areca.playground.datetime.CalendarAgendaShowcase
 import dev.voir.areca.playground.datetime.CalendarShowcase
 import dev.voir.areca.playground.datetime.DateRangeCalendarShowcase
 import dev.voir.areca.playground.datetime.DateTileShowcase
@@ -23,6 +24,17 @@ internal val DateTimeShowcases: List<ShowcaseEntry> = listOf(
             "heatmap", "spending",
         ),
         content = { CalendarShowcase() },
+    ),
+    ShowcaseEntry(
+        id = "datetime/calendar-agenda",
+        group = ShowcaseGroup.DateTime,
+        title = "Calendar agenda",
+        summary = "A compact month joined to a long day-by-day list the app draws, kept in step.",
+        keywords = listOf(
+            "agenda", "schedule", "planned", "upcoming", "coming up", "payments", "events", "timeline",
+            "sticky", "week", "fold", "list",
+        ),
+        content = { CalendarAgendaShowcase() },
     ),
     ShowcaseEntry(
         id = "datetime/date-tile",

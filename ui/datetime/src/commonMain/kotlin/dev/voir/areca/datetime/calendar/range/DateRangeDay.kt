@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -207,7 +208,7 @@ public fun CalendarScope.DateRangeDay(
             // The band and cap keep the square above the marker row, so the cap stays round and the
             // marker never sits on the band.
             Column(modifier = Modifier.fillMaxSize()) {
-                Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
+                Box(modifier = Modifier.fillMaxWidth().weight(1f), contentAlignment = Alignment.Center) {
                     Box(
                         modifier = Modifier
                             .padding(trackPadding)
@@ -218,6 +219,8 @@ public fun CalendarScope.DateRangeDay(
                     Box(
                         modifier = Modifier
                             .padding(size.dayPadding)
+                            // The cap stays round in a cell wider than tall: it takes the cell's height.
+                            .aspectRatio(1f, matchHeightConstraintsFirst = true)
                             .fillMaxSize()
                             .background(color = backgroundColor, shape = rangeStyle.capShape)
                             .border(

@@ -11,7 +11,7 @@ rules and recipes.
 | Artifact | Package(s) | Passes `foundation` on | Reference |
 | --- | --- | --- | --- |
 | `dev.voir.areca:charts` | `dev.voir.areca.charts` | Yes (`api`) | [charts.md](charts.md) |
-| `dev.voir.areca:datetime` | `dev.voir.areca.datetime`, `.calendar`, `.calendar.range` | Yes (`api`), plus `kotlinx-datetime` 0.8.x (`api`) | [datetime.md](datetime.md) |
+| `dev.voir.areca:datetime` | `dev.voir.areca.datetime`, `.calendar`, `.calendar.agenda`, `.calendar.range` | Yes (`api`), plus `kotlinx-datetime` 0.8.x (`api`) | [datetime.md](datetime.md) |
 | `dev.voir.areca:crop` | `dev.voir.areca.crop` | **No**: declare `dev.voir.areca:foundation` yourself | [crop.md](crop.md) |
 | `dev.voir.areca:media` | `dev.voir.areca.media`, `.image`, `.zoom`, `.carousel`, `.thumbnail`, `.viewer`, `.compare` | Yes (`api`) | [media.md](media.md) |
 | `dev.voir.areca:keyboard` | `dev.voir.areca.keyboard`, `.layout`, `.key` | Yes (`api`) | [keyboard.md](keyboard.md) |
@@ -32,7 +32,7 @@ commonMain.dependencies {
 
 - **charts** — grouped bars, a split of a whole, a period picker made of columns, a running total,
   an amount against its usual or a target, and the legend for any of them.
-- **datetime** — a calendar (one day, many, a range), a heat-map month, month tiles, a date tile, a
+- **datetime** — a calendar (one day, many, a range), a month over a day-by-day agenda, a heat-map month, month tiles, a date tile, a
   time picker, or a date-time field in a form.
 - **crop** — framing a photo before it is saved or uploaded: an avatar, a cover, a post.
 - **media** — pictures from data: a framed picture with loading and failed faces, labels on it,

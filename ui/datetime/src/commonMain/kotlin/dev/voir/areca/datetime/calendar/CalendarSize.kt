@@ -11,6 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.isSpecified
 import dev.voir.areca.foundation.button.ButtonSize
 import dev.voir.areca.foundation.button.IconButtonSize
 import dev.voir.areca.foundation.icon.ChevronSize
@@ -66,6 +67,15 @@ import dev.voir.areca.theme.ArecaTheme
  * @property tileSpacing Gap between month and year tiles, across and down.
  * @property tileShape Shape of a month or year tile.
  * @property tileTextStyle Type of a month or year tile.
+ * @property legendDotSize Diameter of a [CalendarLegend] dot. A step larger than [markerDotSize], so
+ *   the key reads on its own.
+ * @property legendTextStyle Type of a [CalendarLegend]'s words.
+ * @property legendSpacing Gap between a legend dot and its word.
+ * @property legendItemSpacing Gap between legend entries, across and between lines.
+ * @property legendPadding Inset around a [CalendarLegend].
+ * @property maxDayHeight Tallest a day's square may be. A day is as tall as it is wide up to this,
+ *   and wider than tall past it, with its circle staying round in the middle — so a calendar across a
+ *   phone keeps short rows. [Dp.Unspecified] keeps every day square however wide it is.
  */
 @Immutable
 public data class CalendarSize(
@@ -98,6 +108,12 @@ public data class CalendarSize(
     public val tileSpacing: Dp,
     public val tileShape: Shape,
     public val tileTextStyle: TextStyle,
+    public val maxDayHeight: Dp,
+    public val legendDotSize: Dp,
+    public val legendTextStyle: TextStyle,
+    public val legendSpacing: Dp,
+    public val legendItemSpacing: Dp,
+    public val legendPadding: PaddingValues,
 ) {
     /** Theme-derived sizes and the builder they share. */
     public companion object {
@@ -110,8 +126,9 @@ public data class CalendarSize(
          * Tighter throughout, for a calendar inside something else: a date field's dropdown, a
          * sidebar, a popover.
          *
-         * Only the insets and the gaps shrink; the type does not, because day numbers are the one
-         * thing in a calendar nobody should have to squint at.
+         * Only the insets, the gaps and the height of a day shrink; the type does not, because day
+         * numbers are the one thing in a calendar nobody should have to squint at. A day is at most
+         * 40dp tall, so a compact calendar across a phone keeps short rows.
          */
         public val Compact: CalendarSize
             @Composable
@@ -132,6 +149,7 @@ public data class CalendarSize(
                 markerLaneHeight = 12.dp,
                 markerDotSize = 4.dp,
                 markerIconSize = 10.dp,
+                maxDayHeight = 40.dp,
             )
 
         /**
@@ -169,6 +187,12 @@ public data class CalendarSize(
          * @param tileSpacing Gap between month and year tiles.
          * @param tileShape Shape of a month or year tile.
          * @param tileTextStyle Type of a month or year tile.
+         * @param maxDayHeight Tallest a day's square may be, or [Dp.Unspecified] for always square.
+         * @param legendDotSize Diameter of a legend dot.
+         * @param legendTextStyle Type of a legend's words.
+         * @param legendSpacing Gap between a legend dot and its word.
+         * @param legendItemSpacing Gap between legend entries.
+         * @param legendPadding Inset around a legend.
          * @return Size built from the given values.
          */
         @Composable
@@ -220,6 +244,15 @@ public data class CalendarSize(
             tileSpacing: Dp = ArecaTheme.spacing.sm,
             tileShape: Shape = ArecaTheme.shapes.md,
             tileTextStyle: TextStyle = dayTextStyle,
+            maxDayHeight: Dp = Dp.Unspecified,
+            legendDotSize: Dp = 7.dp,
+            legendTextStyle: TextStyle = ArecaTheme.typography.bodyExtraSmall,
+            legendSpacing: Dp = ArecaTheme.spacing.sm,
+            legendItemSpacing: Dp = ArecaTheme.spacing.lg,
+            legendPadding: PaddingValues = PaddingValues(
+                horizontal = ArecaTheme.spacing.md,
+                vertical = ArecaTheme.spacing.md,
+            ),
         ): CalendarSize = CalendarSize(
             contentPadding = contentPadding,
             monthSpacing = monthSpacing,
@@ -250,6 +283,12 @@ public data class CalendarSize(
             tileSpacing = tileSpacing,
             tileShape = tileShape,
             tileTextStyle = tileTextStyle,
+            maxDayHeight = maxDayHeight,
+            legendDotSize = legendDotSize,
+            legendTextStyle = legendTextStyle,
+            legendSpacing = legendSpacing,
+            legendItemSpacing = legendItemSpacing,
+            legendPadding = legendPadding,
         )
     }
 }
@@ -267,6 +306,16 @@ public data class CalendarSize(
  */
 public val LocalCalendarSize: ProvidableCompositionLocal<CalendarSize?> =
     compositionLocalOf { null }
+
+/**
+ * Height of a day's square — the cell above the marker row — in a cell [width] wide: as tall as
+ * wide, at most [CalendarSize.maxDayHeight].
+ *
+ * @param width The cell's width.
+ * @return The square's height.
+ */
+internal fun CalendarSize.dayHeight(width: Dp): Dp =
+    if (maxDayHeight.isSpecified) minOf(width, maxDayHeight) else width
 
 /**
  * Width of the ring around today: the stroke foundation's checkbox and radio draw their outlines

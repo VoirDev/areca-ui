@@ -1,7 +1,15 @@
 package dev.voir.areca.datetime.calendar
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.IntOffset
 import dev.voir.areca.foundation.LocalContentColor
 import dev.voir.areca.foundation.LocalTextStyle
 import dev.voir.areca.foundation.button.Button
@@ -22,6 +31,9 @@ import dev.voir.areca.foundation.icon.Chevron
 import dev.voir.areca.foundation.icon.ChevronDirection
 import dev.voir.areca.foundation.icon.LocalChevronSize
 import dev.voir.areca.foundation.text.Text
+import dev.voir.areca.theme.ArecaTheme
+import dev.voir.areca.theme.tween
+import kotlinx.datetime.number
 
 /**
  * The band above the grid: the title on the left, back and forward on the right.
@@ -33,7 +45,8 @@ import dev.voir.areca.foundation.text.Text
  *
  * The header follows the calendar's [CalendarLevel]. Over the days the title is the month; over the
  * months it is the year, with a "Pick a month" hint beside it; over the years it is the span of the
- * page, with "Pick a year". The chevrons step by the level — a month, a year, a page of years — and
+ * page, with "Pick a year". The chevrons step by the level — a month (a week while the days are
+ * [folded][CalendarState.isFolded]), a year, a page of years — and
  * disable at the ends of the bounds rather than silently doing nothing, so the limits of a bounded
  * calendar are visible before the user pushes against them.
  *
@@ -49,6 +62,7 @@ import dev.voir.areca.foundation.text.Text
  *   plain text — for a calendar whose range is a handful of months.
  * @param style Colors. Defaults to the calendar's.
  * @param size Dimensions and type. Defaults to the calendar's.
+ * @param actions Controls drawn before the chevrons, such as a "Today" pill. `null` draws none.
  */
 @Composable
 public fun CalendarScope.MonthHeader(
@@ -57,11 +71,19 @@ public fun CalendarScope.MonthHeader(
     zoomable: Boolean = true,
     style: CalendarStyle = LocalCalendarStyle.current ?: CalendarStyle.Default,
     size: CalendarSize = LocalCalendarSize.current ?: CalendarSize.Default,
+    actions: (@Composable RowScope.() -> Unit)? = null,
 ) {
     val title = when (level) {
         CalendarLevel.Days -> labels.monthHeader(visibleMonth)
         CalendarLevel.Months -> labels.year(state.browsedYear)
         CalendarLevel.Years -> labels.yearSpan(state.browsedYears)
+    }
+    // Where the title sits in time, so a later title slides in from below and an earlier one from
+    // above, the way the grid pages under it.
+    val titleOrder = when (level) {
+        CalendarLevel.Days -> visibleMonth.year * MONTHS_IN_YEAR + visibleMonth.month.number
+        CalendarLevel.Months -> state.browsedYear * MONTHS_IN_YEAR
+        CalendarLevel.Years -> state.browsedYears.first * MONTHS_IN_YEAR
     }
     val hint = when (level) {
         CalendarLevel.Days -> null
@@ -69,6 +91,7 @@ public fun CalendarScope.MonthHeader(
         CalendarLevel.Years -> labels.pickYearHint
     }
     val (backAction, forwardAction) = when (level) {
+        CalendarLevel.Days if state.isFolded -> labels.previousWeekAction to labels.nextWeekAction
         CalendarLevel.Days -> labels.previousMonthAction to labels.nextMonthAction
         CalendarLevel.Months -> labels.previousYearAction to labels.nextYearAction
         CalendarLevel.Years -> labels.previousYearsAction to labels.nextYearsAction
@@ -113,12 +136,12 @@ public fun CalendarScope.MonthHeader(
                         }
                     },
                 ) {
-                    Text(text = title, maxLines = 1)
+                    HeaderTitle(title = title, order = titleOrder)
                 }
             } else {
-                Text(
-                    text = title,
-                    maxLines = 1,
+                HeaderTitle(
+                    title = title,
+                    order = titleOrder,
                     // The toggle's own inset, so the title starts where it does over the days.
                     modifier = Modifier
                         .padding(size.levelToggle.padding)
@@ -137,6 +160,15 @@ public fun CalendarScope.MonthHeader(
             }
 
             Spacer(modifier = Modifier.weight(1f))
+
+            actions?.let { slot ->
+                Row(
+                    modifier = Modifier.padding(end = size.monthControlSpacing),
+                    horizontalArrangement = Arrangement.spacedBy(size.monthControlSpacing),
+                    verticalAlignment = Alignment.CenterVertically,
+                    content = slot,
+                )
+            }
 
             if (showControls) {
                 Row(
@@ -164,5 +196,45 @@ public fun CalendarScope.MonthHeader(
                 }
             }
         }
+    }
+}
+
+/** Months in a year, for ordering header titles in time. */
+private const val MONTHS_IN_YEAR: Int = 12
+
+/** A header title and where it sits in time. */
+private data class TitleKey(val title: String, val order: Int)
+
+/**
+ * The header's title, which slides up to a later title and down to an earlier one, and fades in
+ * place when it does not move in time (stepping between levels). Under
+ * [reduced motion][dev.voir.areca.theme.ArecaMotion.reduceMotion] every change fades.
+ *
+ * @param title Text to show.
+ * @param order Where [title] sits in time; compared with the previous title to pick a direction.
+ * @param modifier Modifier applied to the title.
+ */
+@Composable
+private fun HeaderTitle(title: String, order: Int, modifier: Modifier = Modifier) {
+    val motion = ArecaTheme.motion
+    AnimatedContent(
+        targetState = TitleKey(title, order),
+        modifier = modifier,
+        contentAlignment = Alignment.CenterStart,
+        transitionSpec = {
+            val fade = motion.medium.tween<Float>(motion.standard)
+            val direction = targetState.order.compareTo(initialState.order)
+            val transform = if (motion.reduceMotion || direction == 0) {
+                fadeIn(fade) togetherWith fadeOut(fade)
+            } else {
+                val slide = motion.slow.tween<IntOffset>(motion.standard)
+                (slideInVertically(slide) { it / 2 * direction } + fadeIn(fade)) togetherWith
+                    (slideOutVertically(slide) { -it / 2 * direction } + fadeOut(fade))
+            }
+            transform using SizeTransform(clip = false)
+        },
+        label = "calendarHeaderTitle",
+    ) { key ->
+        Text(text = key.title, maxLines = 1)
     }
 }

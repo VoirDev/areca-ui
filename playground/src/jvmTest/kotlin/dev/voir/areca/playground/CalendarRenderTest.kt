@@ -1,5 +1,6 @@
 package dev.voir.areca.playground
 
+import androidx.compose.animation.core.snap
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,6 +22,8 @@ import dev.voir.areca.datetime.calendar.Calendar
 import dev.voir.areca.datetime.calendar.CalendarDateRange
 import dev.voir.areca.datetime.calendar.CalendarDateRule
 import dev.voir.areca.datetime.calendar.CalendarDayShape
+import dev.voir.areca.datetime.calendar.CalendarLegend
+import dev.voir.areca.datetime.calendar.CalendarLegendItem
 import dev.voir.areca.datetime.calendar.CalendarMarker
 import dev.voir.areca.datetime.calendar.CalendarSelection
 import dev.voir.areca.datetime.calendar.CalendarSize
@@ -172,6 +175,55 @@ class CalendarRenderTest {
         }
     }
 
+    /** A compact calendar whose height follows each month's weeks: five rows, then four. */
+    @Test
+    fun `month height follows the weeks`() {
+        render("calendar-weeks-five") { WeeksCalendar(state = pinnedState()) }
+        render("calendar-weeks-four") {
+            val state = pinnedState()
+            LaunchedEffect(state) { state.animateTo(kotlinx.datetime.YearMonth(2027, 2)) }
+            WeeksCalendar(state = state)
+        }
+    }
+
+    /** A compact calendar folded to the week of the 25th, and a folded week at the end of a month. */
+    @Test
+    fun `folded week renders`() {
+        render("calendar-folded") {
+            val state = pinnedState()
+            LaunchedEffect(state) { state.fold(animationSpec = snap()) }
+            WeeksCalendar(state = state)
+        }
+        render("calendar-folded-next-week") {
+            val state = pinnedState()
+            LaunchedEffect(state) {
+                state.fold(animationSpec = snap())
+                state.animateFoldTo(LocalDate(2026, 12, 2))
+            }
+            WeeksCalendar(state = state)
+        }
+    }
+
+    /** The key to the dots under a compact calendar, wrapping on a narrow width. */
+    @Test
+    fun `legend renders`() {
+        render("calendar-legend") {
+            Column {
+                Calendar(
+                    modifier = Modifier.fillMaxWidth(),
+                    state = pinnedState(),
+                    selection = CalendarSelection.Single(RenderToday),
+                    onDateClick = {},
+                    fixedWeekCount = false,
+                    size = CalendarSize.Compact,
+                    markers = { date -> dotsOn(date) },
+                )
+                CalendarLegend(items = LegendItems, size = CalendarSize.Compact)
+                CalendarLegend(items = LegendItems + LegendItems, modifier = Modifier.padding(horizontal = 80.dp))
+            }
+        }
+    }
+
     /** A range with markers below its band. */
     @Test
     fun `range markers render`() {
@@ -213,6 +265,28 @@ private fun EventCalendar(state: CalendarState = pinnedState(), size: CalendarSi
 }
 
 /**
+ * A compact calendar with dots that lays each month over only the weeks it has, with a bar under it
+ * that shows where the calendar ends.
+ *
+ * @param state State to draw.
+ */
+@Composable
+private fun WeeksCalendar(state: CalendarState) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Calendar(
+            modifier = Modifier.fillMaxWidth(),
+            state = state,
+            selection = CalendarSelection.Single(RenderToday),
+            onDateClick = {},
+            fixedWeekCount = false,
+            size = CalendarSize.Compact,
+            markers = { date -> dotsOn(date) },
+        )
+        Box(Modifier.fillMaxWidth().padding(vertical = 4.dp).background(Color(0xFFDB340B)).padding(2.dp))
+    }
+}
+
+/**
  * A calendar with today chosen and the given markers, refusing past days.
  *
  * @param shape Day shape.
@@ -235,6 +309,13 @@ private fun MarkedCalendar(
         )
     }
 }
+
+/** What the made-up dot colours stand for. */
+private val LegendItems = listOf(
+    CalendarLegendItem(Color(0xFF7257FF), "Meetings"),
+    CalendarLegendItem(Color(0xFF008557), "Travel"),
+    CalendarLegendItem(Color(0xFFDB340B), "Deadlines"),
+)
 
 /** Amber, for the plane icons. */
 private val ArecaColorsWarn = Color(0xFFED9B16)

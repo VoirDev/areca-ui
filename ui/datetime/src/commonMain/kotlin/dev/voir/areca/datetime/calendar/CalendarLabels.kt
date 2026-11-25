@@ -52,6 +52,10 @@ import kotlinx.datetime.YearMonth
  * @property nextYearAction What assistive technology reads for the forward control over months.
  * @property previousYearsAction What assistive technology reads for the back control over years.
  * @property nextYearsAction What assistive technology reads for the forward control over years.
+ * @property previousWeekAction What assistive technology reads for the back control while the days
+ *   are folded to one week.
+ * @property nextWeekAction What assistive technology reads for the forward control while the days
+ *   are folded to one week.
  */
 @Immutable
 public data class CalendarLabels(
@@ -77,6 +81,8 @@ public data class CalendarLabels(
     public val nextYearAction: String = "Next year",
     public val previousYearsAction: String = "Earlier years",
     public val nextYearsAction: String = "Later years",
+    public val previousWeekAction: String = "Previous week",
+    public val nextWeekAction: String = "Next week",
 ) {
     /** Ready-made label sets. */
     public companion object {
@@ -111,6 +117,8 @@ public data class CalendarLabels(
             nextYearAction = "Next year",
             previousYearsAction = "Earlier years",
             nextYearsAction = "Later years",
+            previousWeekAction = "Previous week",
+            nextWeekAction = "Next week",
         )
 
         /**
