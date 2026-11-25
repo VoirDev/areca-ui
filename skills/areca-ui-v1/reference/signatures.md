@@ -38,7 +38,7 @@ Every foundation symbol is imported from its family's package. Extension composa
 | `….foundation.collection`, `….foundation.table` | `ContentList`, `PagedContentList`, `GroupedContentList`, `GroupedPagedContentList`, `LimitedContentListState`, `PagedContentListState`, `ContentListGroup`, `ContentListGroupLayout`, `ContentListLabels`, `ContentListDefaults`, `LazyVerticalGroupedGrid`, `LazyHorizontalGroupedGrid`, `GroupedGridData`; `Table`, `LazyTable`, `TableColumn` |
 | `….foundation.navigation`, `….foundation.wheel`, `….foundation.slot` | `LocalTabReselect`, `OnTabReselect`, `ScrollToTopOnTabReselect`, `NavList`, `NavNode`, `NavData`, `NavItem`, `SwipePager`, `PagerControls`, `PageIndicator`, `PageIndicatorVariant`, `PageIndicatorStyle`, `PageIndicatorSize`, `PageCounter`, `PageCounterStyle`, `PageCounterSize`, `rememberPagerController`; `WheelPicker`, `WheelPickerColumn`, `WheelPickerItem`, `WheelPickerHighlight`, `WheelPickerEdgeFade`, `rememberWheelPickerColumnState`; `SlotRow`, `SlotRowLayout` (`Default`, `Auto`, `Center`, `Top`, `FirstLine`, `Centered`, `Fill`, `wrap(…)`), `SlotRowAlignment`, `Modifier.firstLineCenter(textStyle)`, `FirstLineCenter` |
 | `dev.voir.areca.indication`, `.modifier`, `.platform`, `.shape` | `TouchIndication`, `FadeIndication`, `StrokeIndication`, `LiquidSweepIndication`, `FocusOutline`; `clickCursor`, `minimumTouchTarget`, `thenIf`; `SystemBars`; `SquircleShape` |
-| `….foundation.adaptive` | `AdaptiveNavigation`, `AdaptiveNavigationStyle`, `AdaptiveNavigationLayout`, `AdaptiveNavigationScope`, `AdaptiveToolbar`, `AdaptiveToolbarAction`, `EdgeColumn`, `EdgeColumnSide`, `EdgeColumnStyle`, `EdgeColumnSize`, `EdgeButton`, `EdgeButtonEmphasis`, `VerticalTabBar`, `EdgeStatus`, `FloatingSidebar`, `NavRail`, `NavDestination`, `NavRailStyle`, `NavRailSize`, `ListDetail`, `ListDetailScope`, `SupportingPane`, `SupportingPaneScope`, `ContentColumn`, `AdaptiveGrid`, `AdaptiveSheet`, `AdaptiveMenu`, `AdaptiveMenuItem`, `contextMenu`, `AdaptiveDefaults` |
+| `….foundation.adaptive` | `AdaptiveNavigation`, `AdaptiveNavigationStyle`, `AdaptiveNavigationLayout`, `AdaptiveNavigationScope`, `CompactNavigation`, `AdaptiveToolbar`, `AdaptiveToolbarAction`, `EdgeColumn`, `EdgeColumnSide`, `EdgeColumnStyle`, `EdgeColumnSize`, `EdgeButton`, `EdgeButtonEmphasis`, `VerticalTabBar`, `EdgeStatus`, `FloatingSidebar`, `NavRail`, `NavDestination`, `NavRailStyle`, `NavRailSize`, `ListDetail`, `ListDetailScope`, `SupportingPane`, `SupportingPaneScope`, `ContentColumn`, `AdaptiveGrid`, `AdaptiveSheet`, `AdaptiveMenu`, `AdaptiveMenuItem`, `contextMenu`, `AdaptiveDefaults` |
 | `dev.voir.areca.window` | `WindowClass`, `WindowFold`, `FoldOrientation`, `FoldState`, `WidthClass`, `HeightClass`, `InputMode`, `WindowProfile`, `adaptive`, `AdaptiveContent`, `WindowClassBox`, `ProvideWindowClass` |
 | `dev.voir.areca` | `ExperimentalArecaApi` |
 
@@ -128,11 +128,17 @@ fun <T : Any> AdaptiveNavigation(destinations: List<NavDestination<T>>, selected
     sidebarSections: (@Composable ColumnScope.() -> Unit)? = null,
     footer: (@Composable AdaptiveNavigationScope.() -> Unit)? = null,
     bottomBar: (@Composable AdaptiveNavigationScope.() -> Unit)? = null,
+    compactNavigation: CompactNavigation = CompactNavigation.Bar,
+    navigationVisible: Boolean = true,
     content: @Composable AdaptiveNavigationScope.() -> Unit)
 // AdaptiveNavigationScope.layout: AdaptiveNavigationLayout.BottomBar (compact, not short) |
 // Rail (a phone on its side; under style Rail also medium and expanded, or large with the sidebar
 // hidden) | Sidebar (large and up under style Rail) | EdgeColumn (medium and up under style
-// EdgeColumn). Content sits in a WindowClassBox. contentPadding: the bottomBar's height on a compact
+// EdgeColumn) | None (content only: navigationVisible = false, or a compact width or height under
+// CompactNavigation.None; the navigation's own slots read their form). CompactNavigation: Bar (the
+// TabBar or bottomBar, the label-less rail on a phone on its side) | None (no navigation on either).
+// navigationVisible = false hides every form, animated on ArecaTheme.motion. The content is moved,
+// never recreated, across every change of form, so its remembered state survives. Content sits in a WindowClassBox. contentPadding: the bottomBar's height on a compact
 // window, EdgeColumnSize.clearance on the column's side beside the column, else zero.
 // Edge column: status and back at its top, header too under ActionReach.Header; a VerticalTabBar,
 // then under ActionReach.Thumb header and the screen's actions, then the onSearch button at its foot; the toggle opens a FloatingSidebar (rows, sidebarSections,

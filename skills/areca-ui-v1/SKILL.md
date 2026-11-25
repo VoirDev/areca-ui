@@ -423,7 +423,9 @@ off its `bounds`, and while its `state` is `FoldState.HalfOpened` lay each half 
   InputMode.Touch)) { … }`; a foldable adds `fold = WindowFold.vertical(at = 380.dp, height = 720.dp)`. It changes the class only; to draw at another input's sizes too, nest
   `ArecaThemeProvider(inputMode = …)`.
 - Use the adaptive layouts (`dev.voir.areca.foundation.adaptive`) before branching by hand:
-  `AdaptiveNavigation` for the app shell (bottom bar on a phone, the edge column from medium up),
+  `AdaptiveNavigation` for the app shell (bottom bar on a phone, the edge column from medium up;
+  `compactNavigation = CompactNavigation.None` for a phone without tabs, `navigationVisible = false`
+  to hide it on a startup screen without recreating the content),
   `ListDetail`,
   `SupportingPane`, `ContentColumn` for forms and auth (`gutter = false` when its children inset
   themselves — settings sections, cards), `AdaptiveGrid`, `AdaptiveSheet` instead of a

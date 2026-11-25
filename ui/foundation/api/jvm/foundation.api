@@ -47,12 +47,13 @@ public final class dev/voir/areca/foundation/adaptive/AdaptiveMenuKt {
 }
 
 public final class dev/voir/areca/foundation/adaptive/AdaptiveNavigationKt {
-	public static final fun AdaptiveNavigation (Ljava/util/List;Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Ldev/voir/areca/foundation/adaptive/AdaptiveNavigationStyle;Ldev/voir/areca/foundation/adaptive/EdgeColumnSide;ZLkotlin/jvm/functions/Function1;Ljava/lang/String;Lkotlin/jvm/functions/Function0;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;III)V
+	public static final fun AdaptiveNavigation (Ljava/util/List;Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Ldev/voir/areca/foundation/adaptive/AdaptiveNavigationStyle;Ldev/voir/areca/foundation/adaptive/EdgeColumnSide;ZLkotlin/jvm/functions/Function1;Ljava/lang/String;Lkotlin/jvm/functions/Function0;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Ldev/voir/areca/foundation/adaptive/CompactNavigation;ZLkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;III)V
 }
 
 public final class dev/voir/areca/foundation/adaptive/AdaptiveNavigationLayout : java/lang/Enum {
 	public static final field BottomBar Ldev/voir/areca/foundation/adaptive/AdaptiveNavigationLayout;
 	public static final field EdgeColumn Ldev/voir/areca/foundation/adaptive/AdaptiveNavigationLayout;
+	public static final field None Ldev/voir/areca/foundation/adaptive/AdaptiveNavigationLayout;
 	public static final field Rail Ldev/voir/areca/foundation/adaptive/AdaptiveNavigationLayout;
 	public static final field Sidebar Ldev/voir/areca/foundation/adaptive/AdaptiveNavigationLayout;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
@@ -91,6 +92,14 @@ public final class dev/voir/areca/foundation/adaptive/AdaptiveToolbarAction {
 
 public final class dev/voir/areca/foundation/adaptive/AdaptiveToolbarKt {
 	public static final fun AdaptiveToolbar (Ljava/lang/String;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function0;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Landroidx/compose/foundation/layout/WindowInsets;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class dev/voir/areca/foundation/adaptive/CompactNavigation : java/lang/Enum {
+	public static final field Bar Ldev/voir/areca/foundation/adaptive/CompactNavigation;
+	public static final field None Ldev/voir/areca/foundation/adaptive/CompactNavigation;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/foundation/adaptive/CompactNavigation;
+	public static fun values ()[Ldev/voir/areca/foundation/adaptive/CompactNavigation;
 }
 
 public final class dev/voir/areca/foundation/adaptive/ContentColumnKt {

@@ -1,5 +1,14 @@
 package dev.voir.areca.foundation.adaptive
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkHorizontally
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,6 +32,10 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.movableContentOf
+import androidx.compose.ui.layout.SubcomposeLayout
+import dev.voir.areca.theme.ProvideSurface
+import dev.voir.areca.theme.SurfaceLevel
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,7 +45,6 @@ import dev.voir.areca.foundation.button.ActionColor
 import dev.voir.areca.foundation.button.IconButton
 import dev.voir.areca.foundation.button.IconButtonStyle
 import dev.voir.areca.foundation.icon.Icon
-import dev.voir.areca.foundation.layout.BaseLayout
 import dev.voir.areca.foundation.layout.VerticalDivider
 import dev.voir.areca.foundation.navigation.NavItem
 import dev.voir.areca.foundation.tabbar.TabBar
@@ -42,7 +54,9 @@ import dev.voir.areca.foundation.text.TextVariant
 import dev.voir.areca.icon.BundledIcons
 import dev.voir.areca.icon.Menu01
 import dev.voir.areca.icon.Search
+import dev.voir.areca.theme.ArecaMotion
 import dev.voir.areca.theme.ArecaTheme
+import dev.voir.areca.theme.tween
 import dev.voir.areca.window.ActionReach
 import dev.voir.areca.window.HeightClass
 import dev.voir.areca.window.WidthClass
@@ -84,12 +98,45 @@ public enum class AdaptiveNavigationLayout {
 
     /** An [EdgeColumn] over the content: a medium window and wider, under [AdaptiveNavigationStyle.EdgeColumn]. */
     EdgeColumn,
+
+    /**
+     * No navigation, and the content has the whole window: [AdaptiveNavigation]'s
+     * `navigationVisible` is `false`, or the window is compact under [CompactNavigation.None]. The
+     * screen reaches the other destinations itself, and draws the app's primary action if it needs one.
+     */
+    None,
+}
+
+/**
+ * What an [AdaptiveNavigation] draws on a window too small for the rail, the sidebar or the
+ * [EdgeColumn]: a compact width — a phone, a folded foldable — or a compact height — a phone on its
+ * side.
+ */
+public enum class CompactNavigation {
+    /**
+     * A [TabBar] along the bottom edge, or the app's own `bottomBar`, on a compact width; a [NavRail]
+     * without labels on a compact height.
+     */
+    Bar,
+
+    /**
+     * No navigation on a compact width or a compact height, and the content has the whole window, for
+     * an app whose phone screens reach each other themselves. A phone on its side draws no rail
+     * either, so turning the phone never brings in navigation the upright phone does not have.
+     * [AdaptiveNavigationScope.layout] reads [AdaptiveNavigationLayout.None]. A medium window and wider
+     * keeps its navigation.
+     */
+    None,
 }
 
 /** What the slots of an [AdaptiveNavigation] know about the navigation around them. */
 @Stable
 public interface AdaptiveNavigationScope {
-    /** The navigation drawn, so the screen can place what the bar or rail does not hold. */
+    /**
+     * The navigation drawn, so the screen can place what the bar or rail does not hold. The slots of
+     * the navigation itself — [AdaptiveNavigation]'s `status`, `header`, `footer` and `bottomBar` —
+     * read the form they are drawn in, never [AdaptiveNavigationLayout.None].
+     */
     public val layout: AdaptiveNavigationLayout
 
     /**
@@ -122,7 +169,9 @@ public interface AdaptiveNavigationScope {
  *
  * The destinations and the selection are the same in every form, so a window that is resized or a
  * foldable that is opened keeps its place. [content] is drawn in a [WindowClassBox] beside, above or
- * under the navigation, so a screen lays itself out for the space it has.
+ * under the navigation, so a screen lays itself out for the space it has. It is moved, not recreated,
+ * when the form changes — a resize, a turned tablet, an unfolded foldable, a toggled sidebar, a
+ * hidden navigation — so everything it remembers, a navigation host's state included, survives.
  *
  * Screens declare their title, back and actions with [AdaptiveToolbar] rather than a
  * [dev.voir.areca.foundation.topbar.TopBar]: it is a bar over the screen in every form but the
@@ -133,6 +182,15 @@ public interface AdaptiveNavigationScope {
  * under it, so the screen keeps the full height and paints beneath a bar that floats; its height
  * reaches the screen as [AdaptiveNavigationScope.contentPadding]. Build it from the same
  * destinations, so the bar and the rail never disagree about where the app can go.
+ *
+ * An app whose phone screens reach each other themselves passes [compactNavigation]
+ * [CompactNavigation.None]: a compact window then draws no navigation at all, and a medium window and
+ * wider keeps its own.
+ *
+ * [navigationVisible] `false` hides the navigation in every form — for a startup screen, onboarding —
+ * and gives [content] the whole window. The navigation slides away and back on the theme's motion,
+ * while [content] stays where it is in the composition, so a navigation host inside it keeps its
+ * state across the change.
  *
  * [header] is the app's primary action: above the destinations of the rail and the sidebar, after
  * the toggle in the column, or over the screen's actions at its foot under [ActionReach.Thumb]. Draw
@@ -188,6 +246,12 @@ public interface AdaptiveNavigationScope {
  * @param footer Content at the foot of the rail and the sidebars.
  * @param bottomBar The bar a compact window draws in place of the [TabBar], over the bottom of the
  *   content. `null` draws the [TabBar].
+ * @param compactNavigation What a compact window draws: [CompactNavigation.Bar], the default, for the
+ *   [TabBar] or [bottomBar] and the label-less rail of a phone on its side; [CompactNavigation.None]
+ *   for none.
+ * @param navigationVisible Whether the navigation shows. `false` draws no rail, sidebar, column or
+ *   bar, and [content] takes the whole window with [AdaptiveNavigationScope.layout]
+ *   [AdaptiveNavigationLayout.None]; the change is animated, and [content] keeps its state.
  * @param content The selected destination's screen. A tap on its destination while it is already
  *   selected reaches it through [LocalTabReselect]: `listState.ScrollToTopOnTabReselect()`.
  */
@@ -209,6 +273,8 @@ public fun <T : Any> AdaptiveNavigation(
     sidebarSections: (@Composable ColumnScope.() -> Unit)? = null,
     footer: (@Composable AdaptiveNavigationScope.() -> Unit)? = null,
     bottomBar: (@Composable AdaptiveNavigationScope.() -> Unit)? = null,
+    compactNavigation: CompactNavigation = CompactNavigation.Bar,
+    navigationVisible: Boolean = true,
     content: @Composable AdaptiveNavigationScope.() -> Unit,
 ) {
     // A tap on the destination already selected reaches its screen through LocalTabReselect.
@@ -239,6 +305,8 @@ public fun <T : Any> AdaptiveNavigation(
             sidebarSections = sidebarSections,
             footer = footer,
             bottomBar = bottomBar,
+            compactNavigation = compactNavigation,
+            navigationVisible = navigationVisible,
             content = content,
         )
     }
@@ -262,25 +330,43 @@ private fun <T : Any> AdaptiveNavigationShell(
     sidebarSections: (@Composable ColumnScope.() -> Unit)? = null,
     footer: (@Composable AdaptiveNavigationScope.() -> Unit)? = null,
     bottomBar: (@Composable AdaptiveNavigationScope.() -> Unit)? = null,
+    compactNavigation: CompactNavigation = CompactNavigation.Bar,
+    navigationVisible: Boolean = true,
     content: @Composable AdaptiveNavigationScope.() -> Unit,
 ) {
     val window = ArecaTheme.window
-    val layout = when {
+    // The form the window calls for; whether it shows is decided apart from it, so hiding the
+    // navigation keeps the same structure around the content and the content keeps its state.
+    val form = when {
         window.width == WidthClass.Compact && window.height > HeightClass.Compact -> AdaptiveNavigationLayout.BottomBar
         window.height == HeightClass.Compact -> AdaptiveNavigationLayout.Rail
         style == AdaptiveNavigationStyle.EdgeColumn -> AdaptiveNavigationLayout.EdgeColumn
         window.width >= WidthClass.Large && sidebarVisible -> AdaptiveNavigationLayout.Sidebar
         else -> AdaptiveNavigationLayout.Rail
     }
-    val scope = remember(layout) { AdaptiveNavigationScopeImpl(layout, NoPadding) }
+    val compact = window.width == WidthClass.Compact || window.height == HeightClass.Compact
+    val shown = navigationVisible && !(compact && compactNavigation == CompactNavigation.None)
+    val layout = if (shown) form else AdaptiveNavigationLayout.None
+    // The navigation's own slots keep the form they are drawn in, even while it slides away.
+    val scope = remember(form) { AdaptiveNavigationScopeImpl(form, NoPadding) }
+    val contentScope = remember(layout) { AdaptiveNavigationScopeImpl(layout, NoPadding) }
+    // One screen for every form: each form places this same movable content, so a resize, a turned
+    // tablet, an unfolded foldable or a toggled sidebar moves the screen and keeps its state.
+    val currentContent by rememberUpdatedState(content)
+    val screen = remember {
+        movableContentOf { screenScope: AdaptiveNavigationScope, screenModifier: Modifier ->
+            WindowClassBox(modifier = screenModifier) { screenScope.currentContent() }
+        }
+    }
 
-    if (layout == AdaptiveNavigationLayout.EdgeColumn) {
+    val edgeColumn: @Composable () -> Unit = {
         EdgeColumnShell(
             destinations = destinations,
             selectedValue = selectedValue,
             onValueSelected = onValueSelected,
-            modifier = modifier,
+            modifier = Modifier.fillMaxSize(),
             side = edgeSide.resolve(),
+            visible = shown,
             sidebarVisible = sidebarVisible,
             onSidebarVisibleChange = onSidebarVisibleChange,
             sidebarToggleDescription = sidebarToggleDescription,
@@ -290,9 +376,8 @@ private fun <T : Any> AdaptiveNavigationShell(
             header = header,
             sidebarSections = sidebarSections,
             footer = footer,
-            content = content,
+            screen = screen,
         )
-        return
     }
 
     val toggle: (@Composable () -> Unit)? =
@@ -320,74 +405,133 @@ private fun <T : Any> AdaptiveNavigationShell(
         null
     }
 
-    when (layout) {
-        AdaptiveNavigationLayout.BottomBar -> if (bottomBar != null) {
-            // Over the content rather than under it, measured first, so a floating bar keeps the
-            // screen's full height and the screen learns what the bar covers.
-            BaseLayout(
-                modifier = modifier,
-                // The shell only places the bar; each destination paints its own page.
-                bg = Color.Transparent,
-                bottomBar = { scope.bottomBar() },
-            ) { padding ->
-                val padded = remember(padding) { AdaptiveNavigationScopeImpl(layout, padding) }
-                WindowClassBox(modifier = Modifier.fillMaxSize()) { padded.content() }
+    val motion = ArecaTheme.motion
+    val ownBar = form == AdaptiveNavigationLayout.BottomBar && bottomBar != null
+    val forms: @Composable (barScope: AdaptiveNavigationScope) -> Unit = { barScope ->
+        when (form) {
+            AdaptiveNavigationLayout.BottomBar -> if (bottomBar != null) {
+                // The app's own bar floats over the screen: the shell measures it and hands its height on.
+                screen(barScope, Modifier.fillMaxSize())
+            } else Column(modifier = Modifier.fillMaxSize()) {
+                screen(contentScope, Modifier.weight(1f).fillMaxWidth())
+                AnimatedVisibility(visible = shown, enter = motion.navigationEnter(vertical = true), exit = motion.navigationExit(vertical = true)) {
+                    TabBar(
+                        items = destinations.map { destination ->
+                            TabBarItem(value = destination.value, enabled = destination.enabled) {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Icon(imageVector = destination.icon, contentDescription = null)
+                                    Text(
+                                        text = destination.label,
+                                        variant = TextVariant.LabelSmall,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                }
+                            }
+                        },
+                        selectedValue = selectedValue,
+                        onValueSelected = onValueSelected,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
             }
-        } else Column(modifier = modifier.fillMaxSize()) {
-            WindowClassBox(modifier = Modifier.weight(1f).fillMaxWidth()) { scope.content() }
-            TabBar(
-                items = destinations.map { destination ->
-                    TabBarItem(value = destination.value, enabled = destination.enabled) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Icon(imageVector = destination.icon, contentDescription = null)
-                            Text(
-                                text = destination.label,
-                                variant = TextVariant.LabelSmall,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                            )
+
+            AdaptiveNavigationLayout.Rail -> Row(modifier = Modifier.fillMaxSize()) {
+                AnimatedVisibility(visible = shown, enter = motion.navigationEnter(vertical = false), exit = motion.navigationExit(vertical = false)) {
+                    NavRail(
+                        destinations = destinations,
+                        selectedValue = selectedValue,
+                        onValueSelected = onValueSelected,
+                        // A phone on its side has no height for labels under five icons.
+                        showLabels = window.height > HeightClass.Compact,
+                        header = if (header != null) { { scope.header() } } else null,
+                        footer = if (foot != null) { { foot() } } else null,
+                    )
+                }
+                screen(contentScope, Modifier.weight(1f).fillMaxHeight())
+            }
+
+            AdaptiveNavigationLayout.Sidebar -> Row(modifier = Modifier.fillMaxSize()) {
+                AnimatedVisibility(visible = shown, enter = motion.navigationEnter(vertical = false), exit = motion.navigationExit(vertical = false)) {
+                    Sidebar(
+                        destinations = destinations,
+                        selectedValue = selectedValue,
+                        onValueSelected = onValueSelected,
+                        header = if (header != null) { { scope.header() } } else null,
+                        sections = sidebarSections,
+                        footer = foot,
+                    )
+                }
+                screen(contentScope, Modifier.weight(1f).fillMaxHeight())
+            }
+
+            AdaptiveNavigationLayout.EdgeColumn -> edgeColumn()
+            AdaptiveNavigationLayout.None -> Unit
+        }
+    }
+
+    // Every form is composed in one slot, so the screen moves within a single composition when the
+    // form changes; the app's own bottom bar is measured first, in a slot of its own, so the screen
+    // keeps the full height under it and learns what it covers.
+    SubcomposeLayout(modifier = modifier.fillMaxSize()) { constraints ->
+        val bars = subcompose(ShellSlot.Bar) {
+            if (ownBar && bottomBar != null) {
+                // The page a bar of the app's own is drawn on, as a screen's bottom bar is.
+                ProvideSurface(SurfaceLevel.Page) {
+                    ProvideSurface(fill = Color.Transparent) {
+                        AnimatedVisibility(
+                            visible = shown,
+                            enter = motion.navigationEnter(vertical = true),
+                            exit = motion.navigationExit(vertical = true),
+                        ) {
+                            scope.bottomBar()
                         }
                     }
-                },
-                selectedValue = selectedValue,
-                onValueSelected = onValueSelected,
-                modifier = Modifier.fillMaxWidth(),
-            )
+                }
+            }
+        }.map { it.measure(constraints.copy(minWidth = 0, minHeight = 0)) }
+        val barHeight = (bars.maxOfOrNull { it.height } ?: 0).toDp()
+        val body = subcompose(ShellSlot.Body) {
+            val barScope = remember(layout, barHeight) {
+                AdaptiveNavigationScopeImpl(layout, PaddingValues(bottom = barHeight))
+            }
+            forms(barScope)
+        }.map { it.measure(constraints) }
+        layout(constraints.maxWidth, constraints.maxHeight) {
+            body.forEach { it.placeRelative(0, 0) }
+            bars.forEach { it.placeRelative(0, constraints.maxHeight - it.height) }
         }
-
-        AdaptiveNavigationLayout.Rail -> Row(modifier = modifier.fillMaxSize()) {
-            NavRail(
-                destinations = destinations,
-                selectedValue = selectedValue,
-                onValueSelected = onValueSelected,
-                // A phone on its side has no height for labels under five icons.
-                showLabels = window.height > HeightClass.Compact,
-                header = if (header != null) { { scope.header() } } else null,
-                footer = if (foot != null) { { foot() } } else null,
-            )
-            WindowClassBox(modifier = Modifier.weight(1f).fillMaxHeight()) { scope.content() }
-        }
-
-        AdaptiveNavigationLayout.Sidebar -> Row(modifier = modifier.fillMaxSize()) {
-            Sidebar(
-                destinations = destinations,
-                selectedValue = selectedValue,
-                onValueSelected = onValueSelected,
-                header = if (header != null) { { scope.header() } } else null,
-                sections = sidebarSections,
-                footer = foot,
-            )
-            WindowClassBox(modifier = Modifier.weight(1f).fillMaxHeight()) { scope.content() }
-        }
-
-        AdaptiveNavigationLayout.EdgeColumn -> Unit
     }
+}
+
+/**
+ * How the navigation comes in when it is shown: it grows from its edge as it fades in, or only fades
+ * under [ArecaMotion.reduceMotion].
+ *
+ * @param vertical Whether it grows from the bottom edge, as a bar does, rather than from the side.
+ */
+private fun ArecaMotion.navigationEnter(vertical: Boolean): EnterTransition {
+    val fade = fadeIn(fast.tween(enter))
+    if (reduceMotion) return fade
+    return fade + if (vertical) expandVertically(medium.tween(standard)) else expandHorizontally(medium.tween(standard))
+}
+
+/**
+ * How the navigation leaves when it is hidden: the reverse of [navigationEnter].
+ *
+ * @param vertical Whether it shrinks into the bottom edge, as a bar does, rather than to the side.
+ */
+private fun ArecaMotion.navigationExit(vertical: Boolean): ExitTransition {
+    val fade = fadeOut(fast.tween(exit))
+    if (reduceMotion) return fade
+    return fade + if (vertical) shrinkVertically(medium.tween(standard)) else shrinkHorizontally(medium.tween(standard))
 }
 
 /**
  * The edge-column form: the screen at the window's full size, the [FloatingSidebar] over it, and the
  * [EdgeColumn] over both, so the toggle that opened the sidebar stays pressable. Screens' toolbars
- * reach the column through [LocalEdgeColumnHost].
+ * reach the column through [LocalEdgeColumnHost] while it shows; hidden, the column slides away, the
+ * screen loses its clearance and draws its own toolbar, and stays where it is in the composition.
  */
 @Composable
 private fun <T : Any> EdgeColumnShell(
@@ -396,6 +540,7 @@ private fun <T : Any> EdgeColumnShell(
     onValueSelected: (T) -> Unit,
     modifier: Modifier,
     side: EdgeColumnSide,
+    visible: Boolean,
     sidebarVisible: Boolean,
     onSidebarVisibleChange: ((Boolean) -> Unit)?,
     sidebarToggleDescription: String,
@@ -405,7 +550,7 @@ private fun <T : Any> EdgeColumnShell(
     header: (@Composable AdaptiveNavigationScope.() -> Unit)?,
     sidebarSections: (@Composable ColumnScope.() -> Unit)?,
     footer: (@Composable AdaptiveNavigationScope.() -> Unit)?,
-    content: @Composable AdaptiveNavigationScope.() -> Unit,
+    screen: @Composable (AdaptiveNavigationScope, Modifier) -> Unit,
 ) {
     val size = LocalEdgeColumnSize.current ?: EdgeColumnSize.Default
     val host = remember { EdgeColumnHost() }
@@ -416,10 +561,12 @@ private fun <T : Any> EdgeColumnShell(
             if (side == EdgeColumnSide.End) PaddingValues(end = clearance) else PaddingValues(start = clearance),
         )
     }
+    val contentScope = if (visible) scope else HiddenScope
     // Held from below, the app's action and the screen's go down to the thumbs; held by its sides or
     // driven by a pointer, the screen draws its actions beside its title and the app's stays on top.
     val thumb = ArecaTheme.hostWindow.actionReach == ActionReach.Thumb
-    val sidebarShown = sidebarVisible && onSidebarVisibleChange != null
+    val sidebarShown = visible && sidebarVisible && onSidebarVisibleChange != null
+    val motion = ArecaTheme.motion
     val toggle: (@Composable () -> Unit)? = if (onSidebarVisibleChange != null) {
         {
             EdgeButton(
@@ -433,9 +580,9 @@ private fun <T : Any> EdgeColumnShell(
         null
     }
 
-    CompositionLocalProvider(LocalEdgeColumnHost provides host) {
+    CompositionLocalProvider(LocalEdgeColumnHost provides if (visible) host else null) {
         Box(modifier = modifier.fillMaxSize()) {
-            WindowClassBox(modifier = Modifier.fillMaxSize()) { scope.content() }
+            screen(contentScope, Modifier.fillMaxSize())
             FloatingSidebar(
                 visible = sidebarShown,
                 onDismissRequest = { onSidebarVisibleChange?.invoke(false) },
@@ -456,33 +603,39 @@ private fun <T : Any> EdgeColumnShell(
                     scope.footer()
                 }
             }
-            EdgeColumn(
+            AnimatedVisibility(
+                visible = visible,
                 modifier = Modifier.align(if (side == EdgeColumnSide.End) Alignment.CenterEnd else Alignment.CenterStart),
-                side = side,
-                size = size,
-                top = {
-                    if (status != null) scope.status()
-                    EdgeToolbarBack(host = host, leading = toggle)
-                    if (!thumb && header != null) scope.header()
-                },
-                bottom = {
-                    if (!sidebarShown) {
-                        VerticalTabBar(
-                            destinations = destinations,
-                            selectedValue = selectedValue,
-                            onValueSelected = onValueSelected,
-                            size = size,
-                        )
-                    }
-                    if (thumb) {
-                        if (header != null) scope.header()
-                        EdgeToolbarActions(host = host, size = size)
-                    }
-                    if (onSearch != null) {
-                        EdgeButton(imageVector = BundledIcons.Search, contentDescription = searchDescription, onClick = onSearch)
-                    }
-                },
-            )
+                enter = motion.navigationEnter(vertical = false),
+                exit = motion.navigationExit(vertical = false),
+            ) {
+                EdgeColumn(
+                    side = side,
+                    size = size,
+                    top = {
+                        if (status != null) scope.status()
+                        EdgeToolbarBack(host = host, leading = toggle)
+                        if (!thumb && header != null) scope.header()
+                    },
+                    bottom = {
+                        if (!sidebarShown) {
+                            VerticalTabBar(
+                                destinations = destinations,
+                                selectedValue = selectedValue,
+                                onValueSelected = onValueSelected,
+                                size = size,
+                            )
+                        }
+                        if (thumb) {
+                            if (header != null) scope.header()
+                            EdgeToolbarActions(host = host, size = size)
+                        }
+                        if (onSearch != null) {
+                            EdgeButton(imageVector = BundledIcons.Search, contentDescription = searchDescription, onClick = onSearch)
+                        }
+                    },
+                )
+            }
         }
     }
 }
@@ -571,5 +724,11 @@ private class AdaptiveNavigationScopeImpl(
     override val contentPadding: PaddingValues,
 ) : AdaptiveNavigationScope
 
+/** The slots of the shell's layout: the app's own bottom bar, measured first, and every form. */
+private enum class ShellSlot { Bar, Body }
+
 /** What a navigation that does not cover the content hands it. */
 private val NoPadding = PaddingValues()
+
+/** What the content of a hidden navigation reads: no navigation, nothing covered. */
+private val HiddenScope: AdaptiveNavigationScope = AdaptiveNavigationScopeImpl(AdaptiveNavigationLayout.None, NoPadding)

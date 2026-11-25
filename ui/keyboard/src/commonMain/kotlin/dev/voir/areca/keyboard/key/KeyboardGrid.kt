@@ -11,7 +11,8 @@ import androidx.compose.ui.unit.Dp
  * is no column count.
  *
  * @property keys Keys in the row, left to right in every layout direction.
- * @property height Height of the row. `null` takes the keyboard's default key height, which is what
+ * @property height Height of the row. `null` takes the keyboard's key height — or, in [KeyboardKeys]
+ *   given a `maxKeyHeight`, its share of the height — which is what
  *   all but a deliberately taller action row wants.
  */
 @Immutable

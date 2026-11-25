@@ -416,7 +416,7 @@ public final class dev/voir/areca/keyboard/key/KeyboardGrids {
 }
 
 public final class dev/voir/areca/keyboard/key/KeyboardKeysKt {
-	public static final fun KeyboardKeys (Ldev/voir/areca/keyboard/key/KeyboardGrid;Landroidx/compose/ui/Modifier;Ldev/voir/areca/keyboard/key/KeyStyle;Ldev/voir/areca/keyboard/layout/KeyboardSize;Landroidx/compose/runtime/Composer;II)V
+	public static final fun KeyboardKeys-FJfuzF0 (Ldev/voir/areca/keyboard/key/KeyboardGrid;Landroidx/compose/ui/Modifier;Ldev/voir/areca/keyboard/key/KeyStyle;Ldev/voir/areca/keyboard/layout/KeyboardSize;FLandroidx/compose/runtime/Composer;II)V
 	public static final fun getLocalKeyboardHaptics ()Landroidx/compose/runtime/ProvidableCompositionLocal;
 }
 

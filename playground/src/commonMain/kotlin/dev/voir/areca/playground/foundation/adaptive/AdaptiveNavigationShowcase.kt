@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.voir.areca.foundation.adaptive.AdaptiveNavigation
 import dev.voir.areca.foundation.adaptive.AdaptiveNavigationLayout
+import dev.voir.areca.foundation.adaptive.CompactNavigation
 import dev.voir.areca.foundation.adaptive.AdaptiveNavigationScope
 import dev.voir.areca.foundation.adaptive.AdaptiveNavigationStyle
 import dev.voir.areca.foundation.adaptive.AdaptiveToolbar
@@ -134,6 +135,17 @@ fun AdaptiveNavigationShowcase() = ShowcaseScaffold(
             default = true,
             description = "The primary action: after the toggle in the column, above the destinations of the rail and the sidebar.",
         )
+        val compactNavigation by enumControl(
+            key = "compactNavigation",
+            default = CompactNavigation.Bar,
+            options = CompactNavigation.entries,
+            optionLabel = { it.name },
+        )
+        val navigationVisible by booleanControl(
+            key = "navigationVisible",
+            default = true,
+            description = "Off hides the navigation in every form and gives the screen the whole window; the screen keeps its state.",
+        )
 
         preview {
             WindowFrame(preset = preset) {
@@ -146,6 +158,8 @@ fun AdaptiveNavigationShowcase() = ShowcaseScaffold(
                     showSearch = search,
                     showStatus = status,
                     showHeader = header,
+                    compactNavigation = compactNavigation,
+                    navigationVisible = navigationVisible,
                 )
             }
         }
@@ -351,6 +365,30 @@ fun AdaptiveNavigationShowcase() = ShowcaseScaffold(
             }
         }
         case(
+            name = "Phone without tabs",
+            expectation = "compactNavigation = None: no tab bar, the screen has the whole window and draws the primary action in its toolbar.",
+        ) {
+            WindowFrame(preset = WindowPreset.Phone, maxHeight = 320.dp) {
+                FinanceShell(preset = WindowPreset.Phone, compactNavigation = CompactNavigation.None)
+            }
+        }
+        case(
+            name = "Phone without tabs, on its side",
+            expectation = "compactNavigation = None: no rail either, so turning the phone brings in no navigation.",
+        ) {
+            WindowFrame(preset = WindowPreset.PhoneLandscape, maxHeight = 240.dp) {
+                FinanceShell(preset = WindowPreset.PhoneLandscape, compactNavigation = CompactNavigation.None)
+            }
+        }
+        case(
+            name = "Navigation hidden",
+            expectation = "navigationVisible = false on a tablet, as on a startup screen: no column, the screen's toolbar back over it, layout None.",
+        ) {
+            WindowFrame(preset = WindowPreset.TabletLandscape, maxHeight = 300.dp) {
+                FinanceShell(preset = WindowPreset.TabletLandscape, navigationVisible = false)
+            }
+        }
+        case(
             name = "Long label in the rail",
             expectation = "\"Subscriptions & bills\" truncates to one line under its icon rather than widening the rail.",
         ) {
@@ -414,6 +452,8 @@ private fun financeDestinations(
  * @param showHeader Whether the navigation carries the "New transaction" action.
  * @param pushed Whether a transaction is open over the destination's screen.
  * @param manyActions Whether the screen has more actions than there is room for, beside the title or in the column.
+ * @param compactNavigation What a compact window draws.
+ * @param navigationVisible Whether the navigation shows.
  */
 @Composable
 private fun FinanceShell(
@@ -427,6 +467,8 @@ private fun FinanceShell(
     showHeader: Boolean = true,
     pushed: Boolean = false,
     manyActions: Boolean = false,
+    compactNavigation: CompactNavigation = CompactNavigation.Bar,
+    navigationVisible: Boolean = true,
 ) {
     var tab by remember { mutableStateOf(FinanceTab.Home) }
     var sidebar by remember(sidebarVisible) { mutableStateOf(sidebarVisible) }
@@ -446,6 +488,8 @@ private fun FinanceShell(
         status = if (showStatus) ({ SyncStatus() }) else null,
         header = if (showHeader) ({ NewTransactionAction() }) else null,
         footer = { Text("Synced just now", variant = TextVariant.BodySmall, color = TextColor.Muted) },
+        compactNavigation = compactNavigation,
+        navigationVisible = navigationVisible,
     ) {
         FinanceScreen(tab = tab, open = open, onBack = { open = false }, manyActions = manyActions)
     }
@@ -483,7 +527,8 @@ private fun AdaptiveNavigationScope.NewTransactionAction() {
 
 /**
  * The selected destination's screen: its toolbar, its headline figure, and which navigation and
- * width class it was given. In the bottom-bar form the toolbar carries the action itself.
+ * width class it was given. In the bottom-bar form, and with no navigation, the toolbar
+ * carries the action itself.
  *
  * @param tab The selected destination.
  * @param open Whether a transaction is open over it, with back in its toolbar.
@@ -499,7 +544,8 @@ private fun AdaptiveNavigationScope.FinanceScreen(
 ) {
     val screen = ArecaTheme.window
     val actions = buildList {
-        if (layout == AdaptiveNavigationLayout.BottomBar) {
+        // Neither the bottom bar nor a hidden navigation holds the app's action, so the screen does.
+        if (layout == AdaptiveNavigationLayout.BottomBar || layout == AdaptiveNavigationLayout.None) {
             add(AdaptiveToolbarAction(ArecaIcons.Plus, "New transaction", onClick = {}, primary = true))
         }
         if (manyActions) {

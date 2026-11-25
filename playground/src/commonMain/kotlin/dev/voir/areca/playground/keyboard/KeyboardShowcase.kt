@@ -322,6 +322,19 @@ fun KeyboardShowcase() = ShowcaseScaffold(
                 ),
             )
         }
+        case(
+            name = "Keys in a tall pane",
+            expectation = "maxKeyHeight = 64.dp in a 520dp pane: the keys share the height up to " +
+                "64dp each, and the grid sits at the bottom of the pane, by the thumbs.",
+        ) {
+            Box(Modifier.width(ScreenWidth).height(520.dp)) {
+                KeyboardKeys(
+                    grid = grid(GridPreset.Calculator) {},
+                    modifier = Modifier.fillMaxSize(),
+                    maxKeyHeight = 64.dp,
+                )
+            }
+        }
     }
 }
 

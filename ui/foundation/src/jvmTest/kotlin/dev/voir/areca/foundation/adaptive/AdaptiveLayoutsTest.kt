@@ -7,7 +7,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -16,6 +23,7 @@ import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import dev.voir.areca.icon.Bell
@@ -54,6 +62,8 @@ class AdaptiveLayoutsTest {
         height: Int,
         style: AdaptiveNavigationStyle = AdaptiveNavigationStyle.EdgeColumn,
         sidebarVisible: Boolean = style == AdaptiveNavigationStyle.Rail,
+        compactNavigation: CompactNavigation = CompactNavigation.Bar,
+        navigationVisible: Boolean = true,
     ): AdaptiveNavigationLayout {
         var drawn: AdaptiveNavigationLayout? = null
         runComposeUiTest {
@@ -65,6 +75,8 @@ class AdaptiveLayoutsTest {
                         onValueSelected = {},
                         style = style,
                         sidebarVisible = sidebarVisible,
+                        compactNavigation = compactNavigation,
+                        navigationVisible = navigationVisible,
                     ) { drawn = layout }
                 }
             }
@@ -91,6 +103,142 @@ class AdaptiveLayoutsTest {
         assertEquals(AdaptiveNavigationLayout.Rail, navigationLayout(1180, 820, rail))
         assertEquals(AdaptiveNavigationLayout.Sidebar, navigationLayout(1440, 900, rail))
         assertEquals(AdaptiveNavigationLayout.Rail, navigationLayout(1440, 900, rail, sidebarVisible = false))
+    }
+
+    @Test
+    fun `no compact navigation leaves a phone without a bar or a rail, and wider windows as they are`() {
+        val none = CompactNavigation.None
+        assertEquals(AdaptiveNavigationLayout.None, navigationLayout(393, 852, compactNavigation = none))
+        assertEquals(AdaptiveNavigationLayout.None, navigationLayout(852, 393, compactNavigation = none))
+        assertEquals(AdaptiveNavigationLayout.EdgeColumn, navigationLayout(1180, 820, compactNavigation = none))
+        assertEquals(
+            AdaptiveNavigationLayout.Rail,
+            navigationLayout(1180, 820, AdaptiveNavigationStyle.Rail, compactNavigation = none),
+        )
+    }
+
+    @Test
+    fun `hidden navigation draws nothing in every form`() {
+        for ((width, height) in listOf(393 to 852, 852 to 393, 1180 to 820)) {
+            assertEquals(AdaptiveNavigationLayout.None, navigationLayout(width, height, navigationVisible = false))
+            assertEquals(
+                AdaptiveNavigationLayout.None,
+                navigationLayout(width, height, AdaptiveNavigationStyle.Rail, navigationVisible = false),
+            )
+        }
+        assertEquals(
+            AdaptiveNavigationLayout.None,
+            navigationLayout(1440, 900, AdaptiveNavigationStyle.Rail, navigationVisible = false),
+        )
+    }
+
+    @Test
+    fun `hiding the navigation gives the screen the window and keeps its state`() {
+        for (style in AdaptiveNavigationStyle.entries) {
+            runComposeUiTest {
+                var visible by mutableStateOf(true)
+                val states = mutableListOf<Any>()
+                var screenWidth: Int? = null
+                var covered: Dp? = null
+                setContent {
+                    Window(1180, 820) {
+                        AdaptiveNavigation(
+                            destinations = destinations,
+                            selectedValue = "Home",
+                            onValueSelected = {},
+                            style = style,
+                            navigationVisible = visible,
+                        ) {
+                            val state = remember { Any() }
+                            SideEffect { if (states.lastOrNull() !== state) states += state }
+                            covered = contentPadding.calculateEndPadding(LayoutDirection.Ltr) +
+                                contentPadding.calculateStartPadding(LayoutDirection.Ltr)
+                            Box(Modifier.fillMaxSize().onGloballyPositioned { screenWidth = it.size.width })
+                        }
+                    }
+                }
+                waitForIdle()
+                assertTrue(screenWidth!! < with(density) { 1180.dp.roundToPx() } || covered!! > 0.dp, "$style shows its navigation")
+
+                visible = false
+                waitForIdle()
+                assertEquals(with(density) { 1180.dp.roundToPx() }, screenWidth, "$style gives the screen the window")
+                assertEquals(0.dp, covered, "$style covers nothing")
+
+                visible = true
+                waitForIdle()
+                assertEquals(1, states.size, "$style keeps the screen's state")
+            }
+        }
+    }
+
+    @Test
+    fun `the screen keeps its state through every change of form`() {
+        // Each step is a window, whether the sidebar shows and whether the navigation shows.
+        data class Step(val width: Int, val height: Int, val sidebar: Boolean = true, val visible: Boolean = true)
+        val steps = listOf(
+            Step(1180, 820),
+            Step(1440, 900),
+            Step(1440, 900, sidebar = false),
+            Step(1440, 900),
+            Step(393, 852),
+            Step(852, 393),
+            Step(393, 852, visible = false),
+            Step(1180, 820, visible = false),
+            Step(1180, 820),
+            Step(393, 852),
+            Step(1440, 900),
+        )
+        for (style in AdaptiveNavigationStyle.entries) {
+            for (ownBar in listOf(false, true)) {
+                runComposeUiTest {
+                    var step by mutableStateOf(steps.first())
+                    val states = mutableListOf<Any>()
+                    val layouts = mutableSetOf<AdaptiveNavigationLayout>()
+                    setContent {
+                        Window(step.width, step.height) {
+                            AdaptiveNavigation(
+                                destinations = destinations,
+                                selectedValue = "Home",
+                                onValueSelected = {},
+                                style = style,
+                                sidebarVisible = step.sidebar,
+                                bottomBar = if (ownBar) ({ Box(Modifier.fillMaxWidth().height(72.dp)) }) else null,
+                                navigationVisible = step.visible,
+                            ) {
+                                val state = remember { Any() }
+                                SideEffect {
+                                    if (states.lastOrNull() !== state) states += state
+                                    layouts += layout
+                                }
+                            }
+                        }
+                    }
+                    for (next in steps) {
+                        step = next
+                        waitForIdle()
+                    }
+
+                    val expected = if (style == AdaptiveNavigationStyle.Rail) {
+                        setOf(
+                            AdaptiveNavigationLayout.Rail,
+                            AdaptiveNavigationLayout.Sidebar,
+                            AdaptiveNavigationLayout.BottomBar,
+                            AdaptiveNavigationLayout.None,
+                        )
+                    } else {
+                        setOf(
+                            AdaptiveNavigationLayout.EdgeColumn,
+                            AdaptiveNavigationLayout.Rail,
+                            AdaptiveNavigationLayout.BottomBar,
+                            AdaptiveNavigationLayout.None,
+                        )
+                    }
+                    assertEquals(expected, layouts, "$style, own bar $ownBar, went through every form")
+                    assertEquals(1, states.size, "$style, own bar $ownBar, kept the screen's state")
+                }
+            }
+        }
     }
 
     @Test

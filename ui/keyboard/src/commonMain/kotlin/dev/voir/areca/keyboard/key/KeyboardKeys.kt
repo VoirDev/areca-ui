@@ -2,15 +2,18 @@ package dev.voir.areca.keyboard.key
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.key
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -19,6 +22,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
 import dev.voir.areca.foundation.button.Button
 import dev.voir.areca.foundation.button.ButtonSize
 import dev.voir.areca.foundation.button.ButtonStyle
@@ -55,6 +59,13 @@ import androidx.compose.runtime.staticCompositionLocalOf
  *   [KeyboardStyle.Default].
  * @param size Row and key spacing, the key height, and the metrics of a single key. Defaults to
  *   [LocalKeyboardSize], or [KeyboardSize.Default].
+ * @param maxKeyHeight The tallest a key grows. [Dp.Unspecified], the default, keeps every key at
+ *   [KeyboardSize.keyHeight]. Given a height, the keys fill the height they are given — a calculator
+ *   in a pane, say — sharing it equally from [KeyboardSize.keyHeight] up to [maxKeyHeight]; a pane
+ *   taller than that keeps them at [maxKeyHeight] and places the grid at the bottom of the space, by
+ *   the thumbs. [KeyboardSize.keyHeight] is the floor: on a shorter space the keys keep it and the
+ *   grid runs past the space, as it does without [maxKeyHeight]. A row with its own
+ *   [KeyRow.height] keeps it. Under an unbounded height the keys keep [KeyboardSize.keyHeight].
  *
  * Every press of an enabled key plays the platform's keyboard tap feedback, unless
  * [LocalKeyboardHaptics] is `false`.
@@ -65,11 +76,60 @@ public fun KeyboardKeys(
     modifier: Modifier = Modifier,
     style: KeyStyle = (LocalKeyboardStyle.current ?: KeyboardStyle.Default).keys,
     size: KeyboardSize = LocalKeyboardSize.current ?: KeyboardSize.Default,
+    maxKeyHeight: Dp = Dp.Unspecified,
 ) {
+    if (maxKeyHeight == Dp.Unspecified) {
+        KeyRows(grid = grid, modifier = modifier.fillMaxWidth(), style = style, size = size, keyHeight = size.keyHeight)
+        return
+    }
+    BoxWithConstraints(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.BottomCenter) {
+        val keyHeight = if (constraints.hasBoundedHeight) {
+            fillingKeyHeight(grid, maxHeight, rowGap = size.rowGap, minKeyHeight = size.keyHeight, maxKeyHeight = maxKeyHeight)
+        } else {
+            size.keyHeight
+        }
+        // The box takes the whole height it is given, so a grid shorter than it sits at its bottom.
+        if (constraints.hasBoundedHeight) Spacer(Modifier.fillMaxHeight())
+        KeyRows(grid = grid, modifier = Modifier.fillMaxWidth(), style = style, size = size, keyHeight = keyHeight)
+    }
+}
+
+/**
+ * The height each row without its own [KeyRow.height] takes so the grid fills [available]: an equal
+ * share of what the gaps and the fixed rows leave, no shorter than [minKeyHeight] and no taller than
+ * [maxKeyHeight].
+ *
+ * @param grid Rows to fit.
+ * @param available Height the grid is given.
+ * @param rowGap Space between rows.
+ * @param minKeyHeight The shortest a key gets; it wins over [maxKeyHeight].
+ * @param maxKeyHeight The tallest a key grows.
+ * @return The height of a row that does not set its own.
+ */
+internal fun fillingKeyHeight(grid: KeyboardGrid, available: Dp, rowGap: Dp, minKeyHeight: Dp, maxKeyHeight: Dp): Dp {
+    val flexible = grid.rows.count { it.height == null }
+    if (flexible == 0) return minKeyHeight
+    val fixed = grid.rows.fold(0.dp) { sum, row -> sum + (row.height ?: 0.dp) }
+    val gaps = rowGap * (grid.rows.size - 1).coerceAtLeast(0)
+    val share = (available - fixed - gaps) / flexible
+    return maxOf(minKeyHeight, minOf(share, maxKeyHeight))
+}
+
+/**
+ * The grid's rows, top down, each row's keys sharing its width by weight.
+ *
+ * @param grid Keys to draw.
+ * @param modifier Modifier applied to the column of rows.
+ * @param style Look of each kind of key.
+ * @param size Row and key spacing and the metrics of a single key.
+ * @param keyHeight Height of a row that does not set its own.
+ */
+@Composable
+private fun KeyRows(grid: KeyboardGrid, modifier: Modifier, style: KeyStyle, size: KeyboardSize, keyHeight: Dp) {
     val contentDirection = LocalLayoutDirection.current
 
     Column(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(size.rowGap),
     ) {
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
@@ -82,7 +142,7 @@ public fun KeyboardKeys(
                         key(item.id) {
                             KeyItem(
                                 key = item,
-                                height = row.height ?: size.keyHeight,
+                                height = row.height ?: keyHeight,
                                 size = size.key,
                                 labelMaxLines = size.keyLabelMaxLines,
                                 style = item.style ?: style.of(item.role),

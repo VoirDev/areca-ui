@@ -181,6 +181,21 @@ a hairline along the top edge only.
 KeyboardKeys(grid = KeyboardGrids.phone(onAction = ::onKeyAction))
 ```
 
+Keys are `KeyboardSize.keyHeight` tall. Given a `maxKeyHeight`, `KeyboardKeys` fills the height it
+is given instead — a calculator in a pane on a tablet — each row sharing it from `keyHeight` up to
+`maxKeyHeight`. A taller space keeps the keys at `maxKeyHeight` and places the grid at its bottom,
+within reach of the thumbs; a shorter one keeps them at `keyHeight`. A row with its own `height`
+keeps it.
+
+```kotlin
+KeyboardKeys(
+    grid = KeyboardGrids.calculator(onAction = ::onKeyAction),
+    modifier = Modifier.fillMaxSize(),
+    size = KeyboardSize.default(keyHeight = 40.dp),
+    maxKeyHeight = 72.dp,
+)
+```
+
 A `KeyboardGrid` is a list of `KeyRow`s; each row divides its width among its keys by `Key.weight`,
 independently of the other rows.
 

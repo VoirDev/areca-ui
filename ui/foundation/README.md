@@ -1672,7 +1672,7 @@ layout inside a narrow pane takes its compact form. See [Window classes](#window
 
 | Component | Compact | Wider |
 | --- | --- | --- |
-| `AdaptiveNavigation` | `TabBar` along the bottom; a `NavRail` without labels on a phone on its side | An `EdgeColumn` from a medium window up (the default `AdaptiveNavigationStyle.EdgeColumn`); under `AdaptiveNavigationStyle.Rail`, a `NavRail`, then a sidebar of `NavItem` rows from 1200dp the person can hide to the rail |
+| `AdaptiveNavigation` | `TabBar` along the bottom; a `NavRail` without labels on a phone on its side; nothing under `CompactNavigation.None` | An `EdgeColumn` from a medium window up (the default `AdaptiveNavigationStyle.EdgeColumn`); under `AdaptiveNavigationStyle.Rail`, a `NavRail`, then a sidebar of `NavItem` rows from 1200dp the person can hide to the rail |
 | `AdaptiveToolbar` | A `TopBar`: back, the title, the actions | The title over the screen and back at the head of the `EdgeColumn`; the actions as labelled buttons beside the title under `ActionReach.Header`, as round buttons at the foot of the column under `ActionReach.Thumb` |
 | `EdgeColumn` | — | A floating column along one edge: status and back at its top, the destinations and search at its foot, a held-from-below window's actions between them |
 | `EdgeButton`, `VerticalTabBar`, `EdgeStatus` | — | The column's round actions, its vertical capsule of destinations, and the app's own status icon |
@@ -1757,13 +1757,40 @@ AdaptiveNavigation(
 }
 ```
 
+An app whose phone screens reach each other themselves — no tabs — passes
+`compactNavigation = CompactNavigation.None`: a compact window draws no `TabBar` and no `bottomBar`,
+and a phone on its side no rail either, so turning the phone never brings in navigation the upright
+phone lacks. The screen has the whole window and `layout` reads `AdaptiveNavigationLayout.None`. A
+medium window and wider keeps its column, rail or sidebar.
+
+`navigationVisible = false` hides the navigation in every form — on a startup screen or during
+onboarding — and gives the content the whole window, with `layout` `None` and no `contentPadding`.
+The navigation slides away and back on the theme's motion tokens (only fading under
+`ArecaMotion.reduceMotion`), and the content stays where it is in the composition, so a navigation
+host wrapped by `AdaptiveNavigation` keeps its back stack:
+
+```kotlin
+AdaptiveNavigation(
+    destinations = destinations,
+    selectedValue = tab,
+    onValueSelected = { tab = it },
+    style = AdaptiveNavigationStyle.Rail,
+    compactNavigation = CompactNavigation.None,
+    navigationVisible = currentRoute != Route.Startup,
+) {
+    NavHost(navController, startDestination = Route.Startup) { … }
+}
+```
+
 A tap on the destination already selected reaches its screen through `LocalTabReselect`, in every
 form: `listState.ScrollToTopOnTabReselect()` on the screen takes it back to the top. See
 [Navigation, tabs, tab bar and top bar](#navigation-tabs-tab-bar-and-top-bar).
 
 The slots of `AdaptiveNavigation`, `ListDetail` and `SupportingPane` know which form they are in —
 `layout`, `isTwoPane`, `isSupportingInline` — so a screen draws a back action or a "Filters" button
-only when the layout needs it. `ListDetail` and `SupportingPane` keep each part's saved state, such as
+only when the layout needs it. `AdaptiveNavigation` moves its content rather than recreating it when
+the form changes — a resize, a turned tablet, an unfolded foldable, the sidebar toggled, the
+navigation hidden — so what the screen remembers survives. `ListDetail` and `SupportingPane` keep each part's saved state, such as
 a scroll position, when a resize switches the form. `AdaptiveSheet` and `AdaptiveMenu` choose by the
 whole window, not by the pane that opened them. `NavRail` takes `NavRailStyle` and `NavRailSize`,
 seeded by the provider like every other component.

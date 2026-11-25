@@ -9,8 +9,8 @@ status go on each window, and how a screen hands its toolbar to the edge column.
 
 | Window | Destinations | A screen's title, back and actions | Status |
 | --- | --- | --- | --- |
-| Compact width: a phone, a folded foldable, a narrow split view | `TabBar` along the bottom, or the app's `bottomBar` | `AdaptiveToolbar` draws a `TopBar` | In the screen |
-| Compact height: a phone on its side | `NavRail` without labels | `AdaptiveToolbar` draws a `TopBar` | Foot of the rail |
+| Compact width: a phone, a folded foldable, a narrow split view | `TabBar` along the bottom, or the app's `bottomBar`; none under `CompactNavigation.None` | `AdaptiveToolbar` draws a `TopBar` | In the screen |
+| Compact height: a phone on its side | `NavRail` without labels; none under `CompactNavigation.None` | `AdaptiveToolbar` draws a `TopBar` | Foot of the rail |
 | Medium width and up, `ActionReach.Header`: a tablet on its side, a desktop | `VerticalTabBar` at the foot of the `EdgeColumn`; every destination labelled in the `FloatingSidebar` | Title as a heading over the screen with the actions beside it as labelled buttons; back at the top of the column | An `EdgeStatus` at the head of the column; the full text in the sidebar's `footer` |
 | Medium width and up, `ActionReach.Thumb`: a tablet held upright, an unfolded foldable either way round | As above | Title as a heading over the screen; back at the top of the column; the actions as round buttons at its foot, between the tabs and search | As above |
 | Medium width and up, `style = AdaptiveNavigationStyle.Rail` | `NavRail`, then a sidebar of rows from 1200dp | `AdaptiveToolbar` draws a `TopBar` | Foot of the rail or the sidebar |
@@ -90,7 +90,40 @@ fun AppShell(state: ShellState, onAction: (ShellAction) -> Unit) {
   surface layout's page ground. The `TabBar`, the `NavRail` and the sidebar column take
   `ArecaTheme.surfaces.bar`; the edge column's capsules float on their own `EdgeColumnStyle.surface`.
   `AdaptiveNavigationLayout` is `BottomBar`, `Rail`, `Sidebar` (a large window under
-  `AdaptiveNavigationStyle.Rail` with the sidebar shown) or `EdgeColumn`.
+  `AdaptiveNavigationStyle.Rail` with the sidebar shown), `EdgeColumn`, or `None` when no
+  navigation is drawn. The navigation's own slots (`status`, `header`, `footer`, `bottomBar`) always
+  read the form they are drawn in; only `content` reads `None`.
+
+## No tabs on a phone, and screens without navigation
+
+- An app whose phone screens reach each other themselves passes
+  `compactNavigation = CompactNavigation.None`, never `bottomBar = {}`. A compact width and a
+  compact height (a phone on its side) then draw no navigation, the screen has the whole window and
+  `layout` is `None`; a medium window and wider keep their column, rail or sidebar.
+- A startup screen, onboarding or anything else that must hide the navigation passes
+  `navigationVisible = false`, never a second shell or an `if` around `AdaptiveNavigation`: the
+  content stays in the same place in the composition, so a `NavHost` inside it keeps its back stack.
+  The navigation slides away and back on `ArecaTheme.motion`; the content gets the whole window and
+  `contentPadding` is zero, and beside a hidden edge column `AdaptiveToolbar` draws a `TopBar`.
+- When `layout` is `None`, the screen draws the app's primary action itself, as it does for
+  `BottomBar`.
+
+```kotlin
+AdaptiveNavigation(
+    destinations = destinations,
+    selectedValue = tab,
+    onValueSelected = { tab = it },
+    style = AdaptiveNavigationStyle.Rail,
+    compactNavigation = CompactNavigation.None,
+    navigationVisible = currentRoute != Route.Startup,
+) {
+    NavHost(navController, startDestination = Route.Startup) { … }
+}
+```
+
+- The content is moved, not recreated, when the form changes (a resize, a turned tablet, an
+  unfolded foldable, the sidebar toggled, `navigationVisible`), so `remember` and `rememberSaveable`
+  state inside it, a `NavHost` included, survives every change of form.
 
 ## A screen inside the shell
 
@@ -187,5 +220,6 @@ Box(Modifier.fillMaxSize()) {
 | Put sync or offline text across the top of the screen | `status` with an `EdgeStatus` (`attention = true` when it needs the person), the full text in `footer` |
 | Give the column more than three toolbar buttons by drawing your own | Pass them all as actions; the rest fold into More in order |
 | Put a control, a row of text or a chart's axis across `ArecaTheme.window.fold.bounds` | Let `ListDetail` split at the fold, or lay each half out for itself while the fold is half opened |
+| Pass `bottomBar = {}` to drop the tab bar, or swap `AdaptiveNavigation` in and out around a startup screen | `compactNavigation = CompactNavigation.None`; `navigationVisible = false`, which keeps the content's state |
 | Branch on a device or a platform to choose the column | `AdaptiveNavigation` decides by the window; `style = AdaptiveNavigationStyle.Rail` opts out |
 | Decide where a screen's own actions go by width, or by `isLandscape` | Branch on `ArecaTheme.hostWindow.actionReach`: an unfolded foldable on its side is landscape and expanded, and still held from below |

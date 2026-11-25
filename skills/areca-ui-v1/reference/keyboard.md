@@ -24,6 +24,7 @@ codes, a calculator, a phone pad — instead of the platform keyboard.
 | A real text field driven by the keyboard | `Modifier.keyboardAnchor(controller, target)` on a `readOnly` field | — |
 | The keyboard's surface with header and footer slots | `KeyboardLayout(grid = …)` or `KeyboardLayout { … }` | `KeyboardStyle`, `KeyboardSize` |
 | Keys without the surface — in a sheet, a panel, a screen | `KeyboardKeys(grid)` | `KeyStyle`, `KeyboardSize` |
+| Keys that fill a pane — a calculator beside a list on a tablet | `KeyboardKeys(grid, Modifier.fillMaxSize(), maxKeyHeight = 72.dp)` | `KeyboardSize.keyHeight` is the floor; never measure the pane to compute `keyHeight` yourself |
 | A stock pad | `KeyboardGrids.numeric` / `decimal` / `phone` / `calculator` | `KeyboardGridLabels` |
 | A layout of your own | `KeyboardGrid(KeyRow(Key.text("1") { … }, …), …)` | `Key`, `KeyRole`, `KeyRow` |
 | Hardware keys mapped to the same actions | `KeyEvent.toKeyAction(decimalSeparator)` | `KeyAction` |
@@ -88,7 +89,11 @@ fun Modifier.keyboardAnchor(              // for a text field: wires focus, scro
     modifier: Modifier = Modifier,
     style: KeyStyle = (LocalKeyboardStyle.current ?: KeyboardStyle.Default).keys,
     size: KeyboardSize = LocalKeyboardSize.current ?: KeyboardSize.Default,
+    maxKeyHeight: Dp = Dp.Unspecified,
 )
+// maxKeyHeight Unspecified: every key is size.keyHeight. Given: the keys fill the bounded height
+// they are given, sharing it from size.keyHeight up to maxKeyHeight; a taller space keeps them at
+// maxKeyHeight with the grid at its bottom. Rows with their own KeyRow.height keep it.
 val LocalKeyboardHaptics: ProvidableCompositionLocal<Boolean>  // true by default
 ```
 
