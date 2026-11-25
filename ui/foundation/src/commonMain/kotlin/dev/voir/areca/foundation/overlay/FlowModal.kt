@@ -820,6 +820,19 @@ public val LocalFlowModalStyle: ProvidableCompositionLocal<FlowModalStyle?> =
     compositionLocalOf { null }
 
 /**
+ * The height a sheet's body may take: what the sheet may grow to, less its header, footer and bottom
+ * inset. A sheet measured without a height limit — as an iOS dialog's layer can be for a frame while
+ * the window turns — leaves its body unlimited too; taking the rest from the unlimited value would
+ * give a height Compose cannot represent.
+ *
+ * @param maxHeight The sheet's own height limit, or [Constraints.Infinity].
+ * @param used The header's, the footer's and the bottom inset's height together.
+ * @return The body's height limit, never negative, or [Constraints.Infinity].
+ */
+internal fun sheetBodyRoom(maxHeight: Int, used: Int): Int =
+    if (maxHeight == Constraints.Infinity) Constraints.Infinity else (maxHeight - used).coerceAtLeast(0)
+
+/**
  * The sheet's content: the header at its top, the footer above the navigation bar or the keyboard,
  * and the body between them, with the drag handle floating over the top.
  *
@@ -893,7 +906,7 @@ private fun SheetContent(
                 val bottom = footers.map { it.measure(loose) }
                 val topHeight = top.sumOf { it.height }
                 val bottomHeight = bottom.sumOf { it.height }
-                val bodyRoom = (constraints.maxHeight - topHeight - bottomHeight - bottomInset).coerceAtLeast(0)
+                val bodyRoom = sheetBodyRoom(constraints.maxHeight, used = topHeight + bottomHeight + bottomInset)
                 val body = bodies.map { it.measure(loose.copy(maxHeight = bodyRoom)) }
                 val bodyHeight = body.maxOfOrNull { it.height } ?: 0
 
