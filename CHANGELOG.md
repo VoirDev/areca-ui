@@ -57,6 +57,10 @@ All notable changes to the Areca libraries. The format follows
 
 ### Fixed
 
+- `foundation`: a `FlowModal` measured without a height limit — as an iOS dialog's layer can be for a
+  frame while the window turns — no longer crashes with "Can't represent a width of … and height of …
+  in Constraints"; its body is left unlimited instead of taking the header and footer from the
+  unlimited height.
 - `foundation`: `AdaptiveNavigation` no longer recreates its content when the form changes — a
   resize, a turned tablet, an unfolded foldable, the sidebar toggled, the navigation hidden. The
   content is moved, so `remember` and `rememberSaveable` state inside it, a navigation host's
