@@ -10,10 +10,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.runtime.Composable
@@ -21,17 +21,27 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.semantics.CollectionInfo
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -100,6 +110,8 @@ public data class CalendarDayState(
  * @property startDayOfWeek Day each week begins on.
  * @property coroutineScope Scope the navigation functions launch in. Tied to the calendar's
  *   composition, so a scroll is cancelled when the calendar leaves.
+ * @property markersState The calendar's `markers`, kept current across recompositions.
+ * @property monthMarkersState The calendar's `monthMarkers`, kept current across recompositions.
  */
 @Stable
 public class CalendarScope internal constructor(
@@ -107,6 +119,8 @@ public class CalendarScope internal constructor(
     public val labels: CalendarLabels,
     public val startDayOfWeek: DayOfWeek,
     private val coroutineScope: CoroutineScope,
+    private val markersState: State<((LocalDate) -> CalendarMarker?)?>,
+    private val monthMarkersState: State<((YearMonth) -> CalendarMarker?)?>,
 ) {
     /** Months the calendar can reach. */
     public val bounds: CalendarBounds get() = state.bounds
@@ -114,14 +128,39 @@ public class CalendarScope internal constructor(
     /** Month currently named by the header. */
     public val visibleMonth: YearMonth get() = state.visibleMonth
 
-    /** Whether the month picker is showing in place of the grid. */
-    public val isMonthPickerExpanded: Boolean get() = state.isMonthPickerExpanded
+    /**
+     * Whether the calendar was given markers, so every day keeps a row of
+     * [CalendarSize.markerLaneHeight] under its number.
+     */
+    public val hasMarkers: Boolean get() = markersState.value != null
 
-    /** Whether an earlier month exists. */
-    public val canGoBack: Boolean get() = state.canScrollBackward
+    /**
+     * The marker the calendar's `markers` give [day], or `null` for none — always `null` for a day
+     * of a neighbouring month. What [CalendarDay] and
+     * [dev.voir.areca.datetime.calendar.range.DateRangeDay] draw unless told otherwise.
+     *
+     * @param day Day to look up.
+     * @return Its marker, or `null`.
+     */
+    public fun markerFor(day: CalendarDayState): CalendarMarker? =
+        if (day.isAdjacent) null else markersState.value?.invoke(day.date)
 
-    /** Whether a later month exists. */
-    public val canGoForward: Boolean get() = state.canScrollForward
+    /** The calendar's `monthMarkers`, read by the month tiles. */
+    internal val monthMarkers: ((YearMonth) -> CalendarMarker?)? get() = monthMarkersState.value
+
+    /** What the calendar body shows: days, months or years. */
+    public val level: CalendarLevel get() = state.level
+
+    /**
+     * Whether [goBack] has somewhere to go: an earlier month at [CalendarLevel.Days], an earlier
+     * year or page of years on the other levels.
+     */
+    public val canGoBack: Boolean
+        get() = if (state.level == CalendarLevel.Days) state.canScrollBackward else state.canBrowseBackward
+
+    /** Whether [goForward] has somewhere to go. The forward counterpart of [canGoBack]. */
+    public val canGoForward: Boolean
+        get() = if (state.level == CalendarLevel.Days) state.canScrollForward else state.canBrowseForward
 
     /**
      * Days drawn as chosen. Written by the calendar after each composition and read only to place
@@ -179,30 +218,39 @@ public class CalendarScope internal constructor(
     /**
      * Jumps to a month without animating, clamped into [bounds].
      *
-     * What the month picker uses. Animating there would page the grid through every month in
-     * between, and the grid is not on screen while the picker is open — so the animation is both
-     * invisible and, because each month it passes through is published as the visible one, a stream
-     * of changes the picker would read as somebody else moving the calendar.
-     *
      * @param month Month to show.
      */
     public fun jumpTo(month: YearMonth) {
         coroutineScope.launch { state.scrollTo(month) }
     }
 
-    /** Animates to the month containing today. */
+    /** Animates to the month containing today, and returns to the days if another level is showing. */
     public fun goToToday() {
+        state.showDays()
         coroutineScope.launch { state.animateToToday() }
     }
 
-    /** Swaps between the day grid and the month picker. */
-    public fun toggleMonthPicker() {
-        state.toggleMonthPicker()
+    /**
+     * Steps back by the current level: a month at [CalendarLevel.Days], a year at
+     * [CalendarLevel.Months], a page of years at [CalendarLevel.Years].
+     */
+    public fun goBack() {
+        if (state.level == CalendarLevel.Days) previousMonth() else state.browseBackward()
     }
 
-    /** Shows the day grid again. */
-    public fun collapseMonthPicker() {
-        state.collapseMonthPicker()
+    /** Steps forward by the current level. The forward counterpart of [goBack]. */
+    public fun goForward() {
+        if (state.level == CalendarLevel.Days) nextMonth() else state.browseForward()
+    }
+
+    /** Steps out one level. See [CalendarState.zoomOut]. */
+    public fun zoomOut() {
+        state.zoomOut()
+    }
+
+    /** Returns to the days without changing the month. */
+    public fun showDays() {
+        state.showDays()
     }
 
     /**
@@ -240,10 +288,13 @@ public class CalendarScope internal constructor(
  * about — a cap on how many days may be chosen, a minimum stay, refusing to clear the last one —
  * without racing internal state.
  *
- * Reaching a distant month is two gestures rather than several hundred: the month in the header
- * opens a [MonthYearPicker] in place of the grid, and the back and forward chevrons fade away while
- * it is showing. The picker is measured to the exact height of the grid it replaces, and the bands
- * that fade keep their space, so opening it does not resize the calendar or shift what sits below.
+ * Reaching a distant month takes a few taps rather than hundreds of swipes. The calendar has three
+ * levels ([CalendarLevel]): tapping the title in the [MonthHeader] steps out from the days to the
+ * twelve months of the year, and again to a page of years. A tap on a year shows its months, and a
+ * tap on a month shows its days — the tap is the choice, so there is nothing left to confirm.
+ * Escape, or tapping the month already shown, returns without a change. The month and year tiles
+ * fill the exact height of the day grid, and the weekday row fades rather than leaves, so stepping
+ * between levels does not resize the calendar or shift what sits below.
  *
  * Three parameters shape what exists, and they are not interchangeable.
  * [CalendarBounds][CalendarState.bounds] decides which months can be reached at all — days outside
@@ -282,7 +333,13 @@ public class CalendarScope internal constructor(
  * @param header The band above the grid. `null` removes it — for a calendar navigated entirely from
  *   elsewhere.
  * @param weekdayHeader The Mo/Tu/We row. `null` removes it. Fades out — rather than being removed —
- *   while the month picker is open, so the calendar keeps one height.
+ *   while months or years are showing, so the calendar keeps one height.
+ * @param markers What each day shows under its number — dots, a count, an icon, a price, a load
+ *   bar or anything else (see [CalendarMarker]) — or `null` for the day's own number alone. Once
+ *   given, every day keeps the row whether or not it has a marker, so the grid never shifts as data
+ *   arrives. Called for every drawn day of the page's own month; keep it a map lookup.
+ * @param monthMarkers What each month tile shows under its name while months are showing, such as a
+ *   dot for a month with events or its lowest fare. `null` for the name alone.
  * @param day One cell. Called for every drawn day of every composed page.
  */
 @Composable
@@ -300,6 +357,8 @@ public fun Calendar(
     size: CalendarSize = LocalCalendarSize.current ?: CalendarSize.Default,
     header: (@Composable CalendarScope.() -> Unit)? = { MonthHeader() },
     weekdayHeader: (@Composable CalendarScope.() -> Unit)? = { WeekdayHeader() },
+    markers: ((LocalDate) -> CalendarMarker?)? = null,
+    monthMarkers: ((YearMonth) -> CalendarMarker?)? = null,
     day: @Composable CalendarScope.(CalendarDayState) -> Unit = { dayState ->
         CalendarDay(
             day = dayState,
@@ -308,12 +367,16 @@ public fun Calendar(
     },
 ) {
     val coroutineScope = rememberCoroutineScope()
+    val markersState = rememberUpdatedState(markers)
+    val monthMarkersState = rememberUpdatedState(monthMarkers)
     val scope = remember(state, labels, startDayOfWeek, coroutineScope) {
         CalendarScope(
             state = state,
             labels = labels,
             startDayOfWeek = startDayOfWeek,
             coroutineScope = coroutineScope,
+            markersState = markersState,
+            monthMarkersState = monthMarkersState,
         )
     }
     SideEffect { scope.selection = selection }
@@ -325,16 +388,25 @@ public fun Calendar(
         LocalCalendarSize provides size,
         LocalCalendarStyle provides style,
     ) {
-        Column(modifier = modifier) {
+        Column(
+            modifier = modifier.onKeyEvent { event ->
+                // Escape leaves the months or years without choosing, from whichever tile has focus.
+                val leaves = event.type == KeyEventType.KeyDown && event.key == Key.Escape &&
+                    state.level != CalendarLevel.Days
+                if (leaves) state.showDays()
+                leaves
+            },
+        ) {
             header?.let { slot ->
                 Box(modifier = Modifier.padding(bottom = size.headerSpacing)) { scope.slot() }
             }
 
-            // The weekday row stays laid out while the picker is open and only fades, so the
+            // The weekday row stays laid out while months or years are showing and only fades, so the
             // calendar keeps one height. Removing it would shorten the calendar by a row the moment
-            // the picker opens, which is the jump this whole measurement exists to avoid.
+            // the level changes, which is the jump this whole measurement exists to avoid.
+            val showingDays = state.level == CalendarLevel.Days
             val weekdayAlpha by animateFloatAsState(
-                targetValue = if (state.isMonthPickerExpanded) 0f else 1f,
+                targetValue = if (showingDays) 1f else 0f,
                 animationSpec = motion.medium.tween(motion.standard),
                 label = "calendarWeekdayAlpha",
             )
@@ -344,8 +416,8 @@ public fun Calendar(
                         .alpha(weekdayAlpha)
                         .padding(bottom = size.weekdaySpacing)
                         // Faded out it is decoration, not content; a screen reader should not read
-                        // seven weekday names over a wheel of months.
-                        .thenIf(state.isMonthPickerExpanded) { clearAndSetSemantics { } },
+                        // seven weekday names over a page of months.
+                        .thenIf(!showingDays) { clearAndSetSemantics { } },
                 ) {
                     scope.slot()
                 }
@@ -353,8 +425,8 @@ public fun Calendar(
 
             BoxWithConstraints {
                 // Day cells are square and split the width evenly, so the grid's height follows from
-                // the calendar's width. Computing it here lets the picker be given exactly that
-                // height, which is what stops the calendar resizing when it opens.
+                // the calendar's width. Computing it here lets the month and year tiles be given
+                // exactly that height, which is what stops the calendar resizing between levels.
                 val layoutDirection = LocalLayoutDirection.current
                 val gutters = size.contentPadding.calculateStartPadding(layoutDirection) +
                     size.contentPadding.calculateEndPadding(layoutDirection)
@@ -363,37 +435,20 @@ public fun Calendar(
                 } else {
                     state.visibleMonth.weekCount(startDayOfWeek)
                 }
-                val cellSize = ((maxWidth - gutters) / DAYS_IN_WEEK).coerceAtLeast(0.dp)
-                val bodyHeight = cellSize * weeks + size.weekSpacing * (weeks - 1)
+                val cellWidth = ((maxWidth - gutters) / DAYS_IN_WEEK).coerceAtLeast(0.dp)
+                val cellHeight = cellWidth + scope.markerLaneHeight(size)
+                val bodyHeight = cellHeight * weeks + size.weekSpacing * (weeks - 1)
 
                 AnimatedContent(
-                    targetState = state.isMonthPickerExpanded,
+                    targetState = state.level,
                     transitionSpec = {
                         val spec = motion.medium.tween<Float>(motion.standard)
                         fadeIn(spec) togetherWith fadeOut(spec)
                     },
                     label = "calendarBody",
-                ) { pickingMonth ->
-                    if (pickingMonth) {
-                        MonthYearPicker(
-                            month = state.visibleMonth,
-                            onMonthChange = scope::jumpTo,
-                            bounds = state.bounds,
-                            labels = labels,
-                            style = style.monthPicker,
-                            // Stretch the rows to fill the grid's height rather than keeping the
-                            // token row height, which would leave the picker shorter or taller than
-                            // what it replaced.
-                            size = size.monthPicker.copy(
-                                itemHeight = bodyHeight / size.monthPicker.visibleItemsCount,
-                            ),
-                            modifier = Modifier.padding(
-                                start = size.contentPadding.calculateStartPadding(layoutDirection),
-                                end = size.contentPadding.calculateEndPadding(layoutDirection),
-                            ),
-                        )
-                    } else {
-                        MonthPager(
+                ) { level ->
+                    when (level) {
+                        CalendarLevel.Days -> MonthPager(
                             scope = scope,
                             selection = selection,
                             dateRule = dateRule,
@@ -401,6 +456,20 @@ public fun Calendar(
                             fixedWeekCount = fixedWeekCount,
                             size = size,
                             day = day,
+                        )
+                        CalendarLevel.Months, CalendarLevel.Years -> PeriodTiles(
+                            scope = scope,
+                            state = state,
+                            level = level,
+                            labels = labels,
+                            style = style,
+                            size = size,
+                            modifier = Modifier
+                                .height(bodyHeight)
+                                .padding(
+                                    start = size.contentPadding.calculateStartPadding(layoutDirection),
+                                    end = size.contentPadding.calculateEndPadding(layoutDirection),
+                                ),
                         )
                     }
                 }
@@ -412,8 +481,8 @@ public fun Calendar(
 /**
  * Announces each month the grid settles on, the way a sighted user sees the header change.
  *
- * Silent for the month the calendar opens on, and while the month picker is open: the picker's
- * wheels already read out every month and year they land on.
+ * Silent for the month the calendar opens on, and while months or years are showing: the month a
+ * tile opens is the one the user just chose, and its title says so.
  *
  * @param state Calendar whose settled month is announced.
  * @param labels Source of the month's wording.
@@ -425,7 +494,7 @@ private fun MonthChangeAnnouncement(state: CalendarState, labels: CalendarLabels
         snapshotFlow { state.settledMonth }
             .drop(1)
             .collect { month ->
-                if (!state.isMonthPickerExpanded) announcement = labels.monthHeader(month)
+                if (state.level == CalendarLevel.Days) announcement = labels.monthHeader(month)
             }
     }
     AnnounceOnChange(announcement)
@@ -492,7 +561,7 @@ private fun MonthPager(
                         Box(
                             modifier = Modifier
                                 .weight(1f)
-                                .aspectRatio(1f),
+                                .dayCellSize(extraHeight = scope.markerLaneHeight(size)),
                         ) {
                             if (date != null) {
                                 scope.day(
@@ -513,4 +582,28 @@ private fun MonthPager(
             }
         }
     }
+}
+
+/**
+ * Height of the row every day keeps under its number: [CalendarSize.markerLaneHeight] once the
+ * calendar has markers, otherwise nothing.
+ *
+ * @param size Dimensions the row height comes from.
+ * @return The row's height.
+ */
+internal fun CalendarScope.markerLaneHeight(size: CalendarSize): Dp =
+    if (hasMarkers) size.markerLaneHeight else 0.dp
+
+/**
+ * Sizes a day cell as wide as its share of the row and that much tall plus [extraHeight]: square
+ * without markers, and square plus the marker row with them.
+ *
+ * @param extraHeight Height added below the square.
+ * @return Modifier laying the cell out at that size.
+ */
+private fun Modifier.dayCellSize(extraHeight: Dp): Modifier = layout { measurable, constraints ->
+    val width = constraints.maxWidth
+    val height = width + extraHeight.roundToPx()
+    val placeable = measurable.measure(Constraints.fixed(width, height))
+    layout(width, height) { placeable.place(0, 0) }
 }

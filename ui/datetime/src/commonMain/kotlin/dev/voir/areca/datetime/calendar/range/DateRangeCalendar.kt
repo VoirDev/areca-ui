@@ -18,6 +18,7 @@ import dev.voir.areca.datetime.DateTimeLocale
 import dev.voir.areca.datetime.calendar.Calendar
 import dev.voir.areca.datetime.calendar.CalendarDateRange
 import dev.voir.areca.datetime.calendar.CalendarLabels
+import dev.voir.areca.datetime.calendar.CalendarMarker
 import dev.voir.areca.datetime.calendar.CalendarScope
 import dev.voir.areca.datetime.calendar.CalendarSelection
 import dev.voir.areca.datetime.calendar.CalendarSize
@@ -31,6 +32,7 @@ import dev.voir.areca.datetime.calendar.rememberCalendarState
 import dev.voir.areca.modifier.thenIf
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.YearMonth
 
 /**
  * A month grid for picking a run of days.
@@ -81,6 +83,9 @@ import kotlinx.datetime.LocalDate
  * @param size Dimensions and type. Defaults to [LocalCalendarSize], or [CalendarSize.Default].
  * @param header The band above the grid. `null` removes it.
  * @param weekdayHeader The Mo/Tu/We row. `null` removes it.
+ * @param markers What each day shows under its number, in a row below the band. See
+ *   [dev.voir.areca.datetime.calendar.Calendar]'s parameter of the same name.
+ * @param monthMarkers What each month tile shows under its name while months are showing.
  * @param day One cell. Called for every drawn day of every composed page.
  */
 @Composable
@@ -101,6 +106,8 @@ public fun DateRangeCalendar(
     size: CalendarSize = LocalCalendarSize.current ?: CalendarSize.Default,
     header: (@Composable CalendarScope.() -> Unit)? = { MonthHeader() },
     weekdayHeader: (@Composable CalendarScope.() -> Unit)? = { WeekdayHeader() },
+    markers: ((LocalDate) -> CalendarMarker?)? = null,
+    monthMarkers: ((YearMonth) -> CalendarMarker?)? = null,
     day: @Composable CalendarScope.(DateRangeDayState) -> Unit = { dayState ->
         DateRangeDay(
             day = dayState,
@@ -173,6 +180,8 @@ public fun DateRangeCalendar(
             size = size,
             header = header,
             weekdayHeader = weekdayHeader,
+            markers = markers,
+            monthMarkers = monthMarkers,
         ) { calendarDay ->
             // Each cell derives only its own position, so a hover recomposes the cells whose
             // position it changes instead of every cell of every composed page.

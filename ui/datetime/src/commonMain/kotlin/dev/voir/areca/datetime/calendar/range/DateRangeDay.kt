@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
@@ -29,15 +31,18 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import dev.voir.areca.datetime.calendar.CalendarDayState
+import dev.voir.areca.datetime.calendar.CalendarMarker
 import dev.voir.areca.datetime.calendar.CalendarScope
 import dev.voir.areca.datetime.calendar.CalendarSize
 import dev.voir.areca.datetime.calendar.CalendarStyle
 import dev.voir.areca.datetime.calendar.LocalCalendarSize
 import dev.voir.areca.datetime.calendar.LocalCalendarStyle
+import dev.voir.areca.datetime.calendar.MarkerLane
 import dev.voir.areca.datetime.calendar.animateDayColorAsState
 import dev.voir.areca.datetime.calendar.dayCell
 import dev.voir.areca.datetime.calendar.dayIndication
 import dev.voir.areca.datetime.calendar.dayInteraction
+import dev.voir.areca.datetime.calendar.withMarker
 import dev.voir.areca.foundation.LocalContentColor
 import dev.voir.areca.foundation.LocalTextStyle
 import dev.voir.areca.foundation.text.Text
@@ -103,6 +108,9 @@ public data class DateRangeDayState(
  * @param modifier Modifier applied to the cell.
  * @param onClick Called when the day is tapped. Ignored when the day is unavailable, and `null` for
  *   a read-only calendar.
+ * @param marker What the day shows under its number, in the row a calendar given markers keeps
+ *   below the band. Defaults to what the calendar's `markers` give it. Always in its own colours:
+ *   the band and caps stop above it.
  * @param rangeLabels What assistive technology reads for a day's place in the range.
  * @param style Colors of the days the range does not reach. Defaults to the calendar's.
  * @param rangeStyle Colors and shapes of the days it does. Defaults to [LocalDateRangeStyle], or
@@ -116,6 +124,7 @@ public fun CalendarScope.DateRangeDay(
     day: DateRangeDayState,
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
+    marker: CalendarMarker? = markerFor(day.day),
     rangeLabels: DateRangeLabels = DateRangeLabels.English,
     style: CalendarStyle = LocalCalendarStyle.current ?: CalendarStyle.Default,
     rangeStyle: DateRangeStyle = LocalDateRangeStyle.current ?: DateRangeStyle.Default,
@@ -175,7 +184,7 @@ public fun CalendarScope.DateRangeDay(
         val place = rangeLabels.position(day.position)
         val described = labels.dayDescription(day.date)
         if (place == null) described else "$described, $place"
-    }
+    }.withMarker(marker)
 
     CompositionLocalProvider(
         LocalTextStyle provides size.dayTextStyle,
@@ -195,33 +204,50 @@ public fun CalendarScope.DateRangeDay(
                     interactionSource = source,
                 ),
         ) {
-            Box(
-                modifier = Modifier
-                    .padding(trackPadding)
-                    .fillMaxSize()
-                    .background(color = trackColor, shape = trackShape),
-            )
+            // The band and cap keep the square above the marker row, so the cap stays round and the
+            // marker never sits on the band.
+            Column(modifier = Modifier.fillMaxSize()) {
+                Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
+                    Box(
+                        modifier = Modifier
+                            .padding(trackPadding)
+                            .fillMaxSize()
+                            .background(color = trackColor, shape = trackShape),
+                    )
 
-            Box(
-                modifier = Modifier
-                    .padding(size.dayPadding)
-                    .fillMaxSize()
-                    .background(color = backgroundColor, shape = rangeStyle.capShape)
-                    .border(
-                        width = size.dayBorderWidth,
-                        color = borderColor,
-                        shape = rangeStyle.capShape,
+                    Box(
+                        modifier = Modifier
+                            .padding(size.dayPadding)
+                            .fillMaxSize()
+                            .background(color = backgroundColor, shape = rangeStyle.capShape)
+                            .border(
+                                width = size.dayBorderWidth,
+                                color = borderColor,
+                                shape = rangeStyle.capShape,
+                            )
+                            .dayIndication(
+                                visible = onClick != null && (day.isEnabled || focusable),
+                                interactionSource = source,
+                                shape = rangeStyle.capShape,
+                            )
+                            // The cell already reads the whole date; the drawn number is not a second node.
+                            .clearAndSetSemantics { },
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(text = labels.dayNumber(day.date.day))
+                    }
+                }
+                if (hasMarkers) {
+                    MarkerLane(
+                        marker = marker,
+                        onFill = false,
+                        fillContent = contentColor,
+                        enabled = day.isEnabled,
+                        labels = labels,
+                        style = style,
+                        size = size,
                     )
-                    .dayIndication(
-                        visible = onClick != null && (day.isEnabled || focusable),
-                        interactionSource = source,
-                        shape = rangeStyle.capShape,
-                    )
-                    // The cell already reads the whole date; the drawn number is not a second node.
-                    .clearAndSetSemantics { },
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(text = labels.dayNumber(day.date.day))
+                }
             }
         }
     }

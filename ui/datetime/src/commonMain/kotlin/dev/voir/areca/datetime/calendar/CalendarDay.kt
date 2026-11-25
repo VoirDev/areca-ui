@@ -6,6 +6,8 @@ import androidx.compose.foundation.focusable
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
@@ -53,8 +55,9 @@ import kotlinx.coroutines.flow.filter
 /**
  * One day cell.
  *
- * The circle is drawn on a square that the grid sizes, so this composable never states a size: it
- * fills the cell it is given, insets the circle by [CalendarSize.dayPadding], and lets the number
+ * The fill is drawn on a square that the grid sizes, so this composable never states a size: it
+ * fills the cell it is given, insets the fill — a circle by [CalendarSize.dayPadding], or a tile by
+ * [CalendarSize.dayTilePadding], as [CalendarStyle.dayShape] says — and lets the number
  * sit in the middle. The whole cell takes the tap, padding included, while the press and the focus
  * ring are drawn on the circle. Colors come from [CalendarStyle.resolveDay], which is where the
  * precedence between chosen, today, unavailable and adjacent is decided.
@@ -68,10 +71,16 @@ import kotlinx.coroutines.flow.filter
  * ones included, so the arrows can cross them — while the spill-over days of neighbouring months
  * stay out of the tab order.
  *
+ * Under a calendar given markers the cell is taller than wide by [CalendarSize.markerLaneHeight],
+ * and [marker] is drawn in that row: below the circle in its own colours, or inside the tile in the
+ * day's ink when the tile is filled. Its [CalendarMarker.contentDescription] is read after the day.
+ *
  * @param day Everything about the day this cell draws.
  * @param modifier Modifier applied to the cell.
  * @param onClick Called when the day is tapped. Ignored when the day is unavailable, and `null` for
  *   a read-only calendar.
+ * @param marker What the day shows under its number. Defaults to what the calendar's `markers` give
+ *   it; pass another to override one day in a custom `day` slot.
  * @param style Colors. Defaults to the calendar's.
  * @param size Dimensions and type. Defaults to the calendar's.
  * @param interactionSource Source the press and focus indication is driven from, or `null` for one
@@ -82,6 +91,7 @@ public fun CalendarScope.CalendarDay(
     day: CalendarDayState,
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
+    marker: CalendarMarker? = markerFor(day),
     style: CalendarStyle = LocalCalendarStyle.current ?: CalendarStyle.Default,
     size: CalendarSize = LocalCalendarSize.current ?: CalendarSize.Default,
     interactionSource: MutableInteractionSource? = null,
@@ -95,6 +105,10 @@ public fun CalendarScope.CalendarDay(
     )
     val motion = ArecaTheme.motion
     val focusable = onClick != null && !day.isAdjacent
+    val shape = if (style.dayShape == CalendarDayShape.Tile) size.dayTileShape else CircleShape
+    val padding = if (style.dayShape == CalendarDayShape.Tile) size.dayTilePadding else size.dayPadding
+    val isTile = style.dayShape == CalendarDayShape.Tile
+    val description = labels.dayDescription(day.date).withMarker(marker)
 
     val backgroundColor by animateDayColorAsState(
         targetValue = colors.bg,
@@ -122,7 +136,7 @@ public fun CalendarScope.CalendarDay(
             modifier = modifier
                 .fillMaxSize()
                 .then(dayCell(day = day, focusable = focusable))
-                .semantics { contentDescription = labels.dayDescription(day.date) }
+                .semantics { contentDescription = description }
                 .dayInteraction(
                     day = day,
                     onClick = onClick,
@@ -131,26 +145,60 @@ public fun CalendarScope.CalendarDay(
                 ),
             contentAlignment = Alignment.Center,
         ) {
-            Box(
-                modifier = Modifier
-                    .padding(size.dayPadding)
-                    .fillMaxSize()
-                    .background(color = backgroundColor, shape = CircleShape)
-                    .border(width = size.dayBorderWidth, color = borderColor, shape = CircleShape)
-                    .dayIndication(
-                        visible = onClick != null && (day.isEnabled || focusable),
-                        interactionSource = source,
-                        shape = CircleShape,
-                    )
-                    // The cell already reads the whole date; the drawn number is not a second node.
-                    .clearAndSetSemantics { },
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(text = labels.dayNumber(day.date.day))
+            val fill = Modifier
+                .padding(padding)
+                .fillMaxSize()
+                .background(color = backgroundColor, shape = shape)
+                .border(width = size.dayBorderWidth, color = borderColor, shape = shape)
+                .dayIndication(
+                    visible = onClick != null && (day.isEnabled || focusable),
+                    interactionSource = source,
+                    shape = shape,
+                )
+                .clearAndSetSemantics { }
+            val lane: @Composable () -> Unit = {
+                MarkerLane(
+                    marker = marker,
+                    // Only a filled tile holds the marker; a circle's fill stops above it.
+                    onFill = isTile && colors.bg.alpha > 0f,
+                    fillContent = contentColor,
+                    enabled = day.isEnabled,
+                    labels = labels,
+                    style = style,
+                    size = size,
+                )
+            }
+            if (isTile) {
+                // The tile is the whole cell, so the marker row sits inside it.
+                Column(modifier = fill) {
+                    Box(modifier = Modifier.fillMaxWidth().weight(1f), contentAlignment = Alignment.Center) {
+                        Text(text = labels.dayNumber(day.date.day))
+                    }
+                    if (hasMarkers) lane()
+                }
+            } else {
+                // The circle keeps the square above the marker row, so it stays round.
+                Column(modifier = Modifier.fillMaxSize()) {
+                    Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
+                        Box(modifier = fill, contentAlignment = Alignment.Center) {
+                            Text(text = labels.dayNumber(day.date.day))
+                        }
+                    }
+                    if (hasMarkers) lane()
+                }
             }
         }
     }
 }
+
+/**
+ * A day's description with its marker's appended, as one sentence for assistive technology.
+ *
+ * @param marker Marker whose description to append, or `null`.
+ * @return The receiver, then `", "` and the marker's description when it has one.
+ */
+internal fun String.withMarker(marker: CalendarMarker?): String =
+    marker?.contentDescription?.let { "$this, $it" } ?: this
 
 /**
  * Grid position and keyboard navigation for a built-in day cell.

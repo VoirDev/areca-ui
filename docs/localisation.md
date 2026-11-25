@@ -189,14 +189,19 @@ val GermanCalendarLabels = CalendarLabels(
         val weekday = GermanWeekdays[date.dayOfWeek.ordinal]
         "$weekday, ${date.day}. ${GermanMonths[date.month.ordinal]} ${date.year}"
     },
-    monthPickerAction = "Monat und Jahr wählen",
+    chooseMonthAction = "Monat wählen",
     monthPickerMonth = "Monat",
     monthPickerYear = "Jahr",
     previousMonthAction = "Vorheriger Monat",
     nextMonthAction = "Nächster Monat",
     todayAction = "Heute",
-    monthPickerExpanded = "Ausgeklappt",
-    monthPickerCollapsed = "Eingeklappt",
+    chooseYearAction = "Jahr wählen",
+    pickMonthHint = "Monat wählen",
+    pickYearHint = "Jahr wählen",
+    previousYearAction = "Vorheriges Jahr",
+    nextYearAction = "Nächstes Jahr",
+    previousYearsAction = "Frühere Jahre",
+    nextYearsAction = "Spätere Jahre",
     weekdayName = { day -> GermanWeekdays[day.ordinal] },
 )
 

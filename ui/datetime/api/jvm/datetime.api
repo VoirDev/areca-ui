@@ -265,7 +265,15 @@ public final class dev/voir/areca/datetime/calendar/CalendarDayColors {
 }
 
 public final class dev/voir/areca/datetime/calendar/CalendarDayKt {
-	public static final fun CalendarDay (Ldev/voir/areca/datetime/calendar/CalendarScope;Ldev/voir/areca/datetime/calendar/CalendarDayState;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function0;Ldev/voir/areca/datetime/calendar/CalendarStyle;Ldev/voir/areca/datetime/calendar/CalendarSize;Landroidx/compose/foundation/interaction/MutableInteractionSource;Landroidx/compose/runtime/Composer;II)V
+	public static final fun CalendarDay (Ldev/voir/areca/datetime/calendar/CalendarScope;Ldev/voir/areca/datetime/calendar/CalendarDayState;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function0;Ldev/voir/areca/datetime/calendar/CalendarMarker;Ldev/voir/areca/datetime/calendar/CalendarStyle;Ldev/voir/areca/datetime/calendar/CalendarSize;Landroidx/compose/foundation/interaction/MutableInteractionSource;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class dev/voir/areca/datetime/calendar/CalendarDayShape : java/lang/Enum {
+	public static final field Circle Ldev/voir/areca/datetime/calendar/CalendarDayShape;
+	public static final field Tile Ldev/voir/areca/datetime/calendar/CalendarDayShape;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/datetime/calendar/CalendarDayShape;
+	public static fun values ()[Ldev/voir/areca/datetime/calendar/CalendarDayShape;
 }
 
 public final class dev/voir/areca/datetime/calendar/CalendarDayState {
@@ -376,23 +384,29 @@ public final class dev/voir/areca/datetime/calendar/CalendarHeatStyle$Companion 
 }
 
 public final class dev/voir/areca/datetime/calendar/CalendarKt {
-	public static final fun Calendar (Landroidx/compose/ui/Modifier;Ldev/voir/areca/datetime/calendar/CalendarState;Ldev/voir/areca/datetime/calendar/CalendarSelection;Lkotlin/jvm/functions/Function1;Ldev/voir/areca/datetime/calendar/CalendarDateRule;Lkotlinx/datetime/DayOfWeek;Ldev/voir/areca/datetime/calendar/CalendarLabels;ZZLdev/voir/areca/datetime/calendar/CalendarStyle;Ldev/voir/areca/datetime/calendar/CalendarSize;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;III)V
+	public static final fun Calendar (Landroidx/compose/ui/Modifier;Ldev/voir/areca/datetime/calendar/CalendarState;Ldev/voir/areca/datetime/calendar/CalendarSelection;Lkotlin/jvm/functions/Function1;Ldev/voir/areca/datetime/calendar/CalendarDateRule;Lkotlinx/datetime/DayOfWeek;Ldev/voir/areca/datetime/calendar/CalendarLabels;ZZLdev/voir/areca/datetime/calendar/CalendarStyle;Ldev/voir/areca/datetime/calendar/CalendarSize;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;III)V
 }
 
 public final class dev/voir/areca/datetime/calendar/CalendarLabels {
 	public static final field $stable I
 	public static final field Companion Ldev/voir/areca/datetime/calendar/CalendarLabels$Companion;
-	public fun <init> (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
-	public synthetic fun <init> (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Lkotlin/jvm/functions/Function1;
 	public final fun component10 ()Ljava/lang/String;
-	public final fun component11 ()Ljava/lang/String;
-	public final fun component12 ()Ljava/lang/String;
+	public final fun component11 ()Lkotlin/jvm/functions/Function1;
+	public final fun component12 ()Lkotlin/jvm/functions/Function1;
 	public final fun component13 ()Lkotlin/jvm/functions/Function1;
 	public final fun component14 ()Lkotlin/jvm/functions/Function1;
-	public final fun component15 ()Lkotlin/jvm/functions/Function1;
-	public final fun component16 ()Lkotlin/jvm/functions/Function1;
+	public final fun component15 ()Ljava/lang/String;
+	public final fun component16 ()Ljava/lang/String;
+	public final fun component17 ()Ljava/lang/String;
+	public final fun component18 ()Lkotlin/jvm/functions/Function1;
+	public final fun component19 ()Ljava/lang/String;
 	public final fun component2 ()Lkotlin/jvm/functions/Function1;
+	public final fun component20 ()Ljava/lang/String;
+	public final fun component21 ()Ljava/lang/String;
+	public final fun component22 ()Ljava/lang/String;
 	public final fun component3 ()Lkotlin/jvm/functions/Function1;
 	public final fun component4 ()Lkotlin/jvm/functions/Function1;
 	public final fun component5 ()Ljava/lang/String;
@@ -400,25 +414,31 @@ public final class dev/voir/areca/datetime/calendar/CalendarLabels {
 	public final fun component7 ()Ljava/lang/String;
 	public final fun component8 ()Ljava/lang/String;
 	public final fun component9 ()Ljava/lang/String;
-	public final fun copy (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ldev/voir/areca/datetime/calendar/CalendarLabels;
-	public static synthetic fun copy$default (Ldev/voir/areca/datetime/calendar/CalendarLabels;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ldev/voir/areca/datetime/calendar/CalendarLabels;
+	public final fun copy (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ldev/voir/areca/datetime/calendar/CalendarLabels;
+	public static synthetic fun copy$default (Ldev/voir/areca/datetime/calendar/CalendarLabels;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ldev/voir/areca/datetime/calendar/CalendarLabels;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun getChooseMonthAction ()Ljava/lang/String;
+	public final fun getChooseYearAction ()Ljava/lang/String;
 	public final fun getDayDescription ()Lkotlin/jvm/functions/Function1;
 	public final fun getDayNumber ()Lkotlin/jvm/functions/Function1;
 	public final fun getMonthHeader ()Lkotlin/jvm/functions/Function1;
-	public final fun getMonthPickerAction ()Ljava/lang/String;
-	public final fun getMonthPickerCollapsed ()Ljava/lang/String;
-	public final fun getMonthPickerExpanded ()Ljava/lang/String;
 	public final fun getMonthPickerMonth ()Ljava/lang/String;
 	public final fun getMonthPickerYear ()Ljava/lang/String;
 	public final fun getNextMonthAction ()Ljava/lang/String;
+	public final fun getNextYearAction ()Ljava/lang/String;
+	public final fun getNextYearsAction ()Ljava/lang/String;
+	public final fun getPickMonthHint ()Ljava/lang/String;
+	public final fun getPickYearHint ()Ljava/lang/String;
 	public final fun getPickerMonth ()Lkotlin/jvm/functions/Function1;
 	public final fun getPreviousMonthAction ()Ljava/lang/String;
+	public final fun getPreviousYearAction ()Ljava/lang/String;
+	public final fun getPreviousYearsAction ()Ljava/lang/String;
 	public final fun getShortMonth ()Lkotlin/jvm/functions/Function1;
 	public final fun getTodayAction ()Ljava/lang/String;
 	public final fun getWeekday ()Lkotlin/jvm/functions/Function1;
 	public final fun getWeekdayName ()Lkotlin/jvm/functions/Function1;
 	public final fun getYear ()Lkotlin/jvm/functions/Function1;
+	public final fun getYearSpan ()Lkotlin/jvm/functions/Function1;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -428,23 +448,138 @@ public final class dev/voir/areca/datetime/calendar/CalendarLabels$Companion {
 	public final fun getEnglishNarrow ()Ldev/voir/areca/datetime/calendar/CalendarLabels;
 }
 
+public final class dev/voir/areca/datetime/calendar/CalendarLevel : java/lang/Enum {
+	public static final field Days Ldev/voir/areca/datetime/calendar/CalendarLevel;
+	public static final field Months Ldev/voir/areca/datetime/calendar/CalendarLevel;
+	public static final field Years Ldev/voir/areca/datetime/calendar/CalendarLevel;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/datetime/calendar/CalendarLevel;
+	public static fun values ()[Ldev/voir/areca/datetime/calendar/CalendarLevel;
+}
+
+public abstract interface class dev/voir/areca/datetime/calendar/CalendarMarker {
+	public abstract fun getContentDescription ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/datetime/calendar/CalendarMarker$Count : dev/voir/areca/datetime/calendar/CalendarMarker {
+	public static final field $stable I
+	public fun <init> (ILjava/lang/String;)V
+	public synthetic fun <init> (ILjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (ILjava/lang/String;)Ldev/voir/areca/datetime/calendar/CalendarMarker$Count;
+	public static synthetic fun copy$default (Ldev/voir/areca/datetime/calendar/CalendarMarker$Count;ILjava/lang/String;ILjava/lang/Object;)Ldev/voir/areca/datetime/calendar/CalendarMarker$Count;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getContentDescription ()Ljava/lang/String;
+	public final fun getCount ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/datetime/calendar/CalendarMarker$Custom : dev/voir/areca/datetime/calendar/CalendarMarker {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Lkotlin/jvm/functions/Function3;)V
+	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/functions/Function3;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getContent ()Lkotlin/jvm/functions/Function3;
+	public fun getContentDescription ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/datetime/calendar/CalendarMarker$Dots : dev/voir/areca/datetime/calendar/CalendarMarker {
+	public static final field $stable I
+	public fun <init> (Ljava/util/List;ILjava/lang/String;)V
+	public synthetic fun <init> (Ljava/util/List;ILjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()I
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/util/List;ILjava/lang/String;)Ldev/voir/areca/datetime/calendar/CalendarMarker$Dots;
+	public static synthetic fun copy$default (Ldev/voir/areca/datetime/calendar/CalendarMarker$Dots;Ljava/util/List;ILjava/lang/String;ILjava/lang/Object;)Ldev/voir/areca/datetime/calendar/CalendarMarker$Dots;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getColors ()Ljava/util/List;
+	public fun getContentDescription ()Ljava/lang/String;
+	public final fun getMax ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/datetime/calendar/CalendarMarker$Icon : dev/voir/areca/datetime/calendar/CalendarMarker {
+	public static final field $stable I
+	public synthetic fun <init> (Landroidx/compose/ui/graphics/vector/ImageVector;Landroidx/compose/ui/graphics/Color;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Landroidx/compose/ui/graphics/vector/ImageVector;Landroidx/compose/ui/graphics/Color;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Landroidx/compose/ui/graphics/vector/ImageVector;
+	public final fun component2-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy-bi-UJ9A (Landroidx/compose/ui/graphics/vector/ImageVector;Landroidx/compose/ui/graphics/Color;Ljava/lang/String;)Ldev/voir/areca/datetime/calendar/CalendarMarker$Icon;
+	public static synthetic fun copy-bi-UJ9A$default (Ldev/voir/areca/datetime/calendar/CalendarMarker$Icon;Landroidx/compose/ui/graphics/vector/ImageVector;Landroidx/compose/ui/graphics/Color;Ljava/lang/String;ILjava/lang/Object;)Ldev/voir/areca/datetime/calendar/CalendarMarker$Icon;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getContentDescription ()Ljava/lang/String;
+	public final fun getIcon ()Landroidx/compose/ui/graphics/vector/ImageVector;
+	public final fun getTint-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/datetime/calendar/CalendarMarker$Label : dev/voir/areca/datetime/calendar/CalendarMarker {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;ZLjava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;ZLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Z
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;ZLjava/lang/String;)Ldev/voir/areca/datetime/calendar/CalendarMarker$Label;
+	public static synthetic fun copy$default (Ldev/voir/areca/datetime/calendar/CalendarMarker$Label;Ljava/lang/String;ZLjava/lang/String;ILjava/lang/Object;)Ldev/voir/areca/datetime/calendar/CalendarMarker$Label;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getContentDescription ()Ljava/lang/String;
+	public final fun getEmphasis ()Z
+	public final fun getText ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/datetime/calendar/CalendarMarker$Load : dev/voir/areca/datetime/calendar/CalendarMarker {
+	public static final field $stable I
+	public synthetic fun <init> (FLandroidx/compose/ui/graphics/Color;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (FLandroidx/compose/ui/graphics/Color;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()F
+	public final fun component2-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy-bi-UJ9A (FLandroidx/compose/ui/graphics/Color;Ljava/lang/String;)Ldev/voir/areca/datetime/calendar/CalendarMarker$Load;
+	public static synthetic fun copy-bi-UJ9A$default (Ldev/voir/areca/datetime/calendar/CalendarMarker$Load;FLandroidx/compose/ui/graphics/Color;Ljava/lang/String;ILjava/lang/Object;)Ldev/voir/areca/datetime/calendar/CalendarMarker$Load;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getColor-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
+	public fun getContentDescription ()Ljava/lang/String;
+	public final fun getFraction ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/datetime/calendar/CalendarMarkerScope {
+	public static final field $stable I
+	public final fun getContentColor-0d7_KjU ()J
+	public final fun getLaneHeight-D9Ej5fM ()F
+	public final fun isOnFill ()Z
+}
+
 public final class dev/voir/areca/datetime/calendar/CalendarScope {
 	public static final field $stable I
-	public final fun collapseMonthPicker ()V
 	public final fun getBounds ()Ldev/voir/areca/datetime/calendar/CalendarBounds;
 	public final fun getCanGoBack ()Z
 	public final fun getCanGoForward ()Z
+	public final fun getHasMarkers ()Z
 	public final fun getLabels ()Ldev/voir/areca/datetime/calendar/CalendarLabels;
+	public final fun getLevel ()Ldev/voir/areca/datetime/calendar/CalendarLevel;
 	public final fun getStartDayOfWeek ()Lkotlinx/datetime/DayOfWeek;
 	public final fun getState ()Ldev/voir/areca/datetime/calendar/CalendarState;
 	public final fun getVisibleMonth ()Lkotlinx/datetime/YearMonth;
+	public final fun goBack ()V
+	public final fun goForward ()V
 	public final fun goTo (Lkotlinx/datetime/YearMonth;)V
 	public final fun goToToday ()V
-	public final fun isMonthPickerExpanded ()Z
 	public final fun jumpTo (Lkotlinx/datetime/YearMonth;)V
+	public final fun markerFor (Ldev/voir/areca/datetime/calendar/CalendarDayState;)Ldev/voir/areca/datetime/calendar/CalendarMarker;
 	public final fun nextMonth ()V
 	public final fun previousMonth ()V
-	public final fun toggleMonthPicker ()V
+	public final fun showDays ()V
+	public final fun zoomOut ()V
 }
 
 public abstract interface class dev/voir/areca/datetime/calendar/CalendarSelection {
@@ -507,41 +642,63 @@ public final class dev/voir/areca/datetime/calendar/CalendarSelection$Single : d
 public final class dev/voir/areca/datetime/calendar/CalendarSize {
 	public static final field $stable I
 	public static final field Companion Ldev/voir/areca/datetime/calendar/CalendarSize$Companion;
-	public synthetic fun <init> (Landroidx/compose/foundation/layout/PaddingValues;FFFFLandroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/text/TextStyle;FLandroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/text/TextStyle;Ldev/voir/areca/foundation/button/ButtonSize;Ldev/voir/areca/foundation/icon/ChevronSize;FLdev/voir/areca/foundation/button/IconButtonSize;Ldev/voir/areca/foundation/wheel/WheelPickerSize;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Landroidx/compose/foundation/layout/PaddingValues;FFFFLandroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/graphics/Shape;FLandroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/text/TextStyle;Ldev/voir/areca/foundation/button/ButtonSize;Ldev/voir/areca/foundation/icon/ChevronSize;FLdev/voir/areca/foundation/button/IconButtonSize;FFFLandroidx/compose/ui/text/TextStyle;FFLandroidx/compose/ui/text/TextStyle;FLandroidx/compose/ui/graphics/Shape;Landroidx/compose/ui/text/TextStyle;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Landroidx/compose/foundation/layout/PaddingValues;
-	public final fun component10 ()Landroidx/compose/foundation/layout/PaddingValues;
-	public final fun component11 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component10-D9Ej5fM ()F
+	public final fun component11 ()Landroidx/compose/foundation/layout/PaddingValues;
 	public final fun component12 ()Landroidx/compose/foundation/layout/PaddingValues;
 	public final fun component13 ()Landroidx/compose/ui/text/TextStyle;
-	public final fun component14 ()Ldev/voir/areca/foundation/button/ButtonSize;
-	public final fun component15 ()Ldev/voir/areca/foundation/icon/ChevronSize;
-	public final fun component16-D9Ej5fM ()F
-	public final fun component17 ()Ldev/voir/areca/foundation/button/IconButtonSize;
-	public final fun component18 ()Ldev/voir/areca/foundation/wheel/WheelPickerSize;
+	public final fun component14 ()Landroidx/compose/foundation/layout/PaddingValues;
+	public final fun component15 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component16 ()Ldev/voir/areca/foundation/button/ButtonSize;
+	public final fun component17 ()Ldev/voir/areca/foundation/icon/ChevronSize;
+	public final fun component18-D9Ej5fM ()F
+	public final fun component19 ()Ldev/voir/areca/foundation/button/IconButtonSize;
 	public final fun component2-D9Ej5fM ()F
+	public final fun component20-D9Ej5fM ()F
+	public final fun component21-D9Ej5fM ()F
+	public final fun component22-D9Ej5fM ()F
+	public final fun component23 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component24-D9Ej5fM ()F
+	public final fun component25-D9Ej5fM ()F
+	public final fun component26 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component27-D9Ej5fM ()F
+	public final fun component28 ()Landroidx/compose/ui/graphics/Shape;
+	public final fun component29 ()Landroidx/compose/ui/text/TextStyle;
 	public final fun component3-D9Ej5fM ()F
 	public final fun component4-D9Ej5fM ()F
 	public final fun component5-D9Ej5fM ()F
 	public final fun component6 ()Landroidx/compose/foundation/layout/PaddingValues;
 	public final fun component7 ()Landroidx/compose/ui/text/TextStyle;
-	public final fun component8-D9Ej5fM ()F
-	public final fun component9 ()Landroidx/compose/foundation/layout/PaddingValues;
-	public final fun copy-PDcpTRk (Landroidx/compose/foundation/layout/PaddingValues;FFFFLandroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/text/TextStyle;FLandroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/text/TextStyle;Ldev/voir/areca/foundation/button/ButtonSize;Ldev/voir/areca/foundation/icon/ChevronSize;FLdev/voir/areca/foundation/button/IconButtonSize;Ldev/voir/areca/foundation/wheel/WheelPickerSize;)Ldev/voir/areca/datetime/calendar/CalendarSize;
-	public static synthetic fun copy-PDcpTRk$default (Ldev/voir/areca/datetime/calendar/CalendarSize;Landroidx/compose/foundation/layout/PaddingValues;FFFFLandroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/text/TextStyle;FLandroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/text/TextStyle;Ldev/voir/areca/foundation/button/ButtonSize;Ldev/voir/areca/foundation/icon/ChevronSize;FLdev/voir/areca/foundation/button/IconButtonSize;Ldev/voir/areca/foundation/wheel/WheelPickerSize;ILjava/lang/Object;)Ldev/voir/areca/datetime/calendar/CalendarSize;
+	public final fun component8 ()Landroidx/compose/foundation/layout/PaddingValues;
+	public final fun component9 ()Landroidx/compose/ui/graphics/Shape;
+	public final fun copy-pKneyz4 (Landroidx/compose/foundation/layout/PaddingValues;FFFFLandroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/graphics/Shape;FLandroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/text/TextStyle;Ldev/voir/areca/foundation/button/ButtonSize;Ldev/voir/areca/foundation/icon/ChevronSize;FLdev/voir/areca/foundation/button/IconButtonSize;FFFLandroidx/compose/ui/text/TextStyle;FFLandroidx/compose/ui/text/TextStyle;FLandroidx/compose/ui/graphics/Shape;Landroidx/compose/ui/text/TextStyle;)Ldev/voir/areca/datetime/calendar/CalendarSize;
+	public static synthetic fun copy-pKneyz4$default (Ldev/voir/areca/datetime/calendar/CalendarSize;Landroidx/compose/foundation/layout/PaddingValues;FFFFLandroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/graphics/Shape;FLandroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/text/TextStyle;Ldev/voir/areca/foundation/button/ButtonSize;Ldev/voir/areca/foundation/icon/ChevronSize;FLdev/voir/areca/foundation/button/IconButtonSize;FFFLandroidx/compose/ui/text/TextStyle;FFLandroidx/compose/ui/text/TextStyle;FLandroidx/compose/ui/graphics/Shape;Landroidx/compose/ui/text/TextStyle;ILjava/lang/Object;)Ldev/voir/areca/datetime/calendar/CalendarSize;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getContentPadding ()Landroidx/compose/foundation/layout/PaddingValues;
 	public final fun getDayBorderWidth-D9Ej5fM ()F
 	public final fun getDayPadding ()Landroidx/compose/foundation/layout/PaddingValues;
 	public final fun getDayTextStyle ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getDayTilePadding ()Landroidx/compose/foundation/layout/PaddingValues;
+	public final fun getDayTileShape ()Landroidx/compose/ui/graphics/Shape;
 	public final fun getHeaderChevron ()Ldev/voir/areca/foundation/icon/ChevronSize;
 	public final fun getHeaderContentPadding ()Landroidx/compose/foundation/layout/PaddingValues;
 	public final fun getHeaderSpacing-D9Ej5fM ()F
 	public final fun getHeaderTextStyle ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getLevelHintTextStyle ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getLevelToggle ()Ldev/voir/areca/foundation/button/ButtonSize;
+	public final fun getMarkerBarHeight-D9Ej5fM ()F
+	public final fun getMarkerDotSize-D9Ej5fM ()F
+	public final fun getMarkerIconSize-D9Ej5fM ()F
+	public final fun getMarkerLaneHeight-D9Ej5fM ()F
+	public final fun getMarkerSpacing-D9Ej5fM ()F
+	public final fun getMarkerTextStyle ()Landroidx/compose/ui/text/TextStyle;
 	public final fun getMonthControl ()Ldev/voir/areca/foundation/button/IconButtonSize;
 	public final fun getMonthControlSpacing-D9Ej5fM ()F
-	public final fun getMonthPicker ()Ldev/voir/areca/foundation/wheel/WheelPickerSize;
-	public final fun getMonthPickerToggle ()Ldev/voir/areca/foundation/button/ButtonSize;
 	public final fun getMonthSpacing-D9Ej5fM ()F
+	public final fun getTileShape ()Landroidx/compose/ui/graphics/Shape;
+	public final fun getTileSpacing-D9Ej5fM ()F
+	public final fun getTileTextStyle ()Landroidx/compose/ui/text/TextStyle;
 	public final fun getWeekSpacing-D9Ej5fM ()F
 	public final fun getWeekdayContentPadding ()Landroidx/compose/foundation/layout/PaddingValues;
 	public final fun getWeekdayPadding ()Landroidx/compose/foundation/layout/PaddingValues;
@@ -552,7 +709,7 @@ public final class dev/voir/areca/datetime/calendar/CalendarSize {
 }
 
 public final class dev/voir/areca/datetime/calendar/CalendarSize$Companion {
-	public final fun default-q6NaN-M (Landroidx/compose/foundation/layout/PaddingValues;FFFFLandroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/text/TextStyle;FLandroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/text/TextStyle;Ldev/voir/areca/foundation/icon/ChevronSize;FLdev/voir/areca/foundation/button/IconButtonSize;Ldev/voir/areca/foundation/button/ButtonSize;Ldev/voir/areca/foundation/wheel/WheelPickerSize;Landroidx/compose/runtime/Composer;III)Ldev/voir/areca/datetime/calendar/CalendarSize;
+	public final fun default-8tQ1wzA (Landroidx/compose/foundation/layout/PaddingValues;FFFFLandroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/graphics/Shape;FLandroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/text/TextStyle;Ldev/voir/areca/foundation/icon/ChevronSize;FLdev/voir/areca/foundation/button/IconButtonSize;Ldev/voir/areca/foundation/button/ButtonSize;FFFLandroidx/compose/ui/text/TextStyle;FFLandroidx/compose/ui/text/TextStyle;FLandroidx/compose/ui/graphics/Shape;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/runtime/Composer;IIII)Ldev/voir/areca/datetime/calendar/CalendarSize;
 	public final fun getCompact (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/datetime/calendar/CalendarSize;
 	public final fun getDefault (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/datetime/calendar/CalendarSize;
 }
@@ -567,34 +724,54 @@ public final class dev/voir/areca/datetime/calendar/CalendarState {
 	public final fun animateToNextMonth (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun animateToPreviousMonth (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun animateToToday (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public final fun collapseMonthPicker ()V
-	public final fun expandMonthPicker ()V
+	public final fun browseBackward ()V
+	public final fun browseForward ()V
 	public final fun getBounds ()Ldev/voir/areca/datetime/calendar/CalendarBounds;
+	public final fun getBrowsedYear ()I
+	public final fun getBrowsedYears ()Lkotlin/ranges/IntRange;
+	public final fun getCanBrowseBackward ()Z
+	public final fun getCanBrowseForward ()Z
 	public final fun getCanScrollBackward ()Z
 	public final fun getCanScrollForward ()Z
+	public final fun getCanZoomOut ()Z
+	public final fun getLevel ()Ldev/voir/areca/datetime/calendar/CalendarLevel;
 	public final fun getSettledMonth ()Lkotlinx/datetime/YearMonth;
 	public final fun getToday ()Lkotlinx/datetime/LocalDate;
 	public final fun getVisibleMonth ()Lkotlinx/datetime/YearMonth;
-	public final fun isMonthPickerExpanded ()Z
 	public final fun scrollTo (Lkotlinx/datetime/YearMonth;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public final fun toggleMonthPicker ()V
+	public final fun selectMonth (Lkotlinx/datetime/YearMonth;)V
+	public final fun selectYear (I)V
+	public final fun showDays ()V
+	public final fun zoomOut ()V
 }
 
 public final class dev/voir/areca/datetime/calendar/CalendarStateKt {
+	public static final field YEARS_PER_PAGE I
 	public static final fun rememberCalendarState (Lkotlinx/datetime/YearMonth;Ldev/voir/areca/datetime/calendar/CalendarBounds;Lkotlin/time/Clock;Lkotlinx/datetime/TimeZone;Landroidx/compose/runtime/Composer;II)Ldev/voir/areca/datetime/calendar/CalendarState;
 }
 
 public final class dev/voir/areca/datetime/calendar/CalendarStyle {
 	public static final field $stable I
 	public static final field Companion Ldev/voir/areca/datetime/calendar/CalendarStyle$Companion;
-	public synthetic fun <init> (JJLdev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/foundation/button/IconButtonStyle;Ldev/voir/areca/foundation/button/ButtonStyle;Ldev/voir/areca/foundation/wheel/WheelPickerStyle;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (JJLdev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/foundation/button/IconButtonStyle;Ldev/voir/areca/datetime/calendar/CalendarDayShape;JJJJJJLdev/voir/areca/foundation/button/ButtonStyle;JLdev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1-0d7_KjU ()J
 	public final fun component10 ()Ldev/voir/areca/datetime/calendar/CalendarDayColors;
 	public final fun component11 ()Ldev/voir/areca/datetime/calendar/CalendarDayColors;
 	public final fun component12 ()Ldev/voir/areca/foundation/button/IconButtonStyle;
-	public final fun component13 ()Ldev/voir/areca/foundation/button/ButtonStyle;
-	public final fun component14 ()Ldev/voir/areca/foundation/wheel/WheelPickerStyle;
+	public final fun component13 ()Ldev/voir/areca/datetime/calendar/CalendarDayShape;
+	public final fun component14-0d7_KjU ()J
+	public final fun component15-0d7_KjU ()J
+	public final fun component16-0d7_KjU ()J
+	public final fun component17-0d7_KjU ()J
+	public final fun component18-0d7_KjU ()J
+	public final fun component19-0d7_KjU ()J
 	public final fun component2-0d7_KjU ()J
+	public final fun component20 ()Ldev/voir/areca/foundation/button/ButtonStyle;
+	public final fun component21-0d7_KjU ()J
+	public final fun component22 ()Ldev/voir/areca/datetime/calendar/CalendarDayColors;
+	public final fun component23 ()Ldev/voir/areca/datetime/calendar/CalendarDayColors;
+	public final fun component24 ()Ldev/voir/areca/datetime/calendar/CalendarDayColors;
+	public final fun component25 ()Ldev/voir/areca/datetime/calendar/CalendarDayColors;
 	public final fun component3 ()Ldev/voir/areca/datetime/calendar/CalendarDayColors;
 	public final fun component4 ()Ldev/voir/areca/datetime/calendar/CalendarDayColors;
 	public final fun component5 ()Ldev/voir/areca/datetime/calendar/CalendarDayColors;
@@ -602,20 +779,31 @@ public final class dev/voir/areca/datetime/calendar/CalendarStyle {
 	public final fun component7 ()Ldev/voir/areca/datetime/calendar/CalendarDayColors;
 	public final fun component8 ()Ldev/voir/areca/datetime/calendar/CalendarDayColors;
 	public final fun component9 ()Ldev/voir/areca/datetime/calendar/CalendarDayColors;
-	public final fun copy-E1i84gc (JJLdev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/foundation/button/IconButtonStyle;Ldev/voir/areca/foundation/button/ButtonStyle;Ldev/voir/areca/foundation/wheel/WheelPickerStyle;)Ldev/voir/areca/datetime/calendar/CalendarStyle;
-	public static synthetic fun copy-E1i84gc$default (Ldev/voir/areca/datetime/calendar/CalendarStyle;JJLdev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/foundation/button/IconButtonStyle;Ldev/voir/areca/foundation/button/ButtonStyle;Ldev/voir/areca/foundation/wheel/WheelPickerStyle;ILjava/lang/Object;)Ldev/voir/areca/datetime/calendar/CalendarStyle;
+	public final fun copy-OABatz0 (JJLdev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/foundation/button/IconButtonStyle;Ldev/voir/areca/datetime/calendar/CalendarDayShape;JJJJJJLdev/voir/areca/foundation/button/ButtonStyle;JLdev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;)Ldev/voir/areca/datetime/calendar/CalendarStyle;
+	public static synthetic fun copy-OABatz0$default (Ldev/voir/areca/datetime/calendar/CalendarStyle;JJLdev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/foundation/button/IconButtonStyle;Ldev/voir/areca/datetime/calendar/CalendarDayShape;JJJJJJLdev/voir/areca/foundation/button/ButtonStyle;JLdev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;Ldev/voir/areca/datetime/calendar/CalendarDayColors;ILjava/lang/Object;)Ldev/voir/areca/datetime/calendar/CalendarStyle;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAdjacentDay ()Ldev/voir/areca/datetime/calendar/CalendarDayColors;
 	public final fun getAdjacentSelectedDay ()Ldev/voir/areca/datetime/calendar/CalendarDayColors;
 	public final fun getAdjacentTodayDay ()Ldev/voir/areca/datetime/calendar/CalendarDayColors;
+	public final fun getCurrentTile ()Ldev/voir/areca/datetime/calendar/CalendarDayColors;
 	public final fun getDay ()Ldev/voir/areca/datetime/calendar/CalendarDayColors;
+	public final fun getDayShape ()Ldev/voir/areca/datetime/calendar/CalendarDayShape;
 	public final fun getDisabledDay ()Ldev/voir/areca/datetime/calendar/CalendarDayColors;
+	public final fun getDisabledTile ()Ldev/voir/areca/datetime/calendar/CalendarDayColors;
+	public final fun getLevelHint-0d7_KjU ()J
+	public final fun getLevelToggle ()Ldev/voir/areca/foundation/button/ButtonStyle;
+	public final fun getMarkerContent-0d7_KjU ()J
+	public final fun getMarkerCountBg-0d7_KjU ()J
+	public final fun getMarkerCountContent-0d7_KjU ()J
+	public final fun getMarkerEmphasis-0d7_KjU ()J
+	public final fun getMarkerFill-0d7_KjU ()J
+	public final fun getMarkerTrack-0d7_KjU ()J
 	public final fun getMonthControl ()Ldev/voir/areca/foundation/button/IconButtonStyle;
 	public final fun getMonthLabel-0d7_KjU ()J
-	public final fun getMonthPicker ()Ldev/voir/areca/foundation/wheel/WheelPickerStyle;
-	public final fun getMonthPickerToggle ()Ldev/voir/areca/foundation/button/ButtonStyle;
 	public final fun getSelectedDay ()Ldev/voir/areca/datetime/calendar/CalendarDayColors;
 	public final fun getSelectedDisabledDay ()Ldev/voir/areca/datetime/calendar/CalendarDayColors;
+	public final fun getSelectedTile ()Ldev/voir/areca/datetime/calendar/CalendarDayColors;
+	public final fun getTile ()Ldev/voir/areca/datetime/calendar/CalendarDayColors;
 	public final fun getTodayDay ()Ldev/voir/areca/datetime/calendar/CalendarDayColors;
 	public final fun getTodayDisabledDay ()Ldev/voir/areca/datetime/calendar/CalendarDayColors;
 	public final fun getWeekdayLabel-0d7_KjU ()J
@@ -625,7 +813,7 @@ public final class dev/voir/areca/datetime/calendar/CalendarStyle {
 }
 
 public final class dev/voir/areca/datetime/calendar/CalendarStyle$Companion {
-	public final fun default-HUiFaCc (JJJJJJJJJJJJJJJLdev/voir/areca/foundation/button/IconButtonStyle;Ldev/voir/areca/foundation/button/ButtonStyle;Ldev/voir/areca/foundation/wheel/WheelPickerStyle;Landroidx/compose/runtime/Composer;III)Ldev/voir/areca/datetime/calendar/CalendarStyle;
+	public final fun default-TWWRBVU (JJJJJJJJJJJJJJJLdev/voir/areca/foundation/button/IconButtonStyle;Ldev/voir/areca/datetime/calendar/CalendarDayShape;JJJJJJLdev/voir/areca/foundation/button/ButtonStyle;JJJLandroidx/compose/runtime/Composer;IIII)Ldev/voir/areca/datetime/calendar/CalendarStyle;
 	public final fun getDefault (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/datetime/calendar/CalendarStyle;
 }
 
@@ -636,15 +824,16 @@ public final class dev/voir/areca/datetime/calendar/CalendarStyleKt {
 public final class dev/voir/areca/datetime/calendar/ComposableSingletons$CalendarKt {
 	public static final field INSTANCE Ldev/voir/areca/datetime/calendar/ComposableSingletons$CalendarKt;
 	public fun <init> ()V
-	public final fun getLambda$-576383717$datetime ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda$365530329$datetime ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-1405749247$datetime ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-570481473$datetime ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class dev/voir/areca/datetime/calendar/ComposableSingletons$MonthHeaderKt {
 	public static final field INSTANCE Ldev/voir/areca/datetime/calendar/ComposableSingletons$MonthHeaderKt;
 	public fun <init> ()V
-	public final fun getLambda$1889901229$datetime ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda$436082870$datetime ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$1160431164$datetime ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1776290734$datetime ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$322472375$datetime ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class dev/voir/areca/datetime/calendar/MonthGridKt {
@@ -744,12 +933,12 @@ public final class dev/voir/areca/datetime/calendar/range/BlockedDayPolicy : jav
 public final class dev/voir/areca/datetime/calendar/range/ComposableSingletons$DateRangeCalendarKt {
 	public static final field INSTANCE Ldev/voir/areca/datetime/calendar/range/ComposableSingletons$DateRangeCalendarKt;
 	public fun <init> ()V
-	public final fun getLambda$-2062712395$datetime ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda$757547127$datetime ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-1478440177$datetime ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$1536791761$datetime ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class dev/voir/areca/datetime/calendar/range/DateRangeCalendarKt {
-	public static final fun DateRangeCalendar (Ldev/voir/areca/datetime/calendar/range/DateRangeSelection;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Ldev/voir/areca/datetime/calendar/CalendarState;Ldev/voir/areca/datetime/calendar/range/DateRangeConstraints;Lkotlin/jvm/functions/Function1;Lkotlinx/datetime/DayOfWeek;Ldev/voir/areca/datetime/calendar/CalendarLabels;Ldev/voir/areca/datetime/calendar/range/DateRangeLabels;ZZLdev/voir/areca/datetime/calendar/CalendarStyle;Ldev/voir/areca/datetime/calendar/range/DateRangeStyle;Ldev/voir/areca/datetime/calendar/CalendarSize;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;III)V
+	public static final fun DateRangeCalendar (Ldev/voir/areca/datetime/calendar/range/DateRangeSelection;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Ldev/voir/areca/datetime/calendar/CalendarState;Ldev/voir/areca/datetime/calendar/range/DateRangeConstraints;Lkotlin/jvm/functions/Function1;Lkotlinx/datetime/DayOfWeek;Ldev/voir/areca/datetime/calendar/CalendarLabels;Ldev/voir/areca/datetime/calendar/range/DateRangeLabels;ZZLdev/voir/areca/datetime/calendar/CalendarStyle;Ldev/voir/areca/datetime/calendar/range/DateRangeStyle;Ldev/voir/areca/datetime/calendar/CalendarSize;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;III)V
 }
 
 public final class dev/voir/areca/datetime/calendar/range/DateRangeConstraints {
@@ -789,7 +978,7 @@ public final class dev/voir/areca/datetime/calendar/range/DateRangeDayColors {
 }
 
 public final class dev/voir/areca/datetime/calendar/range/DateRangeDayKt {
-	public static final fun DateRangeDay (Ldev/voir/areca/datetime/calendar/CalendarScope;Ldev/voir/areca/datetime/calendar/range/DateRangeDayState;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function0;Ldev/voir/areca/datetime/calendar/range/DateRangeLabels;Ldev/voir/areca/datetime/calendar/CalendarStyle;Ldev/voir/areca/datetime/calendar/range/DateRangeStyle;Ldev/voir/areca/datetime/calendar/CalendarSize;Landroidx/compose/foundation/interaction/MutableInteractionSource;Landroidx/compose/runtime/Composer;II)V
+	public static final fun DateRangeDay (Ldev/voir/areca/datetime/calendar/CalendarScope;Ldev/voir/areca/datetime/calendar/range/DateRangeDayState;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function0;Ldev/voir/areca/datetime/calendar/CalendarMarker;Ldev/voir/areca/datetime/calendar/range/DateRangeLabels;Ldev/voir/areca/datetime/calendar/CalendarStyle;Ldev/voir/areca/datetime/calendar/range/DateRangeStyle;Ldev/voir/areca/datetime/calendar/CalendarSize;Landroidx/compose/foundation/interaction/MutableInteractionSource;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class dev/voir/areca/datetime/calendar/range/DateRangeDayPosition : java/lang/Enum {
