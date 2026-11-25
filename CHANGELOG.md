@@ -31,6 +31,27 @@ All notable changes to the Areca libraries. The format follows
   under each day — `Dots`, `Count`, `Icon`, `Label`, `Load` or `Custom` — in a row every day keeps,
   so markers never sit on the selection. On a filled tile they take the selected day's ink.
   `monthMarkers` does the same for month tiles; `CalendarDay(marker = …)` overrides one day.
+- `datetime`: `Calendar(fixedWeekCount = false)` animates its height between months, following a
+  swipe as well as the chevrons. The `MonthHeader` title slides with the month it names.
+- `datetime`: `CalendarState.fold(anchor, animationSpec)` folds a calendar's days to one week;
+  `unfold(animationSpec)`, `snapFoldTo(fraction)` (a fold under the finger), `animateFoldTo(anchor)`,
+  `isFolded`, `foldFraction` and `foldAnchor` go with it. The fold moves in layout, without
+  recomposing the grid.
+  Folded, the chevrons and `CalendarScope.goBack()` / `goForward()` step a week, announced with the
+  new `CalendarLabels.previousWeekAction` and `nextWeekAction`.
+- `datetime`: `CalendarAgenda`, a compact month joined to a long, scrolling day-by-day list the app
+  draws (`dev.voir.areca.datetime.calendar.agenda`). Tapping a day scrolls its group up and flashes
+  its heading; scrolling picks the day whose heading is pinned at the top; on a compact window the
+  calendar collapses to the selected week with the list's scroll, like a collapsing top bar; from a
+  medium window the calendar is a card beside the list. With `CalendarAgendaState`, `rememberCalendarAgendaState`,
+  `CalendarAgendaDayScope`, `CalendarAgendaStyle`, `CalendarAgendaSize`, `CalendarAgendaLabels` and
+  their locals.
+- `datetime`: `MonthHeader(actions = …)` draws controls of your own before the chevrons.
+- `datetime`: `CalendarLegend(items)` with `CalendarLegendItem(color, label)`, the key to a calendar's
+  dot markers; styled by the new `CalendarStyle.legendLabel` and `CalendarSize.legendDotSize`,
+  `legendTextStyle`, `legendSpacing`, `legendItemSpacing` and `legendPadding`.
+- `datetime`: `CalendarSize.maxDayHeight` caps a day's square; past it the cell is wider than tall
+  and its circle stays round. `CalendarSize.Compact` caps days at 40dp.
 - `datetime`: `CalendarStyle.dayShape` — `CalendarDayShape.Circle` (the default) or `Tile`, a fill
   over the whole cell for days that carry a price or a count.
 
@@ -46,6 +67,11 @@ All notable changes to the Areca libraries. The format follows
 - `foundation`: an exhaustive `when` over `AdaptiveNavigationLayout` needs a `None` branch.
 - `foundation`, `keyboard`: `AdaptiveNavigation` and `KeyboardKeys` take new trailing parameters
   with defaults. Calls compile unchanged; code compiled against an earlier version must be rebuilt.
+- `datetime`: `CalendarSize`, `CalendarStyle` and `CalendarLabels` gain properties (the day height
+  cap, the legend tokens, the week actions) and `MonthHeader` an `actions` parameter, all with
+  defaults. Calls compile unchanged; code compiled against an earlier version must be rebuilt.
+- `datetime`: `CalendarSize.Compact` caps a day at 40dp tall, so a compact calendar wider than about
+  300dp has shorter rows than before.
 
 ### Removed
 

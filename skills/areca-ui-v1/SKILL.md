@@ -544,6 +544,8 @@ Every foundation family, by intent. Signatures, overloads and packages:
 | Amount against a usual or a target; key to a chart's colours | `MeterBar(fraction, marker = …)`; `ChartLegend(items)` with a `ChartSwatch` per series |
 | Dates and times | `dev.voir.areca:datetime`: calendars, ranges, pickers, date-time field |
 | Event dots, a count, an icon or a price under each day; a busy-month dot on month tiles | `Calendar(markers = { date -> CalendarMarker.Dots(…) })`, `monthMarkers`; `CalendarStyle.default(dayShape = CalendarDayShape.Tile)` for prices and counts — never overlay a `Box` on `CalendarDay` |
+| A month over a long day-by-day list (planned payments, a schedule), kept in step | `CalendarAgenda(days, selected, onSelect, dayHeading) { rows }` + `rememberCalendarAgendaState(bounds)` (`dev.voir.areca:datetime`) |
+| Key to a calendar's dot markers | `CalendarLegend(items = listOf(CalendarLegendItem(color, label)))` under the `Calendar` (`dev.voir.areca:datetime`) |
 | Heat-map month; pick a month from tiles; date as a row's leading tile | `CalendarHeatDay` in a `Calendar`'s `day` slot + `calendarHeatLevel` (`steps` = the ramp's size, `CalendarHeatStyle.ramp.size`) + `CalendarHeatLegend`; `MonthGrid`; `DateTile` (all `dev.voir.areca:datetime`; the grid and the tile take `labels: CalendarLabels`) |
 
 ## Rows, sections and cards

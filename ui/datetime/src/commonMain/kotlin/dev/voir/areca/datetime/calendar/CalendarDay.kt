@@ -7,6 +7,7 @@ import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -145,8 +146,10 @@ public fun CalendarScope.CalendarDay(
                 ),
             contentAlignment = Alignment.Center,
         ) {
+            // A circle stays round in a cell wider than tall: it takes the cell's height.
             val fill = Modifier
                 .padding(padding)
+                .thenIf(!isTile) { aspectRatio(1f, matchHeightConstraintsFirst = true) }
                 .fillMaxSize()
                 .background(color = backgroundColor, shape = shape)
                 .border(width = size.dayBorderWidth, color = borderColor, shape = shape)
@@ -177,9 +180,10 @@ public fun CalendarScope.CalendarDay(
                     if (hasMarkers) lane()
                 }
             } else {
-                // The circle keeps the square above the marker row, so it stays round.
+                // The circle keeps the square above the marker row, so it stays round; in a cell wider
+                // than tall it is centred at the cell's height.
                 Column(modifier = Modifier.fillMaxSize()) {
-                    Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
+                    Box(modifier = Modifier.fillMaxWidth().weight(1f), contentAlignment = Alignment.Center) {
                         Box(modifier = fill, contentAlignment = Alignment.Center) {
                             Text(text = labels.dayNumber(day.date.day))
                         }

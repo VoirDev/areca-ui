@@ -167,6 +167,7 @@ CompositionLocalProvider(LocalDateTimeLocale provides DateTimeLocale.Iso) {
 | Labels | Package | Used by | Holds |
 | --- | --- | --- | --- |
 | `CalendarLabels` | `datetime.calendar` | `Calendar`, `DateRangeCalendar`, `MonthYearPicker`, `MonthGrid`, `DateTile` (`labels`); `DateTimeField` (`calendarLabels`) | Weekday headings and spoken names, the month heading, month names, the spoken day ("Tuesday 15 September 2026"), the control names ("Previous month", "Today", …), the digits of days and years. `EnglishNarrow` draws one-letter weekdays |
+| `CalendarAgendaLabels` | `datetime.calendar.agenda` | `CalendarAgenda` (`agendaLabels`) | What the handle under a folding calendar reads ("Show the whole month", "Show one week"); the rest of the agenda's words are its `CalendarLabels` and the app's own slots |
 | `DateRangeLabels` | `datetime.calendar.range` | `DateRangeCalendar` (`rangeLabels`) | What a day's place in the range adds ("start of range", "in range", "end of range") and a range's length ("3 nights") |
 | `TimePickerLabels` | `datetime` | `TimePicker` (`labels`), `DateTimeField` (`timeLabels`) | The wheels' names ("Hour", "Minute", "AM or PM"), the `am` and `pm` rows, how a twelve-hour hour is read with its period |
 | `DateTimeFieldLabels` | `datetime` | `DateTimeField` (`labels`) | The halves' names ("Date", "Time"), their expanded and collapsed states, the placeholders ("Pick a date", "--:--") |
@@ -202,6 +203,8 @@ val GermanCalendarLabels = CalendarLabels(
     nextYearAction = "Nächstes Jahr",
     previousYearsAction = "Frühere Jahre",
     nextYearsAction = "Spätere Jahre",
+    previousWeekAction = "Vorherige Woche",
+    nextWeekAction = "Nächste Woche",
     weekdayName = { day -> GermanWeekdays[day.ordinal] },
 )
 

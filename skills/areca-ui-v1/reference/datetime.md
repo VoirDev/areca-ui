@@ -14,7 +14,8 @@ tile. For scroll wheels that are not dates use foundation's `WheelPicker`.
 | Package | Holds |
 | --- | --- |
 | `dev.voir.areca.datetime` | `TimePicker`, `DateTimeField`, `DateTile`, `DateTimeLocale`, `TimeFormat`, `TimePickerLabels`, `DateTimeFieldLabels`, `DateTimeFieldFormat` |
-| `dev.voir.areca.datetime.calendar` | `Calendar` and its parts (`CalendarDay`, `MonthHeader`, `WeekdayHeader`, `TodayButton`), `CalendarHeatDay`, `CalendarHeatLegend`, `calendarHeatLevel`, `MonthYearPicker`, `MonthGrid`, `CalendarState`, `CalendarSelection`, `CalendarBounds`, `CalendarDateRule`, `CalendarDateRange`, `CalendarLabels` |
+| `dev.voir.areca.datetime.calendar` | `Calendar` and its parts (`CalendarDay`, `MonthHeader`, `WeekdayHeader`, `TodayButton`), `CalendarHeatDay`, `CalendarHeatLegend`, `calendarHeatLevel`, `CalendarLegend`, `CalendarLegendItem`, `MonthYearPicker`, `MonthGrid`, `CalendarState`, `CalendarSelection`, `CalendarBounds`, `CalendarDateRule`, `CalendarDateRange`, `CalendarLabels` |
+| `dev.voir.areca.datetime.calendar.agenda` | `CalendarAgenda`, `CalendarAgendaState`, `rememberCalendarAgendaState`, `CalendarAgendaDayScope`, `CalendarAgendaStyle`, `CalendarAgendaSize`, `CalendarAgendaLabels` |
 | `dev.voir.areca.datetime.calendar.range` | `DateRangeCalendar`, `DateRangeDay`, `DateRangeSelection`, `DateRangeConstraints`, `BlockedDayPolicy`, `DateRangeLabels`, `DateRangeStyle` |
 
 ## Choose
@@ -22,10 +23,12 @@ tile. For scroll wheels that are not dates use foundation's `WheelPicker`.
 | Need | Use | Types |
 | --- | --- | --- |
 | Pick one day, several days, or show a range picked elsewhere | `Calendar(selection, onDateClick)` | `CalendarSelection.Single` / `Multiple` / `Range`, `CalendarState`, `CalendarDateRule`, `CalendarBounds` |
+| A month over a long list of what is planned each day, kept in step (planned payments, a schedule) | `CalendarAgenda(days, selected, onSelect, dayHeading) { rows }` with `rememberCalendarAgendaState(bounds)` | `CalendarAgendaState`, `CalendarAgendaDayScope`, `CalendarAgendaStyle`, `CalendarAgendaSize`, `CalendarAgendaLabels` |
 | Pick a run of days in two taps, with length limits | `DateRangeCalendar(selection, onSelectionChange)` | `DateRangeSelection`, `DateRangeConstraints`, `BlockedDayPolicy`, `CalendarDateRange` |
 | One date-time in a form, inside a `FieldGroup` | `DateTimeField(value, onValueChange)` | `DateTimeFieldFormat`, `DateTimeFieldLabels` |
 | Hour and minute (and AM/PM) wheels | `TimePicker(initialTime, onTimeChange)` | `TimeFormat`, `TimePickerLabels` |
 | Month and year wheels on their own (a far jump such as a birth year, in the app's own sheet with Cancel / Done) | `MonthYearPicker(month, onMonthChange)` | `CalendarBounds` |
+| What the dots under the days mean | `CalendarLegend(items = listOf(CalendarLegendItem(color, label), …))` under the grid | `CalendarStyle`, `CalendarSize` |
 | A month shaded by how much each day held | `Calendar` whose `day` slot draws `CalendarHeatDay`, + `CalendarHeatLegend`, levels from `calendarHeatLevel` | `CalendarHeatStyle` |
 | Pick a whole month from tiles, a year to a block, with a figure each | `MonthGrid(years, selected, onSelect)` | `CalendarLabels` |
 | A date as a month-over-day tile leading a row | `DateTile(date)` | `CalendarLabels` |
@@ -45,7 +48,7 @@ tile. For scroll wheels that are not dates use foundation's `WheelPicker`.
     startDayOfWeek: DayOfWeek = DateTimeLocale.Current.firstDayOfWeek,
     labels: CalendarLabels = CalendarLabels.English,
     showAdjacentMonths: Boolean = false,
-    fixedWeekCount: Boolean = true,                      // six rows always
+    fixedWeekCount: Boolean = true,                      // six rows always; false: each month's own weeks, height animates
     style: CalendarStyle = LocalCalendarStyle.current ?: CalendarStyle.Default,
     size: CalendarSize = LocalCalendarSize.current ?: CalendarSize.Default,
     header: (@Composable CalendarScope.() -> Unit)? = { MonthHeader() },
@@ -188,6 +191,7 @@ tile. For scroll wheels that are not dates use foundation's `WheelPicker`.
     zoomable: Boolean = true,                            // false = title as plain text, no months/years
     style: CalendarStyle = LocalCalendarStyle.current ?: CalendarStyle.Default,
     size: CalendarSize = LocalCalendarSize.current ?: CalendarSize.Default,
+    actions: (@Composable RowScope.() -> Unit)? = null,  // controls before the chevrons, e.g. a Today pill
 )
 @Composable fun CalendarScope.WeekdayHeader(
     modifier: Modifier = Modifier,
@@ -221,6 +225,46 @@ tile. For scroll wheels that are not dates use foundation's `WheelPicker`.
     size: CalendarHeatSize = LocalCalendarHeatSize.current ?: CalendarHeatSize.Default,
 )
 fun calendarHeatLevel(value: Float, max: Float, steps: Int): Int?
+// The key to CalendarMarker.Dots: centred dots and words that wrap; one node
+@Composable fun CalendarLegend(
+    items: List<CalendarLegendItem>,                     // CalendarLegendItem(color, label), in dot order
+    modifier: Modifier = Modifier,
+    contentDescription: String? = null,                  // default: the words in order
+    style: CalendarStyle = LocalCalendarStyle.current ?: CalendarStyle.Default,   // legendLabel
+    size: CalendarSize = LocalCalendarSize.current ?: CalendarSize.Default,       // legendDotSize, legendTextStyle, legendSpacing, legendItemSpacing, legendPadding
+)
+```
+
+```kotlin
+// dev.voir.areca.datetime.calendar.agenda — a compact month over a long day-by-day list the app draws
+@Composable fun CalendarAgenda(
+    days: List<LocalDate>,                               // days with entries; sorted and deduplicated for you
+    selected: LocalDate,
+    onSelect: (LocalDate) -> Unit,                       // tap, scroll, week step, Today
+    dayHeading: @Composable CalendarAgendaDayScope.() -> Unit,   // date, isSelected, isToday, isEmpty
+    modifier: Modifier = Modifier,
+    state: CalendarAgendaState = rememberCalendarAgendaState(),
+    markers: ((LocalDate) -> CalendarMarker?)? = null,
+    dateRule: CalendarDateRule = CalendarDateRule.All,
+    startDayOfWeek: DayOfWeek = DateTimeLocale.Current.firstDayOfWeek,
+    labels: CalendarLabels = CalendarLabels.English,      // todayAction is the pill
+    agendaLabels: CalendarAgendaLabels = CalendarAgendaLabels.English,   // showMonthAction, showWeekAction
+    calendarStyle: CalendarStyle = LocalCalendarStyle.current ?: CalendarStyle.Default,
+    calendarSize: CalendarSize = LocalCalendarSize.current ?: CalendarSize.Compact,
+    style: CalendarAgendaStyle = LocalCalendarAgendaStyle.current ?: CalendarAgendaStyle.Default,
+    size: CalendarAgendaSize = LocalCalendarAgendaSize.current ?: CalendarAgendaSize.Default,
+    contentPadding: PaddingValues = PaddingValues(),    // around the list, below the calendar
+    legend: (@Composable () -> Unit)? = null,            // under the grid; folds away with the month
+    monthSeparator: (@Composable (YearMonth) -> Unit)? = null,
+    emptyDay: (@Composable CalendarAgendaDayScope.() -> Unit)? = null,   // placeholder group for a selected day with no entries
+    dayContent: @Composable CalendarAgendaDayScope.() -> Unit,
+)
+@Composable fun rememberCalendarAgendaState(
+    bounds: CalendarBounds = CalendarBounds.Default,     // the window the list covers
+    initialMonth: YearMonth? = null,
+    clock: Clock = Clock.System,
+    timeZone: TimeZone = TimeZone.currentSystemDefault(),
+): CalendarAgendaState                                   // calendar (fold it: calendar.fold() / unfold()), list, requestScrollToDay(date)
 ```
 
 ## Values and state
@@ -285,15 +329,30 @@ LocalDateTimeLocale                                  // pin a subtree
 | `selectYear(year)` → months of that year; `selectMonth(month)` → its days (a jump) | What the year and month tiles call |
 | `browsedYear`, `browsedYears` (12 years from the bounds' first year), `browseBackward()`, `browseForward()`, `canBrowseBackward`, `canBrowseForward` | The months' year and the years' page, stepped by the header chevrons |
 | `suspend animateTo(month)`, `scrollTo(month)`, `animateToNextMonth()`, `animateToPreviousMonth()`, `animateToToday()` | Launch from `rememberCoroutineScope()`; `scrollTo` (jump) when the move is not the user's |
+| `isFolded` (past half way), `foldAnchor`, `foldFraction` (0 month … 1 week); `suspend fold(anchor = foldAnchor, animationSpec)`, `suspend unfold(animationSpec)`, `snapFoldTo(fraction)`, `suspend animateFoldTo(anchor)` | Fold the days to the week of `foldAnchor` (one row; swipe off; the chevrons step a week to the same weekday, read `previousWeekAction` / `nextWeekAction`; no zoom). Pass `motion.slow.tween(motion.standard)`, or `snap()` under `reduceMotion`; a later fold change interrupts one in flight. `snapFoldTo` folds under a finger (a collapsing header). `animateFoldTo` moves the week and pages to its month, always resting on a whole page. The fold moves in layout: read `foldFraction` in layout or drawing, never in composition. Saved with the month |
 
 `CalendarScope` (the receiver of `header`, `weekdayHeader`, `day`): `state`, `labels`,
 `startDayOfWeek`, `bounds`, `visibleMonth`, `level`, `canGoBack`, `canGoForward` (by level), and
 fire-and-forget `nextMonth()`, `previousMonth()`, `goTo(month)`, `jumpTo(month)`, `goToToday()` (also
 returns to the days), `goBack()`, `goForward()` (a month, a year or twelve years by level),
-`zoomOut()`, `showDays()` for an `onClick`.
+`zoomOut()`, `showDays()` for an `onClick`. Folded, `goBack()` / `goForward()` step a week and
+`goToToday()` moves to today's week.
 
 ## Rules
 
+- **Agenda: the list is the app's, the layout is the agenda's.** `CalendarAgenda` draws no rows —
+  pass `days` and draw each day in `dayHeading` / `dayContent` (rows as `ListItem`s, amounts as
+  `AmountText`). Never wrap a `Calendar` over a `LazyColumn` by hand to get the sync, pinning or
+  fold. Keep `selected` in the screen's state and store every `onSelect`; it arrives on taps,
+  scrolls, week steps and Today. Put the list's window in `rememberCalendarAgendaState(bounds)`,
+  dots per kind in `markers` (`CalendarMarker.Dots(max = 4)`), and their key in
+  `legend = { CalendarLegend(…) }`. Filters belong to the screen's other views, not the agenda.
+  The agenda adapts itself: on a compact window the calendar sits above the list and collapses to
+  the selected week with the list's scroll, like a collapsing top bar (the handle folds or opens it
+  with a tap); from `WidthClass.Medium` it is a fixed card beside the list card. Never branch on the
+  device around it, and give it the whole content area — it paints its own cards. Define
+  `dayHeading` / `dayContent` / `emptyDay` in the screen's composable and read changing data through
+  the day's scope, so a new selection recomposes only the two days it changes.
 - **Markers, not overlays.** Anything under a day's number goes through `markers` (or
   `CalendarDay(marker = …)` in a custom slot), never a `Box` overlaid on `CalendarDay`: the calendar
   reserves the row, keeps it off the selection fill, and switches ink on a filled tile. Keep
@@ -345,7 +404,8 @@ returns to the days), `goBack()`, `goForward()` (a month, a year or twelve years
 
 | Labels | Used by | Fields |
 | --- | --- | --- |
-| `CalendarLabels` (`English`, `EnglishNarrow`) | `Calendar`, `DateRangeCalendar`, `MonthYearPicker`, `DateTimeField(calendarLabels)`, `MonthGrid`, `DateTile` | `weekday`, `monthHeader`, `pickerMonth`, `dayDescription`, `chooseMonthAction`, `monthPickerMonth`, `monthPickerYear`, `previousMonthAction`, `nextMonthAction`, `todayAction`, `weekdayName`, `dayNumber`, `year`, `shortMonth`, `chooseYearAction`, `pickMonthHint`, `pickYearHint`, `yearSpan`, `previousYearAction`, `nextYearAction`, `previousYearsAction`, `nextYearsAction` |
+| `CalendarLabels` (`English`, `EnglishNarrow`) | `Calendar`, `DateRangeCalendar`, `MonthYearPicker`, `DateTimeField(calendarLabels)`, `MonthGrid`, `DateTile` | `weekday`, `monthHeader`, `pickerMonth`, `dayDescription`, `chooseMonthAction`, `monthPickerMonth`, `monthPickerYear`, `previousMonthAction`, `nextMonthAction`, `todayAction`, `weekdayName`, `dayNumber`, `year`, `shortMonth`, `chooseYearAction`, `pickMonthHint`, `pickYearHint`, `yearSpan`, `previousYearAction`, `nextYearAction`, `previousYearsAction`, `nextYearsAction`, `previousWeekAction`, `nextWeekAction` |
+| `CalendarAgendaLabels` (`English`) | `CalendarAgenda(agendaLabels)` | `showMonthAction`, `showWeekAction` (the handle); the Today pill is `CalendarLabels.todayAction`, every heading and row is the app's slot |
 | `DateRangeLabels` (`English`) | `DateRangeCalendar(rangeLabels)`, `DateRangeDay` | `position: (DateRangeDayPosition) -> String?`, `length: (CalendarDateRange) -> String` ("3 nights") — the calendar never draws `length`; use it in your own footer |
 | `TimePickerLabels` (`English`) | `TimePicker`, `DateTimeField(timeLabels)` | `hour`, `minute`, `period`, `am`, `pm`, `hourWithPeriod` |
 | `DateTimeFieldLabels` (`English`) | `DateTimeField(labels)` | `date`, `time`, `expanded`, `collapsed`, `datePlaceholder` ("Pick a date"), `timePlaceholder` ("--:--") |
@@ -369,6 +429,8 @@ val GermanCalendarLabels = CalendarLabels(
     nextYearAction = "Nächstes Jahr",
     previousYearsAction = "Frühere Jahre",
     nextYearsAction = "Spätere Jahre",
+    previousWeekAction = "Vorherige Woche",
+    nextWeekAction = "Nächste Woche",
     weekdayName = { GermanWeekdays[it.ordinal] },
     shortMonth = { GermanMonths[it.ordinal].take(3) },
 )
@@ -390,12 +452,16 @@ val GermanCalendarLabels = CalendarLabels(
 - `CalendarHeatLegend` is one node: pass a sentence as `contentDescription` ("Shaded from €0 to
   €280; a ringed day had nothing").
 - Each `DateTimeField` half is a button reading its name and value with an expanded state.
+- `CalendarAgenda`: day headings are headings, pinned in place as the list scrolls;
+  the handle is a button reading `showMonthAction` / `showWeekAction`; the folded calendar's hidden
+  rows and the folded legend leave the semantics tree.
 
 ## Styles and sizes
 
 | Component | Style · local | Size · local |
 | --- | --- | --- |
-| `Calendar`, `MonthHeader`, `WeekdayHeader`, `CalendarDay`, `TodayButton` (its own `ButtonStyle`) | `CalendarStyle` · `LocalCalendarStyle` · `default(weekdayLabel, monthLabel, dayBg, dayContent, selectedBg, selectedContent, todayBg, todayContent, todayBorder, disabledBg, disabledContent, …, monthControl, dayShape, markerContent, markerEmphasis, markerCountBg, markerCountContent, markerTrack, markerFill, levelToggle, levelHint, tileBg, tileContent)`; `dayShape = CalendarDayShape.Circle` (default: fill around the number) or `Tile` (fill over the whole cell — for days carrying a price or count; range days keep their caps) | `CalendarSize` · `LocalCalendarSize` · `Default`, `Compact` (inside a dropdown or sidebar), `default(…)`; marker row `markerLaneHeight`, `markerDotSize`, `markerSpacing`, `markerTextStyle`, `markerIconSize`, `markerBarHeight` |
+| `Calendar`, `MonthHeader`, `WeekdayHeader`, `CalendarDay`, `TodayButton` (its own `ButtonStyle`) | `CalendarStyle` · `LocalCalendarStyle` · `default(weekdayLabel, monthLabel, dayBg, dayContent, selectedBg, selectedContent, todayBg, todayContent, todayBorder, disabledBg, disabledContent, …, monthControl, dayShape, markerContent, markerEmphasis, markerCountBg, markerCountContent, markerTrack, markerFill, levelToggle, levelHint, tileBg, tileContent)`; `dayShape = CalendarDayShape.Circle` (default: fill around the number) or `Tile` (fill over the whole cell — for days carrying a price or count; range days keep their caps) | `CalendarSize` · `LocalCalendarSize` · `Default`, `Compact` (inside a dropdown or sidebar, or across a phone above a list; days at most 40dp tall), `default(…)`; `maxDayHeight` caps a day's square (`Dp.Unspecified` = always square), the circle stays round; marker row `markerLaneHeight`, `markerDotSize`, `markerSpacing`, `markerTextStyle`, `markerIconSize`, `markerBarHeight` |
+| `CalendarAgenda` | `CalendarAgendaStyle` · `LocalCalendarAgendaStyle` · `default(calendarBg, listBg, headingBg, highlight, handle, lift)` (grounds `Unspecified` = the surface's raised fill), plus `calendarStyle` | `CalendarAgendaSize` · `LocalCalendarAgendaSize` · `default(shape, headingPadding, handleSize, handleHeight, lift, paneSpacing, calendarPaneWidth)`, plus `calendarSize` (`Compact` by default) |
 | `DateRangeCalendar`, `DateRangeDay` | `DateRangeStyle` · `LocalDateRangeStyle` · `default(track, previewTrack, capBg, capContent, …, capShape, trackCorner)`, plus `CalendarStyle` | `CalendarSize` |
 | `MonthYearPicker`, `TimePicker` | foundation `WheelPickerStyle` · `LocalWheelPickerStyle` | `WheelPickerSize` · `LocalWheelPickerSize` |
 | `DateTimeField` | foundation `FieldStyle` · `LocalFieldStyle` | `FieldSize` · `LocalFieldSize` |

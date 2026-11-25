@@ -71,6 +71,7 @@ public data class CalendarDayColors(
  * @property selectedTile The tile of the month or year being shown.
  * @property currentTile The tile of today's month or year, unchosen. Ringed like today's day.
  * @property disabledTile A month or year outside the calendar's bounds.
+ * @property legendLabel Words of a [CalendarLegend].
  */
 @Immutable
 public data class CalendarStyle(
@@ -99,6 +100,7 @@ public data class CalendarStyle(
     public val selectedTile: CalendarDayColors,
     public val currentTile: CalendarDayColors,
     public val disabledTile: CalendarDayColors,
+    public val legendLabel: Color,
 ) {
     /**
      * Picks the colors for one day cell.
@@ -195,6 +197,7 @@ public data class CalendarStyle(
          * @param levelHint The hint beside the title while months or years are showing.
          * @param tileBg Fill of a month or year tile. Follows the surface's well, like [MonthGrid].
          * @param tileContent Label of a month or year tile.
+         * @param legendLabel Words of a [CalendarLegend].
          * @return Style built from the given colors.
          */
         @Composable
@@ -228,6 +231,7 @@ public data class CalendarStyle(
             levelHint: Color = ArecaTheme.colors.fgMuted,
             tileBg: Color = ArecaTheme.surface.well,
             tileContent: Color = dayContent,
+            legendLabel: Color = ArecaTheme.colors.fgSubtle,
         ): CalendarStyle = CalendarStyle(
             weekdayLabel = weekdayLabel,
             monthLabel = monthLabel,
@@ -272,6 +276,7 @@ public data class CalendarStyle(
             selectedTile = CalendarDayColors(bg = selectedBg, content = selectedContent),
             currentTile = CalendarDayColors(bg = tileBg, content = todayContent, border = todayBorder),
             disabledTile = CalendarDayColors(bg = Color.Transparent, content = disabledContent),
+            legendLabel = legendLabel,
         )
     }
 }

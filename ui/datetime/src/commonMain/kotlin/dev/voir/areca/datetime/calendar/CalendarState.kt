@@ -1,15 +1,22 @@
 package dev.voir.areca.datetime.calendar
 
+import androidx.compose.animation.core.AnimationSpec
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animate
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.YearMonth
@@ -39,12 +46,16 @@ import kotlin.time.Clock
  * @property today The day drawn as today. Captured once when the state is created rather than read
  *   per cell, so every cell in a composition agrees and tests can pin it.
  * @param initialMonth Month the calendar opens on, clamped into [bounds].
+ * @param initiallyFolded Whether the days open folded to the week of [initialFoldAnchor].
+ * @param initialFoldAnchor Day whose week a fold shows, or `null` for [today]; clamped into [bounds].
  */
 @Stable
 public class CalendarState internal constructor(
     public val bounds: CalendarBounds,
     public val today: LocalDate,
     initialMonth: YearMonth,
+    initiallyFolded: Boolean = false,
+    initialFoldAnchor: LocalDate? = null,
 ) {
     /**
      * Pager backing the month grid.
@@ -135,19 +146,54 @@ public class CalendarState internal constructor(
      */
     public val canBrowseForward: Boolean by canBrowseForwardState
 
+    /** Backing value of [foldFraction]. */
+    private var foldFractionState by mutableFloatStateOf(if (initiallyFolded) 1f else 0f)
+
+    /**
+     * How far the days are folded to the one week holding [foldAnchor]: `0` shows the month, `1`
+     * the one week, and anything between part of the way, as a fold being dragged or animated.
+     *
+     * Changed by [fold], [unfold] and [snapFoldTo]. The calendar reads it while laying out, so
+     * changing it every frame moves the grid without recomposing it; read it the same way —
+     * in a layout or drawing block — to move something with the fold.
+     */
+    public val foldFraction: Float get() = foldFractionState
+
+    /** Derivation behind [isFolded]. */
+    private val isFoldedState = derivedStateOf { foldFractionState >= FOLDED_PAST }
+
+    /**
+     * Whether the days are folded, or more than half way to it.
+     *
+     * Folded, the header names the week and its back and forward step a week rather than a month.
+     * Changes only as the fold crosses half way, so reading it in composition is cheap. Saved across
+     * configuration change with [foldAnchor].
+     */
+    public val isFolded: Boolean by isFoldedState
+
+    /** The coroutine animating the fold, cancelled by the next fold change. */
+    private var foldMotion: Job? = null
+
+    /**
+     * The day whose week a folded calendar shows, always inside [bounds]. Kept while the calendar is
+     * open, so folding again returns to the same week unless [fold] is given another day.
+     */
+    public var foldAnchor: LocalDate by mutableStateOf((initialFoldAnchor ?: today).coerceIn(bounds.minDate, bounds.maxDate))
+        private set
+
     /** Derivation behind [canZoomOut]. */
     private val canZoomOutState = derivedStateOf {
         when (level) {
-            CalendarLevel.Days -> bounds.monthCount > 1
+            CalendarLevel.Days -> bounds.monthCount > 1 && foldFractionState == 0f
             CalendarLevel.Months -> bounds.yearRange.first < bounds.yearRange.last
             CalendarLevel.Years -> false
         }
     }
 
     /**
-     * Whether [zoomOut] has a wider level to step to. `false` on the years, and on any level whose
-     * wider one would hold a single choice: the months of a calendar bounded to one month, the years
-     * of one bounded to one year.
+     * Whether [zoomOut] has a wider level to step to. `false` on the years, while the days are
+     * folded even part way ([foldFraction] above `0`), and on any level whose wider one would hold a single choice: the months of
+     * a calendar bounded to one month, the years of one bounded to one year.
      */
     public val canZoomOut: Boolean by canZoomOutState
 
@@ -202,6 +248,96 @@ public class CalendarState internal constructor(
     public suspend fun animateToToday() {
         animateTo(today.yearMonth)
     }
+
+    /**
+     * Folds the days to the week holding [anchor], returning to the days from the months or years
+     * and showing that week's month at once if another is showing.
+     *
+     * Suspends until the fold has finished. A later [fold], [unfold] or [snapFoldTo] interrupts it,
+     * cancelling the caller.
+     *
+     * @param anchor Day whose week to show, clamped into [bounds]. Defaults to the last one folded to.
+     * @param animationSpec How the fold moves. Pass the theme's motion, such as
+     *   `ArecaTheme.motion.slow.tween(ArecaTheme.motion.standard)`, and `snap()` under reduced motion.
+     */
+    public suspend fun fold(
+        anchor: LocalDate = foldAnchor,
+        animationSpec: AnimationSpec<Float> = spring(stiffness = Spring.StiffnessMediumLow),
+    ) {
+        foldAnchor = anchor.coerceIn(bounds.minDate, bounds.maxDate)
+        level = CalendarLevel.Days
+        if (!isOnPage(foldAnchor.yearMonth)) pagerState.scrollToPage(bounds.pageOf(foldAnchor.yearMonth))
+        animateFoldFraction(1f, animationSpec)
+    }
+
+    /**
+     * Opens the folded week back out to the whole month. Keeps [foldAnchor].
+     *
+     * Suspends until the month is open. A later [fold], [unfold] or [snapFoldTo] interrupts it,
+     * cancelling the caller.
+     *
+     * @param animationSpec How the fold moves; see [fold].
+     */
+    public suspend fun unfold(animationSpec: AnimationSpec<Float> = spring(stiffness = Spring.StiffnessMediumLow)) {
+        animateFoldFraction(0f, animationSpec)
+    }
+
+    /**
+     * Sets how far the days are folded at once, stopping a [fold] or [unfold] in flight: what a
+     * screen calls frame by frame to fold the calendar under a finger, as a collapsing header does.
+     *
+     * @param fraction `0` for the month to `1` for the week; clamped.
+     */
+    public fun snapFoldTo(fraction: Float) {
+        foldMotion?.cancel()
+        foldMotion = null
+        if (fraction > 0f && foldFractionState == 0f) level = CalendarLevel.Days
+        foldFractionState = fraction.coerceIn(0f, 1f)
+    }
+
+    /** Whether a [fold] or [unfold] is animating. */
+    internal val isFoldAnimating: Boolean get() = foldMotion?.isActive == true
+
+    /**
+     * Animates [foldFraction] to [target], interrupting any fold animation already running.
+     *
+     * @param target `0` or `1`.
+     * @param animationSpec How it moves.
+     */
+    private suspend fun animateFoldFraction(target: Float, animationSpec: AnimationSpec<Float>) {
+        val job = currentCoroutineContext()[Job]
+        foldMotion?.takeIf { it != job }?.cancel()
+        foldMotion = job
+        try {
+            animate(initialValue = foldFractionState, targetValue = target, animationSpec = animationSpec) { value, _ ->
+                foldFractionState = value
+            }
+        } finally {
+            if (foldMotion == job) foldMotion = null
+        }
+    }
+
+    /**
+     * Moves the folded week to the one holding [anchor], animating to its month when it lies in
+     * another. Open, it only sets the week a later [fold] shows, and pages to its month.
+     *
+     * Always comes to rest on a whole page: a move interrupted part way between two months — by the
+     * next day picked while the pager is still sliding — is finished by the next call.
+     *
+     * @param anchor Day whose week to show, clamped into [bounds].
+     */
+    public suspend fun animateFoldTo(anchor: LocalDate) {
+        foldAnchor = anchor.coerceIn(bounds.minDate, bounds.maxDate)
+        if (!isOnPage(foldAnchor.yearMonth)) pagerState.animateScrollToPage(bounds.pageOf(foldAnchor.yearMonth))
+    }
+
+    /**
+     * Whether the pager rests exactly on [month]'s page — not on another, and not part way between two.
+     *
+     * @param month Month to check.
+     */
+    private fun isOnPage(month: YearMonth): Boolean =
+        pagerState.currentPage == bounds.pageOf(month) && pagerState.currentPageOffsetFraction == 0f
 
     /**
      * Steps out one level: from the days to the months of the visible month's year, from the months
@@ -274,24 +410,33 @@ public class CalendarState internal constructor(
     /** Construction helpers that stay inside the module. */
     internal companion object {
         /**
-         * Saves the visible month across configuration change and process death.
+         * Saves the visible month and the fold across configuration change and process death.
          *
-         * Only the month is saved. [bounds] and [today] are restored from the call site, because
+         * Only the month and the fold are saved. [bounds] and [today] are restored from the call site, because
          * both may legitimately differ on the way back — a booking window moves on, and so does
          * today — and a saved copy would silently resurrect yesterday's limits.
          *
          * @param bounds Window to rebuild the state with.
          * @param today Day to rebuild the state with.
-         * @return Saver holding the visible month as `[year, monthNumber]`.
+         * @return Saver holding `[year, monthNumber, folded, anchorEpochDay]`, with `folded` `1` or `0`.
          */
-        fun saver(bounds: CalendarBounds, today: LocalDate): Saver<CalendarState, List<Int>> =
+        fun saver(bounds: CalendarBounds, today: LocalDate): Saver<CalendarState, List<Long>> =
             Saver(
-                save = { listOf(it.visibleMonth.year, it.visibleMonth.month.number) },
+                save = {
+                    listOf(
+                        it.visibleMonth.year.toLong(),
+                        it.visibleMonth.month.number.toLong(),
+                        if (it.isFolded) 1L else 0L,
+                        it.foldAnchor.toEpochDays(),
+                    )
+                },
                 restore = { saved ->
                     CalendarState(
                         bounds = bounds,
                         today = today,
-                        initialMonth = YearMonth(saved[0], saved[1]),
+                        initialMonth = YearMonth(saved[0].toInt(), saved[1].toInt()),
+                        initiallyFolded = saved[2] == 1L,
+                        initialFoldAnchor = LocalDate.fromEpochDays(saved[3]),
                     )
                 },
             )
@@ -342,6 +487,9 @@ public enum class CalendarLevel {
     /** The page of years [CalendarState.browsedYears]. */
     Years,
 }
+
+/** Fold past which a calendar counts as [folded][CalendarState.isFolded]. */
+private const val FOLDED_PAST: Float = 0.5f
 
 /** Years on one page of the [CalendarLevel.Years] level: three columns of four rows. */
 public const val YEARS_PER_PAGE: Int = 12
