@@ -18,6 +18,28 @@ open annotation class dev.voir.areca/ExperimentalArecaApi : kotlin/Annotation { 
     constructor <init>() // dev.voir.areca/ExperimentalArecaApi.<init>|<init>(){}[0]
 }
 
+final enum class dev.voir.areca.foundation.adaptive/AdaptiveMenuIconPosition : kotlin/Enum<dev.voir.areca.foundation.adaptive/AdaptiveMenuIconPosition> { // dev.voir.areca.foundation.adaptive/AdaptiveMenuIconPosition|null[0]
+    enum entry Leading // dev.voir.areca.foundation.adaptive/AdaptiveMenuIconPosition.Leading|null[0]
+    enum entry Trailing // dev.voir.areca.foundation.adaptive/AdaptiveMenuIconPosition.Trailing|null[0]
+
+    final val entries // dev.voir.areca.foundation.adaptive/AdaptiveMenuIconPosition.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<dev.voir.areca.foundation.adaptive/AdaptiveMenuIconPosition> // dev.voir.areca.foundation.adaptive/AdaptiveMenuIconPosition.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): dev.voir.areca.foundation.adaptive/AdaptiveMenuIconPosition // dev.voir.areca.foundation.adaptive/AdaptiveMenuIconPosition.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<dev.voir.areca.foundation.adaptive/AdaptiveMenuIconPosition> // dev.voir.areca.foundation.adaptive/AdaptiveMenuIconPosition.values|values#static(){}[0]
+}
+
+final enum class dev.voir.areca.foundation.adaptive/AdaptiveMenuPresentation : kotlin/Enum<dev.voir.areca.foundation.adaptive/AdaptiveMenuPresentation> { // dev.voir.areca.foundation.adaptive/AdaptiveMenuPresentation|null[0]
+    enum entry Adaptive // dev.voir.areca.foundation.adaptive/AdaptiveMenuPresentation.Adaptive|null[0]
+    enum entry Dropdown // dev.voir.areca.foundation.adaptive/AdaptiveMenuPresentation.Dropdown|null[0]
+
+    final val entries // dev.voir.areca.foundation.adaptive/AdaptiveMenuPresentation.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<dev.voir.areca.foundation.adaptive/AdaptiveMenuPresentation> // dev.voir.areca.foundation.adaptive/AdaptiveMenuPresentation.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): dev.voir.areca.foundation.adaptive/AdaptiveMenuPresentation // dev.voir.areca.foundation.adaptive/AdaptiveMenuPresentation.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<dev.voir.areca.foundation.adaptive/AdaptiveMenuPresentation> // dev.voir.areca.foundation.adaptive/AdaptiveMenuPresentation.values|values#static(){}[0]
+}
+
 final enum class dev.voir.areca.foundation.adaptive/AdaptiveNavigationLayout : kotlin/Enum<dev.voir.areca.foundation.adaptive/AdaptiveNavigationLayout> { // dev.voir.areca.foundation.adaptive/AdaptiveNavigationLayout|null[0]
     enum entry BottomBar // dev.voir.areca.foundation.adaptive/AdaptiveNavigationLayout.BottomBar|null[0]
     enum entry EdgeColumn // dev.voir.areca.foundation.adaptive/AdaptiveNavigationLayout.EdgeColumn|null[0]
@@ -1726,6 +1748,76 @@ final class dev.voir.areca.foundation.adaptive/AdaptiveMenuItem { // dev.voir.ar
         final fun <get-label>(): kotlin/String // dev.voir.areca.foundation.adaptive/AdaptiveMenuItem.label.<get-label>|<get-label>(){}[0]
     final val onClick // dev.voir.areca.foundation.adaptive/AdaptiveMenuItem.onClick|{}onClick[0]
         final fun <get-onClick>(): kotlin/Function0<kotlin/Unit> // dev.voir.areca.foundation.adaptive/AdaptiveMenuItem.onClick.<get-onClick>|<get-onClick>(){}[0]
+}
+
+final class dev.voir.areca.foundation.adaptive/AdaptiveMenuSize { // dev.voir.areca.foundation.adaptive/AdaptiveMenuSize|null[0]
+    constructor <init>(androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, dev.voir.areca.foundation.adaptive/AdaptiveMenuIconPosition, dev.voir.areca.foundation.list/ListItemSize) // dev.voir.areca.foundation.adaptive/AdaptiveMenuSize.<init>|<init>(androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;dev.voir.areca.foundation.adaptive.AdaptiveMenuIconPosition;dev.voir.areca.foundation.list.ListItemSize){}[0]
+
+    final val borderWidth // dev.voir.areca.foundation.adaptive/AdaptiveMenuSize.borderWidth|{}borderWidth[0]
+        final fun <get-borderWidth>(): androidx.compose.ui.unit/Dp // dev.voir.areca.foundation.adaptive/AdaptiveMenuSize.borderWidth.<get-borderWidth>|<get-borderWidth>(){}[0]
+    final val iconPosition // dev.voir.areca.foundation.adaptive/AdaptiveMenuSize.iconPosition|{}iconPosition[0]
+        final fun <get-iconPosition>(): dev.voir.areca.foundation.adaptive/AdaptiveMenuIconPosition // dev.voir.areca.foundation.adaptive/AdaptiveMenuSize.iconPosition.<get-iconPosition>|<get-iconPosition>(){}[0]
+    final val item // dev.voir.areca.foundation.adaptive/AdaptiveMenuSize.item|{}item[0]
+        final fun <get-item>(): dev.voir.areca.foundation.list/ListItemSize // dev.voir.areca.foundation.adaptive/AdaptiveMenuSize.item.<get-item>|<get-item>(){}[0]
+    final val maxHeight // dev.voir.areca.foundation.adaptive/AdaptiveMenuSize.maxHeight|{}maxHeight[0]
+        final fun <get-maxHeight>(): androidx.compose.ui.unit/Dp // dev.voir.areca.foundation.adaptive/AdaptiveMenuSize.maxHeight.<get-maxHeight>|<get-maxHeight>(){}[0]
+    final val offsetY // dev.voir.areca.foundation.adaptive/AdaptiveMenuSize.offsetY|{}offsetY[0]
+        final fun <get-offsetY>(): androidx.compose.ui.unit/Dp // dev.voir.areca.foundation.adaptive/AdaptiveMenuSize.offsetY.<get-offsetY>|<get-offsetY>(){}[0]
+    final val width // dev.voir.areca.foundation.adaptive/AdaptiveMenuSize.width|{}width[0]
+        final fun <get-width>(): androidx.compose.ui.unit/Dp // dev.voir.areca.foundation.adaptive/AdaptiveMenuSize.width.<get-width>|<get-width>(){}[0]
+
+    final fun component1(): androidx.compose.ui.unit/Dp // dev.voir.areca.foundation.adaptive/AdaptiveMenuSize.component1|component1(){}[0]
+    final fun component2(): androidx.compose.ui.unit/Dp // dev.voir.areca.foundation.adaptive/AdaptiveMenuSize.component2|component2(){}[0]
+    final fun component3(): androidx.compose.ui.unit/Dp // dev.voir.areca.foundation.adaptive/AdaptiveMenuSize.component3|component3(){}[0]
+    final fun component4(): androidx.compose.ui.unit/Dp // dev.voir.areca.foundation.adaptive/AdaptiveMenuSize.component4|component4(){}[0]
+    final fun component5(): dev.voir.areca.foundation.adaptive/AdaptiveMenuIconPosition // dev.voir.areca.foundation.adaptive/AdaptiveMenuSize.component5|component5(){}[0]
+    final fun component6(): dev.voir.areca.foundation.list/ListItemSize // dev.voir.areca.foundation.adaptive/AdaptiveMenuSize.component6|component6(){}[0]
+    final fun copy(androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ..., dev.voir.areca.foundation.adaptive/AdaptiveMenuIconPosition = ..., dev.voir.areca.foundation.list/ListItemSize = ...): dev.voir.areca.foundation.adaptive/AdaptiveMenuSize // dev.voir.areca.foundation.adaptive/AdaptiveMenuSize.copy|copy(androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;dev.voir.areca.foundation.adaptive.AdaptiveMenuIconPosition;dev.voir.areca.foundation.list.ListItemSize){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.foundation.adaptive/AdaptiveMenuSize.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.foundation.adaptive/AdaptiveMenuSize.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.foundation.adaptive/AdaptiveMenuSize.toString|toString(){}[0]
+
+    final object Companion { // dev.voir.areca.foundation.adaptive/AdaptiveMenuSize.Companion|null[0]
+        final val Default // dev.voir.areca.foundation.adaptive/AdaptiveMenuSize.Companion.Default|{}Default[0]
+            final fun <get-Default>(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.foundation.adaptive/AdaptiveMenuSize // dev.voir.areca.foundation.adaptive/AdaptiveMenuSize.Companion.Default.<get-Default>|<get-Default>(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+
+        final fun default(androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, dev.voir.areca.foundation.adaptive/AdaptiveMenuIconPosition?, dev.voir.areca.foundation.list/ListItemSize?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.voir.areca.foundation.adaptive/AdaptiveMenuSize // dev.voir.areca.foundation.adaptive/AdaptiveMenuSize.Companion.default|default(androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;dev.voir.areca.foundation.adaptive.AdaptiveMenuIconPosition?;dev.voir.areca.foundation.list.ListItemSize?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+    }
+}
+
+final class dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle { // dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle|null[0]
+    constructor <init>(androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Shape, androidx.compose.ui.unit/Dp, dev.voir.areca.foundation.list/ListItemStyle, dev.voir.areca.foundation.list/ListItemStyle) // dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle.<init>|<init>(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Shape;androidx.compose.ui.unit.Dp;dev.voir.areca.foundation.list.ListItemStyle;dev.voir.areca.foundation.list.ListItemStyle){}[0]
+
+    final val bg // dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle.bg|{}bg[0]
+        final fun <get-bg>(): androidx.compose.ui.graphics/Color // dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle.bg.<get-bg>|<get-bg>(){}[0]
+    final val border // dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle.border|{}border[0]
+        final fun <get-border>(): androidx.compose.ui.graphics/Color // dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle.border.<get-border>|<get-border>(){}[0]
+    final val destructiveItem // dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle.destructiveItem|{}destructiveItem[0]
+        final fun <get-destructiveItem>(): dev.voir.areca.foundation.list/ListItemStyle // dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle.destructiveItem.<get-destructiveItem>|<get-destructiveItem>(){}[0]
+    final val item // dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle.item|{}item[0]
+        final fun <get-item>(): dev.voir.areca.foundation.list/ListItemStyle // dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle.item.<get-item>|<get-item>(){}[0]
+    final val shadowElevation // dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle.shadowElevation|{}shadowElevation[0]
+        final fun <get-shadowElevation>(): androidx.compose.ui.unit/Dp // dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle.shadowElevation.<get-shadowElevation>|<get-shadowElevation>(){}[0]
+    final val shape // dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle.shape|{}shape[0]
+        final fun <get-shape>(): androidx.compose.ui.graphics/Shape // dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle.shape.<get-shape>|<get-shape>(){}[0]
+
+    final fun component1(): androidx.compose.ui.graphics/Color // dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle.component1|component1(){}[0]
+    final fun component2(): androidx.compose.ui.graphics/Color // dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle.component2|component2(){}[0]
+    final fun component3(): androidx.compose.ui.graphics/Shape // dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle.component3|component3(){}[0]
+    final fun component4(): androidx.compose.ui.unit/Dp // dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle.component4|component4(){}[0]
+    final fun component5(): dev.voir.areca.foundation.list/ListItemStyle // dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle.component5|component5(){}[0]
+    final fun component6(): dev.voir.areca.foundation.list/ListItemStyle // dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle.component6|component6(){}[0]
+    final fun copy(androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Shape = ..., androidx.compose.ui.unit/Dp = ..., dev.voir.areca.foundation.list/ListItemStyle = ..., dev.voir.areca.foundation.list/ListItemStyle = ...): dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle // dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle.copy|copy(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Shape;androidx.compose.ui.unit.Dp;dev.voir.areca.foundation.list.ListItemStyle;dev.voir.areca.foundation.list.ListItemStyle){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle.toString|toString(){}[0]
+
+    final object Companion { // dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle.Companion|null[0]
+        final val Default // dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle.Companion.Default|{}Default[0]
+            final fun <get-Default>(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle // dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle.Companion.Default.<get-Default>|<get-Default>(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+
+        final fun default(androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Shape?, androidx.compose.ui.unit/Dp, dev.voir.areca.foundation.list/ListItemStyle?, dev.voir.areca.foundation.list/ListItemStyle?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle // dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle.Companion.default|default(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Shape?;androidx.compose.ui.unit.Dp;dev.voir.areca.foundation.list.ListItemStyle?;dev.voir.areca.foundation.list.ListItemStyle?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+    }
 }
 
 final class dev.voir.areca.foundation.adaptive/AdaptiveToolbarAction { // dev.voir.areca.foundation.adaptive/AdaptiveToolbarAction|null[0]
@@ -8460,6 +8552,12 @@ final object dev.voir.areca.theme/ArecaTheme { // dev.voir.areca.theme/ArecaThem
         final fun <get-window>(androidx.compose.runtime/Composer?, kotlin/Int): dev.voir.areca.window/WindowClass // dev.voir.areca.theme/ArecaTheme.window.<get-window>|<get-window>(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
 }
 
+final val dev.voir.areca.foundation.adaptive/LocalAdaptiveMenuPresentation // dev.voir.areca.foundation.adaptive/LocalAdaptiveMenuPresentation|{}LocalAdaptiveMenuPresentation[0]
+    final fun <get-LocalAdaptiveMenuPresentation>(): androidx.compose.runtime/ProvidableCompositionLocal<dev.voir.areca.foundation.adaptive/AdaptiveMenuPresentation> // dev.voir.areca.foundation.adaptive/LocalAdaptiveMenuPresentation.<get-LocalAdaptiveMenuPresentation>|<get-LocalAdaptiveMenuPresentation>(){}[0]
+final val dev.voir.areca.foundation.adaptive/LocalAdaptiveMenuSize // dev.voir.areca.foundation.adaptive/LocalAdaptiveMenuSize|{}LocalAdaptiveMenuSize[0]
+    final fun <get-LocalAdaptiveMenuSize>(): androidx.compose.runtime/ProvidableCompositionLocal<dev.voir.areca.foundation.adaptive/AdaptiveMenuSize?> // dev.voir.areca.foundation.adaptive/LocalAdaptiveMenuSize.<get-LocalAdaptiveMenuSize>|<get-LocalAdaptiveMenuSize>(){}[0]
+final val dev.voir.areca.foundation.adaptive/LocalAdaptiveMenuStyle // dev.voir.areca.foundation.adaptive/LocalAdaptiveMenuStyle|{}LocalAdaptiveMenuStyle[0]
+    final fun <get-LocalAdaptiveMenuStyle>(): androidx.compose.runtime/ProvidableCompositionLocal<dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle?> // dev.voir.areca.foundation.adaptive/LocalAdaptiveMenuStyle.<get-LocalAdaptiveMenuStyle>|<get-LocalAdaptiveMenuStyle>(){}[0]
 final val dev.voir.areca.foundation.adaptive/LocalEdgeColumnSize // dev.voir.areca.foundation.adaptive/LocalEdgeColumnSize|{}LocalEdgeColumnSize[0]
     final fun <get-LocalEdgeColumnSize>(): androidx.compose.runtime/ProvidableCompositionLocal<dev.voir.areca.foundation.adaptive/EdgeColumnSize?> // dev.voir.areca.foundation.adaptive/LocalEdgeColumnSize.<get-LocalEdgeColumnSize>|<get-LocalEdgeColumnSize>(){}[0]
 final val dev.voir.areca.foundation.adaptive/LocalEdgeColumnStyle // dev.voir.areca.foundation.adaptive/LocalEdgeColumnStyle|{}LocalEdgeColumnStyle[0]
@@ -8470,6 +8568,8 @@ final val dev.voir.areca.foundation.adaptive/LocalNavRailStyle // dev.voir.areca
     final fun <get-LocalNavRailStyle>(): androidx.compose.runtime/ProvidableCompositionLocal<dev.voir.areca.foundation.adaptive/NavRailStyle?> // dev.voir.areca.foundation.adaptive/LocalNavRailStyle.<get-LocalNavRailStyle>|<get-LocalNavRailStyle>(){}[0]
 final val dev.voir.areca.foundation.adaptive/dev_voir_areca_foundation_adaptive_AdaptiveDefaults$stableprop // dev.voir.areca.foundation.adaptive/dev_voir_areca_foundation_adaptive_AdaptiveDefaults$stableprop|#static{}dev_voir_areca_foundation_adaptive_AdaptiveDefaults$stableprop[0]
 final val dev.voir.areca.foundation.adaptive/dev_voir_areca_foundation_adaptive_AdaptiveMenuItem$stableprop // dev.voir.areca.foundation.adaptive/dev_voir_areca_foundation_adaptive_AdaptiveMenuItem$stableprop|#static{}dev_voir_areca_foundation_adaptive_AdaptiveMenuItem$stableprop[0]
+final val dev.voir.areca.foundation.adaptive/dev_voir_areca_foundation_adaptive_AdaptiveMenuSize$stableprop // dev.voir.areca.foundation.adaptive/dev_voir_areca_foundation_adaptive_AdaptiveMenuSize$stableprop|#static{}dev_voir_areca_foundation_adaptive_AdaptiveMenuSize$stableprop[0]
+final val dev.voir.areca.foundation.adaptive/dev_voir_areca_foundation_adaptive_AdaptiveMenuStyle$stableprop // dev.voir.areca.foundation.adaptive/dev_voir_areca_foundation_adaptive_AdaptiveMenuStyle$stableprop|#static{}dev_voir_areca_foundation_adaptive_AdaptiveMenuStyle$stableprop[0]
 final val dev.voir.areca.foundation.adaptive/dev_voir_areca_foundation_adaptive_AdaptiveToolbarAction$stableprop // dev.voir.areca.foundation.adaptive/dev_voir_areca_foundation_adaptive_AdaptiveToolbarAction$stableprop|#static{}dev_voir_areca_foundation_adaptive_AdaptiveToolbarAction$stableprop[0]
 final val dev.voir.areca.foundation.adaptive/dev_voir_areca_foundation_adaptive_EdgeColumnSize$stableprop // dev.voir.areca.foundation.adaptive/dev_voir_areca_foundation_adaptive_EdgeColumnSize$stableprop|#static{}dev_voir_areca_foundation_adaptive_EdgeColumnSize$stableprop[0]
 final val dev.voir.areca.foundation.adaptive/dev_voir_areca_foundation_adaptive_EdgeColumnStyle$stableprop // dev.voir.areca.foundation.adaptive/dev_voir_areca_foundation_adaptive_EdgeColumnStyle$stableprop|#static{}dev_voir_areca_foundation_adaptive_EdgeColumnStyle$stableprop[0]
@@ -9054,6 +9154,7 @@ final fun <#A: kotlin/Any?> dev.voir.areca.foundation.wheel/WheelPickerColumn(ko
 final fun <#A: kotlin/Any?> dev.voir.areca.window/adaptive(#A, #A?, #A?, #A?, #A?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): #A // dev.voir.areca.window/adaptive|adaptive(0:0;0:0?;0:0?;0:0?;0:0?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){0§<kotlin.Any?>}[0]
 final fun dev.voir.areca.foundation.adaptive/AdaptiveGrid(androidx.compose.ui/Modifier?, androidx.compose.ui.unit/Dp, kotlin/Int, androidx.compose.ui.unit/Dp, androidx.compose.foundation.lazy.grid/LazyGridState?, androidx.compose.foundation.layout/PaddingValues?, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, kotlin/Function1<androidx.compose.foundation.lazy.grid/LazyGridScope, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.voir.areca.foundation.adaptive/AdaptiveGrid|AdaptiveGrid(androidx.compose.ui.Modifier?;androidx.compose.ui.unit.Dp;kotlin.Int;androidx.compose.ui.unit.Dp;androidx.compose.foundation.lazy.grid.LazyGridState?;androidx.compose.foundation.layout.PaddingValues?;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;kotlin.Function1<androidx.compose.foundation.lazy.grid.LazyGridScope,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
 final fun dev.voir.areca.foundation.adaptive/AdaptiveMenu(dev.voir.areca.foundation.overlay/DropdownPopupState, kotlin.collections/List<dev.voir.areca.foundation.adaptive/AdaptiveMenuItem>, androidx.compose.ui/Modifier?, kotlin/String?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.voir.areca.foundation.adaptive/AdaptiveMenu|AdaptiveMenu(dev.voir.areca.foundation.overlay.DropdownPopupState;kotlin.collections.List<dev.voir.areca.foundation.adaptive.AdaptiveMenuItem>;androidx.compose.ui.Modifier?;kotlin.String?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.voir.areca.foundation.adaptive/AdaptiveMenu(dev.voir.areca.foundation.overlay/DropdownPopupState, kotlin.collections/List<kotlin.collections/List<dev.voir.areca.foundation.adaptive/AdaptiveMenuItem>>, androidx.compose.ui/Modifier?, kotlin/String?, dev.voir.areca.foundation.adaptive/AdaptiveMenuPresentation?, dev.voir.areca.foundation.adaptive/AdaptiveMenuStyle?, dev.voir.areca.foundation.adaptive/AdaptiveMenuSize?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.voir.areca.foundation.adaptive/AdaptiveMenu|AdaptiveMenu(dev.voir.areca.foundation.overlay.DropdownPopupState;kotlin.collections.List<kotlin.collections.List<dev.voir.areca.foundation.adaptive.AdaptiveMenuItem>>;androidx.compose.ui.Modifier?;kotlin.String?;dev.voir.areca.foundation.adaptive.AdaptiveMenuPresentation?;dev.voir.areca.foundation.adaptive.AdaptiveMenuStyle?;dev.voir.areca.foundation.adaptive.AdaptiveMenuSize?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
 final fun dev.voir.areca.foundation.adaptive/AdaptiveSheet(kotlin/Boolean, kotlin/Function0<kotlin/Unit>, androidx.compose.ui/Modifier?, kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.voir.areca.foundation.adaptive/AdaptiveSheet|AdaptiveSheet(kotlin.Boolean;kotlin.Function0<kotlin.Unit>;androidx.compose.ui.Modifier?;kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
 final fun dev.voir.areca.foundation.adaptive/AdaptiveToolbar(kotlin/String, androidx.compose.ui/Modifier?, kotlin/Function0<kotlin/Unit>?, kotlin.collections/List<dev.voir.areca.foundation.adaptive/AdaptiveToolbarAction>?, kotlin/String?, kotlin/String?, androidx.compose.foundation.layout/WindowInsets?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.voir.areca.foundation.adaptive/AdaptiveToolbar|AdaptiveToolbar(kotlin.String;androidx.compose.ui.Modifier?;kotlin.Function0<kotlin.Unit>?;kotlin.collections.List<dev.voir.areca.foundation.adaptive.AdaptiveToolbarAction>?;kotlin.String?;kotlin.String?;androidx.compose.foundation.layout.WindowInsets?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
 final fun dev.voir.areca.foundation.adaptive/ContentColumn(androidx.compose.ui/Modifier?, androidx.compose.ui.unit/Dp, androidx.compose.foundation.layout/Arrangement.Vertical?, androidx.compose.ui/Alignment.Horizontal?, kotlin/Boolean, kotlin/Function3<androidx.compose.foundation.layout/ColumnScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.voir.areca.foundation.adaptive/ContentColumn|ContentColumn(androidx.compose.ui.Modifier?;androidx.compose.ui.unit.Dp;androidx.compose.foundation.layout.Arrangement.Vertical?;androidx.compose.ui.Alignment.Horizontal?;kotlin.Boolean;kotlin.Function3<androidx.compose.foundation.layout.ColumnScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
@@ -9065,6 +9166,8 @@ final fun dev.voir.areca.foundation.adaptive/ListDetail(kotlin/Boolean, androidx
 final fun dev.voir.areca.foundation.adaptive/SupportingPane(kotlin/Boolean, kotlin/Function0<kotlin/Unit>, androidx.compose.ui/Modifier?, kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function3<dev.voir.areca.foundation.adaptive/SupportingPaneScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, kotlin/Function3<dev.voir.areca.foundation.adaptive/SupportingPaneScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.voir.areca.foundation.adaptive/SupportingPane|SupportingPane(kotlin.Boolean;kotlin.Function0<kotlin.Unit>;androidx.compose.ui.Modifier?;kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function3<dev.voir.areca.foundation.adaptive.SupportingPaneScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;kotlin.Function3<dev.voir.areca.foundation.adaptive.SupportingPaneScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
 final fun dev.voir.areca.foundation.adaptive/dev_voir_areca_foundation_adaptive_AdaptiveDefaults$stableprop_getter(): kotlin/Int // dev.voir.areca.foundation.adaptive/dev_voir_areca_foundation_adaptive_AdaptiveDefaults$stableprop_getter|dev_voir_areca_foundation_adaptive_AdaptiveDefaults$stableprop_getter(){}[0]
 final fun dev.voir.areca.foundation.adaptive/dev_voir_areca_foundation_adaptive_AdaptiveMenuItem$stableprop_getter(): kotlin/Int // dev.voir.areca.foundation.adaptive/dev_voir_areca_foundation_adaptive_AdaptiveMenuItem$stableprop_getter|dev_voir_areca_foundation_adaptive_AdaptiveMenuItem$stableprop_getter(){}[0]
+final fun dev.voir.areca.foundation.adaptive/dev_voir_areca_foundation_adaptive_AdaptiveMenuSize$stableprop_getter(): kotlin/Int // dev.voir.areca.foundation.adaptive/dev_voir_areca_foundation_adaptive_AdaptiveMenuSize$stableprop_getter|dev_voir_areca_foundation_adaptive_AdaptiveMenuSize$stableprop_getter(){}[0]
+final fun dev.voir.areca.foundation.adaptive/dev_voir_areca_foundation_adaptive_AdaptiveMenuStyle$stableprop_getter(): kotlin/Int // dev.voir.areca.foundation.adaptive/dev_voir_areca_foundation_adaptive_AdaptiveMenuStyle$stableprop_getter|dev_voir_areca_foundation_adaptive_AdaptiveMenuStyle$stableprop_getter(){}[0]
 final fun dev.voir.areca.foundation.adaptive/dev_voir_areca_foundation_adaptive_AdaptiveToolbarAction$stableprop_getter(): kotlin/Int // dev.voir.areca.foundation.adaptive/dev_voir_areca_foundation_adaptive_AdaptiveToolbarAction$stableprop_getter|dev_voir_areca_foundation_adaptive_AdaptiveToolbarAction$stableprop_getter(){}[0]
 final fun dev.voir.areca.foundation.adaptive/dev_voir_areca_foundation_adaptive_EdgeColumnSize$stableprop_getter(): kotlin/Int // dev.voir.areca.foundation.adaptive/dev_voir_areca_foundation_adaptive_EdgeColumnSize$stableprop_getter|dev_voir_areca_foundation_adaptive_EdgeColumnSize$stableprop_getter(){}[0]
 final fun dev.voir.areca.foundation.adaptive/dev_voir_areca_foundation_adaptive_EdgeColumnStyle$stableprop_getter(): kotlin/Int // dev.voir.areca.foundation.adaptive/dev_voir_areca_foundation_adaptive_EdgeColumnStyle$stableprop_getter|dev_voir_areca_foundation_adaptive_EdgeColumnStyle$stableprop_getter(){}[0]

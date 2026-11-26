@@ -468,11 +468,12 @@ internal val ComponentShowcases: List<ShowcaseEntry> = listOf(
         group = ShowcaseGroup.Components,
         section = ShowcaseSection.Overlays,
         title = "Adaptive menu",
-        summary = "The actions for one row or card, as a dropdown under a pointer and a bottom sheet under a finger.",
+        summary = "The actions for one row, card or details sheet, as a card at the trigger or a bottom sheet under a finger.",
         status = ShowcaseStatus.Beta,
         keywords = listOf(
             "adaptive", "responsive", "overflow", "more", "context menu", "action sheet", "dropdown",
             "kebab", "AdaptiveMenuItem", "contextMenu", "right-click", "long press", "tablet", "desktop",
+            "details menu", "AdaptiveMenuPresentation", "AdaptiveMenuStyle", "AdaptiveMenuSize",
         ),
         content = { AdaptiveMenuShowcase() },
     ),

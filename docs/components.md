@@ -345,7 +345,7 @@ With a title and a row-wide tap target, use the list rows under
 | [`ContentColumn`](../ui/foundation/README.md#adaptive-layouts) | A form or reading column that stops growing and centres | `adaptive` | `ContentColumnShowcase` |
 | [`AdaptiveGrid`](../ui/foundation/README.md#adaptive-layouts) | A grid whose column count follows its width | `adaptive` | `AdaptiveGridShowcase` |
 | [`AdaptiveSheet`](../ui/foundation/README.md#adaptive-layouts) | A sheet on a phone, a dialog on a wide window | `adaptive` | `AdaptiveSheetShowcase` |
-| [`AdaptiveMenu`](../ui/foundation/README.md#adaptive-layouts) | Actions for a row: a sheet under touch, a dropdown on a desktop | `adaptive` | `AdaptiveMenuShowcase` |
+| [`AdaptiveMenu`](../ui/foundation/README.md#adaptive-layouts) | Actions for a row, a card or a details sheet, in groups with destructive ones last: a card at the trigger on every device (`AdaptiveMenuPresentation.Dropdown`), or a sheet under touch and a dropdown on a desktop; restyled with `AdaptiveMenuStyle` and `AdaptiveMenuSize` | `adaptive` | `AdaptiveMenuShowcase` |
 | [`Modifier.contextMenu`](../ui/foundation/README.md#adaptive-layouts) | Opens a row's `AdaptiveMenu` on a right-click, a long press or the Menu key | `adaptive` | `AdaptiveMenuShowcase` |
 
 ## Window classes

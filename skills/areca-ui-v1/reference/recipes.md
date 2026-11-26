@@ -983,6 +983,41 @@ The actions of a row — which a phone shows as a sheet and a pointer as a menu,
 right-click — are `AdaptiveMenu(state, actions = listOf(AdaptiveMenuItem(…)))` on the same
 `rememberDropdownPopup()`, with `Modifier.contextMenu(menu)` on the row.
 
+## Actions menu on a details sheet
+
+The ⋯ in a details sheet's heading opens a card under itself on every device, with the ordinary
+actions together and delete apart:
+
+```kotlin
+@Composable
+fun PaymentActions(onEdit: () -> Unit, onEnd: () -> Unit, onDelete: () -> Unit) {
+    val menu = rememberDropdownPopup(placement = AnchoredPlacement.BelowEnd)
+    IconButton(
+        imageVector = ArecaIcons.DotsHorizontal,
+        contentDescription = "Payment actions",
+        onClick = menu::show,
+        modifier = Modifier.anchored(menu.anchorState),
+        style = IconButtonStyle.plain(ActionColor.Neutral),
+    )
+    AdaptiveMenu(
+        state = menu,
+        presentation = AdaptiveMenuPresentation.Dropdown,
+        groups = listOf(
+            listOf(
+                AdaptiveMenuItem("Edit", icon = ArecaIcons.Edit, onClick = onEdit),
+                AdaptiveMenuItem("End", icon = ArecaIcons.StopCircle, onClick = onEnd),
+            ),
+            listOf(AdaptiveMenuItem("Delete", icon = ArecaIcons.Trash, destructive = true, onClick = onDelete)),
+        ),
+    )
+}
+```
+
+Rows are the label with its glyph at the far end, a control's height; one hairline separates the
+groups. For every menu in the app, provide `LocalAdaptiveMenuPresentation provides
+AdaptiveMenuPresentation.Dropdown` in `componentDefaults` instead of passing it each time. Delete
+still asks: confirm it with `ConfirmSheet(style = ConfirmSheetStyle.Danger)`.
+
 ## Region that is always dark
 
 A photo viewer, a camera or an editor is dark whatever the app theme. `ArecaDarkTheme` keeps the

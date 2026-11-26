@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.IntOffset
@@ -114,6 +115,9 @@ public fun Modifier.anchored(state: AnchoredState): Modifier = onGloballyPositio
  * @property flipWhenClipped Whether to try the opposite side when the preferred one does not fit.
  *   A dropdown near the bottom of the window then opens upward instead of being squashed against the
  *   edge, overlapping its own trigger. Pass `false` to pin the placement and clamp instead.
+ * @property onPlaced Called on each positioning with the placement used — the preferred one or its
+ *   flip — and the layout direction, so the surface can grow from the corner that touches its
+ *   anchor. Called during layout: write only state that is read in a later phase.
  */
 internal class AnchoredPositionProvider(
     private val anchorBounds: IntRect,
@@ -121,6 +125,7 @@ internal class AnchoredPositionProvider(
     private val offsetX: Int,
     private val offsetY: Int,
     private val flipWhenClipped: Boolean = true,
+    private val onPlaced: ((AnchoredPlacement, LayoutDirection) -> Unit)? = null,
 ) : PopupPositionProvider {
 
     /**
@@ -145,6 +150,7 @@ internal class AnchoredPositionProvider(
         } else {
             placement
         }
+        onPlaced?.invoke(resolved, layoutDirection)
 
         val x = horizontalPositionFor(
             placement = resolved,
@@ -241,4 +247,27 @@ internal fun horizontalPositionFor(
             if (isRtl) leftAligned else rightAligned
     }
     return if (isRtl) x - offsetX else x + offsetX
+}
+
+/**
+ * The point of an anchored surface that touches its anchor, as a fraction of the surface's size: the
+ * corner a menu grows from and shrinks back into.
+ *
+ * Fractions are physical — `0` is the left edge whatever the layout direction — because a graphics
+ * layer's pivot is. A start-aligned surface touches its anchor at its leading edge, an end-aligned
+ * one at its trailing edge, a centred one at its middle; one below its anchor at its top, one above
+ * at its bottom.
+ *
+ * @param placement Side and alignment the surface opened on.
+ * @param layoutDirection Direction start and end resolve against.
+ * @return Pivot for the surface's scale.
+ */
+internal fun transformOriginFor(placement: AnchoredPlacement, layoutDirection: LayoutDirection): TransformOrigin {
+    val isRtl = layoutDirection == LayoutDirection.Rtl
+    val x = when (placement) {
+        AnchoredPlacement.BelowStart, AnchoredPlacement.AboveStart -> if (isRtl) 1f else 0f
+        AnchoredPlacement.BelowCenter, AnchoredPlacement.AboveCenter -> 0.5f
+        AnchoredPlacement.BelowEnd, AnchoredPlacement.AboveEnd -> if (isRtl) 0f else 1f
+    }
+    return TransformOrigin(pivotFractionX = x, pivotFractionY = if (placement.isBelow) 0f else 1f)
 }

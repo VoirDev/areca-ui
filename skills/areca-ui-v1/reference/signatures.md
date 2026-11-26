@@ -38,7 +38,7 @@ Every foundation symbol is imported from its family's package. Extension composa
 | `….foundation.collection`, `….foundation.table` | `ContentList`, `PagedContentList`, `GroupedContentList`, `GroupedPagedContentList`, `LimitedContentListState`, `PagedContentListState`, `ContentListGroup`, `ContentListGroupLayout`, `ContentListLabels`, `ContentListDefaults`, `LazyVerticalGroupedGrid`, `LazyHorizontalGroupedGrid`, `GroupedGridData`; `Table`, `LazyTable`, `TableColumn` |
 | `….foundation.navigation`, `….foundation.wheel`, `….foundation.slot` | `LocalTabReselect`, `OnTabReselect`, `ScrollToTopOnTabReselect`, `NavList`, `NavNode`, `NavData`, `NavItem`, `SwipePager`, `PagerControls`, `PageIndicator`, `PageIndicatorVariant`, `PageIndicatorStyle`, `PageIndicatorSize`, `PageCounter`, `PageCounterStyle`, `PageCounterSize`, `rememberPagerController`; `WheelPicker`, `WheelPickerColumn`, `WheelPickerItem`, `WheelPickerHighlight`, `WheelPickerEdgeFade`, `rememberWheelPickerColumnState`; `SlotRow`, `SlotRowLayout` (`Default`, `Auto`, `Center`, `Top`, `FirstLine`, `Centered`, `Fill`, `wrap(…)`), `SlotRowAlignment`, `Modifier.firstLineCenter(textStyle)`, `FirstLineCenter` |
 | `dev.voir.areca.indication`, `.modifier`, `.platform`, `.shape` | `TouchIndication`, `FadeIndication`, `StrokeIndication`, `LiquidSweepIndication`, `FocusOutline`; `clickCursor`, `minimumTouchTarget`, `thenIf`; `SystemBars`; `SquircleShape` |
-| `….foundation.adaptive` | `AdaptiveNavigation`, `AdaptiveNavigationStyle`, `AdaptiveNavigationLayout`, `AdaptiveNavigationScope`, `CompactNavigation`, `AdaptiveToolbar`, `AdaptiveToolbarAction`, `EdgeColumn`, `EdgeColumnSide`, `EdgeColumnStyle`, `EdgeColumnSize`, `EdgeButton`, `EdgeButtonEmphasis`, `VerticalTabBar`, `EdgeStatus`, `FloatingSidebar`, `NavRail`, `NavDestination`, `NavRailStyle`, `NavRailSize`, `ListDetail`, `ListDetailScope`, `SupportingPane`, `SupportingPaneScope`, `ContentColumn`, `AdaptiveGrid`, `AdaptiveSheet`, `AdaptiveMenu`, `AdaptiveMenuItem`, `contextMenu`, `AdaptiveDefaults` |
+| `….foundation.adaptive` | `AdaptiveNavigation`, `AdaptiveNavigationStyle`, `AdaptiveNavigationLayout`, `AdaptiveNavigationScope`, `CompactNavigation`, `AdaptiveToolbar`, `AdaptiveToolbarAction`, `EdgeColumn`, `EdgeColumnSide`, `EdgeColumnStyle`, `EdgeColumnSize`, `EdgeButton`, `EdgeButtonEmphasis`, `VerticalTabBar`, `EdgeStatus`, `FloatingSidebar`, `NavRail`, `NavDestination`, `NavRailStyle`, `NavRailSize`, `ListDetail`, `ListDetailScope`, `SupportingPane`, `SupportingPaneScope`, `ContentColumn`, `AdaptiveGrid`, `AdaptiveSheet`, `AdaptiveMenu`, `AdaptiveMenuItem`, `AdaptiveMenuPresentation`, `LocalAdaptiveMenuPresentation`, `AdaptiveMenuStyle`, `LocalAdaptiveMenuStyle`, `AdaptiveMenuSize`, `LocalAdaptiveMenuSize`, `AdaptiveMenuIconPosition`, `contextMenu`, `AdaptiveDefaults` |
 | `dev.voir.areca.window` | `WindowClass`, `WindowFold`, `FoldOrientation`, `FoldState`, `WidthClass`, `HeightClass`, `InputMode`, `WindowProfile`, `adaptive`, `AdaptiveContent`, `WindowClassBox`, `ProvideWindowClass` |
 | `dev.voir.areca` | `ExperimentalArecaApi` |
 
@@ -224,6 +224,26 @@ fun AdaptiveMenu(state: DropdownPopupState, actions: List<AdaptiveMenuItem>, mod
     title: String? = null)
 // Trigger: Modifier.anchored(state.anchorState) and state.show(). DropdownPopup under a pointer or
 // from an expanded window up; a sheet with `title` at its head under touch on narrower windows.
+// Rows as listed, glyph leading, the dropdown 200–320dp wide.
+fun AdaptiveMenu(state: DropdownPopupState, groups: List<List<AdaptiveMenuItem>>,
+    modifier: Modifier = Modifier, title: String? = null,
+    presentation: AdaptiveMenuPresentation = LocalAdaptiveMenuPresentation.current,
+    style: AdaptiveMenuStyle = LocalAdaptiveMenuStyle.current ?: AdaptiveMenuStyle.Default,
+    size: AdaptiveMenuSize = LocalAdaptiveMenuSize.current ?: AdaptiveMenuSize.Default)
+// Groups in order, one full-width hairline between groups, none inside; destructive items leave
+// their groups for one last group in the danger ink; empty groups dropped. A flat menu is
+// groups = listOf(actions). AdaptiveMenuPresentation.Dropdown: a card under the trigger on every
+// window and input; .Adaptive (LocalAdaptiveMenuPresentation's default): card under a pointer or
+// from expanded, sheet under touch below it.
+// AdaptiveMenuStyle(bg, border, shape, shadowElevation, item: ListItemStyle,
+//     destructiveItem: ListItemStyle); default(bg = sheet ground, border = Color.Transparent,
+//     shape = shapes.surface, shadowElevation = elevation.md, item = ListItemStyle.plain(),
+//     destructiveItem = ListItemStyle.plain(ListItemColor.Danger)). Card fields apply to the card.
+// AdaptiveMenuSize(width, offsetY, maxHeight, borderWidth, iconPosition, item: ListItemSize);
+//     default(width = 248.dp, offsetY = spacing.xs, maxHeight = 360.dp, borderWidth = 0.dp,
+//     iconPosition = AdaptiveMenuIconPosition.Trailing (or Leading),
+//     item = ListItemSize.Medium with the whole row, padding included, sizing.controlMd tall).
+// LocalAdaptiveMenuStyle and LocalAdaptiveMenuSize are null unless provided.
 fun Modifier.contextMenu(state: DropdownPopupState, enabled: Boolean = true,
     label: String = "Show actions"): Modifier
 // On the row, before its clickable: right-click (menu at the pointer), long press under touch, Menu
@@ -1741,6 +1761,9 @@ fun DropdownPopup(state: DropdownPopupState, onDismissRequest: () -> Unit,
 fun Modifier.anchored(state: AnchoredState): Modifier // on the trigger: state.anchorState
 // AnchoredPlacement.BelowStart (default) | BelowCenter | BelowEnd | AboveStart | AboveCenter |
 // AboveEnd; it flips to the other side when it would run off screen.
+// It grows in (fade and scale, motion.fast) from the corner touching its anchor, on the side it
+// opened on, and shrinks back into it on close, staying composed until the exit ends; none with
+// motion.reduceMotion. Call it unconditionally, like a sheet, or it cannot animate out.
 
 fun TooltipBox(text: String, modifier: Modifier = Modifier,
     placement: AnchoredPlacement = AnchoredPlacement.BelowCenter, enabled: Boolean = true,
