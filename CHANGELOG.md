@@ -68,6 +68,10 @@ All notable changes to the Areca libraries. The format follows
 
 ### Fixed
 
+- `foundation`: a `Section` takes the screen gutter of the place it is drawn. Section sizes built
+  once at the theme's root — an app's `LocalSettingsSizes` in its component defaults — kept the
+  window's gutter, so a section in a narrower pane (a `ContentColumn` on a tablet) sat 8dp further in
+  than the content beside it. An `outerPadding` the app sets is kept as it is.
 - `foundation`: a `FlowModal` measured without a height limit — as an iOS dialog's layer can be for a
   frame while the window turns — no longer crashes with "Can't represent a width of … and height of …
   in Constraints"; its body is left unlimited instead of taking the header and footer from the

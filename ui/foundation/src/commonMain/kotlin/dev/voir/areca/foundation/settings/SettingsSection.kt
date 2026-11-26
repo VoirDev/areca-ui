@@ -123,7 +123,7 @@ public fun SettingsScope.Section(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .thenIf(!flat) { padding(sizes.outerPadding) },
+            .thenIf(!flat) { padding(sizes.outerPadding.resolveScreenGutter()) },
     ) {
         if (header != null && headerPlacement == SettingsHeaderPlacement.Outside) {
             SectionCopy(

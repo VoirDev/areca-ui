@@ -15,7 +15,6 @@ import dev.voir.areca.foundation.list.ListItemColor
 import dev.voir.areca.foundation.list.ListItemSize
 import dev.voir.areca.foundation.list.ListItemStyle
 import dev.voir.areca.theme.ArecaTheme
-import dev.voir.areca.theme.horizontalGutter
 
 /**
  * Theme-backed defaults for [Settings].
@@ -226,8 +225,9 @@ public object SettingsDefaults {
      * Metrics of a section.
      *
      * @param outerPadding Padding around the section, header and footer included. Defaults to the
-     *   screen gutter for the width class in scope, so a section lines up with
-     *   `Modifier.horizontalContentInsets()` at every width.
+     *   screen gutter for the width class where the section is drawn, so a section lines up with
+     *   `Modifier.horizontalContentInsets()` beside it at every width, even when these sizes are
+     *   built once at the theme's root or the section sits in a narrower pane than the window.
      * @param sectionGap Spacing between sections.
      * @param headerInsidePadding Padding around a header inside the card.
      * @param headerOutsidePadding Padding around a header above the card.
@@ -241,7 +241,7 @@ public object SettingsDefaults {
      */
     @Composable
     public fun sectionSize(
-        outerPadding: PaddingValues = PaddingValues(horizontal = horizontalGutter),
+        outerPadding: PaddingValues = ScreenGutterPadding,
         sectionGap: Dp = ArecaTheme.spacing.lg,
         headerInsidePadding: PaddingValues = PaddingValues(
             start = ArecaTheme.spacing.xl,
