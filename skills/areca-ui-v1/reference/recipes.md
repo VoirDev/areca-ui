@@ -127,7 +127,7 @@ fun NotificationSettingsScreen(
 
 - The status-bar inset goes to the top bar and the rest to `contentWindowInsets`; the two add up.
 - `Settings` does not scroll; the caller scrolls it and applies `BaseLayout`'s `padding`.
-- Each `Section` keeps itself to the screen's gutter (`SettingsSectionSize.outerPadding`), so never
+- Each `Section` keeps itself to the screen's gutter where it is drawn (`SettingsSectionSize.outerPadding`, a pane's gutter inside a `ContentColumn`), so never
   add `horizontalContentInsets()` or side padding around `Settings`: the inset would double. On a
   sheet a section draws flat, its rows edge to edge.
 - `SettingsRowStatus.Loading` shows a spinner in place of the value while a change saves;
