@@ -10,14 +10,13 @@ All notable changes to the Areca libraries. The format follows
 
 - `foundation`: `AdaptiveMenu(state, groups = …)` draws actions in groups, one full-width hairline
   between groups and none inside one, with destructive actions moved to a last group in the danger
-  ink. `presentation = AdaptiveMenuPresentation.Dropdown` makes it a card hanging from its trigger on
-  every device, touch included; `AdaptiveMenuPresentation.Adaptive`, the default, keeps today's
-  sheet on a touched phone. `LocalAdaptiveMenuPresentation` sets it for an app. `AdaptiveMenuStyle`
+  ink. `presentation` picks its form on every window: `AdaptiveMenuPresentation.Dropdown`, the
+  default, a card hanging from its trigger, or `AdaptiveMenuPresentation.Sheet`, a sheet from the
+  bottom edge. `LocalAdaptiveMenuPresentation` sets it for an app. `AdaptiveMenuStyle`
   and `AdaptiveMenuSize`, with `LocalAdaptiveMenuStyle` and `LocalAdaptiveMenuSize` (`null` unless
   provided), give the card's shape (the surface shape), lift (`elevation.md`), outline (none),
   width (248dp) and its rows — control-height `ListItem`s with the glyph at the far end or, with
-  `AdaptiveMenuIconPosition.Leading`, before the label. `AdaptiveMenu(state, actions = …)` is
-  unchanged.
+  `AdaptiveMenuIconPosition.Leading`, before the label.
 
 - `foundation`: `AdaptiveNavigation(navigationVisible = false)` hides the rail, sidebar, edge column
   or bottom bar and gives the content the whole window. The navigation slides away and back on the
@@ -83,6 +82,20 @@ All notable changes to the Areca libraries. The format follows
 
 ### Changed
 
+- `foundation`: every `FlowModal` stops at `AdaptiveDefaults.ReadableWidth` (640dp), centred on the
+  bottom edge of a wider window: `FlowModalSize.maxWidth` and `FlowModalSize.default(maxWidth = …)`
+  default to it instead of `Dp.Unspecified`. `ConfirmSheet`, `SelectFlowModal` and `AdaptiveMenu`'s
+  sheet follow. A phone is narrower than the cap and is unchanged; `maxWidth = Dp.Unspecified` spans
+  the window as before.
+- `foundation`, `profile`, `attachments`: no component turns into a dialog by window any more.
+  `ConfirmSheet`, `BirthdayRow`'s calendar, `AvatarSourceSheet`, every `attachments` sheet and
+  `SupportingPane`'s sheet below 920dp are a `FlowModal` on every window, where from an expanded
+  window up they were a centred `Dialog`. Whether a question is a sheet or a dialog is the app's
+  choice: `ConfirmationDialog` and `Dialog` are the centred forms.
+- `foundation`: `AdaptiveMenu` keeps one form on every window. `AdaptiveMenu(state, actions = …)`,
+  `AdaptiveToolbar`'s overflow and `EdgeColumn`'s More follow `LocalAdaptiveMenuPresentation` —
+  a card at the trigger unless the app provides `AdaptiveMenuPresentation.Sheet` — where they were a
+  sheet under touch below an expanded window and a dropdown otherwise.
 - `media`: a picture peeked with `ZoomBehavior.Peek` moves toward the window's centre as it grows,
   reaching it at twice its size, instead of growing around its frame; a picture at the top of the
   screen no longer spills off the top. It still follows the fingers and springs back onto its frame.
@@ -101,6 +114,8 @@ All notable changes to the Areca libraries. The format follows
 
 ### Removed
 
+- `foundation`: `AdaptiveSheet` and `AdaptiveDefaults.usesDialog`, without deprecation; see
+  Migrating.
 - `datetime`: the month and year wheels inside `Calendar`, replaced by the month and year levels.
   This release removes, without deprecation:
   - `CalendarState.isMonthPickerExpanded`, `expandMonthPicker()`, `collapseMonthPicker()`,
@@ -114,3 +129,21 @@ All notable changes to the Areca libraries. The format follows
     `chooseMonthAction`, plus the new `chooseYearAction`, `pickMonthHint`, `pickYearHint`,
     `yearSpan`, `previousYearAction`, `nextYearAction`, `previousYearsAction`, `nextYearsAction`.
   - An app that wants wheels places `MonthYearPicker` in its own sheet with Cancel and Done.
+
+### Migrating
+
+- `AdaptiveSheet(visible, onDismissRequest, header = …, footer = …) { … }` becomes a `FlowModal`
+  driven from the same state, or a `Dialog` where the app wants a centred window:
+
+  ```kotlin
+  val sheet = rememberFlowModal()
+  LaunchedEffect(visible) { if (visible) sheet.show(partial = false) else sheet.hide() }
+  FlowModal(controller = sheet, onDismissRequest = onDismissRequest, header = …, footer = …) { … }
+  ```
+
+- `AdaptiveDefaults.usesDialog(window)` has no replacement: choose the sheet or the dialog where it
+  opens. An app that wants its own rule reads `ArecaTheme.hostWindow`.
+- `FlowModalSize.default(maxWidth = AdaptiveDefaults.ReadableWidth)` is the default now; drop it.
+  A sheet that should span a wide window passes `maxWidth = Dp.Unspecified`.
+- An app that wants its menus as sheets provides `LocalAdaptiveMenuPresentation provides
+  AdaptiveMenuPresentation.Sheet` in `componentDefaults`.

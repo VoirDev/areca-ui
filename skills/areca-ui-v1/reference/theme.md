@@ -107,7 +107,7 @@ Read through `ArecaTheme` inside composition; every accessor is `@Composable`.
 | `ArecaTheme.baseColors` | `ArecaBaseColors` | Raw palette ramps; only when no semantic colour fits (a chart series, an illustration) |
 | `ArecaTheme.baseTypography` | `ArecaBaseTypography` | Raw type sizes; only when no role fits |
 | `ArecaTheme.fonts` | `ArecaFonts` | Font families |
-| `ArecaTheme.hostWindow` | `WindowClass` | The whole window's class, ignoring any `WindowClassBox` — choose an overlay's form by it (`AdaptiveDefaults.usesDialog(hostWindow)`) |
+| `ArecaTheme.hostWindow` | `WindowClass` | The whole window's class, ignoring any `WindowClassBox` — what depends on how the device is held reads it (`actionReach`); never switch a sheet to a dialog by it |
 | `ArecaTheme.window` | `WindowClass` | Not a token: width and height classes, input mode and profile of the window or `WindowClassBox` in scope — branch layout on it (SKILL.md, "Lay out by window class") |
 
 Never write `Color(0xFF…)`, `16.dp` padding, `14.sp`, `RoundedCornerShape(12.dp)` or `tween(300)` in

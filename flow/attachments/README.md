@@ -224,9 +224,8 @@ fun AttachmentSheets(state: AttachmentsState, viewModel: AttachmentsViewModel, c
 saves nothing until it is saved, so it does not. Where the device offers one source only — a
 desktop picks files — start that pick from the add square instead of raising a sheet.
 
-Nothing here changes for a tablet or a desktop: on a wide window every one of these sheets, and
-foundation's `ConfirmSheet`, opens as a centred dialog by itself; see
-[On a wide window](#on-a-wide-window).
+Nothing here changes for a tablet or a desktop: every one of these sheets, and foundation's
+`ConfirmSheet`, stays a sheet; see [On a wide window](#on-a-wide-window).
 
 ### A form
 
@@ -422,8 +421,8 @@ a sheet from the Attachments row, and `isSupportingInline` is what the record re
 To keep a phone's files on the page itself instead, draw
 [A record's details](#a-records-details)' strip in `main` where `isSupportingInline` is `false`.
 
-`AttachmentSheets` is unchanged: on these windows every sheet in it opens as a dialog, and the
-viewer has the whole window. The supporting pane needs foundation's adaptive layouts, which come
+`AttachmentSheets` is unchanged: every sheet in it rises from the bottom edge, no wider than the
+readable width, and the viewer has the whole window. The supporting pane needs foundation's adaptive layouts, which come
 with this module; see foundation's [Adaptive layouts](../../ui/foundation/README.md#adaptive-layouts).
 
 ### Documents
@@ -601,8 +600,7 @@ first choice becomes a full-width card and the rest share a row of equal-height 
 choices share the row as halves). Each card is washed in its choice's `hue` over the sheet, with its
 glyph on a solid disc of that hue, its label and its `description`; the subtitle sits centred under
 the cards. The built-in sources default to blue, purple and orange from `ArecaTheme.hues` and carry
-English descriptions — pass your own words. It is still a sheet on a phone and a dialog on a wide
-window. Rows, the default, draw neither description nor hue.
+English descriptions — pass your own words. Rows, the default, draw neither description nor hue.
 
 ```kotlin
 AttachmentSourceSheet(
@@ -651,8 +649,6 @@ PendingAttachmentSheet(
 - A file that cannot be attached carries the reason, worded by the application, in
   `PendingAttachment.problem`. The sheet states it in place of the question, announces it, and
   offers only Close.
-- On a wide window the source and pending sheets open as centred dialogs, with the same heading,
-  question and Cancel and Attach; see [On a wide window](#on-a-wide-window).
 
 ## Acting on a file
 
@@ -687,19 +683,10 @@ AttachmentOptionsSheet(
 
 ## On a wide window
 
-Every sheet in the module — source, pending, options and rename — is a sheet rising from the
-bottom edge on a phone, and a centred dialog where foundation's `AdaptiveDefaults.usesDialog` says
-so for the whole window (`ArecaTheme.hostWindow`): from an expanded width up, unless the window is
-too short for a dialog, as a phone on its side is. The bottom edge of a tablet in landscape or a
-desktop is far from where the person is looking.
-
-- Nothing to pass: the sheet reads the window it opens over, never the pane it was opened from, so
-  a sheet raised from a narrow pane of a desktop window is still a dialog.
-- The dialog has the sheet's heading, content and foot. The heading and the foot stay put and the
-  content scrolls between them, so Attach and Save are never pushed off a short window.
-- The scrim, Escape and the back gesture close it, and arrive as `onDismiss` like a drag down does.
-  It is driven by the same state, and still does not close itself when a choice is made.
-- Foundation's `ConfirmSheet`, which asks before a removal, follows the same rule.
+Every sheet in the module — source, pending, options and rename — rises from the bottom edge on
+every window. On a tablet or a desktop it stops at foundation's `AdaptiveDefaults.ReadableWidth`
+(640dp), centred, as every `FlowModal` does; the scrim still covers the window. Nothing to pass.
+Foundation's `ConfirmSheet`, which asks before a removal, is a sheet the same way.
 
 ## The viewer
 

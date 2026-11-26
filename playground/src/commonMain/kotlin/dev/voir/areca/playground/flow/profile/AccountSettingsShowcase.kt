@@ -89,9 +89,8 @@ fun AccountSettingsShowcase() = FlowShowcase(
         )
         ChromeText(
             text = "Beside the list the open row is marked and the page has no back action; alone, the " +
-                "rows carry a chevron and the page a back action. From a tablet on its side up, the " +
-                "photo, birthday and confirmation sheets open as centred dialogs; on a phone, a folded " +
-                "or unfolded foldable and a tablet held upright they rise from the bottom edge.",
+                "rows carry a chevron and the page a back action. The photo, birthday and confirmation " +
+                "sheets rise from the bottom edge on every window, no wider than the readable width.",
             role = ChromeTextRole.SectionDescription,
             tone = ChromeTone.Muted,
         )

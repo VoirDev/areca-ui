@@ -31,7 +31,7 @@ with white cards by default (`SurfaceLayout.Grouped`), or a white page with grey
 | Navigate an app on phone, tablet and desktop | `AdaptiveNavigation` with `AdaptiveToolbar` on each screen; `EdgeColumn` or `NavRail` on their own |
 | Show a list beside the open item; filters beside results | `ListDetail`; `SupportingPane` |
 | Keep a form or a grid from stretching on a wide window | `ContentColumn`; `AdaptiveGrid` |
-| Open a form or a row's actions | `AdaptiveSheet`; `AdaptiveMenu`, from a right-click or long press with `Modifier.contextMenu` |
+| Open a form or a row's actions | `FlowModal` or `Dialog`, as the app chooses; `AdaptiveMenu`, from a right-click or long press with `Modifier.contextMenu` |
 | Name an icon or a truncated control for a pointer user | `TooltipBox`; an `IconButton` shows its `contentDescription` already |
 | Give a scrolling element of your own a desktop scrollbar | `VerticalScrollbar`; `HorizontalScrollbar` |
 | Hide a value until revealed | `SensitiveText` |
@@ -344,8 +344,7 @@ With a title and a row-wide tap target, use the list rows under
 | [`SupportingPane`](../ui/foundation/README.md#adaptive-layouts) | Main content with filters, reviews or details beside it, or in a sheet | `adaptive` | `SupportingPaneShowcase` |
 | [`ContentColumn`](../ui/foundation/README.md#adaptive-layouts) | A form or reading column that stops growing and centres | `adaptive` | `ContentColumnShowcase` |
 | [`AdaptiveGrid`](../ui/foundation/README.md#adaptive-layouts) | A grid whose column count follows its width | `adaptive` | `AdaptiveGridShowcase` |
-| [`AdaptiveSheet`](../ui/foundation/README.md#adaptive-layouts) | A sheet on a phone, a dialog on a wide window | `adaptive` | `AdaptiveSheetShowcase` |
-| [`AdaptiveMenu`](../ui/foundation/README.md#adaptive-layouts) | Actions for a row, a card or a details sheet, in groups with destructive ones last: a card at the trigger on every device (`AdaptiveMenuPresentation.Dropdown`), or a sheet under touch and a dropdown on a desktop; restyled with `AdaptiveMenuStyle` and `AdaptiveMenuSize` | `adaptive` | `AdaptiveMenuShowcase` |
+| [`AdaptiveMenu`](../ui/foundation/README.md#adaptive-layouts) | Actions for a row, a card or a details sheet, in groups with destructive ones last: a card at the trigger (`AdaptiveMenuPresentation.Dropdown`, the default) or a sheet (`Sheet`), as the app chose, on every window; restyled with `AdaptiveMenuStyle` and `AdaptiveMenuSize` | `adaptive` | `AdaptiveMenuShowcase` |
 | [`Modifier.contextMenu`](../ui/foundation/README.md#adaptive-layouts) | Opens a row's `AdaptiveMenu` on a right-click, a long press or the Menu key | `adaptive` | `AdaptiveMenuShowcase` |
 
 ## Window classes

@@ -65,7 +65,7 @@ fun SupportingPaneShowcase() = ShowcaseScaffold(
 ) {
     Playground(
         description = "Below 920dp the filters move behind the Filters action. The sheet opens over the whole " +
-            "playground window, and takes its form — sheet or dialog — from the chosen window.",
+            "playground window and rises from its bottom edge.",
     ) {
         val preset by enumControl(
             key = "window",
@@ -141,7 +141,7 @@ fun SupportingPaneShowcase() = ShowcaseScaffold(
         }
         case(
             name = "800dp column on a desktop",
-            expectation = "The layout is given 800dp, so the filters leave it; opened, they are a dialog, since the window is a desktop.",
+            expectation = "The layout is given 800dp, so the filters leave it; opened, they rise in a sheet from the bottom edge.",
         ) {
             WindowFrame(preset = WindowPreset.Desktop, maxHeight = 300.dp) {
                 Row(modifier = Modifier.fillMaxSize()) {

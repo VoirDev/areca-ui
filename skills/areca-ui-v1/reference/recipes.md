@@ -979,8 +979,8 @@ fun MoreMenu(onRename: () -> Unit, onArchive: () -> Unit) {
 }
 ```
 
-The actions of a row — which a phone shows as a sheet and a pointer as a menu, with a
-right-click — are `AdaptiveMenu(state, actions = listOf(AdaptiveMenuItem(…)))` on the same
+The actions of a row — opened from a long press under touch or a right-click under a pointer —
+are `AdaptiveMenu(state, actions = listOf(AdaptiveMenuItem(…)))` on the same
 `rememberDropdownPopup()`, with `Modifier.contextMenu(menu)` on the row.
 
 ## Actions menu on a details sheet
@@ -1001,7 +1001,6 @@ fun PaymentActions(onEdit: () -> Unit, onEnd: () -> Unit, onDelete: () -> Unit) 
     )
     AdaptiveMenu(
         state = menu,
-        presentation = AdaptiveMenuPresentation.Dropdown,
         groups = listOf(
             listOf(
                 AdaptiveMenuItem("Edit", icon = ArecaIcons.Edit, onClick = onEdit),
@@ -1014,8 +1013,8 @@ fun PaymentActions(onEdit: () -> Unit, onEnd: () -> Unit, onDelete: () -> Unit) 
 ```
 
 Rows are the label with its glyph at the far end, a control's height; one hairline separates the
-groups. For every menu in the app, provide `LocalAdaptiveMenuPresentation provides
-AdaptiveMenuPresentation.Dropdown` in `componentDefaults` instead of passing it each time. Delete
+groups. The card is the default form on every window; an app whose menus are sheets provides
+`LocalAdaptiveMenuPresentation provides AdaptiveMenuPresentation.Sheet` in `componentDefaults`. Delete
 still asks: confirm it with `ConfirmSheet(style = ConfirmSheetStyle.Danger)`.
 
 ## Region that is always dark

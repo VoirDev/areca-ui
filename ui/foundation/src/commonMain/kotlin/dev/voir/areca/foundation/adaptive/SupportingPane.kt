@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
@@ -16,6 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import dev.voir.areca.foundation.layout.VerticalDivider
+import dev.voir.areca.foundation.overlay.FlowModal
+import dev.voir.areca.foundation.overlay.rememberFlowModal
 import dev.voir.areca.window.FoldOrientation
 import dev.voir.areca.window.WindowClassBox
 import dev.voir.areca.window.rememberFoldView
@@ -37,7 +40,7 @@ public interface SupportingPaneScope {
  *
  * In a container of [AdaptiveDefaults.SupportingPaneMinWidth] or more the supporting content is a
  * pane [AdaptiveDefaults.supportingPaneWidth] wide at the end, always shown, under
- * [supportingHeader]. In a narrower container it opens in an [AdaptiveSheet] while
+ * [supportingHeader]. In a narrower container it opens in a [FlowModal] while
  * [supportingVisible] — offer the button that sets it when
  * [SupportingPaneScope.isSupportingInline] is `false`. Each part is a [WindowClassBox] and keeps
  * its saved state across the switch. Neither part scrolls on its own: give long supporting content
@@ -114,8 +117,13 @@ public fun SupportingPane(
             WindowClassBox(modifier = Modifier.fillMaxSize()) {
                 holder.SaveableStateProvider(MainKey) { scope.main() }
             }
-            AdaptiveSheet(
-                visible = supportingVisible,
+            // A panel is as tall as it is, not a fixed share of the window.
+            val controller = rememberFlowModal()
+            LaunchedEffect(supportingVisible) {
+                if (supportingVisible) controller.show(partial = false) else controller.hide()
+            }
+            FlowModal(
+                controller = controller,
                 onDismissRequest = onSupportingDismissRequest,
                 header = supportingHeader,
             ) {

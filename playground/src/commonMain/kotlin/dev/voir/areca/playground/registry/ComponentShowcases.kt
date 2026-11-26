@@ -3,7 +3,6 @@ package dev.voir.areca.playground.registry
 import dev.voir.areca.playground.foundation.adaptive.AdaptiveGridShowcase
 import dev.voir.areca.playground.foundation.adaptive.AdaptiveMenuShowcase
 import dev.voir.areca.playground.foundation.adaptive.AdaptiveNavigationShowcase
-import dev.voir.areca.playground.foundation.adaptive.AdaptiveSheetShowcase
 import dev.voir.areca.playground.foundation.adaptive.ContentColumnShowcase
 import dev.voir.areca.playground.foundation.adaptive.ListDetailShowcase
 import dev.voir.areca.playground.foundation.adaptive.SupportingPaneShowcase
@@ -451,24 +450,11 @@ internal val ComponentShowcases: List<ShowcaseEntry> = listOf(
         content = { ToastShowcase() },
     ),
     ShowcaseEntry(
-        id = "foundation/adaptive-sheet",
-        group = ShowcaseGroup.Components,
-        section = ShowcaseSection.Overlays,
-        title = "Adaptive sheet",
-        summary = "A form or a short task over the screen, as a bottom sheet on a phone and a dialog on a tablet or desktop.",
-        status = ShowcaseStatus.Beta,
-        keywords = listOf(
-            "adaptive", "responsive", "bottom sheet", "dialog", "modal", "form", "tablet", "desktop",
-            "foldable", "AdaptiveSheet",
-        ),
-        content = { AdaptiveSheetShowcase() },
-    ),
-    ShowcaseEntry(
         id = "foundation/adaptive-menu",
         group = ShowcaseGroup.Components,
         section = ShowcaseSection.Overlays,
         title = "Adaptive menu",
-        summary = "The actions for one row, card or details sheet, as a card at the trigger or a bottom sheet under a finger.",
+        summary = "The actions for one row, card or details sheet, as a card at the trigger or a bottom sheet.",
         status = ShowcaseStatus.Beta,
         keywords = listOf(
             "adaptive", "responsive", "overflow", "more", "context menu", "action sheet", "dropdown",

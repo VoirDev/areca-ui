@@ -38,9 +38,6 @@ import dev.voir.areca.foundation.icon.FeaturedIconSize
 import dev.voir.areca.foundation.icon.FeaturedIconStyle
 import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.theme.ArecaTheme
-import dev.voir.areca.foundation.adaptive.AdaptiveDefaults
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.unit.isSpecified
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.layout.layout
@@ -235,8 +232,8 @@ public data class ConfirmSheetSize(
 
 /**
  * A sheet — a `FlowModal`, rising from the bottom edge — that asks once before something hard to
- * take back. On a window from expanded up the same question is a centred [Dialog] instead
- * ([AdaptiveDefaults.usesDialog]), answered with the same buttons.
+ * take back, on every window. An app that wants a centred question instead uses
+ * [ConfirmationDialog].
  *
  * Every confirmation is this shape, so the difference between signing out, deleting an account and
  * throwing away a half-filled form is an icon, some words and the colour of one box. A sheet rather
@@ -304,8 +301,7 @@ public fun ConfirmSheet(
     val layoutDirection = LocalLayoutDirection.current
     val padding = size.contentPadding
 
-    // The same question in either form: a sheet a thumb answers on a phone, a centred dialog on a
-    // window wide enough that the bottom edge is far from where the person is looking.
+    // The question and its buttons, answered through the gate below.
     val body: @Composable (confirm: () -> Unit, dismiss: () -> Unit) -> Unit = { confirm, dismiss ->
         Column(
             modifier = Modifier
@@ -402,26 +398,6 @@ public fun ConfirmSheet(
         }
     }
 
-    if (AdaptiveDefaults.usesDialog(ArecaTheme.hostWindow)) {
-        // A dialog has no slide to answer during, so the gate is simply the first answer per showing.
-        val answered = remember(visible, confirming) { mutableStateOf(false) }
-        val answerOnce = { answer: () -> Unit ->
-            if (!answered.value) {
-                answered.value = true
-                answer()
-            }
-        }
-        if (visible) {
-            Dialog(
-                onDismissRequest = { if (!confirming) answerOnce(onDismiss) },
-                modifier = modifier,
-            ) {
-                body({ answerOnce(onConfirm) }, { answerOnce(onDismiss) })
-            }
-        }
-        return
-    }
-
     val controller = rememberFlowModal()
 
     LaunchedEffect(visible) {
@@ -437,9 +413,7 @@ public fun ConfirmSheet(
     FlowModal(
         controller = controller,
         style = style.sheet,
-        // On a tablet held upright the sheet stops at a readable width rather than spanning it; a
-        // phone is narrower than the cap.
-        size = if (size.sheet.maxWidth.isSpecified) size.sheet else size.sheet.copy(maxWidth = AdaptiveDefaults.ReadableWidth),
+        size = size.sheet,
         onDismissRequest = { if (!confirming) dismiss() },
         modifier = modifier,
     ) {

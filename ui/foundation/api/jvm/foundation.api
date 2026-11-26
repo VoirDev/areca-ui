@@ -24,7 +24,6 @@ public final class dev/voir/areca/foundation/adaptive/AdaptiveDefaults {
 	public final fun getTwoPaneMinWidth-D9Ej5fM ()F
 	public final fun listPaneWidth-5rwHm24 (F)F
 	public final fun supportingPaneWidth-5rwHm24 (F)F
-	public final fun usesDialog (Ldev/voir/areca/window/WindowClass;)Z
 }
 
 public final class dev/voir/areca/foundation/adaptive/AdaptiveGridKt {
@@ -56,8 +55,8 @@ public final class dev/voir/areca/foundation/adaptive/AdaptiveMenuKt {
 }
 
 public final class dev/voir/areca/foundation/adaptive/AdaptiveMenuPresentation : java/lang/Enum {
-	public static final field Adaptive Ldev/voir/areca/foundation/adaptive/AdaptiveMenuPresentation;
 	public static final field Dropdown Ldev/voir/areca/foundation/adaptive/AdaptiveMenuPresentation;
+	public static final field Sheet Ldev/voir/areca/foundation/adaptive/AdaptiveMenuPresentation;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/foundation/adaptive/AdaptiveMenuPresentation;
 	public static fun values ()[Ldev/voir/areca/foundation/adaptive/AdaptiveMenuPresentation;
@@ -157,10 +156,6 @@ public final class dev/voir/areca/foundation/adaptive/AdaptiveNavigationStyle : 
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/foundation/adaptive/AdaptiveNavigationStyle;
 	public static fun values ()[Ldev/voir/areca/foundation/adaptive/AdaptiveNavigationStyle;
-}
-
-public final class dev/voir/areca/foundation/adaptive/AdaptiveSheetKt {
-	public static final fun AdaptiveSheet (ZLkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class dev/voir/areca/foundation/adaptive/AdaptiveToolbarAction {

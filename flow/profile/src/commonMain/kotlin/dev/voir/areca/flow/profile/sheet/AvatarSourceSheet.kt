@@ -15,9 +15,7 @@ import dev.voir.areca.flow.profile.icon.BundledIcons
 import dev.voir.areca.flow.profile.icon.Camera
 import dev.voir.areca.flow.profile.icon.Image
 import dev.voir.areca.flow.profile.icon.Trash
-import dev.voir.areca.foundation.adaptive.AdaptiveDefaults
 import dev.voir.areca.foundation.icon.Icon
-import dev.voir.areca.foundation.overlay.Dialog
 import dev.voir.areca.foundation.overlay.FlowModal
 import dev.voir.areca.foundation.overlay.FlowModalHeaderInsets
 import dev.voir.areca.foundation.overlay.rememberFlowModal
@@ -97,10 +95,8 @@ public object AvatarSourceOptions {
  * out is the close control in its heading, a foundation [TopBar] in the modal style, which keeps
  * the sheet's gutter so the title lines up with the choices under it.
  *
- * On a phone, a folded foldable or a tablet held upright it is a sheet rising from the bottom edge.
- * From an expanded window up — a tablet on its side, a desktop — it is a centred [Dialog] with the
- * same heading and choices, decided by [AdaptiveDefaults.usesDialog] on the whole window
- * ([ArecaTheme.hostWindow]), so a sheet opened from a narrow pane is a dialog too.
+ * It is a sheet rising from the bottom edge on every window, as wide as the theme's flow modal size
+ * lets it.
  *
  * @param visible Whether the sheet is shown.
  * @param options Choices to offer, in order.
@@ -162,19 +158,11 @@ public fun AvatarSourceSheet(
         }
     }
 
-    if (AdaptiveDefaults.usesDialog(ArecaTheme.hostWindow)) {
-        // The same heading and choices, centred: on a wide window the bottom edge is far from where
-        // the person is looking. The window decides, not the pane that opened the sheet.
-        if (visible) {
-            Dialog(onDismissRequest = onDismiss, header = header, content = body)
-        }
-    } else {
-        AvatarSourceFlowModal(visible = visible, onDismiss = onDismiss, header = header, body = body)
-    }
+    AvatarSourceFlowModal(visible = visible, onDismiss = onDismiss, header = header, body = body)
 }
 
 /**
- * The sheet form of [AvatarSourceSheet]: a [FlowModal] rising from the bottom edge, as on a phone.
+ * The sheet of [AvatarSourceSheet]: a [FlowModal] rising from the bottom edge.
  *
  * @param visible Whether the sheet is shown.
  * @param onDismiss Called when the sheet is dismissed without a choice.

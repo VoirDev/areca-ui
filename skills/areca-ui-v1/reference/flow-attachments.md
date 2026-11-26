@@ -172,7 +172,7 @@ interface AttachmentPdfDocument : AutoCloseable {
     title: String = "Add attachment", subtitle: String? = null, closeLabel: String = ArecaTheme.labels.close,
     layout: AttachmentChoiceLayout = AttachmentChoiceLayout.Rows,   // Bento: cards, the first leads
 )
-// A sheet on a phone, a centred dialog on a wide window, in either layout. Bento is a deliberate
+// A sheet on every window, in either layout. Bento is a deliberate
 // exception to flat sheets: keep it to two to four fixed sources, and pass localised `description`s.
 @Composable fun PendingAttachmentSheet(
     file: PendingAttachment?,                   // non-null = shown
@@ -273,11 +273,9 @@ interface AttachmentPdfDocument : AutoCloseable {
   `format == AttachmentFormat.Image`), open the app's crop screen, and replace the pending file's
   `model` with the crop. Hide the pending sheet while cropping (`file = pending.takeIf { editing == null }`).
 - `AttachmentOptionsSheet` lists only what applies: no share or save unless `state == Ready`.
-- **Wide windows:** every module sheet (source, pending, options, rename) is a `FlowModal` on a phone
-  and a centred foundation `Dialog` where `AdaptiveDefaults.usesDialog(ArecaTheme.hostWindow)` —
-  expanded width and up, not a phone on its side. Same heading, content and foot; heading and foot
-  pinned, content scrolls; scrim / Escape / back arrive as `onDismiss`. Nothing to pass, and it reads
-  the whole window, not the pane it was opened from. `ConfirmSheet` does the same.
+- **Wide windows:** every module sheet (source, pending, options, rename) is a `FlowModal` on every
+  window, stopping at `AdaptiveDefaults.ReadableWidth`, centred, like every `FlowModal`. Nothing to
+  pass. `ConfirmSheet` is a sheet the same way.
 - **Removal:** a saved record removes at once and confirms first with foundation `ConfirmSheet`
   (`style = ConfirmSheetStyle.Danger`); a form saves nothing until it is saved, so removing there
   asks nothing.
@@ -496,7 +494,7 @@ AttachmentSheets(files, actions, confirmRemoval = true)   // unchanged: its shee
 ```
 
 From a 920dp container the files are a 340/360dp pane at the end and the record has no row for them;
-below it they open in a sheet (a dialog on an expanded window) from the row. To keep a phone's files on
+below it they open in a sheet from the row. To keep a phone's files on
 the page, draw the details strip in `main` while `!isSupportingInline` instead of the row.
 
 ### Documents: rows grouped by tag

@@ -156,8 +156,8 @@ internal val AuthLayout.heroFraction: Float?
  * The layout actually drawn in [window]: this one, or for a [AuthLayout.Split] that does not fit,
  * the fallback it names.
  *
- * The split fits from an expanded width up while the height is not compact — the same windows a
- * sheet opens as a dialog in, because both need room on either side and above and below.
+ * The split fits from an expanded width up while the height is not compact: it needs room on either
+ * side and above and below.
  *
  * @param window Window or container the scaffold is laid out in, normally `ArecaTheme.window`.
  * @return A layout other than [AuthLayout.Split], or a [AuthLayout.Split] that fits [window].

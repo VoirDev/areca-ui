@@ -203,7 +203,7 @@ fun SupportingPane(supportingVisible: Boolean, onSupportingDismissRequest: () ->
     modifier: Modifier = Modifier, supportingHeader: (@Composable () -> Unit)? = null,
     main: @Composable SupportingPaneScope.() -> Unit,
     supporting: @Composable SupportingPaneScope.() -> Unit)
-// Inline pane from a 920dp container (SupportingPaneScope.isSupportingInline), else an AdaptiveSheet.
+// Inline pane from a 920dp container (SupportingPaneScope.isSupportingInline), else a FlowModal.
 fun ContentColumn(modifier: Modifier = Modifier, maxWidth: Dp = AdaptiveDefaults.ReadableWidth,
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start, gutter: Boolean = true,
@@ -214,16 +214,12 @@ fun AdaptiveGrid(modifier: Modifier = Modifier, minCellWidth: Dp = AdaptiveDefau
     state: LazyGridState = rememberLazyGridState(), contentPadding: PaddingValues = PaddingValues(),
     horizontalSpacing: Dp = ArecaTheme.spacing.lg, verticalSpacing: Dp = ArecaTheme.spacing.xl,
     content: LazyGridScope.() -> Unit)
-fun AdaptiveSheet(visible: Boolean, onDismissRequest: () -> Unit, modifier: Modifier = Modifier,
-    header: (@Composable () -> Unit)? = null, footer: (@Composable () -> Unit)? = null,
-    content: @Composable () -> Unit)
-// FlowModal (capped at 640dp) below an expanded window or on a short one; Dialog otherwise.
 class AdaptiveMenuItem(val label: String, val icon: ImageVector? = null, val destructive: Boolean = false,
     val enabled: Boolean = true, val onClick: () -> Unit)
 fun AdaptiveMenu(state: DropdownPopupState, actions: List<AdaptiveMenuItem>, modifier: Modifier = Modifier,
     title: String? = null)
-// Trigger: Modifier.anchored(state.anchorState) and state.show(). DropdownPopup under a pointer or
-// from an expanded window up; a sheet with `title` at its head under touch on narrower windows.
+// Trigger: Modifier.anchored(state.anchorState) and state.show(). LocalAdaptiveMenuPresentation picks
+// the form on every window: DropdownPopup (Dropdown), or a sheet with `title` at its head (Sheet).
 // Rows as listed, glyph leading, the dropdown 200–320dp wide.
 fun AdaptiveMenu(state: DropdownPopupState, groups: List<List<AdaptiveMenuItem>>,
     modifier: Modifier = Modifier, title: String? = null,
@@ -232,9 +228,9 @@ fun AdaptiveMenu(state: DropdownPopupState, groups: List<List<AdaptiveMenuItem>>
     size: AdaptiveMenuSize = LocalAdaptiveMenuSize.current ?: AdaptiveMenuSize.Default)
 // Groups in order, one full-width hairline between groups, none inside; destructive items leave
 // their groups for one last group in the danger ink; empty groups dropped. A flat menu is
-// groups = listOf(actions). AdaptiveMenuPresentation.Dropdown: a card under the trigger on every
-// window and input; .Adaptive (LocalAdaptiveMenuPresentation's default): card under a pointer or
-// from expanded, sheet under touch below it.
+// groups = listOf(actions). AdaptiveMenuPresentation.Dropdown (LocalAdaptiveMenuPresentation's
+// default): a card under the trigger; .Sheet: a sheet from the bottom edge. Same on every window
+// and input.
 // AdaptiveMenuStyle(bg, border, shape, shadowElevation, item: ListItemStyle,
 //     destructiveItem: ListItemStyle); default(bg = sheet ground, border = Color.Transparent,
 //     shape = shapes.surface, shadowElevation = elevation.md, item = ListItemStyle.plain(),
@@ -252,9 +248,8 @@ fun Modifier.contextMenu(state: DropdownPopupState, enabled: Boolean = true,
 // AdaptiveDefaults: ReadableWidth 640, ContentWidth 1200, TwoPaneMinWidth 600,
 // SupportingPaneMinWidth 920, SidebarWidth 256, FloatingSidebarWidth 300, GridMinCellWidth 160, ListPaneMinWidth 240,
 // DetailPaneMinWidth 320 (dp); listPaneWidth(container),
-// supportingPaneWidth(container); usesDialog(window) — true from an expanded width up unless the
-// window is short. A sheet of your own: if (AdaptiveDefaults.usesDialog(ArecaTheme.hostWindow))
-// Dialog(…) else FlowModal(…). ConfirmSheet already does this.
+// supportingPaneWidth(container). No component turns into another by window: a sheet or a
+// dialog is the app's choice, made where it opens one.
 ```
 
 ```kotlin
@@ -1707,10 +1702,10 @@ fun FlowModalTopBar(title: String, modifier: Modifier = Modifier, onClose: (() -
 // content under the title inside the header — a SearchField pinned above a list. `size =
 // TopBarSize.Default` for a larger title; `titleAlignment = Start` for a title read as a heading.
 // FlowModalSize.default(dragPadding, dragWidth = 44.dp, dragHeight = 4.dp,
-//     maxWidth: Dp = Dp.Unspecified): `maxWidth` caps the sheet, centred along the bottom edge; the
-// scrim still covers the window. A sheet opens in its own window, so an app that keeps a phone
-// layout on a tablet caps its sheets here — `LocalFlowModalSize provides
-// FlowModalSize.default(maxWidth = …)` — as well as its screens.
+//     maxWidth: Dp = AdaptiveDefaults.ReadableWidth): the sheet stops at `maxWidth` (640dp unless
+// given), centred along the bottom edge; the scrim still covers the window. Dp.Unspecified spans
+// the window. A different cap for every sheet: `LocalFlowModalSize provides
+// FlowModalSize.default(maxWidth = …)` beside the theme.
 
 fun FlowModalActionBar(confirmText: String, onConfirm: () -> Unit, modifier: Modifier = Modifier,
     enabled: Boolean = true, loading: Boolean = false, style: FlowModalActionBarStyle = …,
@@ -1734,8 +1729,8 @@ fun ConfirmSheet(visible: Boolean, icon: ImageVector?, title: String, descriptio
     style: ConfirmSheetStyle = LocalConfirmSheetStyle.current ?: ConfirmSheetStyle.Default,
     size: ConfirmSheetSize = LocalConfirmSheetSize.current ?: ConfirmSheetSize.Default,
     extra: (@Composable ColumnScope.() -> Unit)? = null)
-// A FlowModal as tall as its content; from an expanded window up (AdaptiveDefaults.usesDialog) the
-// same question in a centred Dialog. Answered once: the buttons and every dismissal count only
+// A FlowModal as tall as its content, on every window; ConfirmationDialog for a centred question.
+// Answered once: the buttons and every dismissal count only
 // while it rests open, and only the first answer — answer onConfirm by clearing `visible` or
 // setting `confirming`. `confirming` spins the confirm button and stops every way out until the
 // caller clears it. `onDismiss` covers Cancel, the scrim, a drag down and back. `note` is the one

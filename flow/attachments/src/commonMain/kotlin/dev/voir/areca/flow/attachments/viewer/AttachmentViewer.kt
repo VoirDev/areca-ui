@@ -54,8 +54,8 @@ import kotlin.time.Duration.Companion.seconds
  * **The same viewer on every window.** On a tablet or a desktop the file still has the whole
  * window — a viewer is where a file is looked at, and a pane beside it would only make it smaller.
  * What changes is inside the page and over it: a PDF's pages and a file stated rather than drawn
- * keep a readable width ([AttachmentViewerPage]), and the module's sheets in [sheets] open as
- * centred dialogs, as foundation's `ConfirmSheet` does. The record the files belong to is where
+ * keep a readable width ([AttachmentViewerPage]), and the module's sheets in [sheets] stop at the
+ * readable width, as every foundation sheet does. The record the files belong to is where
  * their details go, beside them; see the module README's "On a tablet or desktop".
  *
  * [page] draws each file; the default is [AttachmentViewerPage] with English words and no way to

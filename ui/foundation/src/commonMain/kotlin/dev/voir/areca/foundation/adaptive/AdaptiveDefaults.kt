@@ -2,9 +2,6 @@ package dev.voir.areca.foundation.adaptive
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import dev.voir.areca.window.HeightClass
-import dev.voir.areca.window.WidthClass
-import dev.voir.areca.window.WindowClass
 
 /**
  * Widths and thresholds the adaptive layouts share.
@@ -61,17 +58,4 @@ public object AdaptiveDefaults {
      * @return Width of the supporting pane.
      */
     public fun supportingPaneWidth(containerWidth: Dp): Dp = if (containerWidth < 1200.dp) 340.dp else 360.dp
-
-    /**
-     * Whether something that rises as a sheet on a phone opens as a centred dialog in [window]: from
-     * an expanded width up, unless the window is too short for a dialog — a phone on its side.
-     *
-     * [AdaptiveSheet] and `ConfirmSheet` decide by it; a sheet of your own can too, with
-     * `ArecaTheme.hostWindow`.
-     *
-     * @param window The window the sheet opens over, normally `ArecaTheme.hostWindow`.
-     * @return Whether to open a dialog rather than a sheet.
-     */
-    public fun usesDialog(window: WindowClass): Boolean =
-        window.width >= WidthClass.Expanded && window.height > HeightClass.Compact
 }

@@ -36,3 +36,11 @@ Load them as `areca:areca-ui-v1` and `areca:areca-viewmodel-v1`, or read `skills
   raises it (Prepare Release); a skills-only release raises it alone (Prepare Skills Release). Only
   those two workflows change it, and installs update only when it changes.
 - Edit skills in `skills/` only; `.agents/skills/` holds symlinks to them.
+
+## Departures from the handbook
+
+- `library-maintenance`, "Versions": from 1.0 a removed declaration or a change to documented
+  behaviour is a major release, deprecated first. Areca's consumers are Voir apps that adopt every
+  release, so a minor release may remove API and change documented behaviour without deprecation;
+  `CHANGELOG.md` lists each such change under `Removed` or `Changed` and the replacement under
+  `Migrating`.

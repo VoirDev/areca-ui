@@ -445,18 +445,6 @@ class AdaptiveLayoutsTest {
 
 
     @Test
-    fun `sheets become dialogs from an expanded window that is tall enough`() {
-        fun dialog(width: Int, height: Int) =
-            AdaptiveDefaults.usesDialog(WindowClass(DpSize(width.dp, height.dp), InputMode.Touch))
-
-        assertFalse(dialog(393, 852))
-        assertFalse(dialog(690, 830))
-        assertFalse(dialog(852, 393))
-        assertTrue(dialog(1180, 820))
-        assertTrue(dialog(1440, 900))
-    }
-
-    @Test
     fun `the host window ignores the pane it is read in`() = runComposeUiTest {
         var host: WindowClass? = null
         var pane: WindowClass? = null

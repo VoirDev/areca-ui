@@ -211,9 +211,11 @@ CompositionLocalProvider(
   section ground, corner and gap, and pass `styles` to one `Settings` only where it differs. `LocalNoticeStyle`, `LocalConfirmSheetStyle` and
   `LocalConfirmSheetSize` stay `null` unless provided: a notice follows its tone, and a confirm
   sheet builds on the `LocalFlowModalStyle` / `LocalFlowModalSize` in scope.
-- A sheet opens in its own window, so capping the width of the screens does not reach it. An app
-  that keeps a phone layout on a wide window caps every sheet with `LocalFlowModalSize provides
-  FlowModalSize.default(maxWidth = …)` — `ConfirmSheet` and `SelectFlowModal` follow it too.
+- Every `FlowModal` stops at `AdaptiveDefaults.ReadableWidth` (640dp), centred on the bottom edge
+  of a wider window; never pass `maxWidth = AdaptiveDefaults.ReadableWidth` yourself. Pass
+  `FlowModalSize.default(maxWidth = Dp.Unspecified)` only for a sheet that should span the window.
+  A different cap for every sheet goes in `LocalFlowModalSize provides FlowModalSize.default(maxWidth
+  = …)` — `ConfirmSheet`, `SelectFlowModal` and `AdaptiveMenu`'s sheet follow it too.
 - Never write a wrapper composable whose only job is to restyle a component. See "The app's own
   layer" below for what an app may add instead.
 - Build presets and `default(…)` inside composition: they read the theme where called, so a style
@@ -401,9 +403,9 @@ themselves.
 ### Lay out by window class, never by device
 
 **The minimum, for an app designed phone first.** If it can run on a tablet or a desktop at all,
-keep forms and reading text in `ContentColumn` so they stop growing, and cap every sheet once with
-`LocalFlowModalSize provides FlowModalSize.default(maxWidth = …)` beside the theme. A phone layout
-stretched across a tablet is a bug even when nothing else is adaptive.
+keep forms and reading text in `ContentColumn` so they stop growing; sheets already stop at the
+readable width. A phone layout stretched across a tablet is a bug even when nothing else is
+adaptive.
 
 Branch a screen on `ArecaTheme.window` (`dev.voir.areca.window`), never on a platform, a screen
 size in pixels or an `isTablet` flag: a tablet in a narrow split view is a compact window. Width
@@ -428,8 +430,7 @@ off its `bounds`, and while its `state` is `FoldState.HalfOpened` lay each half 
   to hide it on a startup screen without recreating the content),
   `ListDetail`,
   `SupportingPane`, `ContentColumn` for forms and auth (`gutter = false` when its children inset
-  themselves — settings sections, cards), `AdaptiveGrid`, `AdaptiveSheet` instead of a
-  bare `FlowModal` for forms (`ConfirmSheet` is already a dialog on wide windows), `AdaptiveMenu`
+  themselves — settings sections, cards), `AdaptiveGrid`, `AdaptiveMenu`
   for the actions of a row, a card or a details sheet (see "Action menus" below). Their slots say which form they are in (`layout`, `isTwoPane`,
   `isSupportingInline`): draw a back action only when `!isTwoPane`, a "Filters" button only when
   `!isSupportingInline`. Signatures: reference/signatures.md.
@@ -451,10 +452,10 @@ off its `bounds`, and while its `state` is `FoldState.HalfOpened` lay each half 
   `AdaptiveMenu(state, groups = listOf(listOf(edit, end), listOf(delete)))`, never a hand-made
   `DropdownPopup` of `ListItem`s. Groups are drawn in order with one full-width hairline between
   them; destructive items move to a last group in the danger ink whatever group they are given in.
-  `presentation = AdaptiveMenuPresentation.Dropdown` is a card hanging from the trigger on every
-  device, touch included; `Adaptive` (the default) is that card under a pointer or from an expanded
-  window, and a sheet on a touched phone. Pick one for the whole app with
-  `LocalAdaptiveMenuPresentation provides …` in `componentDefaults`, and restyle every menu there
+  The form never follows the window: `AdaptiveMenuPresentation.Dropdown` (the default) is a card
+  hanging from the trigger, `Sheet` a sheet from the bottom edge, on every device. Pick one for the
+  whole app with `LocalAdaptiveMenuPresentation provides …` in `componentDefaults` (the `actions`
+  form, toolbar overflow and edge-column More follow it), and restyle every menu there
   with `LocalAdaptiveMenuStyle` / `LocalAdaptiveMenuSize` (`AdaptiveMenuStyle.default(…)`: surface
   shape, `elevation.md` lift, no outline; `AdaptiveMenuSize.default(…)`: 248dp card, control-height
   rows, `iconPosition = AdaptiveMenuIconPosition.Trailing` or `Leading`). The card grows in from the
@@ -498,7 +499,7 @@ Every foundation family, by intent. Signatures, overloads and packages:
 | Intent | Use |
 | --- | --- |
 | Primary action; secondary; cancel or skip | `Button(text, onClick)`; `ButtonStyle.soft()` / `outlined()`; `ButtonStyle.plain(ActionColor.Neutral)` |
-| Destructive action; a choice inside the confirmation ("now" or "after the next payment") | `ButtonStyle.soft(ActionColor.Danger)` confirmed with `ConfirmSheet(style = ConfirmSheetStyle.Danger)` (a centred dialog on wide windows) or `ConfirmationDialog` (centred, suspend handlers); `ConfirmSheet(extra = { ConfirmSheetRows { RadioListItem(…) } })` |
+| Destructive action; a choice inside the confirmation ("now" or "after the next payment") | `ButtonStyle.soft(ActionColor.Danger)` confirmed with `ConfirmSheet(style = ConfirmSheetStyle.Danger)` (a sheet on every window) or `ConfirmationDialog` (centred, suspend handlers); `ConfirmSheet(extra = { ConfirmSheetRows { RadioListItem(…) } })` |
 | Icon-only action | `IconButton(imageVector, contentDescription, onClick)` |
 | Icon that is on or off — favourite, pin, mute | `IconToggleButton(checked, onCheckedChange, imageVector, contentDescription, checkedImageVector = …)`; in a top bar `FavoriteAction` |
 | Link; prompt plus link | `TextLink`; `TextLinkPrompt` ("No account? Sign up") |
@@ -538,7 +539,7 @@ Every foundation family, by intent. Signatures, overloads and packages:
 | Pull to refresh | `PagedContentList(onRefresh = …)`; around any scroller `PullToRefreshLayout` + `PullToRefreshIndicator` (experimental) |
 | Sheet opened by state; about one item; opened from code | `FlowModal(visible, onDismissRequest)`; `FlowModal(item, onDismissRequest) { item -> }`; `FlowModal(controller)` + `hideAndWait()` before navigating |
 | Sheet header; with a pinned search | `FlowModalTopBar(title, onClose = …)`; `bottom = { SearchField(…) }` |
-| Actions for one thing — the ⋯ on a row, a card or a details sheet; delete apart in red | `AdaptiveMenu(state, groups = listOf(listOf(…), listOf(…)), presentation = AdaptiveMenuPresentation.Dropdown)` + `Modifier.anchored(state.anchorState)` on the ⋯ (`Modifier.contextMenu(state)` on a row) |
+| Actions for one thing — the ⋯ on a row, a card or a details sheet; delete apart in red | `AdaptiveMenu(state, groups = listOf(listOf(…), listOf(…)))` + `Modifier.anchored(state.anchorState)` on the ⋯ (`Modifier.contextMenu(state)` on a row) |
 | Bottom sheet; any other dialog; menu | `FlowModal` + `FlowModalTopBar` + `FlowModalActionBar` (`layout = FlowModalActionBarLayout.Split()` for a full-width pair, `FlowModalSecondaryAction` beside it); `Dialog` + `ModalDefaults.Actions`; `DropdownPopup` + `rememberDropdownPopup()` + `Modifier.anchored(state.anchorState)` |
 | Transient message; persistent inline message | `BaseLayout(toastState = toasts)` + `toasts.show(label = …)` (a `ToastHost` of your own elsewhere; draws `Toast`); `Notice` + `NoticeText` (`AnimatedNotice` to appear and leave) |
 | Empty or failed region in words; with content of your own; whole-screen progress or result | `Fallback(title, body = …, tone = FallbackTone.Empty / Failure, actionText, onAction)`; `Fallback(top, heading, body, content)`; `StatusScene` + `StatusMark` + `StatusSceneActions` |

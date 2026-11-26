@@ -10,8 +10,8 @@ uploading a picture are the application's.
 </picture>
 
 There is no `ProfileScreen`. Copy a [recipe](#recipes) and edit it. On a tablet or a desktop the
-same parts make [a list and the page it opens](#on-a-tablet-or-desktop), and every sheet opens as a
-centred dialog.
+same parts make [a list and the page it opens](#on-a-tablet-or-desktop); every sheet still rises
+from the bottom edge, no wider than the readable width.
 
 ## Install
 
@@ -680,8 +680,8 @@ AccountSettings(
   their own `WindowInsets.systemBars` padding adds nothing once the layout has taken the bars.
 - Beside the page, the open row is `selected` and the rows drop their chevron; alone, they keep it
   and nothing is marked.
-- Every sheet opened from either pane is a centred dialog from an expanded window up — see
-  [Sheets](#sheets).
+- Every sheet opened from either pane rises from the bottom edge of the window, centred and no
+  wider than the readable width — see [Sheets](#sheets).
 - More pages are an entry in `AccountPage`, a row and a branch: the sign-in methods, data export and
   account switcher of [the account menu](#the-account-menu) make one.
 
@@ -755,13 +755,9 @@ shows what happened next.
 
 - **Driven by state.** Every sheet takes `visible` — `RevokeSessionSheet` takes the `session`
   itself — and reports `onDismiss` for the scrim, back and Cancel alike.
-- **Dialogs on wide windows.** From an expanded window up — a tablet on its side, a laptop, a
-  desktop — every sheet opens as a centred dialog with the same content and the same answers:
-  the confirmation sheets through foundation's `ConfirmSheet`, `AvatarSourceSheet` and
-  `BirthdayRow`'s calendar by the same rule, `AdaptiveDefaults.usesDialog(ArecaTheme.hostWindow)`.
-  The whole window decides, not the pane that opened the sheet. On a phone, a phone on its side, a
-  foldable and a tablet held upright they rise from the bottom edge, exactly as before. Nothing to
-  pass: the parameters are the same either way.
+- **Sheets on every window.** The confirmation sheets (foundation's `ConfirmSheet`),
+  `AvatarSourceSheet` and `BirthdayRow`'s calendar rise from the bottom edge on a phone, a tablet
+  and a desktop alike, and on a wide window stop at the readable width, centred.
 - **`confirming = true`** shows the confirming button's spinner and blocks further presses,
   the scrim's included; clear it when the work ends.
 - **Answered once.** Only the first press while the sheet rests open counts. Answer `onConfirm` by
@@ -782,8 +778,7 @@ warning in a sign-out note. For brand accents, pass styles to the settings list 
 
 ## Birthdays
 
-`BirthdayRow` takes a `kotlinx.datetime.LocalDate?` and opens a calendar sheet — a centred dialog
-from an expanded window up, as every sheet here.
+`BirthdayRow` takes a `kotlinx.datetime.LocalDate?` and opens a calendar sheet.
 
 - The calendar is bounded by `minDate`–`maxDate`; `maxDate` is today by default. Move it back for
   an age requirement. A `null` limit falls back to the calendar's range, 1900 to 2100.
