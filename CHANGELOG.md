@@ -8,6 +8,17 @@ All notable changes to the Areca libraries. The format follows
 
 ### Added
 
+- `foundation`: `AdaptiveMenu(state, groups = …)` draws actions in groups, one full-width hairline
+  between groups and none inside one, with destructive actions moved to a last group in the danger
+  ink. `presentation = AdaptiveMenuPresentation.Dropdown` makes it a card hanging from its trigger on
+  every device, touch included; `AdaptiveMenuPresentation.Adaptive`, the default, keeps today's
+  sheet on a touched phone. `LocalAdaptiveMenuPresentation` sets it for an app. `AdaptiveMenuStyle`
+  and `AdaptiveMenuSize`, with `LocalAdaptiveMenuStyle` and `LocalAdaptiveMenuSize` (`null` unless
+  provided), give the card's shape (the surface shape), lift (`elevation.md`), outline (none),
+  width (248dp) and its rows — control-height `ListItem`s with the glyph at the far end or, with
+  `AdaptiveMenuIconPosition.Leading`, before the label. `AdaptiveMenu(state, actions = …)` is
+  unchanged.
+
 - `foundation`: `AdaptiveNavigation(navigationVisible = false)` hides the rail, sidebar, edge column
   or bottom bar and gives the content the whole window. The navigation slides away and back on the
   theme's motion tokens, and the content keeps its place in the composition, so a navigation host
@@ -68,6 +79,10 @@ All notable changes to the Areca libraries. The format follows
 
 ### Changed
 
+- `foundation`: a `DropdownPopup` grows in with a short fade and scale from the corner that touches
+  its anchor — on the side it opened on, after a flip — and shrinks back into it when it closes,
+  staying composed until that exit has run (`motion.fast`). It ignores presses while it leaves.
+  Under `ArecaMotion.reduceMotion` it appears and goes at once, as before.
 - `foundation`: an exhaustive `when` over `AdaptiveNavigationLayout` needs a `None` branch.
 - `foundation`, `keyboard`: `AdaptiveNavigation` and `KeyboardKeys` take new trailing parameters
   with defaults. Calls compile unchanged; code compiled against an earlier version must be rebuilt.

@@ -31,6 +31,14 @@ public final class dev/voir/areca/foundation/adaptive/AdaptiveGridKt {
 	public static final fun AdaptiveGrid-bbpEF2o (Landroidx/compose/ui/Modifier;FIFLandroidx/compose/foundation/lazy/grid/LazyGridState;Landroidx/compose/foundation/layout/PaddingValues;FFLkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;II)V
 }
 
+public final class dev/voir/areca/foundation/adaptive/AdaptiveMenuIconPosition : java/lang/Enum {
+	public static final field Leading Ldev/voir/areca/foundation/adaptive/AdaptiveMenuIconPosition;
+	public static final field Trailing Ldev/voir/areca/foundation/adaptive/AdaptiveMenuIconPosition;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/foundation/adaptive/AdaptiveMenuIconPosition;
+	public static fun values ()[Ldev/voir/areca/foundation/adaptive/AdaptiveMenuIconPosition;
+}
+
 public final class dev/voir/areca/foundation/adaptive/AdaptiveMenuItem {
 	public static final field $stable I
 	public fun <init> (Ljava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;ZZLkotlin/jvm/functions/Function0;)V
@@ -44,6 +52,83 @@ public final class dev/voir/areca/foundation/adaptive/AdaptiveMenuItem {
 
 public final class dev/voir/areca/foundation/adaptive/AdaptiveMenuKt {
 	public static final fun AdaptiveMenu (Ldev/voir/areca/foundation/overlay/DropdownPopupState;Ljava/util/List;Landroidx/compose/ui/Modifier;Ljava/lang/String;Landroidx/compose/runtime/Composer;II)V
+	public static final fun AdaptiveMenu (Ldev/voir/areca/foundation/overlay/DropdownPopupState;Ljava/util/List;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ldev/voir/areca/foundation/adaptive/AdaptiveMenuPresentation;Ldev/voir/areca/foundation/adaptive/AdaptiveMenuStyle;Ldev/voir/areca/foundation/adaptive/AdaptiveMenuSize;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class dev/voir/areca/foundation/adaptive/AdaptiveMenuPresentation : java/lang/Enum {
+	public static final field Adaptive Ldev/voir/areca/foundation/adaptive/AdaptiveMenuPresentation;
+	public static final field Dropdown Ldev/voir/areca/foundation/adaptive/AdaptiveMenuPresentation;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/voir/areca/foundation/adaptive/AdaptiveMenuPresentation;
+	public static fun values ()[Ldev/voir/areca/foundation/adaptive/AdaptiveMenuPresentation;
+}
+
+public final class dev/voir/areca/foundation/adaptive/AdaptiveMenuPresentationKt {
+	public static final fun getLocalAdaptiveMenuPresentation ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
+public final class dev/voir/areca/foundation/adaptive/AdaptiveMenuSize {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/foundation/adaptive/AdaptiveMenuSize$Companion;
+	public synthetic fun <init> (FFFFLdev/voir/areca/foundation/adaptive/AdaptiveMenuIconPosition;Ldev/voir/areca/foundation/list/ListItemSize;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-D9Ej5fM ()F
+	public final fun component2-D9Ej5fM ()F
+	public final fun component3-D9Ej5fM ()F
+	public final fun component4-D9Ej5fM ()F
+	public final fun component5 ()Ldev/voir/areca/foundation/adaptive/AdaptiveMenuIconPosition;
+	public final fun component6 ()Ldev/voir/areca/foundation/list/ListItemSize;
+	public final fun copy--vR-za8 (FFFFLdev/voir/areca/foundation/adaptive/AdaptiveMenuIconPosition;Ldev/voir/areca/foundation/list/ListItemSize;)Ldev/voir/areca/foundation/adaptive/AdaptiveMenuSize;
+	public static synthetic fun copy--vR-za8$default (Ldev/voir/areca/foundation/adaptive/AdaptiveMenuSize;FFFFLdev/voir/areca/foundation/adaptive/AdaptiveMenuIconPosition;Ldev/voir/areca/foundation/list/ListItemSize;ILjava/lang/Object;)Ldev/voir/areca/foundation/adaptive/AdaptiveMenuSize;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBorderWidth-D9Ej5fM ()F
+	public final fun getIconPosition ()Ldev/voir/areca/foundation/adaptive/AdaptiveMenuIconPosition;
+	public final fun getItem ()Ldev/voir/areca/foundation/list/ListItemSize;
+	public final fun getMaxHeight-D9Ej5fM ()F
+	public final fun getOffsetY-D9Ej5fM ()F
+	public final fun getWidth-D9Ej5fM ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/foundation/adaptive/AdaptiveMenuSize$Companion {
+	public final fun default-5-DNhBc (FFFFLdev/voir/areca/foundation/adaptive/AdaptiveMenuIconPosition;Ldev/voir/areca/foundation/list/ListItemSize;Landroidx/compose/runtime/Composer;II)Ldev/voir/areca/foundation/adaptive/AdaptiveMenuSize;
+	public final fun getDefault (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/foundation/adaptive/AdaptiveMenuSize;
+}
+
+public final class dev/voir/areca/foundation/adaptive/AdaptiveMenuSizeKt {
+	public static final fun getLocalAdaptiveMenuSize ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
+public final class dev/voir/areca/foundation/adaptive/AdaptiveMenuStyle {
+	public static final field $stable I
+	public static final field Companion Ldev/voir/areca/foundation/adaptive/AdaptiveMenuStyle$Companion;
+	public synthetic fun <init> (JJLandroidx/compose/ui/graphics/Shape;FLdev/voir/areca/foundation/list/ListItemStyle;Ldev/voir/areca/foundation/list/ListItemStyle;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3 ()Landroidx/compose/ui/graphics/Shape;
+	public final fun component4-D9Ej5fM ()F
+	public final fun component5 ()Ldev/voir/areca/foundation/list/ListItemStyle;
+	public final fun component6 ()Ldev/voir/areca/foundation/list/ListItemStyle;
+	public final fun copy-NjCrdec (JJLandroidx/compose/ui/graphics/Shape;FLdev/voir/areca/foundation/list/ListItemStyle;Ldev/voir/areca/foundation/list/ListItemStyle;)Ldev/voir/areca/foundation/adaptive/AdaptiveMenuStyle;
+	public static synthetic fun copy-NjCrdec$default (Ldev/voir/areca/foundation/adaptive/AdaptiveMenuStyle;JJLandroidx/compose/ui/graphics/Shape;FLdev/voir/areca/foundation/list/ListItemStyle;Ldev/voir/areca/foundation/list/ListItemStyle;ILjava/lang/Object;)Ldev/voir/areca/foundation/adaptive/AdaptiveMenuStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBg-0d7_KjU ()J
+	public final fun getBorder-0d7_KjU ()J
+	public final fun getDestructiveItem ()Ldev/voir/areca/foundation/list/ListItemStyle;
+	public final fun getItem ()Ldev/voir/areca/foundation/list/ListItemStyle;
+	public final fun getShadowElevation-D9Ej5fM ()F
+	public final fun getShape ()Landroidx/compose/ui/graphics/Shape;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/voir/areca/foundation/adaptive/AdaptiveMenuStyle$Companion {
+	public final fun default-a0fi2-Y (JJLandroidx/compose/ui/graphics/Shape;FLdev/voir/areca/foundation/list/ListItemStyle;Ldev/voir/areca/foundation/list/ListItemStyle;Landroidx/compose/runtime/Composer;II)Ldev/voir/areca/foundation/adaptive/AdaptiveMenuStyle;
+	public final fun getDefault (Landroidx/compose/runtime/Composer;I)Ldev/voir/areca/foundation/adaptive/AdaptiveMenuStyle;
+}
+
+public final class dev/voir/areca/foundation/adaptive/AdaptiveMenuStyleKt {
+	public static final fun getLocalAdaptiveMenuStyle ()Landroidx/compose/runtime/ProvidableCompositionLocal;
 }
 
 public final class dev/voir/areca/foundation/adaptive/AdaptiveNavigationKt {

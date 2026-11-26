@@ -1019,7 +1019,9 @@ bar, with a `FlowModalSecondaryAction` in `leading` taking its share. `showDivid
 the hairline above the buttons.
 
 A `DropdownPopup` positions itself against the control marked with `Modifier.anchored`, and flips to
-the other side when it would run off screen:
+the other side when it would run off screen. It grows in with a short fade and scale from the corner
+that touches the control, and shrinks back into it when it closes — at once under
+`ArecaMotion(reduceMotion = true)` — so compose it unconditionally and let `isOpen` drive it:
 
 ```kotlin
 val menu = rememberDropdownPopup()
@@ -1683,7 +1685,7 @@ layout inside a narrow pane takes its compact form. See [Window classes](#window
 | `ContentColumn` | Full width less the gutters | Centred, no wider than `AdaptiveDefaults.ReadableWidth` (640dp) or a `maxWidth` you pass |
 | `AdaptiveGrid` | Two columns of 160dp cells | As many columns as fit, cells capped at `AdaptiveDefaults.ContentWidth` (1200dp) and centred |
 | `AdaptiveSheet` | A `FlowModal` from the bottom edge, capped at 640dp | A centred `Dialog` from an expanded window up |
-| `AdaptiveMenu` | A sheet of `AdaptiveMenuItem` rows | A `DropdownPopup` at the trigger, from an expanded window up or under a pointer |
+| `AdaptiveMenu` | A sheet of `AdaptiveMenuItem` rows, or a card at the trigger with `AdaptiveMenuPresentation.Dropdown` | A `DropdownPopup` at the trigger, from an expanded window up or under a pointer |
 | `Modifier.contextMenu` | Opens an `AdaptiveMenu` on a long press | Opens it on a right-click, at the pointer |
 
 ```kotlin
@@ -1811,6 +1813,23 @@ ListItem(
     modifier = Modifier.contextMenu(menu),
 )
 AdaptiveMenu(state = menu, title = transaction.merchant, actions = actions)
+```
+
+The `groups` form draws the actions in groups with one full-width hairline between them, and moves
+destructive ones to a last group in the danger ink. `presentation = AdaptiveMenuPresentation.Dropdown`
+makes it a card hanging from its trigger on every device, touch included; the default,
+`AdaptiveMenuPresentation.Adaptive`, keeps the sheet on a touched phone, and
+`LocalAdaptiveMenuPresentation` sets it for a whole app. `AdaptiveMenuStyle` (card fill, outline —
+none by default — surface shape, `elevation.md` lift, the row looks) and `AdaptiveMenuSize` (248dp
+card, gap, height cap, `AdaptiveMenuIconPosition.Trailing` or `Leading`, control-height rows) follow
+the usual `LocalAdaptiveMenuStyle` / `LocalAdaptiveMenuSize`, `null` unless provided.
+
+```kotlin
+AdaptiveMenu(
+    state = menu,
+    presentation = AdaptiveMenuPresentation.Dropdown,
+    groups = listOf(listOf(edit, end), listOf(delete)),
+)
 ```
 
 ## Accessibility

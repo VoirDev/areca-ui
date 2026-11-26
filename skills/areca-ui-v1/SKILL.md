@@ -430,7 +430,7 @@ off its `bounds`, and while its `state` is `FoldState.HalfOpened` lay each half 
   `SupportingPane`, `ContentColumn` for forms and auth (`gutter = false` when its children inset
   themselves — settings sections, cards), `AdaptiveGrid`, `AdaptiveSheet` instead of a
   bare `FlowModal` for forms (`ConfirmSheet` is already a dialog on wide windows), `AdaptiveMenu`
-  for a row's actions. Their slots say which form they are in (`layout`, `isTwoPane`,
+  for the actions of a row, a card or a details sheet (see "Action menus" below). Their slots say which form they are in (`layout`, `isTwoPane`,
   `isSupportingInline`): draw a back action only when `!isTwoPane`, a "Filters" button only when
   `!isSupportingInline`. Signatures: reference/signatures.md.
 - Inside `AdaptiveNavigation`, every screen declares its title, back and actions with
@@ -447,6 +447,19 @@ off its `bounds`, and while its `state` is `FoldState.HalfOpened` lay each half 
   your own buttons along the column's edge or across `ArecaTheme.window`'s top as a toolbar.
   Placement, the screen states and a shell of your own from its parts (`EdgeColumn`,
   `VerticalTabBar`, `NavRail`, `FloatingSidebar`): reference/adaptive-shell.md.
+- **Action menus.** The ⋯ of a row, a card or a details sheet opens
+  `AdaptiveMenu(state, groups = listOf(listOf(edit, end), listOf(delete)))`, never a hand-made
+  `DropdownPopup` of `ListItem`s. Groups are drawn in order with one full-width hairline between
+  them; destructive items move to a last group in the danger ink whatever group they are given in.
+  `presentation = AdaptiveMenuPresentation.Dropdown` is a card hanging from the trigger on every
+  device, touch included; `Adaptive` (the default) is that card under a pointer or from an expanded
+  window, and a sheet on a touched phone. Pick one for the whole app with
+  `LocalAdaptiveMenuPresentation provides …` in `componentDefaults`, and restyle every menu there
+  with `LocalAdaptiveMenuStyle` / `LocalAdaptiveMenuSize` (`AdaptiveMenuStyle.default(…)`: surface
+  shape, `elevation.md` lift, no outline; `AdaptiveMenuSize.default(…)`: 248dp card, control-height
+  rows, `iconPosition = AdaptiveMenuIconPosition.Trailing` or `Leading`). The card grows in from the
+  trigger's corner and shrinks back on close; compose it unconditionally. The `actions = …` form
+  keeps one flat list with leading glyphs, as listed.
 - Desktop affordances come with the components; do not build them by hand. Put
   `Modifier.contextMenu(menu)` on a row that has an `AdaptiveMenu`, ahead of its `clickable`: it
   opens the menu on a right-click, a long press, the Menu key and the accessibility long-click, and
@@ -525,6 +538,7 @@ Every foundation family, by intent. Signatures, overloads and packages:
 | Pull to refresh | `PagedContentList(onRefresh = …)`; around any scroller `PullToRefreshLayout` + `PullToRefreshIndicator` (experimental) |
 | Sheet opened by state; about one item; opened from code | `FlowModal(visible, onDismissRequest)`; `FlowModal(item, onDismissRequest) { item -> }`; `FlowModal(controller)` + `hideAndWait()` before navigating |
 | Sheet header; with a pinned search | `FlowModalTopBar(title, onClose = …)`; `bottom = { SearchField(…) }` |
+| Actions for one thing — the ⋯ on a row, a card or a details sheet; delete apart in red | `AdaptiveMenu(state, groups = listOf(listOf(…), listOf(…)), presentation = AdaptiveMenuPresentation.Dropdown)` + `Modifier.anchored(state.anchorState)` on the ⋯ (`Modifier.contextMenu(state)` on a row) |
 | Bottom sheet; any other dialog; menu | `FlowModal` + `FlowModalTopBar` + `FlowModalActionBar` (`layout = FlowModalActionBarLayout.Split()` for a full-width pair, `FlowModalSecondaryAction` beside it); `Dialog` + `ModalDefaults.Actions`; `DropdownPopup` + `rememberDropdownPopup()` + `Modifier.anchored(state.anchorState)` |
 | Transient message; persistent inline message | `BaseLayout(toastState = toasts)` + `toasts.show(label = …)` (a `ToastHost` of your own elsewhere; draws `Toast`); `Notice` + `NoticeText` (`AnimatedNotice` to appear and leave) |
 | Empty or failed region in words; with content of your own; whole-screen progress or result | `Fallback(title, body = …, tone = FallbackTone.Empty / Failure, actionText, onAction)`; `Fallback(top, heading, body, content)`; `StatusScene` + `StatusMark` + `StatusSceneActions` |
@@ -736,8 +750,8 @@ grey page, inside a white card and in a sheet.
   `Section` whose style names a `bg` (`SettingsDefaults.sectionStyle(bg = …)`) keeps its card,
   for the same reason. Never wrap a sheet's form,
   list or settings in cards or a `RaisedSurface` block, and never add side padding around rows;
-  action sheets are plain `ListItem` rows with a leading glyph (danger ink for a destructive one),
-  as `AdaptiveMenu` lists them. The one deliberate exception is the attachment source sheet's
+  action sheets are plain `ListItem` rows with their glyph (danger ink for a destructive one, drawn
+  last in a group of its own), as `AdaptiveMenu` lists them. The one deliberate exception is the attachment source sheet's
   `AttachmentSourceSheet(layout = AttachmentChoiceLayout.Bento)` (`flow-attachments`): two to four
   sources as cards, one leading.
 - `AuthScaffold` (`flow-auth`) lies on the sheet's ground in light: a white page whatever the

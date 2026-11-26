@@ -1,5 +1,9 @@
 package dev.voir.areca.foundation.overlay
 
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.rememberTransition
+import androidx.compose.animation.core.snap
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -21,7 +25,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
@@ -29,6 +37,7 @@ import androidx.compose.ui.window.PopupProperties
 import dev.voir.areca.theme.ArecaTheme
 import dev.voir.areca.theme.SurfaceOf
 import dev.voir.areca.theme.SurfaceRoot
+import dev.voir.areca.theme.tween
 
 /**
  * How wide a dropdown makes itself relative to the control that opened it.
@@ -260,7 +269,11 @@ public fun rememberDropdownPopup(
  * rest of the screen. It positions itself against the anchor's *window* bounds and flips to the
  * other side of the anchor when the preferred side would run off screen.
  *
- * Composes nothing while closed.
+ * It grows in with a short fade and scale from the corner that touches its anchor — the corner of
+ * the side it actually opened on, after any flip — and shrinks back into it when it closes, staying
+ * composed until that exit has finished; it takes no input while it leaves. With
+ * [dev.voir.areca.theme.ArecaMotion.reduceMotion] it appears and goes at once. Composes nothing once
+ * closed.
  *
  * @param state Whether the dropdown is open, and where its anchor is.
  * @param onDismissRequest Called when the user asks to close it, by back gesture or by pressing
@@ -287,19 +300,30 @@ public fun DropdownPopup(
     clippingEnabled: Boolean = true,
     content: @Composable BoxScope.() -> Unit,
 ) {
-    if (!state.isOpen) return
+    val motion = ArecaTheme.motion
+    // Follows isOpen; its currentState stays true until the exit has run, which is what keeps the
+    // popup composed while it leaves.
+    val visibility = remember(state) { MutableTransitionState(false) }
+    visibility.targetState = state.isOpen
+    val leaving = !motion.reduceMotion && (visibility.currentState || !visibility.isIdle)
+    if (!state.isOpen && !leaving) return
 
     val anchorBounds = state.anchorState.anchorBoundsInWindow ?: return
     val density = LocalDensity.current
     val offsetXPx = with(density) { size.offsetX.roundToPx() }
     val offsetYPx = with(density) { size.offsetY.roundToPx() }
 
+    // Written by the position provider during layout and read only by the graphics layer, so a flip
+    // moves the pivot without recomposing the content.
+    val layoutDirection = LocalLayoutDirection.current
+    val origin = remember(state) { mutableStateOf(transformOriginFor(state.placement, layoutDirection)) }
     val positionProvider = remember(anchorBounds, state.placement, offsetXPx, offsetYPx) {
         AnchoredPositionProvider(
             anchorBounds = anchorBounds,
             placement = state.placement,
             offsetX = offsetXPx,
             offsetY = offsetYPx,
+            onPlaced = { placement, direction -> origin.value = transformOriginFor(placement, direction) },
         )
     }
 
@@ -316,6 +340,19 @@ public fun DropdownPopup(
             clippingEnabled = clippingEnabled,
         ),
     ) {
+        val transition = rememberTransition(visibility, label = "DropdownPopup")
+        // 0 hidden, 1 shown: the fade follows it directly and the scale from HiddenScale up to 1.
+        val shown by transition.animateFloat(
+            transitionSpec = {
+                when {
+                    motion.reduceMotion -> snap()
+                    targetState -> motion.fast.tween(motion.enter)
+                    else -> motion.fast.tween(motion.exit)
+                }
+            },
+            label = "shown",
+        ) { open -> if (open) 1f else 0f }
+
         val widthModifier = when (val w = size.width) {
             is DropdownWidth.MatchAnchor -> Modifier.width(anchorWidthDp)
             is DropdownWidth.Fixed -> Modifier.width(w.width)
@@ -324,9 +361,27 @@ public fun DropdownPopup(
                 .widthIn(min = w.min)
                 .width(anchorWidthDp)
         }
+        // A press on a row while the surface leaves must not choose it a second time.
+        val inputWhileLeaving = if (state.isOpen) {
+            Modifier
+        } else {
+            Modifier.pointerInput(Unit) {
+                awaitPointerEventScope {
+                    while (true) awaitPointerEvent(PointerEventPass.Initial).changes.forEach { it.consume() }
+                }
+            }
+        }
 
         Box(
-            modifier = modifier
+            modifier = Modifier
+                .graphicsLayer {
+                    alpha = shown
+                    scaleX = HiddenScale + (1f - HiddenScale) * shown
+                    scaleY = scaleX
+                    transformOrigin = origin.value
+                }
+                .then(inputWhileLeaving)
+                .then(modifier)
                 .heightIn(max = size.maxHeight)
                 // shadow first (not clipped), then clip content
                 .shadow(elevation = style.shadowElevation, shape = style.shape, clip = false)
@@ -339,6 +394,9 @@ public fun DropdownPopup(
         }
     }
 }
+
+/** How small a dropdown is as it starts to grow in and when it has shrunk away. */
+private const val HiddenScale = 0.9f
 
 /** Default [DropdownPopupStyle] in scope, seeded by [dev.voir.areca.theme.ArecaThemeProvider]. */
 public val LocalDropdownPopupStyle: ProvidableCompositionLocal<DropdownPopupStyle?> =
