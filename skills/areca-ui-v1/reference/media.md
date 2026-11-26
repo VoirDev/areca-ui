@@ -103,7 +103,8 @@ interface MediaImageLoader {
 @Composable fun Modifier.zoomable(state: ZoomState, contentSize: Size = Size.Unspecified,
     behavior: ZoomBehavior = ZoomBehavior.Sticky, onTap: (() -> Unit)? = null,
     onEdgeSwipe: ((direction: Int) -> Unit)? = null, labels: ZoomLabels = ZoomLabels()): Modifier
-// ZoomBehavior: None, Sticky (stays; viewer), Peek (springs back; caller draws the lifted content),
+// ZoomBehavior: None, Sticky (stays; viewer), Peek (springs back; caller draws the lifted content;
+// MediaImage/MediaFrame draw it moving toward the window's centre as it grows),
 // Hover (magnifies under a mouse pointer; desktop).
 // ZoomLabels(zoomIn = "Zoom in", zoomOut = "Zoom out", reset = "Reset zoom").
 

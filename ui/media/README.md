@@ -183,7 +183,8 @@ named by `label`; draw each picture with `fit = MediaFit.Fill`. `ThumbnailStripS
 
 `ZoomBehavior.Sticky` zooms and stays — a viewer; one finger pans once zoomed and belongs to the
 pager before that. `ZoomBehavior.Peek` zooms while the fingers are down, lifting the picture over
-the screen, and springs back on release — a picture in a list. `ZoomBehavior.Hover` brings the
+the screen and drawing it toward the window's centre as it grows, and springs back onto its frame on
+release — a picture in a list. `ZoomBehavior.Hover` brings the
 picture closer under a mouse pointer and follows it — a desktop product page; touch only taps.
 `MediaImage` and `MediaFrame` take a `zoom`; any other content takes
 `Modifier.zoomable(rememberZoomState(), contentSize = …)`. Double tap, `+`, `−` and `0` with focus,

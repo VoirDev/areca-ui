@@ -30,7 +30,8 @@ import dev.voir.areca.modifier.clickCursor
  *
  * [overlay] is drawn above the picture — a foundation `Badge` in a corner, a heart, a page indicator —
  * and stays put while the picture zooms. With [zoom] set to [ZoomBehavior.Peek] a pinch lifts the
- * picture over the screen and lets it fall back on release.
+ * picture over the screen, drawing it toward the window's centre as it grows, and lets it fall back
+ * on release.
  *
  * Pressable when [onClick] is given: name what pressing does in [onClickLabel] — "Open picture".
  * Opening a [MediaViewer][dev.voir.areca.media.viewer.MediaViewer] from it, pass the viewer's
