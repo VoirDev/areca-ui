@@ -18,8 +18,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.geometry.center
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
@@ -287,6 +289,11 @@ private fun Picture(
  * A peeked picture lifted over the whole window: drawn where it sat, scaled and moved with the
  * fingers, over a ground that darkens as it grows.
  *
+ * As it grows it also drifts toward the window's centre ([peekCentring]): a picture at the top of
+ * a page would otherwise grow around its frame and spill off the top edge, so the peek looks
+ * anchored there rather than lifted in front of the reader. The drift is added on top of the
+ * fingers' offset and is nothing at the fitted size, so the spring back lands on the frame.
+ *
  * @param painter The picture.
  * @param contentScale How it filled its frame.
  * @param bounds Where it sat, in the window.
@@ -316,14 +323,38 @@ private fun PeekLayer(painter: Painter, contentScale: ContentScale, bounds: Rect
                     .offset { IntOffset(bounds.left.roundToInt(), bounds.top.roundToInt()) }
                     .size(with(density) { DpSize(bounds.width.toDp(), bounds.height.toDp()) })
                     .graphicsLayer {
+                        val centring = peekCentring(
+                            frame = bounds,
+                            window = Size(window.width.toFloat(), window.height.toFloat()),
+                            scale = zoomState.scale,
+                            maxScale = zoomState.maxScale,
+                        )
                         scaleX = zoomState.scale
                         scaleY = zoomState.scale
-                        translationX = zoomState.offset.x
-                        translationY = zoomState.offset.y
+                        translationX = zoomState.offset.x + centring.x
+                        translationY = zoomState.offset.y + centring.y
                     },
             )
         }
     }
+}
+
+/**
+ * How far a peeked picture is moved toward the window's centre at [scale]: none at the fitted size,
+ * the whole way from its frame's centre to the window's once it has grown to [PEEK_CENTRED_SCALE]
+ * (or [maxScale], when that is lower), and in proportion between.
+ *
+ * @param frame Where the picture sits, in the window.
+ * @param window The window's size.
+ * @param scale The peek's zoom.
+ * @param maxScale The most the peek can grow.
+ * @return The translation to add to the picture, in pixels.
+ */
+internal fun peekCentring(frame: Rect, window: Size, scale: Float, maxScale: Float): Offset {
+    val centredScale = PEEK_CENTRED_SCALE.coerceAtMost(maxScale)
+    if (centredScale <= 1f) return Offset.Zero
+    val progress = ((scale - 1f) / (centredScale - 1f)).coerceIn(0f, 1f)
+    return (window.center - frame.center) * progress
 }
 
 /**
@@ -381,3 +412,6 @@ private const val PEEK_DIM_RATE = 0.8f
 
 /** How dark the ground under a peek gets. */
 private const val PEEK_DIM_MAX = 0.6f
+
+/** Zoom at which a peeked picture has reached the window's centre. */
+private const val PEEK_CENTRED_SCALE = 2f

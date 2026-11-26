@@ -83,6 +83,9 @@ All notable changes to the Areca libraries. The format follows
 
 ### Changed
 
+- `media`: a picture peeked with `ZoomBehavior.Peek` moves toward the window's centre as it grows,
+  reaching it at twice its size, instead of growing around its frame; a picture at the top of the
+  screen no longer spills off the top. It still follows the fingers and springs back onto its frame.
 - `foundation`: a `DropdownPopup` grows in with a short fade and scale from the corner that touches
   its anchor — on the side it opened on, after a flip — and shrinks back into it when it closes,
   staying composed until that exit has run (`motion.fast`). It ignores presses while it leaves.
