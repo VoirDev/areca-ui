@@ -115,8 +115,7 @@ public object AttachmentSourceOptions {
  * **Rows or a bento.** By default the choices are rows laid straight on the sheet, as every other
  * choice is. [AttachmentChoiceLayout.Bento] draws them as cards instead — the first larger, each in
  * its [AttachmentChoice.hue] with its [AttachmentChoice.description] — for a product whose sources
- * are few and fixed and where one leads, such as the camera of an expense tracker. Either way it is
- * a sheet on a phone and a centred dialog on a wide window.
+ * are few and fixed and where one leads, such as the camera of an expense tracker.
  *
  * @param visible Whether the sheet is up.
  * @param options Choices to offer, in order. In a bento the first leads.

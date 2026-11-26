@@ -64,7 +64,7 @@ internal val AttachmentsFlowShowcases: List<ShowcaseEntry> = listOf(
         summary = "A saved expense's details with its files in a pane beside them on a wide window, and in a sheet on a narrow one.",
         status = ShowcaseStatus.Beta,
         keywords = listOf(
-            "attachments tablet", "desktop", "adaptive", "supporting pane", "wide window", "dialog", "screen", "recipe",
+            "attachments tablet", "desktop", "adaptive", "supporting pane", "wide window", "screen", "recipe",
         ),
         content = { AttachmentWideDetailsShowcase() },
     ),

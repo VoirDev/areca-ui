@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.ComposeUiTest
@@ -32,6 +33,25 @@ import kotlin.test.assertTrue
 /** The grouped [AdaptiveMenu]: its form, the order of its rows, and what choosing one does. */
 @OptIn(ExperimentalTestApi::class)
 class AdaptiveMenuTest {
+    /** A window of [size] under [input] with a trigger for [state] and [menu] anchored to it. */
+    @Composable
+    private fun MenuWindow(
+        state: DropdownPopupState,
+        size: DpSize,
+        input: InputMode,
+        motion: ArecaMotion = ArecaMotion(),
+        menu: @Composable () -> Unit,
+    ) {
+        ArecaThemeProvider(inputMode = input, motion = motion) {
+            ProvideWindowClass(WindowClass(size, input)) {
+                Box(Modifier.wrapContentSize(Alignment.TopStart, unbounded = true).requiredSize(size)) {
+                    Box(Modifier.align(Alignment.TopEnd).requiredSize(48.dp).anchored(state.anchorState))
+                    menu()
+                }
+            }
+        }
+    }
+
     /** A phone-sized touch window with a trigger for [state] and its grouped menu. */
     @Composable
     private fun PhoneMenu(
@@ -40,13 +60,8 @@ class AdaptiveMenuTest {
         presentation: AdaptiveMenuPresentation = AdaptiveMenuPresentation.Dropdown,
         motion: ArecaMotion = ArecaMotion(),
     ) {
-        ArecaThemeProvider(inputMode = InputMode.Touch, motion = motion) {
-            ProvideWindowClass(WindowClass(DpSize(393.dp, 852.dp), InputMode.Touch)) {
-                Box(Modifier.wrapContentSize(Alignment.TopStart, unbounded = true).requiredSize(393.dp, 852.dp)) {
-                    Box(Modifier.align(Alignment.TopEnd).requiredSize(48.dp).anchored(state.anchorState))
-                    AdaptiveMenu(state = state, groups = groups, presentation = presentation)
-                }
-            }
+        MenuWindow(state, Phone, InputMode.Touch, motion) {
+            AdaptiveMenu(state = state, groups = groups, presentation = presentation)
         }
     }
 
@@ -75,16 +90,63 @@ class AdaptiveMenuTest {
     }
 
     @Test
-    fun `the adaptive form is still a sheet under touch on a phone`() = runComposeUiTest {
+    fun `the sheet form is a sheet on a phone`() = runComposeUiTest {
         lateinit var state: DropdownPopupState
         setContent {
             state = rememberDropdownPopup()
-            PhoneMenu(state, listOf(listOf(item("Edit"))), presentation = AdaptiveMenuPresentation.Adaptive)
+            PhoneMenu(state, listOf(listOf(item("Edit"))), presentation = AdaptiveMenuPresentation.Sheet)
         }
         runOnIdle { state.show() }
         waitForIdle()
         assertEquals(0, popups())
         assertEquals(1, dialogs())
+    }
+
+    @Test
+    fun `the sheet form stays a sheet on a desktop under a pointer`() = runComposeUiTest {
+        lateinit var state: DropdownPopupState
+        setContent {
+            state = rememberDropdownPopup()
+            MenuWindow(state, Desktop, InputMode.Pointer) {
+                AdaptiveMenu(state = state, groups = listOf(listOf(item("Edit"))), presentation = AdaptiveMenuPresentation.Sheet)
+            }
+        }
+        runOnIdle { state.show() }
+        waitForIdle()
+        assertEquals(0, popups())
+        assertEquals(1, dialogs())
+    }
+
+    @Test
+    fun `the list of actions takes the form the app provides, on any window`() = runComposeUiTest {
+        lateinit var state: DropdownPopupState
+        setContent {
+            state = rememberDropdownPopup()
+            MenuWindow(state, Desktop, InputMode.Pointer) {
+                CompositionLocalProvider(LocalAdaptiveMenuPresentation provides AdaptiveMenuPresentation.Sheet) {
+                    AdaptiveMenu(state = state, actions = listOf(item("Edit")))
+                }
+            }
+        }
+        runOnIdle { state.show() }
+        waitForIdle()
+        assertEquals(0, popups())
+        assertEquals(1, dialogs())
+    }
+
+    @Test
+    fun `the list of actions is a card on a phone by default`() = runComposeUiTest {
+        lateinit var state: DropdownPopupState
+        setContent {
+            state = rememberDropdownPopup()
+            MenuWindow(state, Phone, InputMode.Touch) {
+                AdaptiveMenu(state = state, actions = listOf(item("Edit")))
+            }
+        }
+        runOnIdle { state.show() }
+        waitForIdle()
+        assertEquals(1, popups())
+        assertEquals(0, dialogs())
     }
 
     @Test
@@ -152,5 +214,10 @@ class AdaptiveMenuTest {
         mainClock.advanceTimeByFrame()
         waitForIdle()
         assertEquals(0, popups())
+    }
+
+    private companion object {
+        val Phone = DpSize(393.dp, 852.dp)
+        val Desktop = DpSize(1440.dp, 900.dp)
     }
 }

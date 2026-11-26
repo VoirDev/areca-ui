@@ -139,10 +139,9 @@ AdaptiveContent(
 ```
 
 `ArecaTheme.hostWindow` is the whole window's class whatever `WindowClassBox` is in between — what
-opens over the window (a sheet, a dialog, a menu) chooses its form by it.
-`AdaptiveDefaults.usesDialog(ArecaTheme.hostWindow)` is the rule `AdaptiveSheet` and `ConfirmSheet`
-follow: a dialog from an expanded width up, unless the window is too short; a sheet of your own can
-follow it too.
+depends on how the device is held, such as where `AdaptiveToolbar` puts a screen's actions, reads
+it. No component changes into another by window: a sheet stays a sheet and a dialog a dialog, and
+which one opens is the app's choice.
 
 The outermost provider reads the window's size from `LocalWindowInfo`; a nested provider, such as
 `ArecaDarkTheme`, keeps the class above it. Until the window is measured the size is unspecified,
@@ -890,7 +889,7 @@ a `Fallback` stands in for part of one and appears at once. Their slots line up 
 
 | Component | Use it for |
 | --- | --- |
-| `ConfirmSheet` | A yes-or-no question answered with a thumb: sign out, delete, discard. A centred dialog on a window from expanded up |
+| `ConfirmSheet` | A yes-or-no question answered with a thumb: sign out, delete, discard. A sheet on every window |
 | `ConfirmationDialog` | The same question as a centred dialog, with `suspend` handlers that show progress |
 | `Dialog` | A centred window for a short task — rename, pick one thing. End it with `ModalDefaults.Actions` |
 | `FlowModal` | A bottom sheet the user can drag between heights and away — a form, a picker, a filter. Shown by a `visible` flag, by an `item` it is about, or by a `FlowModalController` |
@@ -921,10 +920,12 @@ A `ConfirmSheet` is a `FlowModal` underneath, so the sheet defaults in scope —
 `extra` sits inside the sheet's side padding, as the buttons do; wrap choice rows in
 `ConfirmSheetRows` so they run edge to edge, as rows do on any sheet.
 
-A sheet spans the window unless `FlowModalSize.maxWidth` caps it; a capped sheet is centred along
-the bottom edge and its scrim still covers the window. The sheet opens in its own window, so an app
-that draws a phone-wide column on a tablet caps its sheets the same way, once, where it provides its
-theme:
+A sheet stops at `FlowModalSize.maxWidth`, `AdaptiveDefaults.ReadableWidth` (640dp) unless given,
+and is centred along the bottom edge of a wider window; its scrim still covers the window. A phone
+is narrower than the cap, so there the sheet spans the screen. `maxWidth = Dp.Unspecified` spans
+every window, for a sheet whose content is itself wide. A different cap for every sheet of an app
+goes once where it provides its theme — `ConfirmSheet`, `SelectFlowModal` and `AdaptiveMenu`'s
+sheet follow it too:
 
 ```kotlin
 CompositionLocalProvider(
@@ -1681,11 +1682,10 @@ layout inside a narrow pane takes its compact form. See [Window classes](#window
 | `FloatingSidebar` | — | A sidebar floating in beside the column over a scrim, every destination labelled |
 | `NavRail` | — | A column of icon-and-label destinations along the start edge, with a `header` slot for the primary action |
 | `ListDetail` | The list, then the detail in its place while `showDetail` | List (280–360dp) and detail side by side from a 600dp container, `detailPlaceholder` while nothing is open. A pointer drags the divider. On a foldable the panes meet at a vertical fold |
-| `SupportingPane` | Supporting content in an `AdaptiveSheet` while `supportingVisible` | A permanent 340–360dp pane at the end from a 920dp container |
+| `SupportingPane` | Supporting content in a `FlowModal` while `supportingVisible` | A permanent 340–360dp pane at the end from a 920dp container |
 | `ContentColumn` | Full width less the gutters | Centred, no wider than `AdaptiveDefaults.ReadableWidth` (640dp) or a `maxWidth` you pass |
 | `AdaptiveGrid` | Two columns of 160dp cells | As many columns as fit, cells capped at `AdaptiveDefaults.ContentWidth` (1200dp) and centred |
-| `AdaptiveSheet` | A `FlowModal` from the bottom edge, capped at 640dp | A centred `Dialog` from an expanded window up |
-| `AdaptiveMenu` | A sheet of `AdaptiveMenuItem` rows, or a card at the trigger with `AdaptiveMenuPresentation.Dropdown` | A `DropdownPopup` at the trigger, from an expanded window up or under a pointer |
+| `AdaptiveMenu` | A card at the trigger, or with `AdaptiveMenuPresentation.Sheet` a sheet of `AdaptiveMenuItem` rows | The same form the app chose |
 | `Modifier.contextMenu` | Opens an `AdaptiveMenu` on a long press | Opens it on a right-click, at the pointer |
 
 ```kotlin
@@ -1793,8 +1793,7 @@ The slots of `AdaptiveNavigation`, `ListDetail` and `SupportingPane` know which 
 only when the layout needs it. `AdaptiveNavigation` moves its content rather than recreating it when
 the form changes — a resize, a turned tablet, an unfolded foldable, the sidebar toggled, the
 navigation hidden — so what the screen remembers survives. `ListDetail` and `SupportingPane` keep each part's saved state, such as
-a scroll position, when a resize switches the form. `AdaptiveSheet` and `AdaptiveMenu` choose by the
-whole window, not by the pane that opened them. `NavRail` takes `NavRailStyle` and `NavRailSize`,
+a scroll position, when a resize switches the form. `NavRail` takes `NavRailStyle` and `NavRailSize`,
 seeded by the provider like every other component.
 
 Under a pointer the layouts take what a desktop expects. `ListDetail`'s divider is a handle: a drag
@@ -1816,10 +1815,12 @@ AdaptiveMenu(state = menu, title = transaction.merchant, actions = actions)
 ```
 
 The `groups` form draws the actions in groups with one full-width hairline between them, and moves
-destructive ones to a last group in the danger ink. `presentation = AdaptiveMenuPresentation.Dropdown`
-makes it a card hanging from its trigger on every device, touch included; the default,
-`AdaptiveMenuPresentation.Adaptive`, keeps the sheet on a touched phone, and
-`LocalAdaptiveMenuPresentation` sets it for a whole app. `AdaptiveMenuStyle` (card fill, outline —
+destructive ones to a last group in the danger ink. The form is the app's and stays the same on
+every window and under every input: `AdaptiveMenuPresentation.Dropdown`, the default, is a card
+hanging from its trigger; `AdaptiveMenuPresentation.Sheet` is a sheet from the bottom edge with
+`title` at its head. Pass `presentation`, or set it for a whole app with
+`LocalAdaptiveMenuPresentation`, which the `actions` form, `AdaptiveToolbar`'s overflow and
+`EdgeColumn`'s More follow too. `AdaptiveMenuStyle` (card fill, outline —
 none by default — surface shape, `elevation.md` lift, the row looks) and `AdaptiveMenuSize` (248dp
 card, gap, height cap, `AdaptiveMenuIconPosition.Trailing` or `Leading`, control-height rows) follow
 the usual `LocalAdaptiveMenuStyle` / `LocalAdaptiveMenuSize`, `null` unless provided.
@@ -1827,7 +1828,6 @@ the usual `LocalAdaptiveMenuStyle` / `LocalAdaptiveMenuSize`, `null` unless prov
 ```kotlin
 AdaptiveMenu(
     state = menu,
-    presentation = AdaptiveMenuPresentation.Dropdown,
     groups = listOf(listOf(edit, end), listOf(delete)),
 )
 ```

@@ -28,8 +28,6 @@ import dev.voir.areca.foundation.text.Text
 import dev.voir.areca.foundation.text.TextColor
 import dev.voir.areca.foundation.text.TextVariant
 import dev.voir.areca.theme.ArecaTheme
-import dev.voir.areca.window.InputMode
-import dev.voir.areca.window.WidthClass
 
 /**
  * One action in an [AdaptiveMenu].
@@ -50,11 +48,11 @@ public class AdaptiveMenuItem(
 )
 
 /**
- * A list of actions for one thing — a row, a card — in the form the window calls for.
+ * A list of actions for one thing — a row, a card — in the form the app chose.
  *
- * Under a pointer, or on any window from expanded up, it is a [DropdownPopup] beside the trigger.
- * On a phone or a tablet in portrait under touch it is a sheet from the bottom edge with [title] at
- * its head, where a finger reaches it. The form follows the window, not the pane that opened it.
+ * [LocalAdaptiveMenuPresentation] picks the form, the same on every window:
+ * [AdaptiveMenuPresentation.Dropdown], the default, is a [DropdownPopup] beside the trigger;
+ * [AdaptiveMenuPresentation.Sheet] is a sheet from the bottom edge with [title] at its head.
  *
  * Anchor it as a dropdown is anchored: put `Modifier.anchored(state.anchorState)` on the trigger and
  * call `state.show()` from it. Choosing an action closes the menu, then runs the action.
@@ -94,8 +92,7 @@ public fun AdaptiveMenu(
     modifier: Modifier = Modifier,
     title: String? = null,
 ) {
-    val window = ArecaTheme.hostWindow
-    if (window.input == InputMode.Pointer || window.width >= WidthClass.Expanded) {
+    if (LocalAdaptiveMenuPresentation.current == AdaptiveMenuPresentation.Dropdown) {
         DropdownPopup(state = state, onDismissRequest = state::dismiss) {
             MenuActions(
                 actions = actions,
@@ -138,14 +135,13 @@ public fun AdaptiveMenu(
 
 /**
  * The actions for one thing — a row, a card, a details sheet — in groups, as a card hanging from
- * its trigger or in the form the window calls for.
+ * its trigger or a sheet from the bottom edge, as the app chose.
  *
- * [presentation] picks the form. [AdaptiveMenuPresentation.Dropdown] is a card under the trigger on
- * every window, touch included: the screen stays in view around it, and it grows in from the corner
- * that touches the trigger. [AdaptiveMenuPresentation.Adaptive] — the default unless
- * [LocalAdaptiveMenuPresentation] says otherwise — is that card under a pointer or from an expanded
- * window up, and a sheet from the bottom edge with [title] at its head on a phone or a portrait
- * tablet under touch.
+ * [presentation] picks the form, the same on every window and under every input.
+ * [AdaptiveMenuPresentation.Dropdown] — the default unless [LocalAdaptiveMenuPresentation] says
+ * otherwise — is a card under the trigger: the screen stays in view around it, and it grows in from
+ * the corner that touches the trigger. [AdaptiveMenuPresentation.Sheet] is a sheet from the bottom
+ * edge with [title] at its head.
  *
  * Groups are drawn in order with one full-width hairline between them and none inside a group.
  * Destructive actions are taken out of every group and drawn last, as a group of their own in the
@@ -184,7 +180,7 @@ public fun AdaptiveMenu(
  *   group is `listOf(actions)`. Destructive actions move to a last group whatever group they are in.
  * @param modifier Modifier applied to the list of actions.
  * @param title What the actions act on, shown at the head of the sheet. The card shows none.
- * @param presentation The form: a card on every window, or a card or a sheet by window. Defaults to
+ * @param presentation The form: a card at the trigger or a sheet. Defaults to
  *   [LocalAdaptiveMenuPresentation].
  * @param style Card colours, shape and lift, and row looks. Defaults to [LocalAdaptiveMenuStyle],
  *   then [AdaptiveMenuStyle.Default].
@@ -202,11 +198,7 @@ public fun AdaptiveMenu(
     size: AdaptiveMenuSize = LocalAdaptiveMenuSize.current ?: AdaptiveMenuSize.Default,
 ) {
     val drawn = menuGroups(groups)
-    val window = ArecaTheme.hostWindow
-    val asCard = presentation == AdaptiveMenuPresentation.Dropdown ||
-        window.input == InputMode.Pointer ||
-        window.width >= WidthClass.Expanded
-    if (asCard) {
+    if (presentation == AdaptiveMenuPresentation.Dropdown) {
         DropdownPopup(
             state = state,
             onDismissRequest = state::dismiss,

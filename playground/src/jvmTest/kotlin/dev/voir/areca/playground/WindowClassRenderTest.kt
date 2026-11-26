@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import dev.voir.areca.playground.foundation.adaptive.AdaptiveGridShowcase
 import dev.voir.areca.playground.foundation.adaptive.AdaptiveMenuShowcase
 import dev.voir.areca.playground.foundation.adaptive.AdaptiveNavigationShowcase
-import dev.voir.areca.playground.foundation.adaptive.AdaptiveSheetShowcase
 import dev.voir.areca.playground.foundation.adaptive.ContentColumnShowcase
 import dev.voir.areca.playground.foundation.adaptive.ListDetailShowcase
 import dev.voir.areca.playground.foundation.adaptive.SupportingPaneShowcase
@@ -71,7 +70,6 @@ class WindowClassRenderTest {
         render("adaptive-supporting-pane", dark = false) { SupportingPaneShowcase() }
         render("adaptive-content-column", dark = false) { ContentColumnShowcase() }
         render("adaptive-grid", dark = false) { AdaptiveGridShowcase() }
-        render("adaptive-sheet", dark = false) { AdaptiveSheetShowcase() }
         render("adaptive-menu", dark = false) { AdaptiveMenuShowcase() }
     }
 

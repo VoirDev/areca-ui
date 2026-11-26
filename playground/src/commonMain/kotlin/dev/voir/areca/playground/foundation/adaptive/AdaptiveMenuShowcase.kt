@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,6 +21,7 @@ import dev.voir.areca.foundation.adaptive.AdaptiveMenu
 import dev.voir.areca.foundation.adaptive.AdaptiveMenuIconPosition
 import dev.voir.areca.foundation.adaptive.AdaptiveMenuItem
 import dev.voir.areca.foundation.adaptive.AdaptiveMenuPresentation
+import dev.voir.areca.foundation.adaptive.LocalAdaptiveMenuPresentation
 import dev.voir.areca.foundation.adaptive.AdaptiveMenuSize
 import dev.voir.areca.foundation.adaptive.contextMenu
 import dev.voir.areca.foundation.badge.Badge
@@ -62,20 +64,19 @@ private enum class MenuInputOption { Window, Touch, Pointer }
  * Showcase for [AdaptiveMenu] and the [AdaptiveMenuItem]s it lists.
  *
  * The sample is a finance app's activity list, each row with an overflow button and
- * [contextMenu] for a right-click or a long press: a dropdown under a pointer or on a wide window, a
- * sheet from the bottom edge on a touched phone or portrait tablet.
+ * [contextMenu] for a right-click or a long press, in the form the app chose: a dropdown at the
+ * trigger or a sheet from the bottom edge, the same on every window.
  */
 @Composable
 fun AdaptiveMenuShowcase() = ShowcaseScaffold(
     title = "Adaptive menu",
-    summary = "The actions for one row, card or details sheet, as a card at the trigger or a bottom sheet under a finger.",
+    summary = "The actions for one row, card or details sheet, as a card at the trigger or a bottom sheet.",
     module = "foundation",
     status = ShowcaseStatus.Beta,
 ) {
     Playground(
         description = "Press a row's overflow button, right-click the row, or long-press it under touch. The menu " +
-            "opens over the whole playground window, and takes its form — dropdown or sheet — from the chosen " +
-            "window and input.",
+            "opens over the whole playground window in the chosen presentation, whatever the window and input.",
     ) {
         val preset by enumControl(
             key = "window",
@@ -88,7 +89,7 @@ fun AdaptiveMenuShowcase() = ShowcaseScaffold(
             default = MenuInputOption.Window,
             options = MenuInputOption.entries,
             optionLabel = { it.name },
-            description = "Window uses the preset's own. Any pointer gets the dropdown, whatever the width.",
+            description = "Window uses the preset's own. A pointer opens the menu with a right-click, touch with a long press.",
         )
         val title by booleanControl(
             key = "title",
@@ -97,10 +98,10 @@ fun AdaptiveMenuShowcase() = ShowcaseScaffold(
         )
         val presentation by enumControl(
             key = "presentation",
-            default = AdaptiveMenuPresentation.Adaptive,
+            default = AdaptiveMenuPresentation.Dropdown,
             options = AdaptiveMenuPresentation.entries,
             optionLabel = { it.name },
-            description = "Dropdown is a card at the trigger on every window; Adaptive gives a touched phone the sheet.",
+            description = "Dropdown is a card at the trigger, Sheet a sheet from the bottom edge, on every window.",
         )
         val grouped by booleanControl(
             key = "grouped",
@@ -146,13 +147,17 @@ fun AdaptiveMenuShowcase() = ShowcaseScaffold(
     }
 
     Variants(
-        title = "Form by window",
-        description = "Open each: a dropdown under a pointer or from 840dp wide, a sheet on a narrower touched window.",
+        title = "Form",
+        description = "Open each: the form is the presentation the app passes, never the window's.",
         layout = VariantLayout.Grid,
     ) {
-        for ((preset, form) in MenuForms) {
-            variant(preset.label, detail = form) {
-                WindowFrame(preset = preset, maxHeight = 240.dp) { ActivitySample(preset = preset) }
+        for (presentation in AdaptiveMenuPresentation.entries) {
+            for (preset in listOf(WindowPreset.Phone, WindowPreset.Laptop)) {
+                variant("${presentation.name} / ${preset.label}", detail = presentation.name.lowercase()) {
+                    WindowFrame(preset = preset, maxHeight = 240.dp) {
+                        ActivitySample(preset = preset, grouped = true, presentation = presentation)
+                    }
+                }
             }
         }
     }
@@ -195,7 +200,7 @@ fun AdaptiveMenuShowcase() = ShowcaseScaffold(
         }
         case(
             name = "Phone-sized window under a pointer",
-            expectation = "393dp is Compact, but a pointer needs no reach: the dropdown beside the button, not a sheet.",
+            expectation = "A right-click opens the menu at the pointer; the form is still the one the app chose.",
         ) {
             WindowFrame(preset = WindowPreset.Phone, input = InputMode.Pointer, maxHeight = 320.dp) {
                 ActivitySample(preset = WindowPreset.Phone)
@@ -203,15 +208,6 @@ fun AdaptiveMenuShowcase() = ShowcaseScaffold(
         }
     }
 }
-
-/** Windows and inputs on either side of the dropdown–sheet line, with the form each one gets. */
-private val MenuForms = listOf(
-    WindowPreset.Phone to "sheet: touch, compact",
-    WindowPreset.Tablet to "sheet: touch, medium",
-    WindowPreset.TabletLandscape to "dropdown: expanded",
-    WindowPreset.NarrowWindow to "dropdown: pointer",
-    WindowPreset.Laptop to "dropdown",
-)
 
 /**
  * An activity list whose rows each open an [AdaptiveMenu], and a line saying what was last chosen.
@@ -223,7 +219,7 @@ private val MenuForms = listOf(
  * @param moveEnabled Whether "Move to wallet" can be chosen.
  * @param longLabel Whether "Move to wallet" names the wallet in full.
  * @param grouped Whether the menu takes the groups form rather than the flat actions form.
- * @param presentation The form of the groups form.
+ * @param presentation The menu's form.
  * @param iconPosition Which end of a row the glyph sits at in the groups form.
  */
 @Composable
@@ -235,7 +231,7 @@ private fun ActivitySample(
     moveEnabled: Boolean = true,
     longLabel: Boolean = false,
     grouped: Boolean = false,
-    presentation: AdaptiveMenuPresentation = AdaptiveMenuPresentation.Adaptive,
+    presentation: AdaptiveMenuPresentation = AdaptiveMenuPresentation.Dropdown,
     iconPosition: AdaptiveMenuIconPosition = AdaptiveMenuIconPosition.Trailing,
 ) {
     var lastChosen by remember { mutableStateOf<String?>(null) }
@@ -279,7 +275,7 @@ private fun ActivitySample(
  * @param moveEnabled Whether "Move to wallet" can be chosen.
  * @param longLabel Whether "Move to wallet" names the wallet in full.
  * @param grouped Whether the menu takes the groups form rather than the flat actions form.
- * @param presentation The form of the groups form.
+ * @param presentation The menu's form.
  * @param iconPosition Which end of a row the glyph sits at in the groups form.
  * @param onChosen Called with the label of the action chosen.
  */
@@ -344,7 +340,9 @@ private fun TransactionRow(
                         groups = listOf(listOf(edit, duplicate), listOf(move), listOf(delete)),
                     )
                 } else {
-                    AdaptiveMenu(state = menu, title = title, actions = listOf(edit, duplicate, move, delete))
+                    CompositionLocalProvider(LocalAdaptiveMenuPresentation provides presentation) {
+                        AdaptiveMenu(state = menu, title = title, actions = listOf(edit, duplicate, move, delete))
+                    }
                 }
             }
         },

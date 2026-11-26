@@ -39,7 +39,7 @@ deleting the account.
 | One fact: value as title, what it is under it ("@ada" over "Username") | `ProfileInfoRow(value, label)` | — |
 | Email with an "Unverified" badge and a "Verify" link | `EmailRow(email, isVerified, onVerify = …)` | — |
 | One sign-in provider: link, unlink, or why not | `LinkedAccountRow(name, isLinked, onLink, onUnlink, icon = …)` | — |
-| A birthday picked in a calendar sheet (a dialog on wide windows), removable | `BirthdayRow(value, onValueChange)` | `LocalDate`, `CalendarLabels` |
+| A birthday picked in a calendar sheet, removable | `BirthdayRow(value, onValueChange)` | `LocalDate`, `CalendarLabels` |
 | "Download your data": idle → preparing → ready / failed | `DataExportRow(state, onRequest, onDownload)` | `DataExportState` |
 | Account switcher rows | `AccountRow(account, isCurrent = …, onClick = …)`, `AddAccountRow(onClick)` | `ProfileSummary` |
 | The two ways out, danger tone | `SignOutRow(onClick)`, `DeleteAccountRow(onClick)` | — |
@@ -287,11 +287,9 @@ AvatarSourceOptions.remove(label: String = "Remove current photo", onClick: () -
 - `ActiveSessionsSections` leaves this device inert; signing out of **this** device is `SignOutRow` in
   the account menu, not a session action. Each sheet closes when answered and the row's spinner
   (`SessionItem.isRevoking`, `Loaded.isSigningOutOthers`) shows the work.
-- **Larger windows.** Phones are unchanged. From an expanded window up
-  (`AdaptiveDefaults.usesDialog(ArecaTheme.hostWindow)`: a tablet on its side, a laptop, a desktop —
-  not a phone on its side) every sheet here opens as a centred dialog with the same content and
-  answers: the confirmation sheets via foundation `ConfirmSheet`, `AvatarSourceSheet` and
-  `BirthdayRow`'s calendar by the same rule. The whole window decides, not the pane; nothing to pass.
+- **Larger windows.** Every sheet here — the confirmation sheets via foundation `ConfirmSheet`,
+  `AvatarSourceSheet`, `BirthdayRow`'s calendar — stays a sheet on every window and stops at the
+  readable width, centred; nothing to pass.
 - **Cap the screen's column, not a part:** a card capped alone would sit narrower than the settings
   list under it. After the insets add `.wrapContentWidth().widthIn(max = AdaptiveDefaults.ReadableWidth)
   .fillMaxWidth()` — a no-op on a phone. Do not wrap the recipes in `ContentColumn`: it draws the

@@ -58,6 +58,7 @@ import androidx.compose.ui.unit.constrainHeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isSpecified
 import androidx.compose.ui.window.DialogProperties
+import dev.voir.areca.foundation.adaptive.AdaptiveDefaults
 import dev.voir.areca.modifier.thenIf
 import dev.voir.areca.theme.ArecaTheme
 import dev.voir.areca.theme.slide
@@ -145,17 +146,18 @@ public data class FlowModalStyle(
  *   over the header, which clears this space with [FlowModalHeaderInsets].
  * @property dragWidth Width of the drag handle.
  * @property dragHeight Thickness of the drag handle.
- * @property maxWidth Widest the sheet grows, centred along the bottom edge on a wider window, or
- *   [Dp.Unspecified] to span the window. An app that keeps a phone layout on a tablet caps its
- *   sheets here: a sheet opens in its own window, so a width limit on the screens behind it does
- *   not reach it. The scrim still covers the whole window.
+ * @property maxWidth Widest the sheet grows, centred along the bottom edge on a wider window:
+ *   [AdaptiveDefaults.ReadableWidth] (640dp) unless given, so on a tablet or a desktop a sheet stays
+ *   a readable column rather than a band across the window. [Dp.Unspecified] spans the window. A
+ *   sheet opens in its own window, so a width limit on the screens behind it does not reach it; the
+ *   scrim still covers the whole window.
  */
 @Immutable
 public data class FlowModalSize(
     public val dragPadding: PaddingValues,
     public val dragWidth: Dp,
     public val dragHeight: Dp,
-    public val maxWidth: Dp = Dp.Unspecified,
+    public val maxWidth: Dp = AdaptiveDefaults.ReadableWidth,
 ) {
     /** The theme's default [FlowModalSize], and [default] for building a variation on it. */
     public companion object {
@@ -170,7 +172,8 @@ public data class FlowModalSize(
          * @param dragPadding Space around the drag handle.
          * @param dragWidth Width of the drag handle.
          * @param dragHeight Thickness of the drag handle.
-         * @param maxWidth Widest the sheet grows, or [Dp.Unspecified] to span the window.
+         * @param maxWidth Widest the sheet grows, [AdaptiveDefaults.ReadableWidth] unless given, or
+         *   [Dp.Unspecified] to span the window.
          * @return Size built from the supplied metrics.
          */
         @Composable
@@ -181,7 +184,7 @@ public data class FlowModalSize(
             ),
             dragWidth: Dp = 44.dp,
             dragHeight: Dp = 4.dp,
-            maxWidth: Dp = Dp.Unspecified,
+            maxWidth: Dp = AdaptiveDefaults.ReadableWidth,
         ): FlowModalSize = FlowModalSize(
             dragPadding = dragPadding,
             dragWidth = dragWidth,

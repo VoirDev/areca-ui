@@ -72,9 +72,8 @@ fun AttachmentWideDetailsShowcase() = FlowShowcase(
             tone = ChromeTone.Muted,
         )
         ChromeText(
-            text = "Every sheet takes its form from the chosen window and opens over the whole playground: " +
-                "a sheet up to a phone on its side, a centred dialog on a tablet in landscape, a laptop " +
-                "and a desktop. The viewer has the whole window on every one.",
+            text = "Every sheet opens over the whole playground and rises from its bottom edge, no wider " +
+                "than the readable width. The viewer has the whole window on every one.",
             role = ChromeTextRole.SectionDescription,
             tone = ChromeTone.Muted,
         )
